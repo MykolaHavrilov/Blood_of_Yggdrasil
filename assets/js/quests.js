@@ -580,7 +580,7 @@
 
   // ---------- Бонуси до досвіду нагород ----------
   // EXP героя = N + N × (k% + j% + r% + x%), де N — досвід за завдання:
-  //   k — за групу героїв: +10% за кожного героя понад першого (як у боях);
+  //   k — за групу героїв: +PARTY_EXP_BONUS% (25%) за кожного героя понад першого (як у боях, party.js);
   //   j — тимчасові ефекти: Джерело Велеса (+VELES.expBonusPct, поки діє);
   //   r — руни й вдягнені речі цього героя: стат expPct речей (rarity.js → itemStats) і руни в гніздах
   //       (ref.runes = [id рун] — гнізда з'являться в оновленні рун; руна «Вуньо» дає +4…12%);
@@ -597,7 +597,7 @@
   function expBonusParts(save, ms = save) {
     const parts = [];
     const size = RPG.partySize ? RPG.partySize(save) : 1;
-    const k = 10 * Math.max(0, size - 1);
+    const k = (RPG.PARTY_EXP_BONUS ?? 25) * Math.max(0, size - 1);
     if (k) parts.push({ label: `група з ${size} героїв`, pct: k });
     const j = springLeft(save) ? VELES.expBonusPct : 0;
     if (j) parts.push({ label: "Джерело Велеса", pct: j });

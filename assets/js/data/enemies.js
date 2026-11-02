@@ -2,7 +2,7 @@
 // ДОВІДНИК ВОРОГІВ ТА ЛОКАЦІЙ
 // stats: hp, mp, attack, magic, defense, magicDefense, speed,
 //        crit (%), blockPhys (%), blockMag (%)
-// exp  — скільки досвіду дає КОЖЕН убитий ворог
+// exp  — скільки досвіду дає КОЖЕН убитий ворог: 3 × рівень²; з 31 рівня — ще ×1,1 за кожен рівень понад 30 (enemyExp нижче)
 //        (і від нього ж рахується штраф при загибелі героя: exp × 10)
 // gold — [мін, макс]
 // loot — chance — шанс від 0 до 1, qty — [мін, макс]
@@ -2128,6 +2128,16 @@ const ENEMIES = {
   function enemyRange(e) { return e?.range || 1; }
   function enemyMove(e) { return e?.move || MONSTER_MOVES[enemyRange(e)]; }
 
+  // Досвід за ворога рівня level: 3 × рівень² (так пораховані всі вороги 1–30 рівня);
+  // з 31 рівня — ще ×1,1 за кожен рівень понад 30, щоб на рівень 31–50 треба було ~8 тис. боїв, а не 8→44 тис.
+  // (таблиця досвіду 31–50 росте ×1,15 — data/levels.js). mult — для босів (зазвичай ×5–6,5).
+  // Вороги нових світів (31+): exp: enemyExp(35) → 5919, enemyExp(40) → 12450, enemyExp(45) → 25377, enemyExp(50) → 50456.
+  // (Оголошення функції піднімається — її можна викликати й усередині ENEMIES вище; тому числа тут, а не в const.)
+  function enemyExp(level, mult = 1) {
+    const extra = level > 30 ? Math.pow(1.1, level - 30) : 1;
+    return Math.round(3 * level * level * extra * mult);
+  }
+
   function getEnemy(id, champion = false) {
     const base = ENEMIES[id];
     if (!base || !champion || base.noChampion) return base || null;
@@ -2268,6 +2278,6 @@ const ENEMIES = {
     MONSTER_MOVES, RANGE_NAMES, enemyRange, enemyMove,
     ENEMIES, LOCATIONS, DUNGEONS, DEFAULT_LOCATION, RESPAWN_LOCATION, GUILD_SHOP, isAlfheimOpen,
     CHAMPION, rollChampion, rollChampionDrop, championBounty,
-    getEnemy, enemySpriteStyle, getLocation, isCombatLocation, canEnterLocation, pickEnemy, rollLoot
+    getEnemy, enemyExp, enemySpriteStyle, getLocation, isCombatLocation, canEnterLocation, pickEnemy, rollLoot
   });
 })(window.RPG);

@@ -24,6 +24,8 @@
   const HIRE_COSTS = [1000, 3000, 5000, 8000, 12000];
   const BOARD_SIZE = 3;      // скільки оголошень висить на дошці
   const HIRE_MIN_LEVEL = 10; // рівень головного героя для найму
+  // Бонус досвіду групи: +PARTY_EXP_BONUS% за кожного героя понад першого — у боях (page-game.js) і за завдання (quests.js → expBonusParts)
+  const PARTY_EXP_BONUS = 25;
 
   const NAMES = [
     "Остап", "Марко", "Богдан", "Тарас", "Ярема", "Данило", "Іван", "Северин", "Орест", "Захар",
@@ -148,7 +150,7 @@
     return { ok: true, name: m.character.name };
   }
 
-  Object.assign(RPG, {
+  Object.assign(RPG, { PARTY_EXP_BONUS,
     MAX_PARTY, HIRE_COSTS, HIRE_MIN_LEVEL,
     partyState, partySize, memberSave, partyMembers, aliveMembers, isMemberDead: isDead, applyRegenAll,
     nextHireCost, boardState, refreshBoard, canHire, hireMember, dismissMember

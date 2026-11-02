@@ -2558,13 +2558,13 @@
             }
           }
         }
-        // Досвід (рішення 2б): +10% за кожного героя групи понад першого,
+        // Досвід (рішення 2б): +PARTY_EXP_BONUS% (25%) за кожного героя групи понад першого (party.js),
         // і вся сума ділиться порівну між тими, хто вижив
         const survivors = team.filter((ms, k) => !result.heroes[k].dead);
         const spring = RPG.springExpMult(save);          // Джерело Велеса: ×3 до досвіду групи
         const orb = RPG.godsOrb(save);                     // Сфера Богів (предмет адміністратора): +800% досвіду
         const orbMult = orb ? 1 + orb.expPct / 100 : 1;
-        const pool = Math.round(totalExp * (1 + 0.1 * (team.length - 1)) * spring * orbMult);
+        const pool = Math.round(totalExp * (1 + RPG.PARTY_EXP_BONUS / 100 * (team.length - 1)) * spring * orbMult);
         const expEach = Math.floor(pool / Math.max(1, survivors.length));
         const runeExpLines = [];
         for (const ms of survivors) {
@@ -2576,7 +2576,7 @@
         }
         const springTxt = (spring > 1 ? `, Джерело Велеса +${RPG.VELES.expBonusPct}%` : "") + (orb ? `, Сфера Богів +${orb.expPct}%` : "");
         summary.unshift(group
-          ? `+${expEach} EXP кожному, хто вижив (усього ${pool}, бонус групи +${(team.length - 1) * 10}%${springTxt})`
+          ? `+${expEach} EXP кожному, хто вижив (усього ${pool}, бонус групи +${(team.length - 1) * RPG.PARTY_EXP_BONUS}%${springTxt})`
           : `+${expEach} EXP${springTxt ? ` (${springTxt.slice(2)})` : ""}`);
         if (gold) summary.splice(1, 0, `+${gold} золота` + (runeEco.gold ? ` (руни +${runeEco.gold}%)` : ""));
         if (runeExpLines.length) summary.splice(1, 0, ...runeExpLines);
