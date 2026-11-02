@@ -718,12 +718,19 @@ function getItem(id) {
 // Інші файли даних можуть додавати свої (data/runes.js → іконки рун icon_rune_<знак>.webp).
 const ICON_FILES = new Set(["sword", "dagger", "axe", "bow", "staff", "shield", "quiver", "orb", "knife"]
   .flatMap(w => [1, 2, 3].map(t => `${w}_t${t}`)));
+// Мішечки, ключі данжів і матеріали кузні (спрайт-листи items_2: new_assets/new_assets/items/Items_2-1…3.png)
+["pouch_small", "pouch_medium", "pouch_large", "key_cave_secret", "key_web_nest", "key_dark_throne",
+ "heavenly_spark", "coal", "gem", "glass", "oak_wood", "ash_wood", "flax", "leather_strap", "flint", "lapis", "onyx",
+ "copper_ore", "copper_ingot", "silver_ore", "silver_ingot", "iron_ore", "iron_ingot", "gold_ore", "gold_ingot"]
+  .forEach(id => ICON_FILES.add(id));
 const ICON_FILE_BASE = RPG.asset("assets/images/items/icon_");
 
 // Стиль іконки предмета (окремий файл або клітинка спрайт-листа); null — іконки немає (буде заглушка)
 function itemIconStyle(id) {
   const file = ITEMS[id]?.iconFile;                 // квестовий предмет може брати іконку іншої речі
   if (file && ICON_FILES.has(file)) id = file;
+  // Магічний / епічний / легендарний матеріал — іконка звичайного (рідкість видно з рамки комірки)
+  if (!ICON_FILES.has(id) && ITEMS[id]?.gradeOf && ICON_FILES.has(ITEMS[id].gradeOf)) id = ITEMS[id].gradeOf;
   if (ICON_FILES.has(id)) {
     return { backgroundImage: `url("${ICON_FILE_BASE}${id}.webp")`, backgroundSize: "100% 100%",
              backgroundPosition: "0 0", backgroundRepeat: "no-repeat" };
