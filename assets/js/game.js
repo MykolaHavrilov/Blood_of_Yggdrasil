@@ -1117,6 +1117,14 @@
     });
   }
 
+  // Вибір героя групи на сторінках Персонаж і Інвентар (спільна логіка). Сторінка сама тримає
+  // свій індекс і «вигляд» героя: get() — поточний індекс, set(i, ms) — записати обране, redraw() — перемалювати.
+  function groupMemberTabs(save, { get, set, redraw }) {
+    const pick = i => { set(i, RPG.memberSave(save, i)); redraw(); };
+    const tabs = () => memberTabs($("member-tabs"), save, get(), pick);
+    return { tabs };
+  }
+
   // Оновлює блок героя: картинка, ім'я, HP / MP / EXP / LVL, відновлення
   function renderHeroBars(save) {
     const st = RPG.calcStats(save);
@@ -4329,16 +4337,12 @@
     // своє спорядження й атрибути, а інвентар, скриня й золото — спільні.
     let memberIndex = 0;
     let ms = save;
-    function pickMember(i) {
-      memberIndex = i;
-      ms = RPG.memberSave(save, i);
-      if (typeof selected !== "undefined") selected = null;
-      render();
-    }
-    function renderMemberTabs() {
-      memberTabs($("member-tabs"), save, memberIndex, pickMember);
-      
-    }
+    const members = groupMemberTabs(save, {
+      get: () => memberIndex,
+      set: (i, v) => { memberIndex = i; ms = v; if (typeof selected !== "undefined") selected = null; },
+      redraw: () => render(),
+    });
+    function renderMemberTabs() { members.tabs(); }
 
     const DERIVED = ["hp", "mp", "attack", "magic", "defense", "magicDefense", "speed",
                      "crit", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct"];
@@ -4645,14 +4649,13 @@
     // своє спорядження й атрибути, а інвентар, скриня й золото — спільні.
     let memberIndex = 0;
     let ms = save;
-    function pickMember(i) {
-      memberIndex = i;
-      ms = RPG.memberSave(save, i);
-      if (typeof selected !== "undefined") selected = null;
-      render();
-    }
+    const members = groupMemberTabs(save, {
+      get: () => memberIndex,
+      set: (i, v) => { memberIndex = i; ms = v; if (typeof selected !== "undefined") selected = null; },
+      redraw: () => render(),
+    });
     function renderMemberTabs() {
-      memberTabs($("member-tabs"), save, memberIndex, pickMember);
+      members.tabs();
       const t = $("equip-title"); if (t) t.textContent = RPG.partySize(save) > 1 ? `Спорядження: ${ms.character.name}` : "Спорядження";
     }
 
