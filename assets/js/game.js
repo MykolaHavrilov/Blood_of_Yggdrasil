@@ -996,6 +996,8 @@
       cell.append(smallIcon(ref, "equip-icon"));
       const gs = RPG.gearScore ? RPG.gearScore(ref) : null;
       if (gs !== null) cell.append(el("span", "item-gs", String(gs)));
+      const sockets = socketMarks(ref);                // гнізда під руни — як у комірках інвентаря
+      if (sockets) cell.append(sockets);
       cell.setAttribute("aria-label", `${RPG.SLOTS[slot]}: ${RPG.itemFullName(ref)}`);
     } else {
       cell.append(el("span", "equip-slot-name", SLOT_SHORT[slot] || RPG.SLOTS[slot]));
