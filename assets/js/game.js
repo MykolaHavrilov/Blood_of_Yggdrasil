@@ -13,6 +13,7 @@
 
   // Створює елемент: el("div", "wf wf-slot", "текст")
   const el = RPG.el;   // спільний помічник (core.js)
+  const noteP = text => el("p", "note", text);   // абзац-примітка (клас note)
 
   function link(text, href, className = "wf wf-link") {
     const a = el("a", className, text);
@@ -216,7 +217,7 @@
     onBox.addEventListener("change", () => { f.on = onBox.checked; sync(); store(); });
     sync();
 
-    const note = el("p", "note", "Позначені рідкості зброї та броні, що випадуть у бою, одразу викидаються " +
+    const note = noteP("Позначені рідкості зброї та броні, що випадуть у бою, одразу викидаються " +
       "і не займають місця в інвентарі. Речі, які вже лежать в інвентарі, ключі, зілля й матеріали фільтр не чіпає.");
     return showNotice("Фільтр здобичі", [power, list, note], "is-loot-filter");
   }
@@ -257,16 +258,20 @@
     return p;
   }
 
-  // Спільний каркас вікон гри (клас notice-dialog): <dialog>, що після закриття видаляється з DOM,
-  // onClose — додаткова дія після закриття. closeBtn(label, onPress) — хрестик «×» для першого рядка вікна.
-  function noticeDialog(cls = "", onClose) {
-    const dlg = el("dialog", "notice-dialog " + cls);
+  // Хрестик «×» вікна гри (клас notice-close); extraCls — додатковий клас (наприклад chronicle-close)
+  function noticeClose(label = "Закрити", onPress, extraCls = "") {
+    const c = button("×", "notice-close" + (extraCls ? " " + extraCls : ""), onPress);
+    c.setAttribute("aria-label", label);
+    return c;
+  }
+
+  // Спільний каркас вікон гри: <dialog>, що після закриття видаляється з DOM; onClose — додаткова дія.
+  // За замовчуванням клас notice-dialog; opts.base — інший базовий клас ("" — без нього), opts.closeCls — клас хрестика.
+  function noticeDialog(cls = "", onClose, opts = {}) {
+    const base = opts.base ?? "notice-dialog";
+    const dlg = el("dialog", (base ? base + " " : "") + cls);
     dlg.addEventListener("close", () => { dlg.remove(); if (onClose) onClose(); });
-    const closeBtn = (label = "Закрити", onPress = () => dlg.close()) => {
-      const c = button("×", "notice-close", onPress);
-      c.setAttribute("aria-label", label);
-      return c;
-    };
+    const closeBtn = (label, onPress = () => dlg.close()) => noticeClose(label, onPress, opts.closeCls);
     return { dlg, closeBtn };
   }
 
@@ -303,16 +308,14 @@
   function showParchment() {
     const P = RPG.CHRONICLE.PARCHMENT;
     document.querySelector(".parchment-dialog")?.remove();
-    const dlg = el("dialog", "parchment-dialog");
-    const close = button("×", "notice-close chronicle-close", () => dlg.close());
-    close.setAttribute("aria-label", "Закрити");
+    const { dlg, closeBtn } = noticeDialog("parchment-dialog", null, { base: "", closeCls: "chronicle-close" });
+    const close = closeBtn();
     const sheet = el("article", "parchment-sheet");
     sheet.append(el("h2", "chronicle-title", P.title));
     P.paras.forEach((p, i) => sheet.append(el("p", "chronicle-p" + (i === 0 ? " is-initial" : "") + (i === P.paras.length - 1 ? " is-cut" : ""), p)));
     sheet.append(el("p", "parchment-torn", P.torn));
     sheet.append(el("p", "parchment-keep", "Ви обережно згортаєте клапоть і ховаєте в торбу."));
     dlg.append(close, sheet);
-    dlg.addEventListener("close", () => dlg.remove());
     document.body.append(dlg);
     dlg.showModal();
   }
@@ -461,10 +464,9 @@
     document.querySelector(".chronicle-dialog")?.remove();
     const src = opts.book || { title: RPG.CHRONICLE.TITLE, contents: RPG.chronicleContents, section: chronicleSection, torn: true };
     const wide = bookWide();
-    const dlg = el("dialog", "chronicle-dialog" + (wide ? " is-3d" : "") + (src.cls ? " " + src.cls : ""));
+    const { dlg, closeBtn } = noticeDialog("chronicle-dialog" + (wide ? " is-3d" : "") + (src.cls ? " " + src.cls : ""), null, { base: "", closeCls: "chronicle-close" });
     dlg.lang = "uk";
-    const close = button("×", "notice-close chronicle-close", () => dlg.close());
-    close.setAttribute("aria-label", "Закрити книгу");
+    const close = closeBtn("Закрити книгу");
     const book = el("div", "chronicle-book");
     const plate = el("div", "book-plate");          // картинка розвороту
     const layer = el("div", "book-anim-layer");     // анімації поверх книги
@@ -648,7 +650,6 @@
       dropBookAnim(img);
     }
 
-    dlg.addEventListener("close", () => dlg.remove());
     document.body.append(dlg);
     dlg.showModal();
     intro();
@@ -1527,7 +1528,7 @@
       const readHp = block("hp", "Здоров'я (HP)");
       const readMp = block("mp", "Мана (MP)");
       form.append(
-        el("p", "note", "Перевірка — перед кожним боєм і після нього, для кожного живого героя групи. Зілля беруться лише з інвентаря. " +
+        noteP("Перевірка — перед кожним боєм і після нього, для кожного живого героя групи. Зілля беруться лише з інвентаря. " +
           "Останнє зілля може відновити трохи більше за ціль. У данжі зілля не діють."));
       const row = el("div", "dialog-actions");
       row.append(button("Зберегти", "wf wf-button", () => {
@@ -1738,20 +1739,20 @@
       // Скриня в іншій (не Домівка) локації — пов'язана або окрема, див. character.js → CHEST_STORAGES
       if (locData.chest && locData.type !== "home") {
         const used = RPG.chestList(save, locData.chest).length;
-        place.append(el("p", "note", `Скриня: ${used}/${RPG.chestConf(locData.chest).size} клітинок зайнято.`));
+        place.append(noteP(`Скриня: ${used}/${RPG.chestConf(locData.chest).size} клітинок зайнято.`));
         place.append(link("Інвентар і скриня", "inventory.html"));
       }
     }
 
     function renderHome() {
       const per = RPG.regenPerTick(save);
-      place.append(el("p", "note", "Тут битися заборонено — монстри сюди не заходять."));
-      place.append(el("p", "note",
+      place.append(noteP("Тут битися заборонено — монстри сюди не заходять."));
+      place.append(noteP(
         `Відпочинок: додатково +${Math.round(RPG.HOME_REGEN_PCT * 100)}% здоров'я та мани кожні 10 секунд ` +
         `понад звичайне відновлення. Зараз: +${per.hp.toFixed(1)} HP і +${per.mp.toFixed(1)} MP за 10 с.`));
       const sid = RPG.chestHere(save) || RPG.DEFAULT_CHEST;
       const used = RPG.chestList(save, sid).length;
-      place.append(el("p", "note", `Скриня: ${used}/${RPG.chestConf(sid).size} клітинок зайнято. Речі в скрині не зникають, навіть якщо герой загине.`));
+      place.append(noteP(`Скриня: ${used}/${RPG.chestConf(sid).size} клітинок зайнято. Речі в скрині не зникають, навіть якщо герой загине.`));
       const row = el("div", "row");
       row.append(link("Інвентар і скриня", "inventory.html"), link("Вирушити (Мапа)", "maps.html"));
       place.append(row);
@@ -2109,8 +2110,8 @@
 
     // Темний ліс: зворотний бік Центральної брами
     function renderDarkGate() {
-      place.append(el("p", "note", locData.description));
-      place.append(el("p", "note", "Тут не б'ються. Звідси — дороги до всіх місць Темного лісу (Мапа). Щоб повернутися в Дубову Заставу, гукніть капітана варти."));
+      place.append(noteP(locData.description));
+      place.append(noteP("Тут не б'ються. Звідси — дороги до всіх місць Темного лісу (Мапа). Щоб повернутися в Дубову Заставу, гукніть капітана варти."));
       renderNpc(place, "captain");
       const row = el("div", "row");
       row.append(link("Мапа Темного лісу", "maps.html"));
@@ -2119,7 +2120,7 @@
 
     // Стартова мапа: Південні ворота Дубової Застави
     function renderCityGate() {
-      place.append(el("p", "note", "Тут не б'ються. Крізь ворота — Південний район Дубової Застави з Гільдією авантюристів."));
+      place.append(noteP("Тут не б'ються. Крізь ворота — Південний район Дубової Застави з Гільдією авантюристів."));
       const row = el("div", "row");
       row.append(button("Увійти в Дубову Заставу", "wf wf-button", async () => {
         RPG.enterCity(save, "south");
@@ -2130,7 +2131,7 @@
     }
 
     function renderTemple() {
-      place.append(el("p", "note",
+      place.append(noteP(
         `Сюди повертаються загиблі. Відроджені мають ${Math.round(RPG.RESPAWN_HP_PCT * 100)}% здоров'я та 0% мани — ` +
         "відновіться зіллям або вирушайте відпочити в Домівку."));
       renderNpc(place, "nun");
@@ -2348,7 +2349,7 @@
 
     function renderTavern() {
       renderNpc(place, "ostap");
-      place.append(el("p", "note",
+      place.append(noteP(
         `${locData.merchant || "Торговець"} продає за ${Math.round(RPG.SHOP_SELL_RATE * 100)}% вартості, ` +
         `а купує за ${Math.round(RPG.SHOP_BUY_RATE * 100)}%. Великі та чарівні зілля тут не купиш — лише здобути в бою.`));
       renderShop(place, locData.shop || []);
@@ -2423,7 +2424,7 @@
           upd();
           buyRow.append(minus, qtyInput, plus);
           box.append(buyRow, buySome);
-          if (most > 1) box.append(el("p", "note", `На ваше золото — до ${fmtNum(most)} шт.`));
+          if (most > 1) box.append(noteP(`На ваше золото — до ${fmtNum(most)} шт.`));
           return box;
         };
         RPG.bindTip(r, build, () => [
@@ -2504,7 +2505,7 @@
     let trainMember = 0;            // кого навчає Тренер (герой групи)
 
     function renderCity() {
-      place.append(el("p", "note", locData.description));
+      place.append(noteP(locData.description));
       const grid = el("div", "district-grid");
       for (const d of locData.districts || []) {
         const locked = districtLocked(d);
@@ -2526,7 +2527,7 @@
       const d = (locData.districts || []).find(x => x.id === cityDistrict);
       if (d) {
         const box = el("div", "stack district");
-        box.append(el("h3", null, `${d.name} — ${d.building}`), el("p", "note", d.description));
+        box.append(el("h3", null, `${d.name} — ${d.building}`), noteP(d.description));
         if (districtLocked(d)) box.append(el("p", "status", RPG.districtLockText(d)));
         else if (d.id === "south") {
           renderGuild(box);
@@ -2591,7 +2592,7 @@
         dlg.innerHTML = "";
         const close = closeBtn("Закрити горно");
         dlg.append(close, el("h3", null, "Горно Сварога"));
-        dlg.append(el("p", "note", `Покладіть у горно ${F.count} будь-яких рун, зламані теж. Сварог переплавить їх в одну нову — від звичайної до епічної. Якщо всі шість одного виду, нова руна буде того ж виду. Данина — ${fmtNum(F.fee)} золота (у вас ${fmtNum(save.character.gold)}).`));
+        dlg.append(noteP(`Покладіть у горно ${F.count} будь-яких рун, зламані теж. Сварог переплавить їх в одну нову — від звичайної до епічної. Якщо всі шість одного виду, нова руна буде того ж виду. Данина — ${fmtNum(F.fee)} золота (у вас ${fmtNum(save.character.gold)}).`));
         if (note) dlg.append(el("p", "forge-result" + (note.error ? " is-error" : ""), note.text));
         // 6 слотів горна
         const slots = el("div", "belt-slots rune-forge-slots");
@@ -2703,7 +2704,7 @@
 
     function renderTradeGuild(box) {
       renderNpc(box, "scrooge");
-      box.append(el("p", "note", `Скрудж продає речі 3 виду (з ${RPG.TRADE_MIN_LEVEL} рівня, для зброї — володіння 20) ` +
+      box.append(noteP(`Скрудж продає речі 3 виду (з ${RPG.TRADE_MIN_LEVEL} рівня, для зброї — володіння 20) ` +
         `за ${RPG.TRADE_PRICE_MULT}× від їхньої вартості, а купує будь-що за ${Math.round(RPG.SHOP_BUY_RATE * 100)}%.`));
       renderShop(box, RPG.tradeStock(), { priceOf: RPG.tradePrice, buy: RPG.buyFromTrade, stock: true });
     }
@@ -2760,7 +2761,7 @@
         return;
       }
       const size = RPG.partySize(save);
-      box.append(el("p", "note", "Біля Мерії стоїть Дошка оголошень: авантюристи шукають собі напарників, щоб об'єднатися в групу. " +
+      box.append(noteP("Біля Мерії стоїть Дошка оголошень: авантюристи шукають собі напарників, щоб об'єднатися в групу. " +
         `За кожного нового члена групи Мерія бере внесок. У групі може бути до ${RPG.MAX_PARTY} героїв.`));
 
       box.append(el("h3", null, `Ваша група: ${size} / ${RPG.MAX_PARTY}`));
@@ -2836,7 +2837,7 @@
       npc.append(head);
       if (guildNpc === "admin") renderQuestBoard(npc);
       else if (guildNpc === "trader") {
-        npc.append(el("p", "note",
+        npc.append(noteP(
           `Тадеуш, торговець гільдії, продає зброю 1–2 виду, шкіряну броню (2 вид), малі й середні зілля (за ${Math.round(RPG.SHOP_SELL_RATE * 100)}% вартості), ` +
           `а купує будь-що за ${Math.round(RPG.SHOP_BUY_RATE * 100)}%.`));
         renderShop(npc, RPG.GUILD_SHOP || []);
@@ -2857,7 +2858,7 @@
       const qs = RPG.questState(save);
       renderExplore(box);
       renderProfession(box);
-      box.append(el("p", "note",
+      box.append(noteP(
         `«Роботи вистачає — беріть до ${RPG.questMaxActive(save)} завдань одночасно.» Виконано завдань: ${qs.done}.` +
         (RPG.partySize(save) > 1 ? " Досвід за завдання отримує кожен герой групи — повністю, ще й з бонусами (група, тимчасові ефекти, руни й речі)." : "")));
 
@@ -2977,7 +2978,7 @@
       const info = RPG.exploreInfo(save);
       const E = RPG.EXPLORE;
       if (!info) {
-        box.append(el("p", "note", `Особливе завдання «${E.name}» Артеміда доручає героям від ${E.minLevel} рівня.`));
+        box.append(noteP(`Особливе завдання «${E.name}» Артеміда доручає героям від ${E.minLevel} рівня.`));
         return;
       }
       // Виконано: один раз показуємо повідомлення про відкриття Дошки оголошень, далі поле приховане
@@ -2992,7 +2993,7 @@
       const card = el("div", "stack explore-card");
       card.append(el("h3", null, `Особливе завдання: «${E.name}»`));
       if (info.canStart) {
-        card.append(el("p", "note", `«Ви вже ${RPG.gw(save, "досвідчений авантюрист", "досвідчена авантюристка")}. Час дослідити світ далі — але спершу допоможіть нам. ` +
+        card.append(noteP(`«Ви вже ${RPG.gw(save, "досвідчений авантюрист", "досвідчена авантюристка")}. Час дослідити світ далі — але спершу допоможіть нам. ` +
           `Завдання з ${info.total} частин, кожна відкривається після попередньої.»`));
         card.append(button("Взяти завдання", "wf wf-button", async () => {
           const r = RPG.startExplore(save);
@@ -3003,7 +3004,7 @@
         }));
       } else {
         card.append(el("p", null, `Частина ${info.index} з ${info.total}: ${info.part.title}`));
-        card.append(el("p", "note", info.part.text));
+        card.append(noteP(info.part.text));
         for (const pr of info.progress) {
           card.append(el("div", pr.have >= pr.need ? "rt-magic" : null, `${pr.label}: ${pr.have} / ${pr.need}`));
         }
@@ -3052,7 +3053,7 @@
       }
       if (waiting.length) {
         const who = group ? waiting.map(ms => `${ms.character.name} (${ms.character.level} рів.)`).join(", ") + " — " : "";
-        box.append(el("p", "note", `${who}квест «${RPG.PROFESSION.name}» — зміна професії — Артеміда дає Селянину з ${RPG.PROFESSION_QUEST_LEVEL} рівня.`));
+        box.append(noteP(`${who}квест «${RPG.PROFESSION.name}» — зміна професії — Артеміда дає Селянину з ${RPG.PROFESSION_QUEST_LEVEL} рівня.`));
       }
     }
     // Картка квесту одного героя. Повертає false, якщо квест йому ще не доступний
@@ -3067,7 +3068,7 @@
       if (info.done) {
         card.append(el("p", null, `${group ? ms.character.name + " — професія" : "Ваша професія"}: ${RPG.getClass(ms.character.classId).name}.`));
       } else if (info.canStart) {
-        card.append(el("p", "note", "«Ти переріс селянське життя. Пройди десять випробувань — і на 15 рівні я скажу, ким тобі судилося стати. " +
+        card.append(noteP("«Ти переріс селянське життя. Пройди десять випробувань — і на 15 рівні я скажу, ким тобі судилося стати. " +
           "Яким шляхом ти підеш, залежить від того, що ти в собі розвивав.»"));
         if (!info.branches.length) card.append(el("p", "rt-magic", RPG.PROFESSION_REFUSE));
         const take = async branch => {
@@ -3123,7 +3124,7 @@
         card.append(b);
       } else {
         card.append(el("p", null, `Завдання ${info.index} з ${info.total}: ${info.part.title}`));
-        card.append(el("p", "note", info.part.text));
+        card.append(noteP(info.part.text));
         for (const pr of info.progress) {
           card.append(el("div", pr.have >= pr.need ? "rt-magic" : null, `${pr.label}: ${pr.have} / ${pr.need}`));
         }
@@ -3165,9 +3166,9 @@
       const tms = RPG.memberSave(save, trainMember);
       const type = RPG.weaponTypeOf(tms);
       const cap = RPG.masteryCap(tms);
-      box.append(el("p", "note", "«Володіння приходить у бою, а не за золото. За кожен виграний бій росте вміння тією зброєю, " +
+      box.append(noteP("«Володіння приходить у бою, а не за золото. За кожен виграний бій росте вміння тією зброєю, " +
         "що в правій руці. Хочеш швидше — потренуйся зі мною.»"));
-      box.append(el("p", "note",
+      box.append(noteP(
         `Межа володіння зараз: ${cap}` + (cap < RPG.MASTERY_MAX ? " (з 10 рівня персонажа — 20)." : ".") +
         " Володіння 10 відкриває зброю 2 виду, 20 — 3 виду. Більше досвіду володіння — за кількох ворогів, чемпіонів, босів, " +
         "сильніших ворогів і з Джерелом Велеса; за ворогів, слабших на 10+ рівнів, — нічого."));
@@ -3311,8 +3312,8 @@
       startBtn.textContent = active && mode === "dungeon" ? `Почати бій ${active.stage} з ${active.stages}` : "Почати бій";
       if (!inGate) return;
       panel.innerHTML = "";
-      panel.append(el("h3", null, `Данж «${dungeonInfo.name}»`), el("p", "note", dungeonInfo.description));
-      panel.append(el("p", "note",
+      panel.append(el("h3", null, `Данж «${dungeonInfo.name}»`), noteP(dungeonInfo.description));
+      panel.append(noteP(
         `3 бої поспіль: 1) ${RPG.DUNGEON_POOL_TEXT(dungeonInfo, 1)}; 2) ${RPG.DUNGEON_POOL_TEXT(dungeonInfo, 2)}; ` +
         `3) бос «${RPG.ENEMIES[dungeonInfo.boss].name}». Зілля й відновлення HP/MP у данжі не діють — ` +
         "лікують лише навички. Досвід і здобич — тільки за перемогу над босом."));
@@ -3653,8 +3654,7 @@
         document.body.append(dlg);
       }
       dlg.innerHTML = "";
-      const close = button("×", "notice-close", () => dlg.close());
-      close.setAttribute("aria-label", "Закрити");
+      const close = noticeClose("Закрити", () => dlg.close());
       const field = el("div", "bfield bf-zone");
       const tray = el("div", "bf-tray");
       tray.setAttribute("aria-label", "Герої, яких ще не розставлено");
@@ -3676,7 +3676,7 @@
       const row = el("div", "row dialog-actions");
       row.append(btnOk, btnAuto, button("Скасувати", "wf wf-link", () => dlg.close()));
       dlg.append(close, el("h3", null, "Розстановка героїв"),
-        el("p", "note", "Ваша зона — 3×3 клітинки. У кожному бою група з'являється в іншому куті поля, " +
+        noteP("Ваша зона — 3×3 клітинки. У кожному бою група з'являється в іншому куті поля, " +
           "а вороги — будь-де на полі (купою або врозкид), але не ближче ніж на хід руху. Розстановка задається відносно " +
           "кута: передній ряд (виділений) дивиться в бік поля. " +
           "Перетягніть героя на клітинку або натисніть на героя, а потім на клітинку. " +
@@ -4535,7 +4535,7 @@
         ? `Вільних очок: ${ch.freePoints}. Натисніть «+», щоб вкласти.`
         : `Вільних очок немає. За кожен новий рівень — ${RPG.POINTS_PER_LEVEL}.`));
       const autoTxt = RPG.describeAttrs(cls.levelAttrs);
-      if (autoTxt) attrBox.append(el("p", "note", `${cls.name}: за кожен рівень автоматично ${autoTxt}.`));
+      if (autoTxt) attrBox.append(noteP(`${cls.name}: за кожен рівень автоматично ${autoTxt}.`));
       for (const key in RPG.ATTRS) {
         const row = el("div", "stat-row");
         // Лише загальна сума; з чого вона складається і на що впливає — у підказці «i»
@@ -4631,7 +4631,7 @@
           mBox.append(row);
         }
         const learned = Object.entries(ch.skills || {}).filter(([, l]) => l > 0);
-        mBox.append(el("p", "note", learned.length
+        mBox.append(noteP(learned.length
           ? "Навички: " + learned.map(([id, l]) => `${RPG.SKILLS[id]?.name || id} ${l}`).join(", ")
           : "Навичок ще немає. Тренер Брут — у Гільдії авантюристів (Дубова Застава, Південний район)."));
       }
@@ -4895,7 +4895,7 @@
             }));
           }
           dlg.append(box);
-        } else dlg.append(el("p", "note", "Натисніть порожній слот, щоб повісити мішечок з інвентаря, або зайнятий — щоб зняти його."));
+        } else dlg.append(noteP("Натисніть порожній слот, щоб повісити мішечок з інвентаря, або зайнятий — щоб зняти його."));
       };
       document.body.append(dlg);
       draw();
@@ -4996,7 +4996,7 @@
         dlg.innerHTML = "";
         const close = closeBtn();
         dlg.append(close, el("h3", null, `Гнізда: ${RPG.itemFullName(ref)}`));
-        dlg.append(el("p", "note", "Руни зброї лягають у зброю та речі лівої руки, руни броні — у броню, універсальні — у будь-що. Вийнята з гнізда руна тріскається і стає зламаною."));
+        dlg.append(noteP("Руни зброї лягають у зброю та речі лівої руки, руни броні — у броню, універсальні — у будь-що. Вийнята з гнізда руна тріскається і стає зламаною."));
         if (note) dlg.append(el("p", "forge-result" + (note.error ? " is-error" : ""), note.text));
         const slots = el("div", "socket-slots");
         ref.runes.forEach((rid, i) => {
@@ -5350,11 +5350,11 @@
       banner.style.setProperty("--loc-img", locImage(region === "city" ? "city" : selected));
       banner.append(el("h2", null, p.name));
       details.append(banner);
-      details.append(el("p", "note", p.desc));
+      details.append(noteP(p.desc));
       if (p.loc && p.loc.type === "combat") {
         const enemies = (p.loc.enemies || []).map(e => `${RPG.getEnemy(e).name} (рів. ${RPG.getEnemy(e).level})` +
           (p.loc.dungeon && RPG.ENEMIES[e]?.boss ? ` — лише в данжі «${RPG.DUNGEONS[p.loc.dungeon].name}»` : "")).join(", ");
-        details.append(el("p", "note", "Вороги: " + enemies));
+        details.append(noteP("Вороги: " + enemies));
       }
       const tr = RPG.travelState(save);
       if (tr) {
@@ -5374,7 +5374,7 @@
       }
       if (st.kind === "open") {
         details.append(button(`Вирушити · ${RPG.fmtLeft(RPG.travelSeconds(st.cells, region, save) * 1000)}`, "wf wf-button", () => go(selected)));
-        details.append(el("p", "note", "Переміщення не можна скасувати; у дорозі доступні лише «Персонаж», «Інвентар» і «Мапа»."));
+        details.append(noteP("Переміщення не можна скасувати; у дорозі доступні лише «Персонаж», «Інвентар» і «Мапа»."));
       } else {
         details.append(el("p", "status", st.text));
       }

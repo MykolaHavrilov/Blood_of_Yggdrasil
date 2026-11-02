@@ -35,9 +35,15 @@ window.RPG = window.RPG || {};
   const SETTINGS_KEY = "rpg_settings";
   const DEFAULT_SETTINGS = { battleView: "stepByStep", volume: 70, musicVolume: 60, sfxVolume: 80, muted: false };
 
+  // Сховище на пристрої (localStorage): без доступу (приватний режим, заблоковано) — тихо, без помилок
+  RPG.storage = {
+    get(key) { try { return localStorage.getItem(key); } catch (e) { return null; } },
+    set(key, value) { try { localStorage.setItem(key, value); } catch (e) { /* без сховища */ } },
+  };
+
   RPG.getSettings = function () {
     try {
-      const raw = localStorage.getItem(SETTINGS_KEY);
+      const raw = RPG.storage.get(SETTINGS_KEY);
       return Object.assign({}, DEFAULT_SETTINGS, raw ? JSON.parse(raw) : {});
     } catch (e) {
       return Object.assign({}, DEFAULT_SETTINGS);
@@ -46,7 +52,7 @@ window.RPG = window.RPG || {};
 
   RPG.setSettings = function (patch) {
     const next = Object.assign(RPG.getSettings(), patch);
-    try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(next)); } catch (e) {}
+    RPG.storage.set(SETTINGS_KEY, JSON.stringify(next));
     return next;
   };
 

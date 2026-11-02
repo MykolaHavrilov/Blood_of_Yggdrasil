@@ -1026,7 +1026,7 @@ window.RPG = window.RPG || {};
     let s = {};
     if (RPG.getSettings) s = RPG.getSettings();
     else {
-      try { s = JSON.parse(localStorage.getItem("rpg_settings") || "{}"); } catch (e) { s = {}; }
+      try { s = JSON.parse(RPG.storage.get("rpg_settings") || "{}"); } catch (e) { s = {}; }
       if (localVol) s = Object.assign({}, s, { volume: localVol.master, musicVolume: localVol.music, sfxVolume: localVol.sfx, muted: localVol.muted });
     }
     return {

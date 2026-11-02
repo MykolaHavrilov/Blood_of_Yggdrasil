@@ -141,7 +141,7 @@
   }
 
   function getCurrentSlot() {
-    try { return localStorage.getItem(CURRENT_SLOT_KEY); } catch (e) { return null; }
+    return RPG.storage.get(CURRENT_SLOT_KEY);
   }
 
   async function loadCurrentGame() {
