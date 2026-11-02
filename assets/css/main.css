@@ -365,7 +365,7 @@ dialog::backdrop { background: var(--overlay); }
 /* ---------- Повідомлення: спливаюче віконце посеред екрана (game.js → showMsg) ---------- */
 /* .toast-host — popover (верхній шар, поверх діалогів); скидаємо типові стилі popover */
 .toast-host {
-  position: fixed; inset: auto; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  position: fixed; inset: auto; top: calc(env(safe-area-inset-top, 0px) + 10px); left: 50%; transform: translateX(-50%);
   width: min(420px, calc(100vw - 32px)); margin: 0; padding: 0; border: 0;
   background: transparent; color: var(--text); overflow: visible; z-index: 1000;
   display: flex; flex-direction: column; gap: 8px; pointer-events: none;

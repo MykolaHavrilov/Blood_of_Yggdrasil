@@ -62,7 +62,8 @@
   // Контейнер — popover: так віконце видно й поверх відкритих діалогів (showModal); без підтримки popover — position: fixed.
   // Поки відкритий модальний діалог, решта сторінки неактивна (inert) — тож віконце кладемо всередину
   // верхнього відкритого діалогу; коли той закривається — повідомлення зникають разом із ним.
-  const MSG_SEC = 5, MSG_MAX = 3;
+  const MSG_SEC = 1.5, MSG_MAX = 1;   // 1,5 с; нове повідомлення замінює попереднє
+  let noticeRec = null;               // запис «Сповіщення» поточного відкриття сторінки (журнал бою)
   let toastBox = null;
   function toastParent() {
     const open = [...document.querySelectorAll("dialog")].filter(d => { try { return d.matches(":modal"); } catch (e) { return false; } });
@@ -121,6 +122,12 @@
     box._t = setTimeout(remove, MSG_SEC * 1000);
     host.append(box);
     while (host.children.length > MSG_MAX) { clearTimeout(host.firstChild._t); host.firstChild.remove(); }
+    // Текст — і в журнал бою (запис «Сповіщення»; зберігається разом із грою)
+    const save = RPG.currentSave;
+    if (save && RPG.journalAdd) {
+      if (!noticeRec || !(save.battleLog || []).includes(noticeRec)) noticeRec = RPG.journalAdd(save, { kind: "notice", lines: [] });
+      noticeRec.lines.push(["info", text, isError ? "m" : ""]);
+    }
     raiseToasts();   // показати (або підняти на самий верх, якщо після попереднього повідомлення відкрився діалог)
   }
 
@@ -141,6 +148,7 @@
     try {
       const save = await RPG.loadCurrentGame();
       if (!save) { showNoGame(); return null; }
+      RPG.currentSave = save;                        // для сповіщень → журнал бою
       // старий сейв: зайва річ з лівої руки — в інвентар (для кожного героя групи)
       const fixed = RPG.partyMembers(save).map(ms => RPG.fixHands(ms)).some(Boolean);
       const arrived = RPG.finishTravel(save);          // дорога скінчилась, поки гра була закрита

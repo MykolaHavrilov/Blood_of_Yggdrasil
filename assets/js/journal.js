@@ -6,7 +6,7 @@
 // найстаріший видаляється. Журнал іде у файл збереження (IndexedDB / JSON).
 //
 // RPG.journalAdd(save, { kind, lines })  — додати подію, повертає запис
-//   kind: "battle" | "quest"; lines: [[who, text, flags]]
+//   kind: "battle" | "quest" | "notice"; lines: [[who, text, flags]]
 //   who: "title" (flags = стан: fight/win/lose/draw/ready) | "hero" | "enemy" | "info" | "round"
 //   flags для інших: "c" — крит, "m" — переміщення, "h" — лікування
 // RPG.journalPack(ev)                    — подія бою (battle.js) → рядок журналу
@@ -21,7 +21,7 @@ window.RPG = window.RPG || {};
 (function (RPG) {
   const MAX = 100;
   RPG.JOURNAL_MAX = MAX;
-  const KIND_NAME = { battle: "Бій", quest: "Нагорода" };
+  const KIND_NAME = { battle: "Бій", quest: "Нагорода", notice: "Сповіщення" };
 
   function list(save) {
     if (!Array.isArray(save.battleLog)) save.battleLog = [];
