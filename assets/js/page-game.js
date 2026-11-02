@@ -83,6 +83,8 @@
     }
     // Данж локації (dungeon.js): режим «explore» — звичайні бої, «dungeon» — данж
     const dungeonInfo = combat ? RPG.locationDungeon(locId) : null;
+    // Бойова локація з порталом (Серце Темного лісу → Альвгейм): картка над вкладками данжу (картка — renderPortal…)
+    let portalBox = null;
     let mode = dungeonInfo && RPG.activeDungeon(save) ? "dungeon" : "explore";
     const dungeonOn = () => mode === "dungeon" && !!RPG.activeDungeon(save);
     // Музика локації: бій — під тип локації (останній бій данжу — тема боса), Дубова Застава — під район
@@ -149,6 +151,7 @@
       else if (locData.type === "city") renderCity();
       else if (locData.type === "gate") renderDarkGate();
       else if (locData.type === "citygate") renderCityGate();
+      else if (locData.type === "portal") renderPortalPlace();
       // Скриня в іншій (не Домівка) локації — пов'язана або окрема, див. character.js → CHEST_STORAGES
       if (locData.chest && locData.type !== "home") {
         const used = RPG.chestList(save, locData.chest).length;
@@ -528,6 +531,43 @@
       renderNpc(place, "captain");
       const row = el("div", "row");
       row.append(link("Мапа Темного лісу", "maps.html"));
+      place.append(row);
+    }
+
+    // ---------- Корінь Іггдрасиля: миттєвий перехід між світами (data/enemies.js → LOCATIONS[…].portal) ----------
+    // Портал видно, лише якщо в місце призначення вже можна зайти (canEnterLocation): у Серці Темного лісу —
+    // після першої перемоги над Володарем, в Альвгеймі — завжди (шлях назад).
+    function portalOpen(pt) {
+      return !!pt && RPG.canEnterLocation(pt.to, save.character.level, save).ok;
+    }
+    async function usePortal(pt) {
+      if (fighting) return;
+      if (RPG.isTraveling(save)) { showMsg(msg, "Ви в дорозі — дочекайтеся прибуття.", true); return; }
+      if (RPG.activeDungeon(save)) { showMsg(msg, "Спершу пройдіть або покиньте данж.", true); return; }
+      const can = RPG.canEnterLocation(pt.to, save.character.level, save);
+      if (!can.ok) { showMsg(msg, can.reason, true); return; }
+      if (save.fieldLoot) await showFieldLoot(save);         // здобич поля бою — перед переходом
+      delete save.travel;
+      delete save.formationAt;
+      save.location.map = pt.to;
+      await RPG.saveGame(save);
+      location.href = "game.html";
+    }
+    function portalCard(pt) {
+      const card = el("div", "panel stack explore-card portal-card");
+      card.append(el("h3", null, pt.title), noteP(pt.text));
+      const row = el("div", "row");
+      row.append(button(pt.button, "wf wf-button", () => usePortal(pt)));
+      card.append(row);
+      return card;
+    }
+    // Мирна локація-портал (Корінь Іггдрасиля в Альвгеймі)
+    function renderPortalPlace() {
+      place.append(noteP(locData.description));
+      place.append(noteP("Тут не б'ються. Звідси — стежка до всіх місць світу (Мапа)."));
+      if (portalOpen(locData.portal)) place.append(portalCard(locData.portal));
+      const row = el("div", "row");
+      row.append(link(`Мапа: ${RPG.MAP_REGIONS[locData.region]?.name || "світ"}`, "maps.html"));
       place.append(row);
     }
 
@@ -2258,7 +2298,16 @@
         : "Зброя: немає (бій кулаками)");
     }
 
+    function renderCombatPortal() {
+      if (!combat || !locData.portal) return;
+      if (!portalOpen(locData.portal)) { portalBox?.remove(); portalBox = null; return; }
+      const card = portalCard(locData.portal);
+      if (portalBox) portalBox.replaceWith(card); else $("mode-tabs").before(card);
+      portalBox = card;
+    }
+
     function renderAll() {
+      renderCombatPortal();
       drawHero();
       renderQuickSlots();
       if (combat) renderQueue();

@@ -6,14 +6,15 @@
 (function (RPG) {
   const { $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX } = RPG.ui;
 
-  // МАПА: три частини світу (data/routes.js → MAP_REGIONS), переміщення з часом (travel.js)
+  // МАПА: частини світу (data/routes.js → MAP_REGIONS), переміщення з часом (travel.js)
   // ============================================================
-  const TYPE_LABEL = { home: "Безпечно", temple: "Безпечно", tavern: "Торговець", city: "Гільдія", combat: "Бої", gate: "Брама", citygate: "Вхід у Дубову Заставу" };
+  const TYPE_LABEL = { home: "Безпечно", temple: "Безпечно", tavern: "Торговець", city: "Гільдія", combat: "Бої", gate: "Брама", citygate: "Вхід у Дубову Заставу", portal: "Корінь Іггдрасиля" };
   // Порядок місць у списку під мапою
   const REGION_ORDER = {
     start: ["home", "temple", "village_start", "tavern", "south_gate", "forest_path", "forest_cave"],
     city: ["south", "center", "trade", "rest", "north"],
-    dark: ["dark_gate", "dk_edge", "dk_marsh", "dk_grave", "dk_webs", "dk_ravine", "dk_ruins", "dk_heart"]
+    dark: ["dark_gate", "dk_edge", "dk_marsh", "dk_grave", "dk_webs", "dk_ravine", "dk_ruins", "dk_heart"],
+    alf: ["alf_gate", "alf_grove", "alf_lake", "alf_gardens", "alf_towers", "alf_freyr", "alf_beli"]
   };
   // Зони кліку (x, y — центр; w, h — розмір у % мапи). Стартова мапа — за картинками будівель (map_layout.js):
   // Дубова Застава на ній — це вхід south_gate («Південний район»).
@@ -33,6 +34,20 @@
     dk_ravine: { x: 91.0, y: 67.0, w: 12.0, h: 16.0 },
     dk_ruins:  { x: 91.0, y: 11.0, w: 9.0,  h: 16.0 },
     dk_heart:  { x: 55.5, y: 9.5,  w: 14.0, h: 16.0 }
+  };
+  const ALF_ZONES = {                        // під картинку map_alfheim.webp (галявини світу 3)
+    alf_gate:    { x: 7.0,  y: 90.0, w: 10.0, h: 15.0 },
+    alf_grove:   { x: 16.5, y: 77.0, w: 13.0, h: 14.0 },
+    alf_lake:    { x: 42.0, y: 64.0, w: 13.0, h: 14.0 },
+    alf_gardens: { x: 72.0, y: 72.0, w: 14.0, h: 14.0 },
+    alf_towers:  { x: 86.0, y: 36.0, w: 11.0, h: 14.0 },
+    alf_freyr:   { x: 53.0, y: 28.0, w: 13.0, h: 14.0 },
+    alf_beli:    { x: 22.0, y: 14.0, w: 14.0, h: 14.0 }
+  };
+  // Картинки локацій поверх галявин (assets/images/map/bld_<id>.webp): x, y — центр, w — ширина в % мапи
+  const REGION_BUILDINGS = {
+    alf: { alf_grove: { x: 16.5, y: 74.5, w: 11 }, alf_lake: { x: 42, y: 61.5, w: 11 }, alf_gardens: { x: 72, y: 69.5, w: 11 },
+           alf_towers: { x: 86, y: 33.5, w: 10 }, alf_freyr: { x: 53, y: 25.5, w: 11 }, alf_beli: { x: 22, y: 11.5, w: 11 } }
   };
   function startZones() {
     const b = (RPG.MAP_LAYOUT && RPG.MAP_LAYOUT.buildings) || {};
@@ -59,7 +74,7 @@
     const here = RPG.whereIs(save);
     const region = t0 ? t0.region : here.region;
     const R = RPG.MAP_REGIONS[region];
-    const ZONES = region === "city" ? CITY_ZONES : region === "dark" ? DARK_ZONES : startZones();
+    const ZONES = region === "city" ? CITY_ZONES : region === "dark" ? DARK_ZONES : region === "alf" ? ALF_ZONES : startZones();
     const districts = RPG.LOCATIONS.city.districts || [];
     const ids = REGION_ORDER[region].filter(id => ZONES[id] && R.spots[id]);
     let selected = t0 ? t0.to : here.spot;
@@ -119,6 +134,17 @@
         bi.src = RPG.asset(`assets/images/map/bld_${id}.webp`);
         bi.alt = "";
         Object.assign(bi.style, { left: b.x + "%", top: b.y + "%", width: b.w + "%", height: b.h + "%" });
+        layer.append(bi);
+      }
+      img.after(layer);
+    }
+    if (REGION_BUILDINGS[region]) {
+      const layer = el("div", "map-buildings");
+      for (const [id, b] of Object.entries(REGION_BUILDINGS[region])) {
+        const bi = el("img", "map-building");
+        bi.src = RPG.asset(`assets/images/map/bld_${id}.webp`);
+        bi.alt = "";
+        Object.assign(bi.style, { left: b.x + "%", top: b.y + "%", width: b.w + "%", height: (b.w * R.w / R.h) + "%" });
         layer.append(bi);
       }
       img.after(layer);

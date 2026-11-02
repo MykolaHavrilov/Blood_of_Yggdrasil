@@ -598,6 +598,37 @@ const ITEMS = {
     type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Ключ із темного кореня. Відчиняє данж «Трон Володаря» (Серце Темного лісу). Одна спроба — один ключ."
   },
+  // Ключі данжів Альвгейму (світ 3) — іконки поки беруть від ключів Темного лісу (iconFile)
+  key_alf_grove: {
+    name: "Ключ «Гніздо мотилів»", iconFile: "key_web_nest",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Срібна гілочка з пилком на крилах-зубцях. Відчиняє данж «Гніздо мотилів» (Сріблястий гай). Одна спроба — один ключ."
+  },
+  key_alf_lake: {
+    name: "Ключ «Глибини озера»", iconFile: "key_cave_secret",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Холодний ключ із перламутру, завжди мокрий. Відчиняє данж «Глибини озера» (Дзеркальне озеро). Одна спроба — один ключ."
+  },
+  key_alf_gardens: {
+    name: "Ключ «Тлінна оранжерея»", iconFile: "key_dark_throne",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Ключ, обвитий терном і зів'ялими пелюстками. Відчиняє данж «Тлінна оранжерея» (Сади вічної весни). Одна спроба — один ключ."
+  },
+  key_alf_towers: {
+    name: "Ключ «Вершина світанку»", iconFile: "key_cave_secret",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Білий ключ, що теплішає на сонці. Відчиняє данж «Вершина світанку» (Вежі світанку). Одна спроба — один ключ."
+  },
+  key_alf_freyr: {
+    name: "Ключ «Трон Фрейра»", iconFile: "key_web_nest",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Важкий ключ із вирізьбленим вепром. Відчиняє данж «Трон Фрейра» (Чертог Фрейра). Одна спроба — один ключ."
+  },
+  key_alf_beli: {
+    name: "Ключ «Курган Белі»", iconFile: "key_dark_throne",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Ключ з оленячого рогу, оповитий фіолетовим димом. Відчиняє данж «Курган Белі» (Поле Белі). Одна спроба — один ключ."
+  },
 
   // ---------- Предмет адміністратора (для тестування прогресу) ----------
   // Діє на ВСЮ групу, поки лежить в інвентарі (character.js → godsOrb): +800% досвіду (бої й квести),
