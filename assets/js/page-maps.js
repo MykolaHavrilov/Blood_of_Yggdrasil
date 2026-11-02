@@ -98,10 +98,11 @@
     if (h2) {
       h2.textContent = `Мапа: ${R.name}`;
       // Короткий опис регіону під заголовком (data/routes.js → MAP_REGIONS[…].desc)
-      let sub = h2.nextElementSibling;
+      const head = h2.closest(".map-head") || h2;   // заголовок разом із кнопкою-глобусом
+      let sub = head.nextElementSibling;
       if (!sub || !sub.classList.contains("map-desc")) {
         sub = el("p", "note map-desc", "");
-        h2.after(sub);
+        head.after(sub);
       }
       sub.textContent = R.desc ? `(${R.desc})` : "";
       sub.hidden = !R.desc;
@@ -296,6 +297,8 @@
       }
     }
 
+    $("globe-btn")?.addEventListener("click", () => showGlobeMap(save));
+
     if (t0) {
       followTravel();
     } else {
@@ -304,6 +307,158 @@
       setHero(s.x, s.y);
     }
     render();
+  }
+
+  // ---------- Глобальна мапа дев'яти світів (кнопка-глобус на сторінці «Мапа», дані — data/worlds.js) ----------
+  // Одна велика картина всіх світів із точками локацій. Світ відкритий лише тоді, коли до нього відкрито шлях
+  // (data/worlds.js → isWorldOpen); закритий світ затемнений сірим по своїй межі, усі його точки сірі.
+  // У відкритому світі точка кольорова, якщо в локацію можна зайти. Фігурка — там, де зараз герой
+  // (у дорозі — між точками дороги; у Дубовій Заставі — біля її брами в Гардариці).
+  function globeWorlds(save) {
+    const lvl = save.character.level;
+    return (RPG.WORLDS || []).map(w => {
+      const path = RPG.isWorldOpen ? RPG.isWorldOpen(save, w.n) : { ok: !!w.region };
+      let spots;
+      if (!path.ok) {                              // шлях у світ закритий — усі точки сірі
+        const list = w.region && w.at ? (REGION_ORDER[w.region] || Object.keys(w.at)).filter(id => w.at[id])
+          .map(id => ({ id, name: id === "south_gate" ? "Дубова Застава" : (RPG.LOCATIONS[id]?.name || id), x: w.at[id][0], y: w.at[id][1] }))
+          : (w.spots || []);
+        spots = list.map(s => ({ ...s, open: false, reason: path.reason }));
+      } else if (w.region && w.at) {
+        spots = (REGION_ORDER[w.region] || Object.keys(w.at)).filter(id => w.at[id]).map(id => {
+          const loc = RPG.LOCATIONS[id];
+          const can = id === "south_gate" ? { ok: true } : RPG.canEnterLocation(id, lvl, save);
+          return { id, name: id === "south_gate" ? "Дубова Застава" : (loc?.name || id), x: w.at[id][0], y: w.at[id][1],
+                   open: can.ok, reason: can.reason || "" };
+        });
+      } else {
+        spots = (w.spots || []).map(s => ({ ...s, open: false, reason: "Закрито — світ відкриється згодом." }));
+      }
+      return { ...w, spots, open: path.ok, lockReason: path.reason || "" };
+    });
+  }
+
+  // Де герой на глобальній картині: { n — номер світу, x, y — % картини, spot? }
+  function globeHero(save, worlds) {
+    const tr = RPG.travelState(save);
+    const region = tr ? tr.region : RPG.whereIs(save).region;
+    if (region === "city") {                       // Дубова Застава — біля її брами на мапі Гардарики
+      const w = worlds.find(x => x.region === "start");
+      return w?.at?.south_gate ? { n: w.n, x: w.at.south_gate[0], y: w.at.south_gate[1], spot: "south_gate" } : null;
+    }
+    const w = worlds.find(x => x.region === region);
+    if (!w?.at) return null;
+    if (tr) {                                      // у дорозі: між точками «звідки» й «куди»
+      const a = w.at[tr.from], b = w.at[tr.to];
+      if (!a || !b) return null;
+      const k = tr.progress;
+      return { n: w.n, x: a[0] + (b[0] - a[0]) * k, y: a[1] + (b[1] - a[1]) * k };
+    }
+    const spot = RPG.whereIs(save).spot, p = w.at[spot];
+    return p ? { n: w.n, x: p[0], y: p[1], spot } : null;
+  }
+
+  function showGlobeMap(save) {
+    document.querySelector(".globe-dialog")?.remove();
+    const M = RPG.WORLD_MAP;
+    if (!M) return;
+    const worlds = globeWorlds(save);
+    const hero = globeHero(save, worlds);
+
+    const dlg = el("dialog", "globe-dialog");
+    dlg.setAttribute("aria-label", "Мапа дев'яти світів");
+    const head = el("div", "globe-head");
+    head.append(el("h2", null, "Дев'ять світів Іггдрасиля"));
+    const legend = el("div", "globe-legend");
+    const leg = (cls, text) => { const s = el("span", "globe-leg"); s.append(el("i", cls), document.createTextNode(text)); return s; };
+    legend.append(leg("globe-dot is-open", "доступно"), leg("globe-dot is-closed", "закрито"), leg("globe-leg-hero", "ви тут"));
+    const close = button("×", "globe-close", () => dlg.close());
+    close.setAttribute("aria-label", "Закрити");
+    head.append(legend, close);
+
+    const scroll = el("div", "globe-scroll");
+    const board = el("div", "globe-board");
+    board.style.aspectRatio = `${M.w} / ${M.h}`;
+    scroll.append(board);
+
+    const base = el("img", "globe-img");
+    base.src = RPG.asset(M.image);
+    base.alt = "Мапа дев'яти світів";
+    board.append(base);
+    // Закриті світи — та сама картина в сірих тонах, обрізана по межі світу
+    for (const w of worlds) {
+      if (w.open || !w.area) continue;
+      const fog = el("img", "globe-fog");
+      fog.src = base.src;
+      fog.alt = "";
+      fog.style.clipPath = `polygon(${w.area.map(([x, y]) => `${x}% ${y}%`).join(", ")})`;
+      board.append(fog);
+    }
+
+    const tip = el("div", "map-tip globe-tip");
+    tip.hidden = true;
+    let tipFor = null;
+    function showTip(dot, w, s, here) {
+      tipFor = dot;
+      tip.innerHTML = "";
+      const st = here ? ["here", "Ви тут"] : s.open ? ["open", "Доступно"] : ["closed", s.reason || "Закрито"];
+      tip.append(el("strong", null, s.name), el("div", "tip-desc", `Світ ${w.n} · ${w.name}`),
+                 el("div", `tip-status tip-${st[0]}`, st[1]));
+      tip.hidden = false;
+      const br = board.getBoundingClientRect(), dr = dot.getBoundingClientRect();
+      const x = dr.left + dr.width / 2 - br.left, top = dr.top - br.top;
+      const below = top < tip.offsetHeight + 12;
+      tip.classList.toggle("tip-below", below);
+      tip.style.top = (below ? top + dr.height : top) + "px";
+      const half = tip.offsetWidth / 2;
+      tip.style.left = Math.max(half + 4, Math.min(br.width - half - 4, x)) + "px";
+    }
+    function hideTip(dot) { if (!dot || tipFor === dot) { tip.hidden = true; tipFor = null; } }
+
+    for (const w of worlds) {
+      if (w.label) {
+        const label = el("div", "globe-label" + (w.open ? "" : " is-locked") + (hero?.n === w.n ? " is-current" : ""));
+        label.style.left = w.label.x + "%";
+        label.style.top = w.label.y + "%";
+        label.append(el("strong", null, `${w.n} · ${w.name}`), el("span", null, w.open ? (w.sub || "") : "Закрито"));
+        board.append(label);
+      }
+      for (const s of w.spots) {
+        const here = hero && hero.n === w.n && hero.spot && hero.spot === s.id;
+        const dot = button("", "globe-dot " + (s.open ? "is-open" : "is-closed") + (here ? " is-here" : ""));
+        dot.style.left = s.x + "%";
+        dot.style.top = s.y + "%";
+        dot.setAttribute("aria-label", `${s.name} — ${here ? "ви тут" : s.open ? "доступно" : "закрито"}`);
+        dot.addEventListener("mouseenter", () => showTip(dot, w, s, here));
+        dot.addEventListener("focus", () => showTip(dot, w, s, here));
+        dot.addEventListener("click", () => showTip(dot, w, s, here));
+        dot.addEventListener("mouseleave", () => hideTip(dot));
+        dot.addEventListener("blur", () => hideTip(dot));
+        board.append(dot);
+      }
+    }
+    let heroEl = null;
+    if (hero) {
+      heroEl = el("div", "globe-hero");
+      heroEl.innerHTML = HERO_FIGURE;
+      heroEl.append(el("span", "hero-tag", save.character.name));
+      heroEl.style.left = hero.x + "%";
+      heroEl.style.top = hero.y + "%";
+      board.append(heroEl);
+    }
+    board.append(tip);
+    board.addEventListener("click", ev => { if (!ev.target.closest(".globe-dot")) hideTip(); });
+
+    dlg.append(head, scroll);
+    document.body.append(dlg);
+    dlg.addEventListener("close", () => dlg.remove());
+    dlg.addEventListener("click", ev => { if (ev.target === dlg) dlg.close(); });   // клік по затемненню — закрити
+    dlg.showModal();
+    // Вузький екран (картина ширша за вікно): прокрутити до героя
+    if (heroEl && scroll.scrollWidth > scroll.clientWidth) {
+      scroll.scrollLeft = heroEl.offsetLeft - scroll.clientWidth / 2;
+      scroll.scrollTop = heroEl.offsetTop - scroll.clientHeight / 2;
+    }
   }
 
   // ---------- Запуск ----------

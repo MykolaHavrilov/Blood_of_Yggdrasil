@@ -29,7 +29,13 @@
   <main>
     <div class="stack">
       <div class="panel stack">
-        <h2>Мапа світу</h2>
+        <div class="map-head">
+          <h2>Мапа світу</h2>
+          <!-- Глобальна мапа дев'яти світів — page-maps.js → showGlobeMap (дані: data/worlds.js) -->
+          <button class="globe-btn" id="globe-btn" type="button" title="Мапа дев'яти світів" aria-label="Мапа дев'яти світів">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><ellipse cx="12" cy="12" rx="4.2" ry="9.2"/><path d="M3 12h18M4.6 7h14.8M4.6 17h14.8"/></svg>
+          </button>
+        </div>
         <!-- Картинка, зони місць і фігурка героя — game.js → pageMaps (дані мап: data/routes.js) -->
         <div class="world-map" id="world-map">
           <img class="map-img" alt="Мапа" width="2048" height="1280">
@@ -67,6 +73,7 @@
   <script src="../assets/js/battle.js" defer></script>
   <script src="../assets/js/map_layout.js" defer></script>
   <script src="../assets/js/data/routes.js" defer></script>
+  <script src="../assets/js/data/worlds.js" defer></script>
   <script src="../assets/js/travel.js" defer></script>
   <script src="../assets/js/game-common.js" defer></script>
   <script src="../assets/js/page-maps.js" defer></script>
