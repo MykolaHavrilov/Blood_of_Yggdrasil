@@ -12,9 +12,11 @@
 // maxStack — скільки штук в одній клітинці ІНВЕНТАРЯ: зілля 100, ресурси 200.
 //           У скрині свої ліміти: матеріали 1000, зілля 500 (character.js → CHEST_DEFAULTS).
 // tier    — вид/клас речі: 1 — дерев'яна/лляна/мідна (з 1 рівня, біжутерія з 2),
-//           2 — кам'яна/шкіряна/срібна (з 10 рівня), 3 — залізна/золота (з 20 рівня).
+//           2 — кам'яна/шкіряна/срібна (з 10 рівня), 3 — залізна/золота (з 20 рівня),
+//           4 — сталева/платинова (з 30), 5 — двергська/самоцвітна (з 40), 6 — асгардська/сонячна (з 50),
+//           7 — Іггдрасилева/зоряна (з 60).
 // weaponType — тип основної зброї: sword, dagger, axe, bow, staff (див. data/skills.js).
-//           Зброя 2 виду потребує володіння 10, 3 виду — володіння 20.
+//           Зброя 2 виду потребує володіння 10, 3–7 виду — володіння 20 (максимум).
 // offType — річ для лівої руки: shield, quiver, orb, knife.
 //           Що з чим можна тримати — див. OFFHAND_RULES нижче.
 // icon    — іконка зі спрайт-листа: ["назва листа", номер клітинки].
@@ -458,6 +460,425 @@ const ITEMS = {
     type: "accessory", slot: "earring", tier: 3, levelReq: 20, price: 1200, noShop: true,
     stats: { mp: 60, dodge: 4 },
     description: "Сережка з невеликим бонусом. Можна носити дві сережки."
+  },
+
+  // ---------- РЕЧІ 4–7 ВИДУ (30 / 40 / 50 / 60 рівень) ----------
+  // 4 — сталь ванів (Ванагейм), 5 — двергська сталь (Свартальвгейм), 6 — небесний метал Асгарду,
+  // 7 — серцевина Іггдрасиля. Основні характеристики — від 3 виду ×1,6 / ×2,3 / ×3,1 / ×4;
+  // крит, швидкість, ухилення, реген мани, інтелект — +1 за кожен вид понад 3 (крит кинджала +2, блок щита +2).
+  // Лише здобич (4 вид — вороги й боси 29–30 рівня Альвгейму; 5–7 — вороги майбутніх світів).
+  // Іконок поки немає (заглушка); промти — H:\Game_NEW\Предмети t4..t7 *.txt, файли icon_<id>.webp.
+  // --- 4 вид: Сталь ванів (30 рівень) ---
+  sword_t4: {
+    name: "Сталевий меч",
+    type: "weapon", slot: "mainHand", tier: 4, levelReq: 30, price: 2700, weaponType: "sword", noShop: true,
+    stats: { attack: 64, crit: 4 },
+    description: "Клинок ванських ковалів, загартований у морській воді Ноатуну. По лезу біжать хвилясті візерунки, мов брижі на воді."
+  },
+  axe_t4: {
+    name: "Сталева сокира",
+    type: "weapon", slot: "mainHand", tier: 4, levelReq: 30, price: 2850, weaponType: "axe", noShop: true,
+    stats: { attack: 80, str: 5, speed: -2 },
+    description: "Бородата сокира ванів: нею рубали дуби на кораблі Ньорда. Лезо прикрашене колоссям Фрейра."
+  },
+  dagger_t4: {
+    name: "Сталевий кинджал",
+    type: "weapon", slot: "mainHand", tier: 4, levelReq: 30, price: 2550, weaponType: "dagger", noShop: true,
+    stats: { attack: 48, crit: 10, speed: 4 },
+    description: "Вузький клинок-листок мисливців Ванагейму — тонкий, як очеретина з Туманних мочарів."
+  },
+  bow_t4: {
+    name: "Сталевий лук",
+    type: "weapon", slot: "mainHand", tier: 4, levelReq: 30, price: 2850, weaponType: "bow", noShop: true,
+    stats: { attack: 61, crit: 5, speed: 4 },
+    description: "Тисовий лук зі сталевими накладками. Ванські ловчі б'ють із нього крізь морський туман."
+  },
+  staff_t4: {
+    name: "Сталевий посох",
+    type: "weapon", slot: "mainHand", tier: 4, levelReq: 30, price: 2850, weaponType: "staff", noShop: true,
+    stats: { attack: 10, magic: 70, mp: 96, int: 4 },
+    description: "Посох ванських вельв із плавника, окутий сталевими кільцями. У навершя — пагін, що не в'яне."
+  },
+  shield_t4: {
+    name: "Сталевий щит",
+    type: "shield", slot: "offHand", tier: 4, levelReq: 30, price: 2400, offType: "shield", noShop: true,
+    stats: { defense: 38, blockPhys: 18 },
+    description: "Круглий щит з умбоном, кований на березі Ноатуну. Його сталевий край витримує удар хвилі."
+  },
+  knife_t4: {
+    name: "Сталевий малий кинджал",
+    type: "offhand", slot: "offHand", tier: 4, levelReq: 30, price: 2250, offType: "knife", noShop: true,
+    stats: { attack: 26, crit: 6 },
+    description: "Короткий сакс для лівої руки: ваніри беруть його і на полювання, і на жнива."
+  },
+  quiver_t4: {
+    name: "Сталевий колчан",
+    type: "offhand", slot: "offHand", tier: 4, levelReq: 30, price: 2250, offType: "quiver", noShop: true,
+    stats: { attack: 22, speed: 4 },
+    description: "Колчан, окутий сталевими смугами. Стріли в ньому оперені пір'ям чайок із Бухти Ран."
+  },
+  orb_t4: {
+    name: "Бурштинова сфера",
+    type: "offhand", slot: "offHand", tier: 4, levelReq: 30, price: 2400, offType: "orb", noShop: true,
+    stats: { magic: 35, mp: 96, mpRegen: 3 },
+    description: "Сфера з бурштину — застиглих сліз Фрейї, що шукала свого чоловіка. Усередині мерехтить тепле світло."
+  },
+  steel_head: {
+    name: "Сталевий шолом",
+    type: "armor", slot: "head", tier: 4, levelReq: 30, price: 1350, set: "steel", noShop: true,
+    stats: { defense: 16, hp: 64 },
+    description: "Шолом із наносником, як у вартових Бухти Ран. Частина сталевого комплекту ванів."
+  },
+  steel_chest: {
+    name: "Сталева кольчуга",
+    type: "armor", slot: "chest", tier: 4, levelReq: 30, price: 2250, set: "steel", noShop: true,
+    stats: { defense: 29, hp: 112 },
+    description: "Дрібне сталеве плетиво під накидкою кольору морської хвилі — легша за залізну кірасу, а тримає краще. Частина сталевого комплекту ванів."
+  },
+  steel_legs: {
+    name: "Сталеві поножі",
+    type: "armor", slot: "legs", tier: 4, levelReq: 30, price: 1650, set: "steel", noShop: true,
+    stats: { defense: 19, hp: 80 },
+    description: "Кольчужні поножі з наколінниками-мушлями. Частина сталевого комплекту ванів."
+  },
+  steel_hands: {
+    name: "Сталеві наручі",
+    type: "armor", slot: "hands", tier: 4, levelReq: 30, price: 1350, set: "steel", noShop: true,
+    stats: { defense: 13, attack: 10 },
+    description: "Сталеві наручі з хвилястим карбуванням. Частина сталевого комплекту ванів."
+  },
+  steel_feet: {
+    name: "Сталеві чоботи",
+    type: "armor", slot: "feet", tier: 4, levelReq: 30, price: 1500, set: "steel", noShop: true,
+    stats: { defense: 13, speed: 4 },
+    description: "Чоботи зі сталевими пластинами, просочені смолою від морської води. Частина сталевого комплекту ванів."
+  },
+  ring_t4: {
+    name: "Платинове кільце",
+    type: "accessory", slot: "ring", tier: 4, levelReq: 30, price: 3600, noShop: true,
+    stats: { crit: 6, str: 6 },
+    description: "Кільце з білої платини, що її ваніри добувають на дні моря. Можна носити два кільця."
+  },
+  amulet_t4: {
+    name: "Платиновий амулет",
+    type: "accessory", slot: "amulet", tier: 4, levelReq: 30, price: 3600, noShop: true,
+    stats: { hp: 160, spi: 8 },
+    description: "Платиновий амулет із колоском і хвилею — знаками Фрейра й Ньорда."
+  },
+  earring_t4: {
+    name: "Платинова сережка",
+    type: "accessory", slot: "earring", tier: 4, levelReq: 30, price: 3600, noShop: true,
+    stats: { mp: 96, dodge: 5 },
+    description: "Платинова сережка з перлиною з Бухти Ран. Можна носити дві сережки."
+  },
+  // --- 5 вид: Двергська сталь (40 рівень) ---
+  sword_t5: {
+    name: "Двергський меч",
+    type: "weapon", slot: "mainHand", tier: 5, levelReq: 40, price: 6750, weaponType: "sword", noShop: true,
+    stats: { attack: 92, crit: 5 },
+    description: "Чорна сталь із кузень Брокка й Ейтрі. Руни на лезі розжарюються, мов горно, коли меч рубає."
+  },
+  axe_t5: {
+    name: "Двергська сокира",
+    type: "weapon", slot: "mainHand", tier: 5, levelReq: 40, price: 7100, weaponType: "axe", noShop: true,
+    stats: { attack: 115, str: 7, speed: -2 },
+    description: "Важка двосічна сокира свартальвів. Кажуть, її гартували в тій самій печі, де народився Мйольнір."
+  },
+  dagger_t5: {
+    name: "Двергський кинджал",
+    type: "weapon", slot: "mainHand", tier: 5, levelReq: 40, price: 6400, weaponType: "dagger", noShop: true,
+    stats: { attack: 69, crit: 12, speed: 5 },
+    description: "Кинджал підземних майстрів, гострий настільки, що ріже камінь, як сир."
+  },
+  bow_t5: {
+    name: "Двергський лук",
+    type: "weapon", slot: "mainHand", tier: 5, levelReq: 40, price: 7100, weaponType: "bow", noShop: true,
+    stats: { attack: 87, crit: 6, speed: 5 },
+    description: "Короткий лук із рогу й чорної сталі: свартальви стріляють із нього в тісних штольнях."
+  },
+  staff_t5: {
+    name: "Двергський посох",
+    type: "weapon", slot: "mainHand", tier: 5, levelReq: 40, price: 7100, weaponType: "staff", noShop: true,
+    stats: { attack: 14, magic: 101, mp: 138, int: 5 },
+    description: "Посох рунних майстрів Нідавелліру. У кованій клітці навершя жевріє самоцвіт, у якому ще живе вогонь горна."
+  },
+  shield_t5: {
+    name: "Двергський щит",
+    type: "shield", slot: "offHand", tier: 5, levelReq: 40, price: 6000, offType: "shield", noShop: true,
+    stats: { defense: 55, blockPhys: 20 },
+    description: "Щит із чорної сталі в колі рун захисту, з молотом і ковадлом посередині. Важкий, як гірська брила, і такий самий надійний."
+  },
+  knife_t5: {
+    name: "Двергський малий кинджал",
+    type: "offhand", slot: "offHand", tier: 5, levelReq: 40, price: 5600, offType: "knife", noShop: true,
+    stats: { attack: 37, crit: 7 },
+    description: "Ніж-кайло гірника: ним свартальви виколупують самоцвіти з породи, а в бою — щілини в броні."
+  },
+  quiver_t5: {
+    name: "Двергський колчан",
+    type: "offhand", slot: "offHand", tier: 5, levelReq: 40, price: 5600, offType: "quiver", noShop: true,
+    stats: { attack: 32, speed: 5 },
+    description: "Колчан зі шкіри печерного ящура на мідних заклепках. Наконечники стріл покриті рунами."
+  },
+  orb_t5: {
+    name: "Криштальна сфера",
+    type: "offhand", slot: "offHand", tier: 5, levelReq: 40, price: 6000, offType: "orb", noShop: true,
+    stats: { magic: 51, mp: 138, mpRegen: 4 },
+    description: "Гірський кришталь із печер Андварі. У його гранях застиг холодний блиск підземних скарбів."
+  },
+  dwarf_head: {
+    name: "Двергський шолом",
+    type: "armor", slot: "head", tier: 5, levelReq: 40, price: 3400, set: "dwarf", noShop: true,
+    stats: { defense: 23, hp: 92 },
+    description: "Шолом із масивним наличником і рунною смугою над очима. Частина двергського комплекту."
+  },
+  dwarf_chest: {
+    name: "Двергська кіраса",
+    type: "armor", slot: "chest", tier: 5, levelReq: 40, price: 5600, set: "dwarf", noShop: true,
+    stats: { defense: 41, hp: 161 },
+    description: "Пластини чорної сталі на золотих заклепках. Свартальви кажуть: вона перекує удар на тиху луну. Частина двергського комплекту."
+  },
+  dwarf_legs: {
+    name: "Двергські поножі",
+    type: "armor", slot: "legs", tier: 5, levelReq: 40, price: 4100, set: "dwarf", noShop: true,
+    stats: { defense: 28, hp: 115 },
+    description: "Ковані поножі з вогнетривкої сталі. Частина двергського комплекту."
+  },
+  dwarf_hands: {
+    name: "Двергські наручі",
+    type: "armor", slot: "hands", tier: 5, levelReq: 40, price: 3400, set: "dwarf", noShop: true,
+    stats: { defense: 18, attack: 14 },
+    description: "Латні наручі коваля з мідними кісточками. Частина двергського комплекту."
+  },
+  dwarf_feet: {
+    name: "Двергські чоботи",
+    type: "armor", slot: "feet", tier: 5, levelReq: 40, price: 3750, set: "dwarf", noShop: true,
+    stats: { defense: 18, speed: 5 },
+    description: "Важкі чоботи з окутими носками, щоб не боятися ні каменю, ні лави. Частина двергського комплекту."
+  },
+  ring_t5: {
+    name: "Самоцвітне кільце",
+    type: "accessory", slot: "ring", tier: 5, levelReq: 40, price: 9000, noShop: true,
+    stats: { crit: 7, str: 9 },
+    description: "Перстень із червоним самоцвітом із глибин Нідавелліру. Можна носити два кільця."
+  },
+  amulet_t5: {
+    name: "Самоцвітний амулет",
+    type: "accessory", slot: "amulet", tier: 5, levelReq: 40, price: 9000, noShop: true,
+    stats: { hp: 230, spi: 12 },
+    description: "Самоцвіт у кованій золотій оправі зі знаком молота — оберіг двергів."
+  },
+  earring_t5: {
+    name: "Самоцвітна сережка",
+    type: "accessory", slot: "earring", tier: 5, levelReq: 40, price: 9000, noShop: true,
+    stats: { mp: 138, dodge: 6 },
+    description: "Сережка з крапелькою смарагду, добутого при світлі горна. Можна носити дві сережки."
+  },
+  // --- 6 вид: Небесний метал Асгарду (50 рівень) ---
+  sword_t6: {
+    name: "Асгардський меч",
+    type: "weapon", slot: "mainHand", tier: 6, levelReq: 50, price: 14850, weaponType: "sword", noShop: true,
+    stats: { attack: 124, crit: 6 },
+    description: "Клинок ейнгер'їв Валгалли, кований з небесного металу. Сяє, мов промінь над Біфростом."
+  },
+  axe_t6: {
+    name: "Асгардська сокира",
+    type: "weapon", slot: "mainHand", tier: 6, levelReq: 50, price: 15700, weaponType: "axe", noShop: true,
+    stats: { attack: 155, str: 9, speed: -2 },
+    description: "Сокира вартових Валгалли з вороном Одіна на лезі. Небесний метал ніколи не тупиться."
+  },
+  dagger_t6: {
+    name: "Асгардський кинджал",
+    type: "weapon", slot: "mainHand", tier: 6, levelReq: 50, price: 14000, weaponType: "dagger", noShop: true,
+    stats: { attack: 93, crit: 14, speed: 6 },
+    description: "Тонкий клинок із Фенсаліру, чертогу Фрігг. Кажуть, він завжди знаходить шлях до правди."
+  },
+  bow_t6: {
+    name: "Асгардський лук",
+    type: "weapon", slot: "mainHand", tier: 6, levelReq: 50, price: 15700, weaponType: "bow", noShop: true,
+    stats: { attack: 118, crit: 7, speed: 6 },
+    description: "Лук із білого ясена й небесного срібла. З такого Улль стріляє з самого неба."
+  },
+  staff_t6: {
+    name: "Асгардський посох",
+    type: "weapon", slot: "mainHand", tier: 6, levelReq: 50, price: 15700, weaponType: "staff", noShop: true,
+    stats: { attack: 19, magic: 136, mp: 186, int: 6 },
+    description: "Посох провидців Гладсгейму, увінчаний крилами ворона, що обіймають світлий кристал. Сповнений мудрості Одіна."
+  },
+  shield_t6: {
+    name: "Асгардський щит",
+    type: "shield", slot: "offHand", tier: 6, levelReq: 50, price: 13200, offType: "shield", noShop: true,
+    stats: { defense: 74, blockPhys: 22 },
+    description: "Щит воїнів Валгалли — з таких складено дах чертогу Одіна."
+  },
+  knife_t6: {
+    name: "Асгардський малий кинджал",
+    type: "offhand", slot: "offHand", tier: 6, levelReq: 50, price: 12400, offType: "knife", noShop: true,
+    stats: { attack: 50, crit: 8 },
+    description: "Короткий клинок валькірій, легкий, як перо з їхніх крил."
+  },
+  quiver_t6: {
+    name: "Асгардський колчан",
+    type: "offhand", slot: "offHand", tier: 6, levelReq: 50, price: 12400, offType: "quiver", noShop: true,
+    stats: { attack: 43, speed: 6 },
+    description: "Колчан із білої шкіри з золотим тисненням. Стріли оперені пір'ям орла з вершини Іггдрасиля."
+  },
+  orb_t6: {
+    name: "Райдужна сфера",
+    type: "offhand", slot: "offHand", tier: 6, levelReq: 50, price: 13200, offType: "orb", noShop: true,
+    stats: { magic: 68, mp: 186, mpRegen: 5 },
+    description: "Уламок Біфросту, райдужного мосту до Асгарду. У ньому переливаються всі барви неба."
+  },
+  asgard_head: {
+    name: "Асгардський шолом",
+    type: "armor", slot: "head", tier: 6, levelReq: 50, price: 7400, set: "asgard", noShop: true,
+    stats: { defense: 31, hp: 124 },
+    description: "Крилатий шолом із небесного металу. Частина асгардського комплекту."
+  },
+  asgard_chest: {
+    name: "Асгардський нагрудник",
+    type: "armor", slot: "chest", tier: 6, levelReq: 50, price: 12400, set: "asgard", noShop: true,
+    stats: { defense: 56, hp: 217 },
+    description: "Білі лати з золотим сонцем на грудях. Їх дають лише тим, кого обрали валькірії. Частина асгардського комплекту."
+  },
+  asgard_legs: {
+    name: "Асгардські поножі",
+    type: "armor", slot: "legs", tier: 6, levelReq: 50, price: 9100, set: "asgard", noShop: true,
+    stats: { defense: 37, hp: 155 },
+    description: "Поножі з білого металу з золотими крилами на наколінниках. Частина асгардського комплекту."
+  },
+  asgard_hands: {
+    name: "Асгардські наручі",
+    type: "armor", slot: "hands", tier: 6, levelReq: 50, price: 7400, set: "asgard", noShop: true,
+    stats: { defense: 25, attack: 19 },
+    description: "Наручі з крилами орла, що розгортаються при замаху. Частина асгардського комплекту."
+  },
+  asgard_feet: {
+    name: "Асгардські чоботи",
+    type: "armor", slot: "feet", tier: 6, levelReq: 50, price: 8250, set: "asgard", noShop: true,
+    stats: { defense: 25, speed: 6 },
+    description: "Чоботи, у яких не зісковзнеш навіть із Біфросту. Частина асгардського комплекту."
+  },
+  ring_t6: {
+    name: "Сонячне кільце",
+    type: "accessory", slot: "ring", tier: 6, levelReq: 50, price: 19800, noShop: true,
+    stats: { crit: 8, str: 12 },
+    description: "Кільце, у яке вплетено промінь Соль, що щодня веде колісницю сонця. Можна носити два кільця."
+  },
+  amulet_t6: {
+    name: "Сонячний амулет",
+    type: "accessory", slot: "amulet", tier: 6, levelReq: 50, price: 19800, noShop: true,
+    stats: { hp: 310, spi: 16 },
+    description: "Золотий сонячний диск-оберіг. Поки сонце не наздогнав вовк Сколль, він гріє і зцілює."
+  },
+  earring_t6: {
+    name: "Сонячна сережка",
+    type: "accessory", slot: "earring", tier: 6, levelReq: 50, price: 19800, noShop: true,
+    stats: { mp: 186, dodge: 7 },
+    description: "Сережка-промінчик із сонячного золота. Можна носити дві сережки."
+  },
+  // --- 7 вид: Серце Іггдрасиля (60 рівень) ---
+  sword_t7: {
+    name: "Іггдрасилів меч",
+    type: "weapon", slot: "mainHand", tier: 7, levelReq: 60, price: 29700, weaponType: "sword", noShop: true,
+    stats: { attack: 160, crit: 7 },
+    description: "Клинок із серцевини Світового Дерева, твердішої за будь-яку сталь. У прожилках тече золотий сік — кров Іггдрасиля."
+  },
+  axe_t7: {
+    name: "Іггдрасилева сокира",
+    type: "weapon", slot: "mainHand", tier: 7, levelReq: 60, price: 31350, weaponType: "axe", noShop: true,
+    stats: { attack: 200, str: 12, speed: -2 },
+    description: "Гілка, що впала з Дерева, коли Нідгьоґ гриз його корінь, і сама стала сокирою. Вона пам'ятає, кому мститись."
+  },
+  dagger_t7: {
+    name: "Іггдрасилів кинджал",
+    type: "weapon", slot: "mainHand", tier: 7, levelReq: 60, price: 28050, weaponType: "dagger", noShop: true,
+    stats: { attack: 120, crit: 16, speed: 7 },
+    description: "Шип зі стовбура Світового Дерева, гострий, як жало. Рана від нього не гоїться, доки на неї не впаде роса з джерела Урд."
+  },
+  bow_t7: {
+    name: "Іггдрасилів лук",
+    type: "weapon", slot: "mainHand", tier: 7, levelReq: 60, price: 31350, weaponType: "bow", noShop: true,
+    stats: { attack: 152, crit: 8, speed: 7 },
+    description: "Лук, що виріс сам: жива гілка ясеня, на кінцях якої досі розпускається листя."
+  },
+  staff_t7: {
+    name: "Іггдрасилів посох",
+    type: "weapon", slot: "mainHand", tier: 7, levelReq: 60, price: 31350, weaponType: "staff", noShop: true,
+    stats: { attack: 24, magic: 176, mp: 240, int: 7 },
+    description: "Корінь Світового Дерева, що п'є з джерела Мімира. Хто тримає його — чує шепіт дев'яти світів."
+  },
+  shield_t7: {
+    name: "Іггдрасилів щит",
+    type: "shield", slot: "offHand", tier: 7, levelReq: 60, price: 26400, offType: "shield", noShop: true,
+    stats: { defense: 96, blockPhys: 24 },
+    description: "Щит із кори Світового Дерева. Його не прорубає навіть вогняний меч Сурта."
+  },
+  knife_t7: {
+    name: "Іггдрасилів малий кинджал",
+    type: "offhand", slot: "offHand", tier: 7, levelReq: 60, price: 24750, offType: "knife", noShop: true,
+    stats: { attack: 64, crit: 9 },
+    description: "Тонкий шип-гілочка: легкий, як листок, і гострий, як іній Ніфльгейму."
+  },
+  quiver_t7: {
+    name: "Іггдрасилів колчан",
+    type: "offhand", slot: "offHand", tier: 7, levelReq: 60, price: 24750, offType: "quiver", noShop: true,
+    stats: { attack: 56, speed: 7 },
+    description: "Колчан із дупла Світового Дерева. Стріли в ньому — прямі пагони, що ніколи не ламаються."
+  },
+  orb_t7: {
+    name: "Мімирова сфера",
+    type: "offhand", slot: "offHand", tier: 7, levelReq: 60, price: 26400, offType: "orb", noShop: true,
+    stats: { magic: 88, mp: 240, mpRegen: 6 },
+    description: "Крапля з джерела Мімира під коренем Іггдрасиля. За ковток із нього Одін віддав око."
+  },
+  ygg_head: {
+    name: "Іггдрасилів шолом",
+    type: "armor", slot: "head", tier: 7, levelReq: 60, price: 14850, set: "ygg", noShop: true,
+    stats: { defense: 40, hp: 160 },
+    description: "Шолом із кори й переплетеного коріння, увінчаний молодими пагонами. Частина комплекту Іггдрасиля."
+  },
+  ygg_chest: {
+    name: "Іггдрасилів обладунок",
+    type: "armor", slot: "chest", tier: 7, levelReq: 60, price: 24750, set: "ygg", noShop: true,
+    stats: { defense: 72, hp: 280 },
+    description: "Кора Світового Дерева, що сама наросла на тіло обраного. Золотий сік у її тріщинах загоює рани. Частина комплекту Іггдрасиля."
+  },
+  ygg_legs: {
+    name: "Іггдрасилеві поножі",
+    type: "armor", slot: "legs", tier: 7, levelReq: 60, price: 18150, set: "ygg", noShop: true,
+    stats: { defense: 48, hp: 200 },
+    description: "Поножі з коріння, що обвило ноги, мов живе. Частина комплекту Іггдрасиля."
+  },
+  ygg_hands: {
+    name: "Іггдрасилеві наручі",
+    type: "armor", slot: "hands", tier: 7, levelReq: 60, price: 14850, set: "ygg", noShop: true,
+    stats: { defense: 32, attack: 24 },
+    description: "Наручі з кори з золотими жилками соку. Частина комплекту Іггдрасиля."
+  },
+  ygg_feet: {
+    name: "Іггдрасилеві чоботи",
+    type: "armor", slot: "feet", tier: 7, levelReq: 60, price: 16500, set: "ygg", noShop: true,
+    stats: { defense: 32, speed: 7 },
+    description: "Чоботи з коріння: хто їх узув, стоїть твердо, як Дерево в бурю. Частина комплекту Іггдрасиля."
+  },
+  ring_t7: {
+    name: "Зоряне кільце",
+    type: "accessory", slot: "ring", tier: 7, levelReq: 60, price: 39600, noShop: true,
+    stats: { crit: 9, str: 16 },
+    description: "Кільце з іскри Муспельгейму, яку боги колись прибили до неба зорею. Можна носити два кільця."
+  },
+  amulet_t7: {
+    name: "Зоряний амулет",
+    type: "accessory", slot: "amulet", tier: 7, levelReq: 60, price: 39600, noShop: true,
+    stats: { hp: 400, spi: 20 },
+    description: "Уламок нічного неба: у ньому видно всі дев'ять світів на гілках Дерева."
+  },
+  earring_t7: {
+    name: "Зоряна сережка",
+    type: "accessory", slot: "earring", tier: 7, levelReq: 60, price: 39600, noShop: true,
+    stats: { mp: 240, dodge: 8 },
+    description: "Сережка-зірочка, що світить навіть у мороці Хельгейму. Можна носити дві сережки."
   },
 
   // ---------- КОМПЛЕКТ СЛИЗУ (здобич зі слаймів, див. ITEM_SETS) ----------
