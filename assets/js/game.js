@@ -257,15 +257,25 @@
     return p;
   }
 
+  // Спільний каркас вікон гри (клас notice-dialog): <dialog>, що після закриття видаляється з DOM,
+  // onClose — додаткова дія після закриття. closeBtn(label, onPress) — хрестик «×» для першого рядка вікна.
+  function noticeDialog(cls = "", onClose) {
+    const dlg = el("dialog", "notice-dialog " + cls);
+    dlg.addEventListener("close", () => { dlg.remove(); if (onClose) onClose(); });
+    const closeBtn = (label = "Закрити", onPress = () => dlg.close()) => {
+      const c = button("×", "notice-close", onPress);
+      c.setAttribute("aria-label", label);
+      return c;
+    };
+    return { dlg, closeBtn };
+  }
+
   function showNotice(title, lines, cls = "") {
     return queueDialog(() => {
-      const dlg = el("dialog", "notice-dialog " + cls);
-      const close = button("×", "notice-close", () => dlg.close());
-      close.setAttribute("aria-label", "Закрити");
-      dlg.append(close, el("h3", null, title));
+      const { dlg, closeBtn } = noticeDialog(cls);
+      dlg.append(closeBtn(), el("h3", null, title));
       for (const l of lines) dlg.append(typeof l === "string" ? el("p", null, l) : l);
       dlg.addEventListener("cancel", ev => ev.preventDefault());     // Esc не закриває — лише хрестик
-      dlg.addEventListener("close", () => dlg.remove());
       document.body.append(dlg);
       dlg.showModal();
       return dlg;
@@ -1890,11 +1900,10 @@
     let forgeTab = "weapon", forgePreferRare = false, forgeSpark = false, forgeResult = null, disConfirm = null;
     function showForge() {
       document.querySelector(".forge-dialog")?.remove();
-      const dlg = el("dialog", "notice-dialog forge-dialog");
+      const { dlg, closeBtn } = noticeDialog("forge-dialog", () => { forgeResult = null; disConfirm = null; renderAll(); });
       const draw = () => {
         dlg.innerHTML = "";
-        const close = button("×", "notice-close", () => dlg.close());
-        close.setAttribute("aria-label", "Закрити кузню");
+        const close = closeBtn("Закрити кузню");
         const st = RPG.craftState(save);
         const house = RPG.houseHere(save);
         const next = RPG.craftExpToNext(st.level);
@@ -2046,7 +2055,6 @@
         if (!any) list.append(el("p", "house-soon", "В інвентарі немає речей, які можна розібрати. Розбираються зброя, щити, броня й прикраси, що лежать в інвентарі (не в скринях)."));
         dlg.append(list);
       };
-      dlg.addEventListener("close", () => { dlg.remove(); forgeResult = null; disConfirm = null; renderAll(); });
       document.body.append(dlg);
       draw();
       dlg.showModal();
@@ -2054,10 +2062,8 @@
 
     // Вікно з полем для назви дому — лише при купівлі (назву дають один раз)
     function askHouseName(current, onOk, opts = {}) {
-      const dlg = el("dialog", "notice-dialog house-dialog");
-      const close = button("×", "notice-close", () => dlg.close());
-      close.setAttribute("aria-label", "Закрити");
-      dlg.append(close, el("h3", null, opts.title || "Назва дому"));
+      const { dlg, closeBtn } = noticeDialog("house-dialog");
+      dlg.append(closeBtn(), el("h3", null, opts.title || "Назва дому"));
       if (opts.text) dlg.append(el("p", null, opts.text));
       const label = el("label", "field", "Назва дому");
       const input = el("input");
@@ -2067,7 +2073,6 @@
       input.addEventListener("keydown", e => { if (e.key === "Enter") ok.click(); });
       dlg.append(label, el("p", "note keep", `До ${RPG.HOUSE_NAME_MAX} символів. Назву дають лише раз — змінити її потім не можна. ` +
         "Згодом доми будуть і в інших містах — назва допоможе їх розрізняти."), ok);
-      dlg.addEventListener("close", () => dlg.remove());
       document.body.append(dlg);
       dlg.showModal();
       input.focus();
@@ -2579,13 +2584,12 @@
     function showRuneForge() {
       document.querySelector(".rune-forge-dialog")?.remove();
       const F = RPG.RUNE_FORGE;
-      const dlg = el("dialog", "notice-dialog rune-forge-dialog");
+      const { dlg, closeBtn } = noticeDialog("rune-forge-dialog", () => renderAll());
       let picked = [], note = null;
       const left = id => RPG.countItem(save, id) - picked.filter(x => x === id).length;
       const draw = () => {
         dlg.innerHTML = "";
-        const close = button("×", "notice-close", () => dlg.close());
-        close.setAttribute("aria-label", "Закрити горно");
+        const close = closeBtn("Закрити горно");
         dlg.append(close, el("h3", null, "Горно Сварога"));
         dlg.append(el("p", "note", `Покладіть у горно ${F.count} будь-яких рун, зламані теж. Сварог переплавить їх в одну нову — від звичайної до епічної. Якщо всі шість одного виду, нова руна буде того ж виду. Данина — ${fmtNum(F.fee)} золота (у вас ${fmtNum(save.character.gold)}).`));
         if (note) dlg.append(el("p", "forge-result" + (note.error ? " is-error" : ""), note.text));
@@ -2635,7 +2639,6 @@
         }
         dlg.append(el("strong", null, "Ваші руни — натисніть, щоб покласти в горно:"), list);
       };
-      dlg.addEventListener("close", () => { dlg.remove(); renderAll(); });
       document.body.append(dlg);
       draw();
       dlg.showModal();
@@ -4849,12 +4852,11 @@
     // Пояс: 5 слотів для мішечків (character.js → putOnBelt / takeFromBelt). Порожній слот — вибрати мішечок з інвентаря.
     function showBelt() {
       document.querySelector(".belt-dialog")?.remove();
-      const dlg = el("dialog", "notice-dialog belt-dialog");
+      const { dlg, closeBtn } = noticeDialog("belt-dialog", () => { selected = null; RPG.popover.hide(); render(); });
       let pick = null, note = null;
       const draw = () => {
         dlg.innerHTML = "";
-        const close = button("×", "notice-close", () => dlg.close());
-        close.setAttribute("aria-label", "Закрити пояс");
+        const close = closeBtn("Закрити пояс");
         dlg.append(close, el("h3", null, "Пояс"));
         dlg.append(el("p", "belt-sum", `Інвентар: ${RPG.invSize(ms)} комірок (36 + ${RPG.beltBonus(ms)} від мішечків) · зайнято ${ms.inventory.length}`));
         if (note) dlg.append(el("p", "forge-result" + (note.error ? " is-error" : ""), note.text));
@@ -4895,7 +4897,6 @@
           dlg.append(box);
         } else dlg.append(el("p", "note", "Натисніть порожній слот, щоб повісити мішечок з інвентаря, або зайнятий — щоб зняти його."));
       };
-      dlg.addEventListener("close", () => { dlg.remove(); selected = null; RPG.popover.hide(); render(); });
       document.body.append(dlg);
       draw();
       dlg.showModal();
@@ -4904,11 +4905,10 @@
     // Вікно «Скільки перекласти?»: число + швидкі кнопки. Повертає Promise<кількість | null>
     function askQty(title, max) {
       return new Promise(resolve => {
-        const dlg = el("dialog", "notice-dialog qty-dialog");
         let done = false;
+        const { dlg, closeBtn } = noticeDialog("qty-dialog", () => { if (!done) { done = true; resolve(null); } });
         const finish = v => { if (done) return; done = true; resolve(v); dlg.close(); };
-        const close = button("×", "notice-close", () => finish(null));
-        close.setAttribute("aria-label", "Скасувати");
+        const close = closeBtn("Скасувати", () => finish(null));
         dlg.append(close, el("h3", null, title));
         const label = el("label", "field", `Кількість (є ${fmtNum(max)})`);
         const input = el("input");
@@ -4930,7 +4930,6 @@
         const row = el("div", "row");
         row.append(ok, button("Скасувати", "wf wf-secondary", () => finish(null)));
         dlg.append(row);
-        dlg.addEventListener("close", () => { if (!done) { done = true; resolve(null); } dlg.remove(); });
         document.body.append(dlg);
         dlg.showModal();
         input.select();
@@ -4991,12 +4990,11 @@
     // Вікно гнізд речі: вільне гніздо — вибір руни з інвентаря, що пасує; зайняте — руна й «Вийняти» (руна трісне)
     function showSocketDialog(ref) {
       document.querySelector(".socket-dialog")?.remove();
-      const dlg = el("dialog", "notice-dialog socket-dialog");
+      const { dlg, closeBtn } = noticeDialog("socket-dialog", () => { RPG.popover.hide(); render(); });
       let pick = null, note = null;
       const draw = () => {
         dlg.innerHTML = "";
-        const close = button("×", "notice-close", () => dlg.close());
-        close.setAttribute("aria-label", "Закрити");
+        const close = closeBtn();
         dlg.append(close, el("h3", null, `Гнізда: ${RPG.itemFullName(ref)}`));
         dlg.append(el("p", "note", "Руни зброї лягають у зброю та речі лівої руки, руни броні — у броню, універсальні — у будь-що. Вийнята з гнізда руна тріскається і стає зламаною."));
         if (note) dlg.append(el("p", "forge-result" + (note.error ? " is-error" : ""), note.text));
@@ -5054,7 +5052,6 @@
           if (fits.length) dlg.append(el("strong", null, `Гніздо ${pick + 1}: виберіть руну`), box);
         }
       };
-      dlg.addEventListener("close", () => { dlg.remove(); RPG.popover.hide(); render(); });
       document.body.append(dlg);
       draw();
       dlg.showModal();
