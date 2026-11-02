@@ -111,6 +111,9 @@
     if (save.location?.map !== d.location) return { ok: false, reason: "Ворота данжу — в іншій локації." };
     if (save.dungeon) return { ok: false, reason: "Ви вже в данжі." };
     if (!RPG.aliveMembers(save).length) return { ok: false, reason: "Усі герої групи полягли — помоліться за них у Храмі." };
+    if (d.minLevel && save.character.level < d.minLevel) {
+      return { ok: false, reason: `Бій у данжі «${d.name}» — з ${d.minLevel} рівня персонажа.` };
+    }
     if (!useKey(save, d.key)) {
       return { ok: false, reason: `Потрібен ${RPG.ITEMS[d.key].name}. Його можна знайти під час «${d.explore}» (шанс ${Math.round(d.keyChance * 100)}% з кожного ворога).` };
     }

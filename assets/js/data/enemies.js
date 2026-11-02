@@ -1100,7 +1100,7 @@ const ENEMIES = {
       edge: ["walls", "rocks", "walls", "rocks"]   // уламки вежі на кам'янистому пагорбі
     },
     dk_heart: {
-      name: "Серце Темного лісу", type: "combat", region: "dark", minLevel: 22,
+      name: "Серце Темного лісу", type: "combat", region: "dark", minLevel: 20,
       description: "Коло замшілих каменів і велетенське мертве дерево, що світиться зсередини. Тут править Володар Темного лісу.",
       enemies: ["ancient_treant", "black_rider", "forest_lord"],
       dungeon: "dark_throne",
@@ -1133,6 +1133,7 @@ const ENEMIES = {
     dark_throne: {
       name: "Трон Володаря", explore: "Обстеження Серця лісу", location: "dk_heart",
       key: "key_dark_throne", keyChance: 0.01, boss: "forest_lord", pool: ["ancient_treant", "black_rider"],
+      minLevel: 22,   // фінальний бій з Володарем (данж) — з 22 рівня персонажа; обстеження Серця — з 20
       edge: "trees",
       description: "Коло каменів розступається, відкриваючи стежку до мертвого дерева. Його вартують лісовики й вершники, а на троні з коріння чекає Володар Темного лісу."
     }

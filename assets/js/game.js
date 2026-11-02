@@ -3313,6 +3313,8 @@
       panel.append(el("p", "note" + (keys ? "" : " is-neg"),
         `${RPG.ITEMS[dungeonInfo.key].name} у кишені для ключів: ${keys}. Одна спроба — один ключ (зникає при вході). ` +
         `Ключ можна знайти під час «${dungeonInfo.explore}» — шанс ${Math.round(dungeonInfo.keyChance * 100)}% з кожного ворога.`));
+      if (dungeonInfo.minLevel) panel.append(el("p", "note" + (save.character.level < dungeonInfo.minLevel ? " is-neg" : ""),
+        `Бій у данжі — з ${dungeonInfo.minLevel} рівня персонажа.`));
       const open = button("Відчинити ворота (−1 ключ)", "wf wf-button", async () => {
         if (fighting) return;
         if (!confirm(`Відчинити ворота? ${RPG.ITEMS[dungeonInfo.key].name} зникне, навіть якщо данж не вдасться пройти.`)) return;
