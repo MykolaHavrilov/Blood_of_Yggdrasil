@@ -1081,26 +1081,26 @@ const ENEMIES = {
       edge: ["walls", "trees", "walls", "trees"]   // мур кладовища й мертві дерева
     },
     dk_webs: {
-      name: "Ліс павутини", type: "combat", region: "dark", minLevel: 10,
+      name: "Ліс павутини", type: "combat", region: "dark", minLevel: 15,
       description: "Велетенські дерева, обплетені павутинням, і кокони на гілках. Десь у глибині — гніздо Королеви павуків.",
       enemies: ["web_hunter", "web_weaver", "spider_queen"],
       dungeon: "web_nest",
       edge: "trees"
     },
     dk_ravine: {
-      name: "Вовкулачий яр", type: "combat", region: "dark", minLevel: 10,
+      name: "Вовкулачий яр", type: "combat", region: "dark", minLevel: 17,
       description: "Глибокий кам'янистий яр, обгризені кістки й сліди пазурів на скелях. Уночі тут виють не вовки.",
       enemies: ["werewolf", "pack_leader", "shadow_beast"],
       edge: "rocks"
     },
     dk_ruins: {
-      name: "Руїни відьминої вежі", type: "combat", region: "dark", minLevel: 10,
+      name: "Руїни відьминої вежі", type: "combat", region: "dark", minLevel: 19,
       description: "Розвалена вежа на пагорбі, фіолетове сяйво й свічки на уламках. Культисти досі служать тут своїй господині.",
       enemies: ["cultist", "witch", "stone_golem"],
       edge: ["walls", "rocks", "walls", "rocks"]   // уламки вежі на кам'янистому пагорбі
     },
     dk_heart: {
-      name: "Серце Темного лісу", type: "combat", region: "dark", minLevel: 10,
+      name: "Серце Темного лісу", type: "combat", region: "dark", minLevel: 22,
       description: "Коло замшілих каменів і велетенське мертве дерево, що світиться зсередини. Тут править Володар Темного лісу.",
       enemies: ["ancient_treant", "black_rider", "forest_lord"],
       dungeon: "dark_throne",
