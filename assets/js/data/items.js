@@ -598,34 +598,34 @@ const ITEMS = {
     type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Ключ із темного кореня. Відчиняє данж «Трон Володаря» (Серце Темного лісу). Одна спроба — один ключ."
   },
-  // Ключі данжів Альвгейму (світ 3) — іконки поки беруть від ключів Темного лісу (iconFile)
+  // Ключі данжів Альвгейму (світ 3) — іконки icon_key_alf_<локація>.webp
   key_alf_grove: {
-    name: "Ключ «Гніздо мотилів»", iconFile: "key_web_nest",
+    name: "Ключ «Гніздо мотилів»",
     type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Срібна гілочка з пилком на крилах-зубцях. Відчиняє данж «Гніздо мотилів» (Сріблястий гай). Одна спроба — один ключ."
   },
   key_alf_lake: {
-    name: "Ключ «Глибини озера»", iconFile: "key_cave_secret",
+    name: "Ключ «Глибини озера»",
     type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Холодний ключ із перламутру, завжди мокрий. Відчиняє данж «Глибини озера» (Дзеркальне озеро). Одна спроба — один ключ."
   },
   key_alf_gardens: {
-    name: "Ключ «Тлінна оранжерея»", iconFile: "key_dark_throne",
+    name: "Ключ «Тлінна оранжерея»",
     type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Ключ, обвитий терном і зів'ялими пелюстками. Відчиняє данж «Тлінна оранжерея» (Сади вічної весни). Одна спроба — один ключ."
   },
   key_alf_towers: {
-    name: "Ключ «Вершина світанку»", iconFile: "key_cave_secret",
+    name: "Ключ «Вершина світанку»",
     type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Білий ключ, що теплішає на сонці. Відчиняє данж «Вершина світанку» (Вежі світанку). Одна спроба — один ключ."
   },
   key_alf_freyr: {
-    name: "Ключ «Трон Фрейра»", iconFile: "key_web_nest",
+    name: "Ключ «Трон Фрейра»",
     type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Важкий ключ із вирізьбленим вепром. Відчиняє данж «Трон Фрейра» (Чертог Фрейра). Одна спроба — один ключ."
   },
   key_alf_beli: {
-    name: "Ключ «Курган Белі»", iconFile: "key_dark_throne",
+    name: "Ключ «Курган Белі»",
     type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Ключ з оленячого рогу, оповитий фіолетовим димом. Відчиняє данж «Курган Белі» (Поле Белі). Одна спроба — один ключ."
   },
@@ -752,7 +752,8 @@ const ICON_FILES = new Set(["sword", "dagger", "axe", "bow", "staff", "shield", 
 // Мішечки, ключі данжів і матеріали кузні (спрайт-листи items_2: new_assets/new_assets/items/Items_2-1…3.png)
 ["pouch_small", "pouch_medium", "pouch_large", "key_cave_secret", "key_web_nest", "key_dark_throne",
  "heavenly_spark", "coal", "gem", "glass", "oak_wood", "ash_wood", "flax", "leather_strap", "flint", "lapis", "onyx",
- "copper_ore", "copper_ingot", "silver_ore", "silver_ingot", "iron_ore", "iron_ingot", "gold_ore", "gold_ingot"]
+ "copper_ore", "copper_ingot", "silver_ore", "silver_ingot", "iron_ore", "iron_ingot", "gold_ore", "gold_ingot",
+ "key_alf_grove", "key_alf_lake", "key_alf_gardens", "key_alf_towers", "key_alf_freyr", "key_alf_beli"]
   .forEach(id => ICON_FILES.add(id));
 const ICON_FILE_BASE = RPG.asset("assets/images/items/icon_");
 
