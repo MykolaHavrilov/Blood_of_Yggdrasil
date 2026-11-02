@@ -365,10 +365,24 @@ function msToNextRegen(save, now = Date.now()) {
 // а рівень визначається за таблицею поточної професії.
 // Повертає масив нових рівнів, напр. [3] або [3, 4], щоб показати повідомлення
 
+// ---------- Межа рівня ----------
+// Усі герої — до 30 рівня. Після першої перемоги над Белі (фінальний бос Альвгейму, світ 3) межа для героїв
+// з професією (будь-яка, крім Селянина) — 50. Перемоги над босами — save.bossKills[id] (page-game.js → нагорода).
+const LEVEL_CAP_BASE = 30;
+const LEVEL_CAP_PROFESSION = 50;
+const LEVEL_CAP_BOSS = "alf_boss_beli";
+function levelCapOpen(save) { return !!save.bossKills?.[LEVEL_CAP_BOSS]; }
+function levelCap(save) {
+  const ch = save.character;
+  const top = maxLevel(getClass(ch.classId).levelTable);
+  const cap = ch.classId !== RPG.DEFAULT_CLASS && levelCapOpen(save) ? LEVEL_CAP_PROFESSION : LEVEL_CAP_BASE;
+  return Math.min(cap, top);
+}
+
 function addExp(save, amount) {
   const ch = save.character;
   const table = getClass(ch.classId).levelTable;
-  const cap = maxExp(table);
+  const cap = expForLevel(table, levelCap(save));     // досвід — не більше початку рівня-межі
 
   // на максимумі досвід більше не нараховується
   const gained = Math.max(0, Math.min(Math.floor(amount), cap - ch.exp));
@@ -376,7 +390,7 @@ function addExp(save, amount) {
   ch.totalExp += gained;
 
   const oldLevel = ch.level;
-  ch.level = levelFromExp(table, ch.exp);
+  ch.level = Math.min(levelFromExp(table, ch.exp), levelCap(save));
 
   const levelUps = [];
   for (let lvl = oldLevel + 1; lvl <= ch.level; lvl++) {
@@ -461,8 +475,8 @@ function removeExp(save, amount) {
 function expProgress(save) {
   const ch = save.character;
   const table = getClass(ch.classId).levelTable;
-  if (ch.level >= maxLevel(table)) {
-    return { exp: ch.exp, nextLevelAt: null, current: 0, needed: 0, percent: 100, max: true };
+  if (ch.level >= levelCap(save)) {
+    return { exp: ch.exp, nextLevelAt: null, current: 0, needed: 0, percent: 100, max: true, cap: levelCap(save) };
   }
   const start = expForLevel(table, ch.level);
   const next = expForLevel(table, ch.level + 1);
@@ -1470,7 +1484,7 @@ Object.assign(RPG, {
   REGEN_TICK_MS, HOME_REGEN_PCT, RESPAWN_HP_PCT, DEATH_EXP_MULT, ITEM_LOSS_CHANCE, maxItemLoss,
   createNewSave, calcStats, clampHpMp, fullHeal, FEMALE_NAMES, heroGender, gw,
   regenPerTick, applyRegen, msToNextRegen,
-  addExp, removeExp, deathExpPenalty, DEATH_MAX_PCT, expProgress, applyDeath, markFallen, pray,
+  addExp, levelCap, levelCapOpen, LEVEL_CAP_BASE, LEVEL_CAP_PROFESSION, LEVEL_CAP_BOSS, removeExp, deathExpPenalty, DEATH_MAX_PCT, expProgress, applyDeath, markFallen, pray,
   getClassChanges, changeClass,
   countInList, addToList, addRefToList, removeFromList, countItem, addItem, removeItem,
   isAtHome, moveToChest, takeFromChest,

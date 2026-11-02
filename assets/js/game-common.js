@@ -1177,7 +1177,10 @@
     const box = el("div", "info-body exp-info");
     box.append(el("p", null, `Рівень ${ch.level} · ${cls.name}`));
     if (p.max) {
-      box.append(el("p", null, `Максимальний рівень. Досвід: ${fmtNum(p.exp)}.`));
+      box.append(el("p", null, `Максимальний рівень (${p.cap}). Досвід: ${fmtNum(p.exp)}.`));
+      if (p.cap < RPG.LEVEL_CAP_PROFESSION) box.append(el("p", "note", ch.classId === RPG.DEFAULT_CLASS
+        ? `Селянин росте лише до ${RPG.LEVEL_CAP_BASE} рівня. Героям з професією межа відкривається до ${RPG.LEVEL_CAP_PROFESSION} після першої перемоги над Белі (Альвгейм).`
+        : `Межа відкриється до ${RPG.LEVEL_CAP_PROFESSION} рівня після першої перемоги над Белі — фінальним босом Альвгейму.`));
     } else {
       box.append(el("p", null, `Набрано ${p.percent}% до ${ch.level + 1} рівня.`));
       box.append(el("p", null, `Цей рівень: ${fmtNum(p.current)} / ${fmtNum(p.needed)} EXP (ще ${fmtNum(p.needed - p.current)}).`));

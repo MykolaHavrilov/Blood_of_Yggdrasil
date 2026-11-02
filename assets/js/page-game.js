@@ -2494,6 +2494,13 @@
           if (h.dead) { RPG.markFallen(team[k]); summary.push(`${team[k].character.name} полягає (відродіть у Храмі)`); }
         });
         const totalExp = result.enemies.reduce((sum, e) => sum + (e.exp || 0), 0);
+        // Перемоги над босами (перша — з датою): відкривають світи й межу рівня (character.js → levelCap).
+        // Записуємо ДО досвіду — досвід за Белі вже йде під нову межу 50.
+        const capWasOpen = RPG.levelCapOpen(save);
+        for (const e of result.enemies) if (RPG.ENEMIES[e.id]?.boss) (save.bossKills ??= {})[e.id] ??= Date.now();
+        if (!capWasOpen && RPG.levelCapOpen(save)) {
+          summary.push(`⭐ Белі повалено! Межа рівня для героїв з професією відтепер — ${RPG.LEVEL_CAP_PROFESSION} (Селянин лишається до ${RPG.LEVEL_CAP_BASE}).`);
+        }
         let gold = 0;
         const runeEco = RPG.teamRuneEco ? RPG.teamRuneEco(team) : { gold: 0, lootRarity: 0 };   // руни Феху й Даждьбог усієї групи
         for (const e of result.enemies) {
