@@ -467,7 +467,7 @@ const ITEMS = {
   // 7 — серцевина Іггдрасиля. Основні характеристики — від 3 виду ×1,6 / ×2,3 / ×3,1 / ×4;
   // крит, швидкість, ухилення, реген мани, інтелект — +1 за кожен вид понад 3 (крит кинджала +2, блок щита +2).
   // Лише здобич (4 вид — вороги й боси 29–30 рівня Альвгейму; 5–7 — вороги майбутніх світів).
-  // Іконок поки немає (заглушка); промти — H:\Game_NEW\Предмети t4..t7 *.txt, файли icon_<id>.webp.
+  // Іконки — assets/images/items/icon_<id>.webp (ICON_FILES нижче); промти — H:\Game_NEW\Предмети t4-t7 - *.txt.
   // --- 4 вид: Сталь ванів (30 рівень) ---
   sword_t4: {
     name: "Сталевий меч",
@@ -1169,7 +1169,10 @@ function getItem(id) {
 // Окремі іконки (assets/images/items/icon_<id>.webp, 256×256) — мають перевагу над спрайт-листом.
 // Інші файли даних можуть додавати свої (data/runes.js → іконки рун icon_rune_<знак>.webp).
 const ICON_FILES = new Set(["sword", "dagger", "axe", "bow", "staff", "shield", "quiver", "orb", "knife"]
-  .flatMap(w => [1, 2, 3].map(t => `${w}_t${t}`)));
+  .flatMap(w => [1, 2, 3, 4, 5, 6, 7].map(t => `${w}_t${t}`)));
+// Речі 4–7 виду: броня й прикраси (зброя — вище). Іконки — new_assets/*_T4_T7_all_assets.zip, вирівняні під розмір 1–3 виду
+["steel", "dwarf", "asgard", "ygg"].forEach(m => ["head", "chest", "legs", "hands", "feet"].forEach(s => ICON_FILES.add(`${m}_${s}`)));
+["ring", "amulet", "earring"].forEach(k => [4, 5, 6, 7].forEach(t => ICON_FILES.add(`${k}_t${t}`)));
 // Мішечки, ключі данжів і матеріали кузні (спрайт-листи items_2: new_assets/new_assets/items/Items_2-1…3.png)
 ["pouch_small", "pouch_medium", "pouch_large", "key_cave_secret", "key_web_nest", "key_dark_throne",
  "heavenly_spark", "coal", "gem", "glass", "oak_wood", "ash_wood", "flax", "leather_strap", "flint", "lapis", "onyx",
