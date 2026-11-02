@@ -12,12 +12,7 @@
   function $(id) { return document.getElementById(id); }
 
   // Створює елемент: el("div", "wf wf-slot", "текст")
-  function el(tag, className, text) {
-    const node = document.createElement(tag);
-    if (className) node.className = className;
-    if (text != null) node.textContent = text;
-    return node;
-  }
+  const el = RPG.el;   // спільний помічник (core.js)
 
   function link(text, href, className = "wf wf-link") {
     const a = el("a", className, text);

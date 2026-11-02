@@ -23,6 +23,14 @@ window.RPG = window.RPG || {};
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
+  // Створити DOM-елемент: el("p", "note", "текст") — спільний для game.js, journal.js та інших сторінок
+  RPG.el = function (tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text != null) node.textContent = text;
+    return node;
+  };
+
   // ---------- Глобальні налаштування (не залежать від сейву) ----------
   const SETTINGS_KEY = "rpg_settings";
   const DEFAULT_SETTINGS = { battleView: "stepByStep", volume: 70, musicVolume: 60, sfxVolume: 80, muted: false };

@@ -44,12 +44,7 @@ window.RPG = window.RPG || {};
 
   // ---------- Відображення ----------
 
-  function el(tag, className, text) {
-    const node = document.createElement(tag);
-    if (className) node.className = className;
-    if (text != null) node.textContent = text;
-    return node;
-  }
+  const el = RPG.el;   // спільний помічник (core.js)
 
   function logLi(line) {
     const [who, text, flags = ""] = line;
