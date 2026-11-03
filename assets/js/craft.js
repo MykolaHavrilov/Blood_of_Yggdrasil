@@ -205,12 +205,14 @@
     const mats = recipe.mats.map(([id, need]) => ({ id, need, have: haveMaterial(save, id) }));
     const tools = recipe.tools.map(id => ({ id, have: !!house?.forge?.tools?.[id] }));
     const ready = forgeReady(save, recipe.tools);
+    const open = RPG.craftTierOpen ? RPG.craftTierOpen(save, recipe.tier) : { ok: true };
     let reason = "";
-    if (st.level < tierLevel) reason = `Потрібен рівень «${g?.name || "майстерності"}» ${tierLevel}.`;
+    if (!open.ok) reason = open.reason;
+    else if (st.level < tierLevel) reason = `Потрібен рівень «${g?.name || "майстерності"}» ${tierLevel}.`;
     else if (!ready.ok) reason = ready.reason;
     else if (mats.some(m => m.have < m.need)) reason = "Бракує матеріалів.";
     else if (!RPG.invFree(save)) reason = "Інвентар повний.";
-    return { recipe, cat, tierLevel, levelOk: st.level >= tierLevel, mats, tools, canCraft: !reason, reason };
+    return { recipe, cat, tierLevel, levelOk: st.level >= tierLevel, tierOpen: open.ok, mats, tools, canCraft: !reason, reason };
   }
 
   function addCraftExp(save, amount) {
@@ -270,7 +272,10 @@
   function smeltInfo(save, ingotId) {
     const s = RPG.SMELT[ingotId];
     if (!s) return null;
-    const ready = forgeReady(save, s.tools);
+    let ready = forgeReady(save, s.tools);
+    // злитки тірів 4–7 — лише коли відкрито світ тіру (data/recipes.js → craftTierOpen)
+    const open = RPG.craftTierOpen ? RPG.craftTierOpen(save, RPG.ITEMS[ingotId]?.craftTier || 1) : { ok: true };
+    if (!open.ok) ready = { ok: false, reason: open.reason, closed: true };
     // скільки злитків можна зробити з руди кожної рідкості
     const byGrade = GRADE_ORDER.map(g => {
       const ore = RPG.materialOfGrade(s.ore, g);

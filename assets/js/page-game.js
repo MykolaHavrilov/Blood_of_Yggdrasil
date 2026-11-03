@@ -315,6 +315,7 @@
       return parts.length ? ". " + parts.join(" ") : ".";
     }
     let forgeTab = "weapon", forgePreferRare = false, forgeSpark = false, forgeResult = null, disConfirm = null;
+    const forgeTier = {};       // вибраний тір на кожній вкладці кузні: { weapon: 4, armor: 2, … }
     function showForge() {
       document.querySelector(".forge-dialog")?.remove();
       const { dlg, closeBtn } = noticeDialog("forge-dialog", () => { forgeResult = null; disConfirm = null; renderAll(); });
@@ -340,7 +341,7 @@
           const cs = RPG.craftCat(save, curGroup.id), cmax = RPG.craftCatMaxLevel(curGroup.id);
           dlg.append(el("p", "forge-cat", `${curGroup.name}: рівень ${cs.level}/${cmax}` +
             (cs.level < cmax ? ` · досвід ${fmtNum(cs.exp)}/${fmtNum(RPG.craftExpToNext(cs.level))}` : " · максимум") +
-            ` · відкрито тір ${RPG.craftCatOpenTier(cs.level)}`));
+            ` · відкрито тір ${(() => { let t = RPG.craftCatOpenTier(cs.level); while (t > 1 && RPG.craftTierOpen && !RPG.craftTierOpen(save, t).ok) t--; return t; })()}`));
         }
         if (forgeTab === "smelt") { drawSmelt(); return; }
         if (forgeTab === "dis") { drawDis(); return; }
@@ -361,12 +362,33 @@
         if (RPG.chestsHere(save).some(id => RPG.parseCraftChest(id)?.type === "mat"))
           dlg.append(el("small", "forge-why", "Матеріали беруться з інвентаря і скринь для матеріалів цього дому."));
         const group = RPG.RECIPE_GROUPS.find(x => x.id === forgeTab);
+        // Фільтр тірів: кнопка на кожен тір цього виду. Закритий тір (світ із ресурсами не відкрито) — сірий:
+        // рецепти видно, але кувати не можна (data/recipes.js → craftTierOpen)
+        const tiers = [...new Set(Object.entries(RPG.RECIPES).filter(([id]) => group.types.includes(RPG.ITEMS[id]?.type)).map(([, r]) => r.tier))].sort((a, b) => a - b);
+        const catLevel = RPG.craftCat(save, group.id).level;
+        const tierOpen = t => RPG.craftTierOpen ? RPG.craftTierOpen(save, t) : { ok: true };
+        if (!tiers.includes(forgeTier[group.id])) {
+          const usable = tiers.filter(t => tierOpen(t).ok && catLevel >= RPG.CRAFT_TIER_LEVEL[t]);
+          forgeTier[group.id] = usable.length ? usable.at(-1) : tiers[0];
+        }
+        const curTier = forgeTier[group.id];
+        const tierRow = el("div", "forge-tiers");
+        for (const t of tiers) {
+          const open = tierOpen(t);
+          const lvlOk = catLevel >= RPG.CRAFT_TIER_LEVEL[t];
+          const tb = button(`Тір ${t}`, "wf " + (t === curTier ? "wf-button" : "wf-link") + (open.ok ? "" : " is-closed"), () => { forgeTier[group.id] = t; forgeResult = null; draw(); });
+          tb.title = !open.ok ? open.reason : lvlOk ? `Тір ${t} відкрито` : `Тір ${t} — з рівня «${group.name}» ${RPG.CRAFT_TIER_LEVEL[t]}`;
+          tierRow.append(tb);
+        }
+        dlg.append(tierRow);
+        const curOpen = tierOpen(curTier);
+        if (!curOpen.ok) dlg.append(el("p", "forge-closed-note", curOpen.reason + " Рецепти можна переглянути, але кувати — ні."));
         const list = el("div", "stack forge-list");
-        for (const [id, rc] of Object.entries(RPG.RECIPES).sort((a, b) => a[1].tier - b[1].tier)) {
+        for (const [id, rc] of Object.entries(RPG.RECIPES)) {
           const item = RPG.ITEMS[id];
-          if (!item || !group.types.includes(item.type)) continue;
+          if (!item || !group.types.includes(item.type) || rc.tier !== curTier) continue;
           const info = RPG.recipeInfo(save, id);
-          const row = el("div", "forge-row" + (info.levelOk ? "" : " is-locked"));
+          const row = el("div", "forge-row" + (!info.tierOpen ? " is-closed" : info.levelOk ? "" : " is-locked"));
           const head = el("div", "forge-head");
           head.append(smallIcon(id), el("strong", null, item.name), el("small", "forge-tier", `тір ${rc.tier}`));
           row.append(head);
@@ -374,12 +396,12 @@
           for (const m of info.mats) mats.append(el("span", "forge-mat" + (m.have >= m.need ? " is-ok" : " is-short"), `${RPG.ITEMS[m.id].name} ${fmtNum(m.have)}/${m.need}`));
           for (const t of info.tools) mats.append(el("span", "forge-mat" + (t.have ? " is-ok" : " is-short"), `знаряддя: ${RPG.FORGE_TOOLS[t.id].name}`));
           row.append(mats);
-          if (info.levelOk) {
+          if (info.levelOk && info.tierOpen) {
             const odds = RPG.craftOdds(save, id, { preferRare: forgePreferRare, spark: forgeSpark });
             row.append(el("p", "forge-odds", ["broken", "common", "magic", "epic", "legendary"]
               .filter(r => odds[r] >= 0.005).map(r => `${RARITY_LABEL[r]} ${pct(odds[r])}`).join(" · ")));
           }
-          const b = button(info.levelOk ? "Кувати" : `${group.name} ${info.tierLevel}`, "wf wf-button forge-btn", async () => {
+          const b = button(!info.tierOpen ? "Закрито" : info.levelOk ? "Кувати" : `${group.name} ${info.tierLevel}`, "wf wf-button forge-btn", async () => {
             const r = RPG.craftItem(save, id, { preferRare: forgePreferRare, spark: forgeSpark });
             if (!r.ok) { forgeResult = { text: r.reason, error: true }; draw(); return; }
             await RPG.saveGame(save);
@@ -390,7 +412,7 @@
           b.disabled = !info.canCraft;
           if (!info.canCraft && info.reason) b.title = info.reason;
           row.append(b);
-          if (!info.canCraft && info.levelOk) row.append(el("small", "forge-why", info.reason));
+          if (!info.canCraft && info.levelOk && info.tierOpen) row.append(el("small", "forge-why", info.reason));
           list.append(row);
         }
         dlg.append(list);
@@ -401,7 +423,7 @@
           "Руда й вугілля беруться і зі скринь для матеріалів; злитки, що не влізли в інвентар, лягають туди ж."));
         for (const ingot of Object.keys(RPG.SMELT)) {
           const info = RPG.smeltInfo(save, ingot);
-          const row = el("div", "forge-row");
+          const row = el("div", "forge-row" + (info.ready.closed ? " is-closed" : ""));
           const head = el("div", "forge-head");
           head.append(smallIcon(ingot), el("strong", null, RPG.ITEMS[ingot].name));
           row.append(head);
@@ -412,9 +434,9 @@
           for (const t of info.s.tools) mats.append(el("span", "forge-mat" + (RPG.houseHere(save)?.forge?.tools?.[t] ? " is-ok" : " is-short"), `знаряддя: ${RPG.FORGE_TOOLS[t].name}`));
           row.append(mats);
           const btns = el("div", "row forge-smelt-btns");
-          for (const n of [1, 10, info.max]) {
-            if (n < 1 || (n === info.max && (n === 1 || n === 10))) continue;
-            const b = button(n === info.max ? `Усе (${fmtNum(n)})` : `×${n}`, "wf wf-button", async () => {
+          for (const n of [...new Set([1, 10, info.max])]) {
+            if (n < 1) continue;
+            const b = button(n === info.max && n !== 1 && n !== 10 ? `Усе (${fmtNum(n)})` : `×${n}`, "wf wf-button", async () => {
               const r = RPG.smelt(save, ingot, n);
               if (!r.ok) { forgeResult = { text: r.reason, error: true }; draw(); return; }
               await RPG.saveGame(save);

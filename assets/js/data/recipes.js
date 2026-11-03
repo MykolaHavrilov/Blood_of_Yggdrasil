@@ -172,11 +172,26 @@
     { id: "armor", name: "Броня", master: "Бронник", types: ["armor"] },
     { id: "jewel", name: "Ювелір", master: "Ювелір", types: ["accessory"] }
   ];
+  // Тір доступний для кування лише тоді, коли відкрито світ із його ресурсами (data/worlds.js → isWorldOpen).
+  // Закритий тір видно в кузні (сірим), рецепти можна переглянути, але кувати й переплавляти його злитки не можна.
+  //   тіри 1–3 — Мідгард (завжди); 4 — Альвгейм (там падають матеріали тіру 4); 5 — Свартальвгейм (кузні двергів);
+  //   6 — Асгард (небесний метал); 7 — Ніфльгейм і Хельгейм (коріння Іггдрасиля).
+  const CRAFT_TIER_WORLD = { 4: 3, 5: 5, 6: 8, 7: 9 };
+  // { ok, world, reason } — чи відкритий тір для кування
+  function craftTierOpen(save, tier) {
+    const n = CRAFT_TIER_WORLD[tier];
+    if (!n || !RPG.isWorldOpen) return { ok: true };
+    if (RPG.isWorldOpen(save, n).ok) return { ok: true, world: n };
+    const w = (RPG.WORLDS || []).find(x => x.n === n);
+    const name = w ? `«${w.name}»` : `№${n}`;
+    return { ok: false, world: n, reason: `Ресурси тіру ${tier} — у світі ${name}, а шлях туди ще закритий.` };
+  }
+
   // Вид ремесла речі (id групи) або null
   function recipeGroupOf(itemId) {
     const t = RPG.ITEMS[itemId]?.type;
     return RECIPE_GROUPS.find(g => g.types.includes(t))?.id || null;
   }
 
-  Object.assign(RPG, { CRAFT_TIER_LEVEL, RECIPES, SMELT, RECIPE_GROUPS, recipeGroupOf });
+  Object.assign(RPG, { CRAFT_TIER_LEVEL, CRAFT_TIER_WORLD, craftTierOpen, RECIPES, SMELT, RECIPE_GROUPS, recipeGroupOf });
 })(window.RPG);

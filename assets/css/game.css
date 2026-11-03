@@ -1229,6 +1229,13 @@ main > a.location { display: flex; margin-bottom: 10px; }
 .forge-list { gap: 8px; }
 .forge-row { display: flex; flex-direction: column; gap: 6px; padding: 8px 10px; border: 1px solid var(--link-border); border-radius: var(--radius); }
 .forge-row.is-locked { opacity: .6; }
+/* Фільтр тірів кузні: закритий тір (світ із ресурсами ще не відкрито) — сірий, переглядати можна, кувати — ні */
+.forge-tiers { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 8px; }
+.forge-tiers .wf { min-width: 0; padding: 6px 12px; }
+.forge-tiers .is-closed { filter: grayscale(1); opacity: .5; }
+.forge-tiers .is-closed.wf-button { opacity: .75; }
+.forge-row.is-closed { filter: grayscale(1); opacity: .55; }
+.forge-closed-note { margin: 0 0 6px; color: var(--text-dim); font-size: .92rem; }
 .forge-head { display: flex; align-items: center; gap: 8px; }
 .forge-head .mini-icon { width: 34px; height: 34px; }
 .forge-tier { margin-left: auto; color: var(--text-dim); }
