@@ -1276,11 +1276,15 @@ const FORGE_TOOLS = {
   hammer:      { name: "Молот коваля",             price: 2000, need: true, text: "Кує зброю, броню й кільця." },
   tongs:       { name: "Кліщі",                    price: 1000, need: true, text: "Тримають розпечене залізо." },
   quench:      { name: "Діжка для гартування",     price: 1000, need: true, text: "Гартування — річ отримує рідкість." },
-  bellows:     { name: "Міхи",                     price: 4000, for: "залізо (тір 3)", text: "Жар для заліза." },
+  bellows:     { name: "Міхи",                     price: 4000, for: "залізо (тір 3) і метали тірів 4–6", text: "Жар для заліза." },
   leatherwork: { name: "Верстак шкірника",         price: 3000, for: "шкіряна броня, колчани, щити тіру 2", text: "Для роботи зі шкірою." },
   carving:     { name: "Різці й рубанок",          price: 2000, for: "луки, посохи, дерев'яні речі", text: "Для роботи з деревом." },
   crucible:    { name: "Тигель і ювелірні щипці",  price: 3000, for: "кільця, амулети, сережки", text: "Для прикрас." },
-  iron_anvil:  { name: "Залізне ковадло",          price: 5000, bonus: 3, text: "Краще ковадло: +3% до успіху кування." }
+  iron_anvil:  { name: "Залізне ковадло",          price: 5000, bonus: 3, text: "Краще ковадло: +3% до успіху кування." },
+  vanir_quench:{ name: "Гартівна ванна ванів",      price: 15000, for: "сталь ванів (тір 4) і сталеві злитки", text: "Ванна з морською водою Ноатуну: у ній ванські ковалі гартують сталь." },
+  rune_forge:  { name: "Рунне горно двергів",       price: 40000, for: "двергська сталь (тір 5) і її злитки", text: "Горно з рунами Брокка й Ейтрі — жар, у якому чорніє сталь." },
+  sky_anvil:   { name: "Небесне ковадло",           price: 90000, for: "небесний метал і сонячне золото (тір 6)", text: "Ковадло, що впало з Асгарду: лише на ньому кується небесний метал." },
+  ygg_chisel:  { name: "Різець Іггдрасиля",         price: 200000, for: "речі з серцевини Іггдрасиля (тір 7)", text: "Різець із зуба Нідгьоґа — єдине, що бере серцевину Світового Дерева." }
 };
 // Ремесло — для героїв з професією (головний герой)
 function hasCraftAccess(save) {
@@ -1350,7 +1354,12 @@ function forgeMissing(house) {
 // ============================================================
 const IFRIT = {
   stock: ["coal", "oak_wood", "ash_wood", "flax", "leather_strap", "glass", "copper_ore", "flint",
-          "lapis", "silver_ore", "iron_ore", "gold_ore", "onyx", "gem"]
+          "lapis", "silver_ore", "iron_ore", "gold_ore", "onyx", "gem", "white_pelt",
+          // тіри 4–7 (поки не всі падають з ворогів — для перевірки кування)
+          "platinum_ore", "yew_wood", "seal_leather", "amber", "pearl",
+          "ironwood", "lizard_leather", "rock_crystal", "rune_gem",
+          "celestial_ore", "white_ash", "eagle_feather", "bifrost_shard",
+          "ygg_heartwood", "ygg_bark", "ygg_root", "ygg_sap", "mimir_water", "star_spark"]
 };
 // Звичайні руни (data/runes.js) — теж у Іфрита, поки руни не падають з ворогів
 if (RPG.RUNE_IDS) IFRIT.stock.push(...RPG.RUNE_IDS);

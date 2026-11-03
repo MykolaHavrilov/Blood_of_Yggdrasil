@@ -2,7 +2,7 @@
 // data/recipes.js — РЕЦЕПТИ КУЗНІ (план крафту, етап 7; книга «Небесна кузня. Настанова»)
 //
 // RECIPES[<id речі>] = { tier, mats: [[id матеріалу, кількість], …], tools: [id знаряддя, …] }
-//   tier  — 1 / 2 / 3: потрібен рівень майстерності ВИДУ (Зброя / Броня / Ювелір) CRAFT_TIER_LEVEL[tier] (1 / 10 / 20)
+//   tier  — 1…7: потрібен рівень майстерності ВИДУ (Зброя / Броня / Ювелір) CRAFT_TIER_LEVEL[tier] (1 / 10 / 20 / 30 / 40 / 50 / 60)
 //   mats  — базові ID матеріалів; підходить будь-яка рідкість (craft.js сам підбирає стопки)
 //   tools — знаряддя понад обов'язкові (горно, ковадло, молот, кліщі, діжка — потрібні завжди)
 // SMELT[<id злитка>] = { ore, oreQty, coal, tools } — переплавка руди в горні (завжди вдається).
@@ -11,8 +11,8 @@
 // ============================================================
 
 (function (RPG) {
-  // Тір відкривається рівнем майстерності свого виду. Тір 4 — на майбутнє (рівень 30).
-  const CRAFT_TIER_LEVEL = { 1: 1, 2: 10, 3: 20, 4: 30 };
+  // Тір відкривається рівнем майстерності свого виду (рівень виду — до 60, craft.js → CAT_MAX_LEVEL).
+  const CRAFT_TIER_LEVEL = { 1: 1, 2: 10, 3: 20, 4: 30, 5: 40, 6: 50, 7: 60 };
 
   const RECIPES = {
     // ---------- Тір 1 (дерево, льон, мідь) ----------
@@ -70,18 +70,100 @@
     iron_feet:  { tier: 3, mats: [["iron_ingot", 5], ["coal", 2], ["white_pelt", 1]], tools: ["bellows"] },
     ring_t3:    { tier: 3, mats: [["gold_ingot", 2], ["gem", 1]], tools: ["crucible"] },
     amulet_t3:  { tier: 3, mats: [["gold_ingot", 3], ["gem", 1]], tools: ["crucible"] },
-    earring_t3: { tier: 3, mats: [["gold_ingot", 1], ["gem", 1]], tools: ["crucible"] }
+    earring_t3: { tier: 3, mats: [["gold_ingot", 1], ["gem", 1]], tools: ["crucible"] },
+
+    // ---------- Тір 4 (сталь ванів, бурштин, платина) — знаряддя: міхи + гартівна ванна ванів ----------
+    sword_t4:   { tier: 4, mats: [["steel_ingot", 6], ["coal", 4], ["seal_leather", 2]], tools: ["bellows", "vanir_quench"] },
+    dagger_t4:  { tier: 4, mats: [["steel_ingot", 3], ["coal", 2], ["seal_leather", 1]], tools: ["bellows", "vanir_quench"] },
+    axe_t4:     { tier: 4, mats: [["steel_ingot", 7], ["coal", 4], ["yew_wood", 2]], tools: ["bellows", "vanir_quench"] },
+    bow_t4:     { tier: 4, mats: [["yew_wood", 5], ["steel_ingot", 2], ["seal_leather", 1]], tools: ["carving", "bellows", "vanir_quench"] },
+    staff_t4:   { tier: 4, mats: [["yew_wood", 3], ["steel_ingot", 2], ["amber", 1]], tools: ["carving", "bellows", "vanir_quench"] },
+    shield_t4:  { tier: 4, mats: [["steel_ingot", 6], ["coal", 3], ["yew_wood", 2]], tools: ["bellows", "vanir_quench"] },
+    quiver_t4:  { tier: 4, mats: [["seal_leather", 3], ["steel_ingot", 2], ["leather_strap", 2]], tools: ["leatherwork", "bellows", "vanir_quench"] },
+    orb_t4:     { tier: 4, mats: [["amber", 3], ["steel_ingot", 1]], tools: ["bellows", "vanir_quench"] },
+    knife_t4:   { tier: 4, mats: [["steel_ingot", 2], ["coal", 1], ["seal_leather", 1]], tools: ["bellows", "vanir_quench"] },
+    steel_head:  { tier: 4, mats: [["steel_ingot", 4], ["coal", 2], ["seal_leather", 1]], tools: ["bellows", "vanir_quench"] },
+    steel_chest: { tier: 4, mats: [["steel_ingot", 8], ["coal", 4], ["seal_leather", 2]], tools: ["bellows", "vanir_quench"] },
+    steel_legs:  { tier: 4, mats: [["steel_ingot", 6], ["coal", 3], ["seal_leather", 1]], tools: ["bellows", "vanir_quench"] },
+    steel_hands: { tier: 4, mats: [["steel_ingot", 4], ["coal", 2], ["seal_leather", 1]], tools: ["bellows", "vanir_quench"] },
+    steel_feet:  { tier: 4, mats: [["steel_ingot", 5], ["coal", 2], ["seal_leather", 1]], tools: ["bellows", "vanir_quench"] },
+    ring_t4:    { tier: 4, mats: [["platinum_ingot", 2], ["pearl", 1]], tools: ["crucible"] },
+    amulet_t4:  { tier: 4, mats: [["platinum_ingot", 3], ["pearl", 1], ["amber", 1]], tools: ["crucible"] },
+    earring_t4: { tier: 4, mats: [["platinum_ingot", 1], ["pearl", 1]], tools: ["crucible"] },
+
+    // ---------- Тір 5 (двергська сталь, кришталь, рунні самоцвіти) — знаряддя: міхи + рунне горно ----------
+    sword_t5:   { tier: 5, mats: [["darksteel_ingot", 6], ["coal", 4], ["lizard_leather", 2]], tools: ["bellows", "rune_forge"] },
+    dagger_t5:  { tier: 5, mats: [["darksteel_ingot", 3], ["coal", 2], ["lizard_leather", 1]], tools: ["bellows", "rune_forge"] },
+    axe_t5:     { tier: 5, mats: [["darksteel_ingot", 7], ["coal", 4], ["ironwood", 2]], tools: ["bellows", "rune_forge"] },
+    bow_t5:     { tier: 5, mats: [["ironwood", 4], ["darksteel_ingot", 2], ["lizard_leather", 2]], tools: ["carving", "bellows", "rune_forge"] },
+    staff_t5:   { tier: 5, mats: [["ironwood", 3], ["darksteel_ingot", 2], ["rune_gem", 1]], tools: ["carving", "bellows", "rune_forge"] },
+    shield_t5:  { tier: 5, mats: [["darksteel_ingot", 7], ["coal", 3], ["gold_ingot", 1]], tools: ["bellows", "rune_forge"] },
+    quiver_t5:  { tier: 5, mats: [["lizard_leather", 3], ["darksteel_ingot", 1], ["copper_ingot", 2]], tools: ["leatherwork", "bellows", "rune_forge"] },
+    orb_t5:     { tier: 5, mats: [["rock_crystal", 3], ["gold_ingot", 1]], tools: ["bellows", "rune_forge"] },
+    knife_t5:   { tier: 5, mats: [["darksteel_ingot", 2], ["coal", 1], ["gold_ingot", 1]], tools: ["bellows", "rune_forge"] },
+    dwarf_head:  { tier: 5, mats: [["darksteel_ingot", 4], ["coal", 2], ["lizard_leather", 1]], tools: ["bellows", "rune_forge"] },
+    dwarf_chest: { tier: 5, mats: [["darksteel_ingot", 8], ["coal", 4], ["lizard_leather", 2], ["gold_ingot", 1]], tools: ["bellows", "rune_forge"] },
+    dwarf_legs:  { tier: 5, mats: [["darksteel_ingot", 6], ["coal", 3], ["lizard_leather", 1]], tools: ["bellows", "rune_forge"] },
+    dwarf_hands: { tier: 5, mats: [["darksteel_ingot", 4], ["coal", 2], ["copper_ingot", 2]], tools: ["bellows", "rune_forge"] },
+    dwarf_feet:  { tier: 5, mats: [["darksteel_ingot", 5], ["coal", 2], ["lizard_leather", 1]], tools: ["bellows", "rune_forge"] },
+    ring_t5:    { tier: 5, mats: [["gold_ingot", 3], ["rune_gem", 1]], tools: ["crucible", "rune_forge"] },
+    amulet_t5:  { tier: 5, mats: [["gold_ingot", 4], ["rune_gem", 1]], tools: ["crucible", "rune_forge"] },
+    earring_t5: { tier: 5, mats: [["gold_ingot", 2], ["rune_gem", 1]], tools: ["crucible", "rune_forge"] },
+
+    // ---------- Тір 6 (небесний метал, сонячне золото, Біфрост) — знаряддя: міхи + небесне ковадло ----------
+    sword_t6:   { tier: 6, mats: [["celestial_ingot", 6], ["sun_gold_ingot", 1], ["white_pelt", 2]], tools: ["bellows", "sky_anvil"] },
+    dagger_t6:  { tier: 6, mats: [["celestial_ingot", 3], ["sun_gold_ingot", 1], ["white_pelt", 1]], tools: ["bellows", "sky_anvil"] },
+    axe_t6:     { tier: 6, mats: [["celestial_ingot", 7], ["white_ash", 2], ["sun_gold_ingot", 1]], tools: ["bellows", "sky_anvil"] },
+    bow_t6:     { tier: 6, mats: [["white_ash", 5], ["celestial_ingot", 2], ["eagle_feather", 2]], tools: ["carving", "bellows", "sky_anvil"] },
+    staff_t6:   { tier: 6, mats: [["white_ash", 3], ["celestial_ingot", 2], ["eagle_feather", 2], ["rock_crystal", 1]], tools: ["carving", "bellows", "sky_anvil"] },
+    shield_t6:  { tier: 6, mats: [["celestial_ingot", 6], ["sun_gold_ingot", 2], ["white_ash", 2]], tools: ["bellows", "sky_anvil"] },
+    quiver_t6:  { tier: 6, mats: [["white_pelt", 3], ["eagle_feather", 4], ["sun_gold_ingot", 1]], tools: ["leatherwork", "bellows", "sky_anvil"] },
+    orb_t6:     { tier: 6, mats: [["bifrost_shard", 3], ["sun_gold_ingot", 1]], tools: ["bellows", "sky_anvil"] },
+    knife_t6:   { tier: 6, mats: [["celestial_ingot", 2], ["eagle_feather", 1], ["sun_gold_ingot", 1]], tools: ["bellows", "sky_anvil"] },
+    asgard_head:  { tier: 6, mats: [["celestial_ingot", 4], ["sun_gold_ingot", 1], ["white_pelt", 1]], tools: ["bellows", "sky_anvil"] },
+    asgard_chest: { tier: 6, mats: [["celestial_ingot", 8], ["sun_gold_ingot", 2], ["white_pelt", 2]], tools: ["bellows", "sky_anvil"] },
+    asgard_legs:  { tier: 6, mats: [["celestial_ingot", 6], ["sun_gold_ingot", 1], ["white_pelt", 1]], tools: ["bellows", "sky_anvil"] },
+    asgard_hands: { tier: 6, mats: [["celestial_ingot", 4], ["sun_gold_ingot", 1], ["eagle_feather", 1]], tools: ["bellows", "sky_anvil"] },
+    asgard_feet:  { tier: 6, mats: [["celestial_ingot", 5], ["sun_gold_ingot", 1], ["white_pelt", 1]], tools: ["bellows", "sky_anvil"] },
+    ring_t6:    { tier: 6, mats: [["sun_gold_ingot", 2], ["bifrost_shard", 1]], tools: ["crucible", "sky_anvil"] },
+    amulet_t6:  { tier: 6, mats: [["sun_gold_ingot", 3], ["bifrost_shard", 1]], tools: ["crucible", "sky_anvil"] },
+    earring_t6: { tier: 6, mats: [["sun_gold_ingot", 1], ["bifrost_shard", 1]], tools: ["crucible", "sky_anvil"] },
+
+    // ---------- Тір 7 (серцевина, кора, корінь і сік Іггдрасиля) — знаряддя: різці + різець Іггдрасиля ----------
+    sword_t7:   { tier: 7, mats: [["ygg_heartwood", 6], ["ygg_sap", 2], ["ygg_root", 1]], tools: ["carving", "ygg_chisel"] },
+    dagger_t7:  { tier: 7, mats: [["ygg_heartwood", 3], ["ygg_sap", 1], ["ygg_root", 1]], tools: ["carving", "ygg_chisel"] },
+    axe_t7:     { tier: 7, mats: [["ygg_heartwood", 7], ["ygg_sap", 2], ["ygg_bark", 1]], tools: ["carving", "ygg_chisel"] },
+    bow_t7:     { tier: 7, mats: [["ygg_heartwood", 4], ["ygg_root", 2], ["ygg_sap", 2]], tools: ["carving", "ygg_chisel"] },
+    staff_t7:   { tier: 7, mats: [["ygg_root", 4], ["ygg_sap", 2], ["mimir_water", 1]], tools: ["carving", "ygg_chisel"] },
+    shield_t7:  { tier: 7, mats: [["ygg_bark", 6], ["ygg_sap", 2], ["ygg_root", 2]], tools: ["carving", "ygg_chisel"] },
+    quiver_t7:  { tier: 7, mats: [["ygg_bark", 3], ["ygg_heartwood", 2], ["ygg_root", 1]], tools: ["carving", "ygg_chisel"] },
+    orb_t7:     { tier: 7, mats: [["mimir_water", 3], ["ygg_root", 1]], tools: ["carving", "ygg_chisel"] },
+    knife_t7:   { tier: 7, mats: [["ygg_heartwood", 2], ["ygg_sap", 1], ["ygg_root", 1]], tools: ["carving", "ygg_chisel"] },
+    ygg_head:  { tier: 7, mats: [["ygg_bark", 4], ["ygg_sap", 1], ["ygg_root", 1]], tools: ["carving", "ygg_chisel"] },
+    ygg_chest: { tier: 7, mats: [["ygg_bark", 8], ["ygg_sap", 3], ["ygg_root", 2]], tools: ["carving", "ygg_chisel"] },
+    ygg_legs:  { tier: 7, mats: [["ygg_bark", 6], ["ygg_sap", 2], ["ygg_root", 2]], tools: ["carving", "ygg_chisel"] },
+    ygg_hands: { tier: 7, mats: [["ygg_bark", 4], ["ygg_sap", 1], ["ygg_root", 1]], tools: ["carving", "ygg_chisel"] },
+    ygg_feet:  { tier: 7, mats: [["ygg_bark", 5], ["ygg_sap", 2], ["ygg_root", 1]], tools: ["carving", "ygg_chisel"] },
+    ring_t7:    { tier: 7, mats: [["star_spark", 1], ["celestial_ingot", 2], ["ygg_sap", 1]], tools: ["crucible", "ygg_chisel"] },
+    amulet_t7:  { tier: 7, mats: [["star_spark", 1], ["celestial_ingot", 3], ["mimir_water", 1]], tools: ["crucible", "ygg_chisel"] },
+    earring_t7: { tier: 7, mats: [["star_spark", 1], ["celestial_ingot", 1]], tools: ["crucible", "ygg_chisel"] }
   };
 
-  // Переплавка: 2 руди (+ вугілля для заліза) → 1 злиток тієї ж рідкості
+  // Переплавка: 2 руди (+ вугілля для заліза) → 1 злиток тієї ж рідкості.
+  // Сталь, двергська сталь і сонячне золото — не з руди, а з нижчих злитків (ore — ID злитка).
   const SMELT = {
     copper_ingot: { ore: "copper_ore", oreQty: 2, coal: 0, tools: [] },
     silver_ingot: { ore: "silver_ore", oreQty: 2, coal: 0, tools: [] },
     iron_ingot:   { ore: "iron_ore",   oreQty: 2, coal: 1, tools: ["bellows"] },
-    gold_ingot:   { ore: "gold_ore",   oreQty: 2, coal: 0, tools: [] }
+    gold_ingot:   { ore: "gold_ore",   oreQty: 2, coal: 0, tools: [] },
+    steel_ingot:     { ore: "iron_ingot",     oreQty: 2, coal: 2, tools: ["bellows", "vanir_quench"] },
+    platinum_ingot:  { ore: "platinum_ore",   oreQty: 2, coal: 0, tools: [] },
+    darksteel_ingot: { ore: "steel_ingot",    oreQty: 2, coal: 3, tools: ["bellows", "rune_forge"] },
+    celestial_ingot: { ore: "celestial_ore",  oreQty: 2, coal: 2, tools: ["bellows", "sky_anvil"] },
+    sun_gold_ingot:  { ore: "gold_ingot",     oreQty: 3, coal: 0, tools: ["sky_anvil"] }
   };
 
-  // Види ремесла = вкладки кузні. У кожного виду — свій рівень майстерності 1–30 (craft.js → craftCat):
+  // Види ремесла = вкладки кузні. У кожного виду — свій рівень майстерності 1–60 (craft.js → craftCat):
   // він відкриває вищі тіри цього виду. Нові види речей додаються сюди за типом предмета (types).
   //   weapon — уся зброя, і для правої, і для лівої руки (щити, колчани, сфери, малі кинджали)
   //   armor  — уся броня; jewel — кільця, амулети, сережки

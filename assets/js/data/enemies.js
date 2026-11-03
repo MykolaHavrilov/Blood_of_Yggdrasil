@@ -1236,7 +1236,9 @@ const ENEMIES = {
         { id: "amulet_t3", chance: 0.04, qty: [1, 1] },
         { id: "earring_t3", chance: 0.04, qty: [1, 1] },
         { id: "glass", chance: 0.25, qty: [1, 3] },
-        { id: "lapis", chance: 0.25, qty: [1, 3] }
+        { id: "lapis", chance: 0.25, qty: [1, 3] },
+        { id: "pearl", chance: 0.25, qty: [1, 2] },
+        { id: "amber", chance: 0.15, qty: [1, 1] }
       ]
     },
     alf_thornbush: {
@@ -1378,7 +1380,9 @@ const ENEMIES = {
         { id: "amulet_t3", chance: 0.04, qty: [1, 1] },
         { id: "earring_t3", chance: 0.04, qty: [1, 1] },
         { id: "oak_wood", chance: 0.25, qty: [1, 3] },
-        { id: "onyx", chance: 0.25, qty: [1, 3] }
+        { id: "onyx", chance: 0.25, qty: [1, 3] },
+        { id: "yew_wood", chance: 0.25, qty: [1, 3] },
+        { id: "amber", chance: 0.1, qty: [1, 1] }
       ]
     },
     alf_elf_mage: {
@@ -1448,7 +1452,8 @@ const ENEMIES = {
         { id: "knife_t3", chance: 0.003, qty: [1, 1] },
         { id: "ring_t3", chance: 0.004, qty: [1, 1] },
         { id: "amulet_t3", chance: 0.004, qty: [1, 1] },
-        { id: "earring_t3", chance: 0.004, qty: [1, 1] }
+        { id: "earring_t3", chance: 0.004, qty: [1, 1] },
+        { id: "pearl", chance: 0.01, qty: [1, 1] }
       ]
     },
     alf_herald_owl: {
@@ -1520,7 +1525,9 @@ const ENEMIES = {
         { id: "amulet_t3", chance: 0.04, qty: [1, 1] },
         { id: "earring_t3", chance: 0.04, qty: [1, 1] },
         { id: "gem", chance: 0.25, qty: [1, 3] },
-        { id: "gold_ore", chance: 0.25, qty: [1, 3] }
+        { id: "gold_ore", chance: 0.25, qty: [1, 3] },
+        { id: "amber", chance: 0.25, qty: [1, 2] },
+        { id: "platinum_ore", chance: 0.15, qty: [1, 2] }
       ]
     },
     alf_wild_boar: {
@@ -1607,7 +1614,8 @@ const ENEMIES = {
         { id: "ring_t4", chance: 0.0012, qty: [1, 1] },
         { id: "amulet_t4", chance: 0.0012, qty: [1, 1] },
         { id: "earring_t4", chance: 0.0012, qty: [1, 1] },
-        { id: "iron_ore", chance: 0.02, qty: [1, 1] }
+        { id: "iron_ore", chance: 0.02, qty: [1, 1] },
+        { id: "platinum_ore", chance: 0.015, qty: [1, 1] }
       ]
     },
     alf_huntsman: {
@@ -1642,7 +1650,8 @@ const ENEMIES = {
         { id: "knife_t3", chance: 0.003, qty: [1, 1] },
         { id: "ring_t3", chance: 0.004, qty: [1, 1] },
         { id: "amulet_t3", chance: 0.004, qty: [1, 1] },
-        { id: "earring_t3", chance: 0.004, qty: [1, 1] }
+        { id: "earring_t3", chance: 0.004, qty: [1, 1] },
+        { id: "seal_leather", chance: 0.015, qty: [1, 1] }
       ]
     },
     alf_boss_gullinbursti: {
@@ -1698,7 +1707,9 @@ const ENEMIES = {
         { id: "amulet_t4", chance: 0.01, qty: [1, 1] },
         { id: "earring_t4", chance: 0.01, qty: [1, 1] },
         { id: "gold_ore", chance: 0.25, qty: [1, 3] },
-        { id: "leather_strap", chance: 0.25, qty: [1, 3] }
+        { id: "leather_strap", chance: 0.25, qty: [1, 3] },
+        { id: "seal_leather", chance: 0.25, qty: [1, 3] },
+        { id: "yew_wood", chance: 0.15, qty: [1, 2] }
       ]
     },
     alf_dead_giant: {
@@ -1750,7 +1761,8 @@ const ENEMIES = {
         { id: "ring_t4", chance: 0.0024, qty: [1, 1] },
         { id: "amulet_t4", chance: 0.0024, qty: [1, 1] },
         { id: "earring_t4", chance: 0.0024, qty: [1, 1] },
-        { id: "flint", chance: 0.02, qty: [1, 1] }
+        { id: "flint", chance: 0.02, qty: [1, 1] },
+        { id: "yew_wood", chance: 0.02, qty: [1, 2] }
       ]
     },
     alf_stag_spirit: {
@@ -1802,7 +1814,8 @@ const ENEMIES = {
         { id: "steel_feet", chance: 0.0012, qty: [1, 1] },
         { id: "ring_t4", chance: 0.0012, qty: [1, 1] },
         { id: "amulet_t4", chance: 0.0012, qty: [1, 1] },
-        { id: "earring_t4", chance: 0.0012, qty: [1, 1] }
+        { id: "earring_t4", chance: 0.0012, qty: [1, 1] },
+        { id: "amber", chance: 0.01, qty: [1, 1] }
       ]
     },
     alf_rot_warrior: {
@@ -1856,7 +1869,8 @@ const ENEMIES = {
         { id: "ring_t4", chance: 0.0012, qty: [1, 1] },
         { id: "amulet_t4", chance: 0.0012, qty: [1, 1] },
         { id: "earring_t4", chance: 0.0012, qty: [1, 1] },
-        { id: "iron_ore", chance: 0.02, qty: [1, 1] }
+        { id: "iron_ore", chance: 0.02, qty: [1, 1] },
+        { id: "seal_leather", chance: 0.015, qty: [1, 1] }
       ]
     },
     alf_boss_beli: {
@@ -1913,7 +1927,9 @@ const ENEMIES = {
         { id: "earring_t4", chance: 0.01, qty: [1, 1] },
         { id: "iron_ingot", chance: 0.25, qty: [1, 3] },
         { id: "gold_ingot", chance: 0.25, qty: [1, 3] },
-        { id: "gem", chance: 0.25, qty: [1, 3] }
+        { id: "gem", chance: 0.25, qty: [1, 3] },
+        { id: "platinum_ore", chance: 0.25, qty: [1, 3] },
+        { id: "pearl", chance: 0.15, qty: [1, 2] }
       ]
     }
   };

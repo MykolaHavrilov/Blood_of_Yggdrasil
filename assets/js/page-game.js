@@ -397,7 +397,7 @@
       };
       const drawSmelt = () => {
         const list = el("div", "stack forge-list");
-        list.append(el("p", "forge-why", "Переплавка завжди вдається: 2 руди → 1 злиток тієї ж рідкості (залізо — ще й 1 вугілля та міхи). +1 досвіду за злиток. " +
+        list.append(el("p", "forge-why", "Переплавка завжди вдається: руда (а для сталі, двергської сталі й сонячного золота — нижчі злитки) → 1 злиток тієї ж рідкості; скільки треба — біля кожного злитка. +1 досвіду за злиток. " +
           "Руда й вугілля беруться і зі скринь для матеріалів; злитки, що не влізли в інвентар, лягають туди ж."));
         for (const ingot of Object.keys(RPG.SMELT)) {
           const info = RPG.smeltInfo(save, ingot);
@@ -407,8 +407,8 @@
           row.append(head);
           const mats = el("div", "forge-mats");
           const oreTotal = info.byGrade.reduce((n, b) => n + RPG.craftCountMat(save, b.ore), 0);
-          mats.append(el("span", "forge-mat" + (oreTotal >= info.s.oreQty ? " is-ok" : " is-short"), `${RPG.ITEMS[info.s.ore].name}: ${fmtNum(oreTotal)}`));
-          if (info.s.coal) mats.append(el("span", "forge-mat" + (info.coalHave >= info.s.coal ? " is-ok" : " is-short"), `Вугілля: ${fmtNum(info.coalHave)}`));
+          mats.append(el("span", "forge-mat" + (oreTotal >= info.s.oreQty ? " is-ok" : " is-short"), `${RPG.ITEMS[info.s.ore].name} ×${info.s.oreQty}: є ${fmtNum(oreTotal)}`));
+          if (info.s.coal) mats.append(el("span", "forge-mat" + (info.coalHave >= info.s.coal ? " is-ok" : " is-short"), `Вугілля ×${info.s.coal}: є ${fmtNum(info.coalHave)}`));
           for (const t of info.s.tools) mats.append(el("span", "forge-mat" + (RPG.houseHere(save)?.forge?.tools?.[t] ? " is-ok" : " is-short"), `знаряддя: ${RPG.FORGE_TOOLS[t].name}`));
           row.append(mats);
           const btns = el("div", "row forge-smelt-btns");

@@ -675,7 +675,7 @@
       for (const g of RPG.RECIPE_GROUPS) {
         frag.append(el("p", "fbook-group", g.name));
         const rows = [];
-        for (const tier of [1, 2, 3]) {
+        for (const tier of Object.keys(RPG.CRAFT_TIER_LEVEL).map(Number)) {
           const ids = Object.keys(RPG.RECIPES).filter(id => RPG.RECIPES[id].tier === tier && g.types.includes(RPG.ITEMS[id]?.type));
           if (!ids.length) continue;
           const mats = [...new Set(ids.flatMap(id => RPG.RECIPES[id].mats.map(([m]) => RPG.ITEMS[m]?.name.toLowerCase())))];

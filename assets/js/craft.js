@@ -4,8 +4,8 @@
 // Майстерність коваля — лише в головного героя (save.character.craft = { level, exp, cats }), а речі носить уся група.
 // Загальна майстерність 1–30: шанс успіху росте з 10% на 1 рівні до 95% на 30-му (+2,93% за рівень) і частки рідкостей.
 // Тіри вона НЕ відкриває — це робить майстерність виду (cats.weapon / armor / jewel, data/recipes.js → RECIPE_GROUPS):
-// у кожного виду свій рівень 1–30, що росте від кування й розбору речей цього виду; максимум виду —
-// рівень, на якому відкривається його найвищий наявний тір (зараз тір 3 → 20), з новими тірами він зросте.
+// у кожного виду свій рівень 1–60, що росте від кування й розбору речей цього виду; максимум виду —
+// рівень, на якому відкривається його найвищий наявний тір (тір 7 → 60).
 // Невдача — річ виходить ЗЛАМАНОЮ (матеріали витрачено). Успіх — рідкість за таблицею RARITY_ANCHORS
 // (опорні рівні 1, 5, 10, 15, 20, 25, 30, між ними — плавно). Числа — з «Небесна_кузня_крафт_v2.xlsx».
 //
@@ -16,12 +16,14 @@
 // ============================================================
 
 (function (RPG) {
-  const MAX_LEVEL = 30;
+  const MAX_LEVEL = 30;            // загальна майстерність (шанс успіху й рідкість)
+  const CAT_MAX_LEVEL = 60;        // майстерність виду (Зброя / Броня / Ювелір) — відкриває тіри 1–7
   const MIN_CHANCE = 0.10, MAX_CHANCE = 0.95;
-  // Досвід до наступного рівня: 10 × рівень² (1→2: 10, 9→10: 810, 29→30: 8 410; разом ≈ 85 550)
-  const expToNext = lvl => lvl >= MAX_LEVEL ? Infinity : 10 * lvl * lvl;
-  // Досвід за кування: тір 1/2/3 → 15/40/100; зламана — половина; переплавка — 1 за злиток
-  const CRAFT_EXP = { 1: 15, 2: 40, 3: 100 };
+  // Досвід до наступного рівня: 10 × рівень² (1→2: 10, 9→10: 810, 29→30: 8 410; разом до 30 ≈ 85 550, до 60 ≈ 696 000).
+  // Загальна майстерність зупиняється на 30 (addCraftExp), майстерність виду — на 60.
+  const expToNext = lvl => lvl >= CAT_MAX_LEVEL ? Infinity : 10 * lvl * lvl;
+  // Досвід за кування: тір 1…7 → 15 / 40 / 100 / 250 / 600 / 1400 / 3000; зламана — половина; переплавка — 1 за злиток
+  const CRAFT_EXP = { 1: 15, 2: 40, 3: 100, 4: 250, 5: 600, 6: 1400, 7: 3000 };
   const SMELT_EXP = 1;
   // Опорні точки: частки магічних / епічних / легендарних речей від усіх спроб
   const RARITY_ANCHORS = [
@@ -41,12 +43,12 @@
   }
   // ---------- Майстерність виду (Зброя / Броня / Ювелір) ----------
   function catState(save, cat) { return craftState(save).cats[cat] || null; }
-  // Найвищий рівень виду: рівень, що відкриває найвищий наявний тір цього виду (не більше 30)
+  // Найвищий рівень виду: рівень, що відкриває найвищий наявний тір цього виду (не більше 60)
   function catMaxLevel(cat) {
     const g = RPG.RECIPE_GROUPS.find(x => x.id === cat);
     let tier = 1;
     for (const [id, r] of Object.entries(RPG.RECIPES)) if (g?.types.includes(RPG.ITEMS[id]?.type)) tier = Math.max(tier, r.tier);
-    return Math.min(MAX_LEVEL, RPG.CRAFT_TIER_LEVEL[tier] || MAX_LEVEL);
+    return Math.min(CAT_MAX_LEVEL, RPG.CRAFT_TIER_LEVEL[tier] || CAT_MAX_LEVEL);
   }
   // Найвищий тір, відкритий рівнем виду
   function catOpenTier(level) {
@@ -379,7 +381,7 @@
   }
 
   Object.assign(RPG, {
-    CRAFT_MAX_LEVEL: MAX_LEVEL, CRAFT_EXP, craftState, craftExpToNext: expToNext, baseCraftChance: baseChance,
+    CRAFT_MAX_LEVEL: MAX_LEVEL, CRAFT_CAT_MAX_LEVEL: CAT_MAX_LEVEL, CRAFT_EXP, craftState, craftExpToNext: expToNext, baseCraftChance: baseChance,
     craftSuccessChance: successChance, craftRarityTable: rarityTable, craftOdds, haveMaterial, recipeInfo,
     craftForgeReady: forgeReady, craftItem, addCraftExp, smeltInfo, smelt,
     DISASSEMBLE_SHARE, DISASSEMBLE_EXP, disassembleInfo, disassemble, salvageRecipe,
