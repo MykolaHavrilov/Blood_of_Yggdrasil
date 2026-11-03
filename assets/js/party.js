@@ -69,14 +69,18 @@
     return !!ms.character.dead || ms.character.hp <= 0;
   }
 
+  // Живі герої, що зараз удома (герої в експедиції — expedition.js → isAway — не б'ються тут)
   function aliveMembers(save) {
-    return partyMembers(save).filter(ms => !isDead(ms));
+    return partyMembers(save).filter(ms => !isDead(ms) && !RPG.isAway?.(ms));
   }
 
   // Відновлення HP/MP з часом — для кожного героя групи
   function applyRegenAll(save) {
     let changed = false;
-    for (const ms of partyMembers(save)) changed = RPG.applyRegen(ms) || changed;
+    for (const ms of partyMembers(save)) {
+      if (RPG.isAway?.(ms)) continue;         // героїв в експедиції відновлює сама експедиція (expedition.js)
+      changed = RPG.applyRegen(ms) || changed;
+    }
     return changed;
   }
 
@@ -145,6 +149,7 @@
   function dismissMember(save, index) {
     const m = partyState(save)[index - 1];
     if (!m) return { ok: false, reason: "Такого героя в групі немає." };
+    if (RPG.isAway?.(memberSave(save, index))) return { ok: false, reason: `${m.character.name} в експедиції — звільнити можна, коли повернеться.` };
     for (const slot in m.equipment) RPG.addRefToList(save.inventory, m.equipment[slot]);
     save.party.splice(index - 1, 1);
     return { ok: true, name: m.character.name };

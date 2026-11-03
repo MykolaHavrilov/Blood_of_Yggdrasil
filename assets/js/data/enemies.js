@@ -2142,6 +2142,41 @@ const ENEMIES = {
   };
   const DEFAULT_LOCATION = "home";
 
+  // ---------- ШАХТА Й ЛІСОПИЛКА (експедиції — expedition.js) ----------
+  // На мапі кожного світу без дороги до них: з мапи лише відправляють туди експедицію (3 або 6 героїв на 4 години).
+  // Вороги — усі звичайні (не боси) вороги бойових локацій свого світу. За кожен виграний бій — 1–3 кожного ресурсу з yields.
+  // image — чия картинка локації (assets/images/locations/loc_<image>.webp), поки немає власної.
+  const EXPEDITION_SITES = {
+    start: {
+      mine:    { minLevel: 5, image: "forest_cave", yields: ["copper_ore", "coal"],
+                 description: "Стара мідна шахта в скелях над Гардарикою. Хутірські рудокопи покинули її, коли зі штолень полізли щури й вовки, — та мідь і вугілля там ще є." },
+      sawmill: { minLevel: 5, image: "forest_path", yields: ["oak_wood", "ash_wood", "flax"],
+                 description: "Хутірська лісопилка на узліссі: дубові й ясеневі колоди, а на полі поруч — льон. Звірі з лісу вважають ці місця своїми." }
+    },
+    dark: {
+      mine:    { minLevel: 10, image: "dk_ravine", yields: ["silver_ore", "iron_ore"],
+                 description: "Штольні під скелями біля Центральної брами. Срібло й залізо Темного лісу варті ризику — якщо вийти живим з туману." },
+      sawmill: { minLevel: 10, image: "dk_edge", yields: ["oak_wood", "ash_wood"],
+                 description: "Покинута лісопилка вартових посеред Темного лісу. Пили ще гострі, колоди ще лежать, а з-поміж дерев дивляться жовті очі." }
+    },
+    alf: {
+      mine:    { minLevel: 25, image: "alf_towers", yields: ["gold_ore", "platinum_ore"],
+                 description: "Копальні альвів у світлих горах Альвгейму. Золото й платина тут виходять просто на поверхню, але тлін Хелли дістався й сюди." },
+      sawmill: { minLevel: 25, image: "alf_grove", yields: ["yew_wood"],
+                 description: "Тисовий гай альвів, де колись різали дерево на луки. Здичавілі альви досі стережуть кожен стовбур." }
+    }
+  };
+  const SITE_NAMES = { mine: "Шахта", sawmill: "Лісопилка" };
+  for (const [region, sites] of Object.entries(EXPEDITION_SITES)) {
+    const pool = [...new Set(Object.values(LOCATIONS)
+      .filter(l => (l.region || "start") === region && l.type === "combat")
+      .flatMap(l => l.enemies || []))].filter(id => !ENEMIES[id]?.boss);
+    for (const [type, s] of Object.entries(sites)) {
+      LOCATIONS[`${type}_${region}`] = { name: SITE_NAMES[type], type, region, minLevel: s.minLevel, image: s.image,
+        description: s.description, yields: s.yields, enemies: pool, expeditionOnly: true };
+    }
+  }
+
   // ---------- ДАНЖІ (логіка — dungeon.js) ----------
   // Локація з полем dungeon має два режими:
   //   explore — «Обстеження»: звичайні бої без боса; з кожного переможеного ворога з pool

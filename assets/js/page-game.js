@@ -2328,7 +2328,20 @@
       portalBox = card;
     }
 
+    // Експедиція (expedition.js): панель стану під назвою локації
+    let expBox = null, expWasActive = RPG.expeditionActive?.(save);
+    function renderExpedition() {
+      const panel = save.expedition ? RPG.ui.expeditionPanel(save, () => renderAll()) : null;
+      if (expBox) expBox.remove();
+      expBox = panel;
+      if (panel) document.querySelector("a.location")?.after(panel);
+      const active = RPG.expeditionActive?.(save);
+      if (expWasActive && !active && save.expedition) showMsg(msg, "Експедиція повернулась — заберіть здобич.");
+      expWasActive = active;
+    }
+
     function renderAll() {
+      renderExpedition();
       renderCombatPortal();
       drawHero();
       renderQuickSlots();
@@ -2377,7 +2390,7 @@
       if (foes.length > 1) lines.push(`Ворогів: ${foes.length}, у вашій групі живих героїв: ${fighters().length}.`);
       if (anyChampion()) lines.push("Серед них рідкісний ЧЕМПІОН: утричі сильніший! За перемогу — трофей і нагорода ×5 у Гільдії авантюристів.");
       if (foes.some((f, i) => curEnemy(i).boss)) lines.push("Це БОС! Кожен третій свій хід він застосовує особливу навичку.");
-      if (!fighters().length) lines.push("Усі герої групи полягли — помоліться за них у Храмі.");
+      if (!fighters().length) lines.push(RPG.expeditionActive?.(save) ? "Удома немає героїв, готових до бою: решта — в експедиції або полягла." : "Усі герої групи полягли — помоліться за них у Храмі.");
       lines.push("Натисніть «Почати бій» або пошукайте іншого суперника.");
       logBox.innerHTML = "";
       setArena(anyChampion() ? "Чемпіон!" : "Готові до бою", lines, anyChampion() ? "champion" : "ready");
@@ -2481,7 +2494,8 @@
     async function startBattle() {
       if (fighting) return;
       const team = fighters();
-      if (!team.length) { showMsg(msg, "Усі герої групи полягли — помоліться за них у Храмі.", true); return; }
+      if (!team.length) { showMsg(msg, RPG.expeditionActive?.(save) && RPG.partyMembers(save).some(ms => RPG.isAway(ms)) && !RPG.partyMembers(save).some(ms => !RPG.isAway(ms) && !RPG.isMemberDead(ms))
+        ? "Уся група, що лишилась удома, — в експедиції або полягла. Дочекайтеся повернення експедиції." : "Усі герої групи полягли — помоліться за них у Храмі.", true); return; }
       if (mode === "dungeon" && !dungeonOn()) { showMsg(msg, "Спершу відчиніть ворота данжу ключем.", true); return; }
       const dun = dungeonOn() ? RPG.activeDungeon(save) : null;   // бій у данжі: { stage, stages, ... }
       const rewarded = !dun || dun.stage === dun.stages;          // нагорода — лише за боса данжу
@@ -2817,7 +2831,7 @@
 
     renderAll();
     // У мирних локаціях не перемальовуємо панель щосекунди — лише смужки героя
-    startRegenTimer(save, () => { drawHero(); }, () => fighting);
+    startRegenTimer(save, () => { drawHero(); if (save.expedition) renderExpedition(); }, () => fighting);
   }
 
   // ============================================================

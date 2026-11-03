@@ -1024,6 +1024,7 @@ function equipItem(save, what) {
   const entry = save.inventory[index];
   if (!entry) return { ok: false, reason: "Предмета немає в інвентарі." };
   const item = ITEMS[entry.id];
+  if (RPG.isAway?.(save)) return { ok: false, reason: `${save.character.name} в експедиції — речі змінити, коли повернеться.` };
   const check = canEquip(save, entry.id);
   if (!check.ok) return check;
 
@@ -1044,6 +1045,7 @@ function equipItem(save, what) {
 function unequipItem(save, slot) {
   const ref = save.equipment[slot];
   if (!ref) return { ok: false, reason: "Слот порожній." };
+  if (RPG.isAway?.(save)) return { ok: false, reason: `${save.character.name} в експедиції — речі змінити, коли повернеться.` };
   delete save.equipment[slot];
   addRefToList(save.inventory, ref);
   fixHands(save);   // з вільною правою рукою ліва може тримати будь-що, але перевіряємо про всяк випадок

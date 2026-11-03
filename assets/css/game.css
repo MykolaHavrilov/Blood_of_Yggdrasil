@@ -1422,3 +1422,21 @@ main > a.location { display: flex; margin-bottom: 10px; }
 .globe-label.is-locked { border-color: rgba(150, 150, 150, .45); }
 .globe-label.is-locked strong { color: #a5a5a5; }
 .globe-tip { z-index: 10; }
+
+/* ---------- Експедиції (expedition.js): Шахта й Лісопилка на мапі, панель стану, вікно запуску ---------- */
+.map-spot.map-site { display: grid; place-items: center; }
+.site-badge { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; color: #f4e2b0;
+  background: radial-gradient(circle at 35% 30%, #6b4a22, #2a1a0a); border: 2px solid #c9a24a; box-shadow: 0 2px 6px rgba(0,0,0,.6); }
+.site-badge svg { width: 22px; height: 22px; }
+.map-spot.map-site.is-closed .site-badge { filter: grayscale(1); opacity: .6; }
+.exp-panel { margin: 8px 0; padding: 10px 12px; border: 1px solid #8a6a2e; border-radius: var(--radius); background: rgba(60, 42, 18, .35); }
+.exp-panel h3 { margin: 0 0 6px; font-size: 1.02rem; color: var(--gold); }
+.exp-panel p { margin: 4px 0; }
+.exp-panel.is-done { border-color: #5f8a52; background: rgba(60, 90, 50, .22); }
+.exp-panel.is-lost { border-color: #a0483a; background: rgba(120, 40, 30, .22); }
+.exp-btns { gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+.exp-dialog { max-width: min(560px, calc(100vw - 24px)); }
+.exp-sizes { gap: 8px; margin: 8px 0; }
+.exp-heroes { gap: 4px; margin: 6px 0 10px; }
+.exp-hero { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.exp-hero.is-off { opacity: .55; cursor: default; }

@@ -8,7 +8,20 @@
 
   // МАПА: частини світу (data/routes.js → MAP_REGIONS), переміщення з часом (travel.js)
   // ============================================================
-  const TYPE_LABEL = { home: "Безпечно", temple: "Безпечно", tavern: "Торговець", city: "Гільдія", combat: "Бої", gate: "Брама", citygate: "Вхід у Дубову Заставу", portal: "Корінь Іггдрасиля" };
+  const TYPE_LABEL = { home: "Безпечно", temple: "Безпечно", tavern: "Торговець", city: "Гільдія", combat: "Бої", gate: "Брама", citygate: "Вхід у Дубову Заставу", portal: "Корінь Іггдрасиля",
+    mine: "Експедиція · руда", sawmill: "Експедиція · деревина" };
+  // Шахта й Лісопилка на мапі кожного світу (data/enemies.js → EXPEDITION_SITES): без дороги, лише експедиція.
+  // x, y — центр, w, h — зона кліку в % мапи
+  const SITE_ZONES = {
+    start: { mine_start: { x: 82, y: 20, w: 7, h: 11 }, sawmill_start: { x: 8, y: 32, w: 7, h: 11 } },
+    dark:  { mine_dark:  { x: 15, y: 86, w: 7, h: 11 }, sawmill_dark:  { x: 45, y: 45, w: 7, h: 11 } },
+    alf:   { mine_alf:   { x: 75, y: 9,  w: 7, h: 11 }, sawmill_alf:   { x: 38, y: 86, w: 7, h: 11 } }
+  };
+  const SITE_ICON = {
+    mine: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7 Q12 1 20 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M12 4 L12 22" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>`,
+    sawmill: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="13" width="18" height="6" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="6" cy="16" r="1.6" fill="currentColor"/><path d="M5 10 L19 10 M6 10 l1 -2 M9 10 l1 -2 M12 10 l1 -2 M15 10 l1 -2 M18 10 l1 -2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`
+  };
+  const isSite = id => !!RPG.LOCATIONS[id]?.expeditionOnly;
   // Порядок місць у списку під мапою
   const REGION_ORDER = {
     start: ["home", "temple", "village_start", "tavern", "south_gate", "forest_path", "forest_cave"],
@@ -74,9 +87,9 @@
     const here = RPG.whereIs(save);
     const region = t0 ? t0.region : here.region;
     const R = RPG.MAP_REGIONS[region];
-    const ZONES = region === "city" ? CITY_ZONES : region === "dark" ? DARK_ZONES : region === "alf" ? ALF_ZONES : startZones();
+    const ZONES = Object.assign({}, region === "city" ? CITY_ZONES : region === "dark" ? DARK_ZONES : region === "alf" ? ALF_ZONES : startZones(), SITE_ZONES[region] || {});
     const districts = RPG.LOCATIONS.city.districts || [];
-    const ids = REGION_ORDER[region].filter(id => ZONES[id] && R.spots[id]);
+    const ids = REGION_ORDER[region].filter(id => ZONES[id] && R.spots[id]).concat(Object.keys(SITE_ZONES[region] || {}).filter(id => RPG.LOCATIONS[id]));
     let selected = t0 ? t0.to : here.spot;
     let travelTimer = null;
     // Музика мапи: регіон світу; на мапі Дубової Застави — тема району, куди йде (або де стоїть) герой
@@ -94,6 +107,10 @@
 
     // here | open | closed | road (поки герой у дорозі)
     function placeState(id) {
+      if (isSite(id)) {
+        const can = RPG.canEnterLocation(id, RPG.LOCATIONS[id].minLevel || 1, save);
+        return can.ok ? { kind: "site", text: "Без дороги — лише експедиція (3 або 6 героїв, 4 год)" } : { kind: "closed", text: can.reason };
+      }
       const tr = RPG.travelState(save);
       if (tr) return tr.to === id ? { kind: "here", text: "Сюди прямуєте" } : { kind: "closed", text: "Ви в дорозі" };
       if (here.spot === id) return { kind: "here", text: "Ви тут" };
@@ -156,8 +173,9 @@
     let tip = null, hero = null, timerTag = null;
     for (const id of ids) {
       const pos = ZONES[id], p = place(id);
-      const spot = button("", "map-spot" + (region === "city" ? " map-district" : ""));
+      const spot = button("", "map-spot" + (region === "city" ? " map-district" : "") + (isSite(id) ? " map-site" : ""));
       spot.dataset.loc = id;
+      if (isSite(id)) spot.innerHTML = `<span class="site-badge">${SITE_ICON[RPG.LOCATIONS[id].type]}</span>`;
       Object.assign(spot.style, { left: pos.x + "%", top: pos.y + "%", width: pos.w + "%", height: pos.h + "%" });
       spot.setAttribute("aria-label", p.name);
       spot.addEventListener("mouseenter", () => showTip(id));
@@ -165,7 +183,7 @@
       spot.addEventListener("mouseleave", restTip);
       spot.addEventListener("blur", restTip);
       spot.addEventListener("click", () => { selected = id; render(); });
-      spot.addEventListener("dblclick", () => go(id));
+      spot.addEventListener("dblclick", () => isSite(id) ? showExpeditionDialog(id) : go(id));
       mapBox.append(spot);
     }
     tip = el("div", "map-tip");
@@ -276,7 +294,7 @@
         const p = place(id), st = placeState(id);
         const cell = button("", "wf loc-card " + (st.kind === "closed" ? "wf-locked" : "wf-link"));
         cell.append(el("strong", null, p.name));
-        cell.append(el("span", "loc-desc", st.kind === "open" ? p.typeLabel
+        cell.append(el("span", "loc-desc", st.kind === "open" || st.kind === "site" ? p.typeLabel
           : st.kind === "closed" && !RPG.isTraveling(save) ? "Закрито" : st.text));
         if (selected === id) cell.classList.add("is-selected");
         if (st.kind === "closed") cell.setAttribute("aria-disabled", "true");
@@ -294,6 +312,15 @@
       banner.append(el("h2", null, p.name));
       details.append(banner);
       details.append(noteP(p.desc));
+      if (save.expedition) {
+        const panel = RPG.ui.expeditionPanel(save, () => render());
+        if (panel) details.prepend(panel);
+      }
+      if (p.loc && isSite(selected)) {
+        details.append(el("p", "note keep", "Видобуток за кожен виграний бій: " + p.loc.yields.map(id => `${RPG.ITEMS[id].name} 1–3`).join(", ") + "."));
+        const pool = p.loc.enemies.map(e => RPG.getEnemy(e)).sort((a, b) => a.level - b.level);
+        details.append(noteP("Вороги — з усього світу (без босів): " + pool.map(e => `${e.name} (рів. ${e.level})`).join(", ")));
+      }
       if (p.loc && p.loc.type === "combat") {
         const enemies = (p.loc.enemies || []).map(e => `${RPG.getEnemy(e).name} (рів. ${RPG.getEnemy(e).level})` +
           (p.loc.dungeon && RPG.ENEMIES[e]?.boss ? ` — лише в данжі «${RPG.DUNGEONS[p.loc.dungeon].name}»` : "")).join(", ");
@@ -303,6 +330,14 @@
       if (tr) {
         details.append(el("p", "status", `Ви в дорозі до «${place(tr.to).name}». Переміщення не скасувати — дочекайтеся прибуття.`));
         return;
+      }
+      // Експедиція: бойові локації (вороги без босів), Шахта й Лісопилка
+      if (p.loc && RPG.isExpeditionLoc?.(selected)) {
+        if (st.kind === "closed" && isSite(selected)) { details.append(el("p", "status", st.text)); return; }
+        const b = button("Відправити експедицію · 4 год", "wf " + (isSite(selected) ? "wf-button" : "wf-secondary"), () => showExpeditionDialog(selected));
+        if (save.expedition) { b.disabled = true; b.title = RPG.expeditionActive(save) ? "Одна експедиція вже в дорозі." : "Спершу заберіть здобич попередньої експедиції."; }
+        details.append(b);
+        if (isSite(selected)) { details.append(noteP("До Шахти й Лісопилки немає дороги: туди лише відправляють експедицію з мапи.")); return; }
       }
       if (st.kind === "here") {
         details.append(link("Ви тут — відкрити локацію", "game.html"));
@@ -322,6 +357,72 @@
         details.append(el("p", "status", st.text));
       }
     }
+
+    // ---------- Вікно експедиції: 3 або 6 героїв на 4 години ----------
+    function showExpeditionDialog(locId) {
+      const loc = RPG.LOCATIONS[locId];
+      const members = RPG.partyMembers(save).map((ms, i) => ({ ms, id: RPG.memberIdOf(save, ms), i }));
+      const why = m => RPG.isMemberDead(m.ms) ? "полеглий" : RPG.isAway(m.ms) ? "в експедиції"
+        : loc.minLevel && m.ms.character.level < loc.minLevel ? `потрібен ${loc.minLevel} рів.` : "";
+      const ok = members.filter(m => !why(m));
+      let size = ok.length >= 6 ? 6 : 3;
+      const chosen = new Set(ok.slice(0, size).map(m => m.id));
+      const { dlg, closeBtn } = noticeDialog("exp-dialog");
+      const draw = () => {
+        dlg.innerHTML = "";
+        dlg.append(closeBtn(), el("h3", null, `Експедиція: ${loc.name}`));
+        dlg.append(el("p", null, "Група 4 години безперервно б'ється з ворогами локації (без босів). На бої з чемпіонами погоджується сама. " +
+          "Здобич — як у звичайних боях" + (loc.yields ? `, а ще за кожен виграний бій: ${loc.yields.map(id => RPG.ITEMS[id].name.toLowerCase() + " 1–3").join(", ")}` : "") + ". " +
+          "Експедиція повертається, коли мине час або коли загинуть усі її герої. Зілля в експедиції не п'ють — між боями група стає на привал."));
+        dlg.append(el("p", "note keep", "Поки триває експедиція, її герої не б'ються вдома, не міняють речей і їх не можна звільнити. Решта групи грає далі. Будьте обережні: чемпіони (утричі сильніші) трапляються часто, а полеглі до кінця експедиції не встають."));
+        const sizes = el("div", "row exp-sizes");
+        for (const n of RPG.EXP_SIZES) {
+          const b = button(`${n} героїв`, "wf " + (size === n ? "wf-button" : "wf-link"), () => {
+            size = n; chosen.clear(); ok.slice(0, n).forEach(m => chosen.add(m.id)); draw();
+          });
+          if (ok.length < n) { b.disabled = true; b.title = `Потрібно ${n} героїв, що можуть піти (зараз ${ok.length}).`; }
+          sizes.append(b);
+        }
+        dlg.append(sizes);
+        const list = el("div", "stack exp-heroes");
+        for (const m of members) {
+          const w = why(m);
+          const row = el("label", "exp-hero" + (w ? " is-off" : ""));
+          const cb = el("input"); cb.type = "checkbox"; cb.disabled = !!w || size === 6; cb.checked = chosen.has(m.id);
+          cb.addEventListener("change", () => {
+            if (cb.checked) { if (chosen.size >= size) { cb.checked = false; return; } chosen.add(m.id); } else chosen.delete(m.id);
+            draw();
+          });
+          row.append(cb, el("span", null, `${m.ms.character.name} — ${RPG.getClass(m.ms.character.classId).name}, рів. ${m.ms.character.level}` + (w ? ` (${w})` : "")));
+          list.append(row);
+        }
+        dlg.append(list);
+        const ids = [...chosen];
+        const can = RPG.canStartExpedition(save, locId, ids);
+        const go = button(`Відправити (${ids.length}/${size})`, "wf wf-button", async () => {
+          const r = RPG.startExpedition(save, locId, ids);
+          if (!r.ok) { showMsg($("map-msg"), r.reason, true); return; }
+          await RPG.saveGame(save);
+          dlg.close();
+          render();
+          showMsg($("map-msg"), `Експедиція вирушила: ${loc.name}. Повернеться за 4 години.`);
+        });
+        go.disabled = ids.length !== size || !can.ok;
+        dlg.append(go);
+        if (ids.length === size && !can.ok) dlg.append(el("p", "status", can.reason));
+        if (ok.length < 3) dlg.append(el("p", "status", `Для експедиції потрібно щонайменше 3 героїв, що можуть піти (зараз ${ok.length}). Напарників наймають на Дошці оголошень біля Мерії.`));
+      };
+      draw();
+      document.body.append(dlg);
+      dlg.showModal();
+    }
+
+    // Експедиція: бої йдуть і поки відкрита мапа
+    setInterval(async () => {
+      if (!save.expedition || save.expedition.done) return;
+      if (RPG.expeditionTick(save)) await RPG.saveGame(save).catch(e => console.error(e));
+      if (!document.querySelector("dialog[open]")) renderDetails();
+    }, 15000);
 
     $("globe-btn")?.addEventListener("click", () => showGlobeMap(save));
 

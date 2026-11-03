@@ -110,7 +110,7 @@
     if (!d) return { ok: false, reason: "Такого данжу немає." };
     if (save.location?.map !== d.location) return { ok: false, reason: "Ворота данжу — в іншій локації." };
     if (save.dungeon) return { ok: false, reason: "Ви вже в данжі." };
-    if (!RPG.aliveMembers(save).length) return { ok: false, reason: "Усі герої групи полягли — помоліться за них у Храмі." };
+    if (!RPG.aliveMembers(save).length) return { ok: false, reason: RPG.expeditionActive?.(save) ? "Удома немає героїв, готових до бою: решта — в експедиції або полягла." : "Усі герої групи полягли — помоліться за них у Храмі." };
     if (d.minLevel && save.character.level < d.minLevel) {
       return { ok: false, reason: `Бій у данжі «${d.name}» — з ${d.minLevel} рівня персонажа.` };
     }
