@@ -1205,7 +1205,10 @@ const ICON_FILES = new Set(["sword", "dagger", "axe", "bow", "staff", "shield", 
 ["pouch_small", "pouch_medium", "pouch_large", "key_cave_secret", "key_web_nest", "key_dark_throne",
  "heavenly_spark", "coal", "gem", "glass", "oak_wood", "ash_wood", "flax", "leather_strap", "flint", "lapis", "onyx",
  "copper_ore", "copper_ingot", "silver_ore", "silver_ingot", "iron_ore", "iron_ingot", "gold_ore", "gold_ingot",
- "key_alf_grove", "key_alf_lake", "key_alf_gardens", "key_alf_towers", "key_alf_freyr", "key_alf_beli"]
+ "key_alf_grove", "key_alf_lake", "key_alf_gardens", "key_alf_towers", "key_alf_freyr", "key_alf_beli",
+ // матеріали тірів 4–7 (спрайт-лист new_assets/new_assets/items/Items_mats_t4-7.png)
+ "steel_ingot", "platinum_ore", "platinum_ingot", "yew_wood", "seal_leather", "amber", "pearl", "darksteel_ingot", "ironwood", "lizard_leather", "rock_crystal", "rune_gem",
+ "celestial_ore", "celestial_ingot", "sun_gold_ingot", "white_ash", "eagle_feather", "bifrost_shard", "ygg_heartwood", "ygg_bark", "ygg_root", "ygg_sap", "mimir_water", "star_spark"]
   .forEach(id => ICON_FILES.add(id));
 const ICON_FILE_BASE = RPG.asset("assets/images/items/icon_");
 
