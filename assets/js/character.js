@@ -1135,10 +1135,12 @@ function pickAutoPotion(save, stat, side, need, max, allowMagic) {
   return allowMagic && has(AUTO_MAGIC) ? AUTO_MAGIC : null;   // Чарівне — лише коли звичайних немає
 }
 
-function autoPotion(save, cfg = RPG.getAutoPotion()) {
-  const out = { lines: [], missing: { hp: false, mp: false }, drank: 0 };
-  if (save.dungeon || (!cfg.hp.on && !cfg.mp.on)) return out;
-  const members = RPG.aliveMembers ? RPG.aliveMembers(save) : [save];
+// members — кого поїти (за замовчуванням живі герої вдома); експедиція (expedition.js) передає своїх героїв.
+// out.used — скільки якого зілля випито всього: { id: n }
+function autoPotion(save, cfg = RPG.getAutoPotion(), members = null) {
+  const out = { lines: [], missing: { hp: false, mp: false }, drank: 0, used: {} };
+  if ((!members && save.dungeon) || (!cfg.hp.on && !cfg.mp.on)) return out;
+  members = members || (RPG.aliveMembers ? RPG.aliveMembers(save) : [save]);
   const group = members.length > 1;
   for (const ms of members) {
     const ch = ms.character;
@@ -1159,6 +1161,7 @@ function autoPotion(save, cfg = RPG.getAutoPotion()) {
         const r = useItem(ms, id);
         if (!r.ok) break;
         used[id] = (used[id] || 0) + 1;
+        out.used[id] = (out.used[id] || 0) + 1;
         out.drank++;
       }
       if (ch[stat] > (from * max) / 100) change[stat] = [Math.floor(from), Math.floor(pct())];

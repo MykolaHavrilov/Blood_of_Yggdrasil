@@ -10,7 +10,8 @@
 // Час — реальний, гра може бути закрита: бої «доганяються» при відкритті гри (expeditionTick, game-common.js → requireSave
 // і щосекундний таймер). Один бій — EXP_BATTLE_MS; після бою, якщо в когось менше EXP_REST_BELOW HP, група стає на привал
 // і відновлюється (звичайне відновлення + EXP_CAMP_PCT за кожні 10 с), доки всі не матимуть EXP_REST_UNTIL HP.
-// Зілля в експедиції не п'ють.
+// Автозілля: якщо в Налаштуваннях увімкнено автозілля (core.js → getAutoPotion), після кожного бою герої експедиції
+// п'ють зілля з інвентаря за тими самими правилами (character.js → autoPotion), ще до привалу. Випите — save.expedition.potions.
 // Кінець: минуло 4 години, гравець відкликав групу, або загинули всі герої експедиції.
 //   Полеглі (і при поразці всієї групи — усі) після повернення лежать полеглими, як після звичайного бою: молитва в Храмі.
 //   Поразка всієї групи: штраф досвіду кожному (як у звичайному бою, без втрати речей). Якщо вдома теж ніхто не стоїть
@@ -96,7 +97,7 @@
     save.expedition = {
       loc: locId, members: ids.slice(), start: now, end: now + EXP_DURATION_MS, at: now,
       battles: 0, wins: 0, champions: 0, done: false, reason: "", finishedAt: 0,
-      bag: { gold: 0, items: [], stacks: {}, filtered: 0, exp: {}, levels: {} }, fallen: []
+      bag: { gold: 0, items: [], stacks: {}, filtered: 0, exp: {}, levels: {} }, fallen: [], potions: {}
     };
     for (const ms of expMembers(save)) {
       ms.character.regenAt = now;
@@ -276,8 +277,14 @@
       changed = true;
       if (r === "wiped" || r?.wiped) { finishExpedition(save, "wiped", e.at + EXP_BATTLE_MS, r?.enemyIds); break; }
       e.at += EXP_BATTLE_MS;
-      // відновлення за час бою, а коли треба — привал
+      // автозілля (якщо ввімкнено в Налаштуваннях), потім відновлення за час бою, а коли треба — привал
       const team = expMembers(save).filter(ms => !isDown(ms));
+      const cfg = RPG.getAutoPotion ? RPG.getAutoPotion() : null;
+      if (cfg && (cfg.hp.on || cfg.mp.on) && RPG.autoPotion && team.length) {
+        const pr = RPG.autoPotion(save, cfg, team);
+        e.potions ??= {};
+        for (const [id, n] of Object.entries(pr.used || {})) e.potions[id] = (e.potions[id] || 0) + n;
+      }
       for (const ms of team) healStep(ms, EXP_BATTLE_MS / EXP_TICK_MS - 1);
       const ticks = restTicks(team);
       if (ticks > 0) {
@@ -335,7 +342,7 @@
       leftMs: Math.max(0, e.end - now), elapsedMs: Math.min(now, e.end) - e.start,
       battles: e.battles, wins: e.wins, champions: e.champions,
       team, alive: team.filter(ms => !isDown(ms)).length, total: team.length,
-      bag: e.bag, fallen: e.fallen || [], temple: !!e.temple, penalty: e.penalty || null
+      bag: e.bag, fallen: e.fallen || [], temple: !!e.temple, penalty: e.penalty || null, potions: e.potions || {}
     };
   }
 

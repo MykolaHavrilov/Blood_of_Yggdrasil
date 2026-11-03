@@ -1250,6 +1250,7 @@
     const names = info.team.map(ms => ms.character.name).join(", ");
     const bag = info.bag;
     const stackLine = Object.entries(bag.stacks).map(([id, n]) => `${RPG.ITEMS[id]?.name || id} ×${fmtNum(n)}`).join(", ");
+    const potLine = Object.entries(info.potions).map(([id, n]) => `${RPG.ITEMS[id]?.name || id} ×${fmtNum(n)}`).join(", ");
     const lootLine = [bag.gold ? `${fmtNum(bag.gold)} золота` : "", bag.items.length ? `речей: ${bag.items.length}` : "", stackLine]
       .filter(Boolean).join(" · ") || (info.done ? "нічого" : "поки нічого");
     if (!info.done) {
@@ -1257,6 +1258,7 @@
       box.append(el("p", null, `${names}. Лишилось ${fmtHours(info.leftMs)} · боїв ${info.battles}, перемог ${info.wins}` +
         (info.champions ? `, чемпіонів ${info.champions}` : "") + ` · у строю ${info.alive}/${info.total}.`));
       box.append(el("p", "note keep", `Здобич: ${lootLine}.`));
+      if (potLine) box.append(el("p", "note keep", `Випито зілля: ${potLine}.`));
       let armed = false;
       const recall = button("Відкликати групу", "wf wf-secondary", async () => {
         if (!armed) { armed = true; recall.textContent = "Точно відкликати? Натисніть ще раз"; return; }
@@ -1280,6 +1282,7 @@
     else if (info.fallen.length) box.append(el("p", "status", `Полягли: ${info.team.filter(ms => info.fallen.includes(RPG.memberIdOf(save, ms))).map(ms => ms.character.name).join(", ")} — помоліться за них у Храмі.`));
     if (bag.filtered) box.append(el("p", "note keep", `Фільтр здобичі викинув речей: ${bag.filtered}.`));
     box.append(el("p", null, `Здобич: ${lootLine}.`));
+    if (potLine) box.append(el("p", "note keep", `Випито зілля: ${potLine}.`));
     const bagIsEmpty = !bag.gold && !bag.items.length && !Object.keys(bag.stacks).length;
     const row = el("div", "row exp-btns");
     row.append(button(bagIsEmpty ? "Гаразд" : "Забрати здобич", "wf wf-button", async () => {
