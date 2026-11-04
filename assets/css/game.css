@@ -311,6 +311,10 @@ figure.is-champion figcaption { color: #ffd76a; }
   flex: 0 0 44px; width: 44px; height: 44px; border-radius: 4px;
   background-color: rgba(0, 0, 0, .25); background-repeat: no-repeat;
 }
+.board-card { gap: 10px; justify-content: flex-start; }
+.board-card .board-face { flex-basis: 56px; width: 56px; height: 56px; }
+.shop-row.board-card .shop-name { flex: 1 1 180px; min-width: 0; }
+@media (max-width: 700px) { .shop-row.board-card > button { flex: 1 1 100%; } }
 .party-info { flex: 1; min-width: 0; display: grid; gap: 3px; }
 .party-info strong { font-size: .8rem; line-height: 1.2; overflow-wrap: anywhere; }
 .bar.bar-mini { min-height: 16px; }

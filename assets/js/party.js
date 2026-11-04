@@ -14,6 +14,12 @@
 // Найм — на Дошці оголошень біля Мерії (Центральний район Дубової Застави), який
 // відкривається після особливого завдання «Час дослідити» (quests.js).
 // Внесок у Мерію за кожного нового напарника — HIRE_COSTS.
+// Оголошення оновлюються раз на BOARD_HOURS годин (о 0:00, 6:00, 12:00, 18:00 за місцевим часом):
+//   • поки в головного героя немає професії — лише Селяни 1–5 рівня;
+//   • коли професія вже є — один Селянин 1–5 рівня і BOARD_SIZE−1 героїв з професією:
+//     один — рівня головного героя або трохи нижче (до BOARD_NEAR рівнів), решта — від 1 до рівня головного героя.
+// Герой з професією приходить так, ніби сам пройшов «Шлях професії»: Селянин 15 рівня з вкладеними
+// очками під умови професії (classes.js → requires.attrs), далі — рівні професії; решта очок — вільні.
 //
 // Підключається ПІСЛЯ character.js і ДО battle.js.
 // ============================================================
@@ -23,6 +29,9 @@
   // Внесок у Мерію: 2-й герой групи, 3-й, 4-й, 5-й, 6-й (перший — безкоштовно)
   const HIRE_COSTS = [1000, 3000, 5000, 8000, 12000];
   const BOARD_SIZE = 3;      // скільки оголошень висить на дошці
+  const BOARD_HOURS = 6;     // як часто оновлюються оголошення
+  const BOARD_NEAR = 3;      // «трохи нижче» за рівень головного героя
+  const RECRUIT_PEASANT_MAX = 5; // Селяни на дошці — 1–5 рівня
   const HIRE_MIN_LEVEL = 10; // рівень головного героя для найму
   // Бонус досвіду групи: +PARTY_EXP_BONUS% за кожного героя понад першого — у боях (page-game.js) і за завдання (quests.js → expBonusParts)
   const PARTY_EXP_BONUS = 25;
@@ -94,23 +103,80 @@
     return new Set(partyMembers(save).map(ms => ms.character.name));
   }
 
-  function boardState(save) {
-    save.story ??= {};
+  // Номер шестигодинного проміжку за місцевим часом (0:00–6:00, 6:00–12:00, …)
+  const BOARD_MS = BOARD_HOURS * 3600 * 1000;
+  function boardSlot(now = Date.now()) {
+    return Math.floor((now - new Date(now).getTimezoneOffset() * 60000) / BOARD_MS);
+  }
+  // Коли з'являться нові оголошення (мітка часу)
+  function boardNextAt(now = Date.now()) {
+    const off = new Date(now).getTimezoneOffset() * 60000;
+    return (boardSlot(now) + 1) * BOARD_MS + off;
+  }
+  const hasProfession = save => save.character.classId !== RPG.DEFAULT_CLASS;
+  const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+
+  // Нові оголошення: [{ name, gender, classId, level }]
+  function rollBoard(save) {
     const taken = takenNames(save);
-    let board = (save.story.board || []).filter(n => !taken.has(n));
-    while (board.length < BOARD_SIZE) {
-      const free = NAMES.filter(n => !taken.has(n) && !board.includes(n));
-      if (!free.length) break;
-      board.push(free[Math.floor(Math.random() * free.length)]);
+    const names = NAMES.filter(n => !taken.has(n));
+    const pickName = () => names.splice(Math.floor(Math.random() * names.length), 1)[0];
+    const main = save.character.level;
+    const profs = Object.keys(RPG.CLASSES).filter(id => RPG.CLASSES[id].requires?.quest === "profession");
+    const cards = [];
+    for (let i = 0; i < BOARD_SIZE && names.length; i++) {
+      const name = pickName();
+      const card = { name, gender: RPG.FEMALE_NAMES.has(name) ? "f" : "m", classId: RPG.DEFAULT_CLASS, level: rnd(1, RECRUIT_PEASANT_MAX) };
+      if (hasProfession(save) && i > 0) {
+        card.classId = profs[Math.floor(Math.random() * profs.length)];
+        card.level = i === 1 ? rnd(Math.max(1, main - BOARD_NEAR), main) : rnd(1, main);
+      }
+      cards.push(card);
     }
-    save.story.board = board;
-    return board;
+    return cards;
   }
 
-  function refreshBoard(save) {
+  // Поточні оголошення (самі оновлюються раз на BOARD_HOURS годин і коли головний герой отримує професію)
+  function boardState(save) {
     save.story ??= {};
-    save.story.board = [];
-    return boardState(save);
+    const slot = boardSlot(), prof = hasProfession(save);
+    let b = save.story.board;
+    if (!b || Array.isArray(b) || b.slot !== slot || b.prof !== prof) {
+      b = save.story.board = { slot, prof, cards: rollBoard(save) };
+    }
+    const taken = takenNames(save);
+    const top = save.character.level;
+    return b.cards.filter(c => !c.hired && !taken.has(c.name))
+      .map(c => Object.assign({}, c, { level: c.classId === RPG.DEFAULT_CLASS ? c.level : Math.min(c.level, top) }));
+  }
+
+  // Готовий напарник з оголошення: Селянин свого рівня або герой з професією
+  function makeRecruit(save, card) {
+    const fresh = RPG.createNewSave(card.name, RPG.DEFAULT_CLASS, card.gender);
+    fresh.bossKills = Object.assign({}, save.bossKills);          // та сама межа рівня, що й у групи
+    const table = cls => RPG.getClass(cls).levelTable;
+    if (card.classId === RPG.DEFAULT_CLASS) {
+      RPG.addExp(fresh, RPG.expForLevel(table(RPG.DEFAULT_CLASS), card.level));
+    } else {
+      const ch = fresh.character;
+      RPG.addExp(fresh, RPG.expForLevel(table(RPG.DEFAULT_CLASS), RPG.PROFESSION_LEVEL));
+      for (const [k, v] of Object.entries(RPG.CLASSES[card.classId].requires?.attrs || {})) {
+        const put = Math.min(v, ch.freePoints || 0);
+        ch.attrs[k] = (ch.attrs[k] || 0) + put;
+        ch.freePoints -= put;
+      }
+      RPG.changeClass(fresh, card.classId, { force: true });       // речі, яких професія не носить, — знімаються
+      if (card.level > 1) RPG.addExp(fresh, RPG.expForLevel(table(card.classId), card.level));
+      // Зброя своєї професії 1 виду, якщо стартову довелося зняти
+      const wt = RPG.CLASSES[card.classId].weapons?.[0];
+      if (!fresh.equipment.mainHand && wt && RPG.ITEMS[wt + "_t1"]) {
+        fresh.equipment.mainHand = RPG.makeItem(wt + "_t1", "common", { fromShop: true });
+      }
+    }
+    RPG.fullHeal(fresh);
+    delete fresh.character.gold;                                     // золото в групі спільне
+    fresh.character.regenAt = Date.now();
+    return fresh;
   }
 
   // Чи можна зараз наймати: { ok, reason }
@@ -123,25 +189,23 @@
     return { ok: true, cost };
   }
 
-  // Найняти напарника з дошки: новий Рекрут 1 рівня зі стартовими речами
+  // Найняти напарника з дошки (name — ім'я з оголошення)
   function hireMember(save, name) {
     const can = canHire(save);
     if (!can.ok) return can;
-    if (!boardState(save).includes(name)) return { ok: false, reason: "Цього оголошення вже немає." };
-    const fresh = RPG.createNewSave(name);           // те саме, що стартовий герой
-    const ch = fresh.character;
-    delete ch.gold;                                   // золото в групі спільне
-    ch.regenAt = Date.now();
+    const card = boardState(save).find(c => c.name === name);
+    if (!card) return { ok: false, reason: "Цього оголошення вже немає." };
+    const fresh = makeRecruit(save, card);
     const member = {
       id: "m" + Date.now().toString(36) + Math.floor(Math.random() * 1000),
-      character: ch,
-      equipment: fresh.equipment,                     // дерев'яний меч, лляна сорочка й штани
+      character: fresh.character,
+      equipment: fresh.equipment,
       battleQueue: ["attack"]
     };
     save.character.gold -= can.cost;
     partyState(save).push(member);
-    save.story.board = save.story.board.filter(n => n !== name);
-    boardState(save);
+    const stored = save.story.board.cards.find(c => c.name === name);
+    if (stored) stored.hired = true;                   // до наступного оновлення дошки це оголошення не повернеться
     return { ok: true, member, cost: can.cost, index: save.party.length };
   }
 
@@ -156,8 +220,8 @@
   }
 
   Object.assign(RPG, { PARTY_EXP_BONUS,
-    MAX_PARTY, HIRE_COSTS, HIRE_MIN_LEVEL,
+    MAX_PARTY, HIRE_COSTS, HIRE_MIN_LEVEL, BOARD_HOURS, RECRUIT_PEASANT_MAX,
     partyState, partySize, memberSave, partyMembers, aliveMembers, isMemberDead: isDead, applyRegenAll,
-    nextHireCost, boardState, refreshBoard, canHire, hireMember, dismissMember
+    nextHireCost, boardState, boardNextAt, canHire, hireMember, dismissMember
   });
 })(window.RPG);

@@ -1261,30 +1261,40 @@
       box.append(el("h3", null, "Дошка оголошень"));
       const cost = RPG.nextHireCost(save);
       if (cost == null) { box.append(el("p", "status", "Група вже повна.")); return; }
+      const profOpen = RPG.getClass(save.character.classId).tier > 1;
       box.append(el("p", "status", `Внесок у Мерію за наступного (${size + 1}-го) героя групи: ${fmtNum(cost)} золота. ` +
-        `Далі — ${RPG.HIRE_COSTS.slice(size).map(fmtNum).join(" → ")} золота. Новачки починають з 1 рівня.`));
+        `Далі — ${RPG.HIRE_COSTS.slice(size).map(fmtNum).join(" → ")} золота.`));
+      box.append(noteP(`Оголошення змінюються раз на ${RPG.BOARD_HOURS} годин. ` + (profOpen
+        ? `Тут шукають групу Селяни 1–${RPG.RECRUIT_PEASANT_MAX} рівня і герої з професією — до вашого рівня (${save.character.level}).`
+        : `Поки у вас немає професії, групу тут шукають лише Селяни 1–${RPG.RECRUIT_PEASANT_MAX} рівня. ` +
+          "Коли пройдете «Шлях професії», на дошці з'являться й герої з професією — до вашого рівня.")));
       const can = RPG.canHire(save);
       if (!can.ok) box.append(el("p", "status", can.reason));
-      for (const name of RPG.boardState(save)) {
-        const r = el("div", "shop-row");
-        r.append(el("span", "shop-name", `«Шукаю групу. ${name}, ${RPG.getClass(RPG.DEFAULT_CLASS).name}, 1 рівень.»`));
+      const cards = RPG.boardState(save);
+      for (const c of cards) {
+        const r = el("div", "shop-row board-card");
+        const face = el("span", "party-face board-face");
+        Object.assign(face.style, RPG.heroSpriteStyle(c.classId, c.gender));
+        const cls = c.classId === RPG.DEFAULT_CLASS && c.gender === "f" ? "Селянка" : RPG.getClass(c.classId).name;
+        r.append(face, el("span", "shop-name", `«Шукаю групу. ${c.name}, ${cls}, ${c.level} рівень.»`));
         const b = button(`Найняти (${fmtNum(cost)} зол.)`, "wf wf-button", async () => {
-          const res = RPG.hireMember(save, name);
+          const res = RPG.hireMember(save, c.name);
           if (!res.ok) { showMsg(msg, res.reason, true); return; }
           await RPG.saveGame(save);
-          showMsg(msg, `${name} приєднується до групи! Внесок у Мерію: ${fmtNum(res.cost)} золота. ` +
-            "Налаштувати спорядження — в Інвентарі, атрибути — на сторінці «Персонаж».");
+          showMsg(msg, `${c.name} приєднується до групи! Внесок у Мерію: ${fmtNum(res.cost)} золота. ` +
+            "Налаштувати спорядження — в Інвентарі, атрибути" + (res.member.character.freePoints ? ` (вільних очок: ${res.member.character.freePoints})` : "") +
+            " і навички — на сторінці «Персонаж».");
           renderAll();
         });
         b.disabled = !can.ok;
         r.append(b);
         box.append(r);
       }
-      box.append(button("Оновити оголошення", "wf wf-link", async () => {
-        RPG.refreshBoard(save);
-        await RPG.saveGame(save);
-        renderAll();
-      }));
+      if (!cards.length) box.append(el("p", "status", "Усіх, хто шукав групу, вже найнято."));
+      const next = new Date(RPG.boardNextAt());
+      const left = Math.max(0, RPG.boardNextAt() - Date.now());
+      box.append(el("p", "status", `Нові оголошення — о ${String(next.getHours()).padStart(2, "0")}:00 ` +
+        `(через ${Math.floor(left / 3600000)} год ${Math.floor(left / 60000) % 60} хв).`));
     }
 
     function renderGuild(box) {
