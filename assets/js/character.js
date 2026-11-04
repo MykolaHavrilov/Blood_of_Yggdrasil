@@ -18,7 +18,7 @@ const DEATH_EXP_MULT = 10;        // штраф: досвід за перемо�
 const DEATH_MAX_PCT = 25;         // … але не більше 25% смужки досвіду рівня
 const ITEM_LOSS_CHANCE = 0.005;   // 0,5% на кожну вдягнену річ
 const QUEUE_SIZE = 6;             // скільки дій у черзі бою
-const BUY_MAX = 1000;             // найбільше штук за одну покупку
+const BUY_MAX = 10000;            // найбільше штук за одну покупку (повна клітинка ресурсів)
 
 // «Молитва благодаті» (Храм): +2% макс. HP кожні 5 с і +3% макс. MP кожні 10 с,
 // діє 10 хвилин реального часу (і поки гра закрита теж).
@@ -743,7 +743,7 @@ function removeItem(save, id, qty = 1) { return removeFromList(save.inventory, i
 // якщо для сховища не задано своїх.
 const CHEST_DEFAULTS = {
   size: 50,                                      // клітинок у скрині
-  stack: { material: 1000, consumable: 500 }     // штук в одній клітинці: матеріали / зілля
+  stack: { material: RPG.MATERIAL_STACK, consumable: RPG.POTION_STACK }   // штук в одній клітинці: матеріали / зілля (як в інвентарі)
 };
 const CHEST_STORAGES = {
   main: { name: "Скриня" }                       // Домівка (і майбутні пов'язані скрині)
@@ -787,8 +787,8 @@ function removeGodsOrb(save) {
 // allow — які типи предметів можна класти; stack — штук в одній клітинці.
 const WAREHOUSE_PRICE = 50000;
 const CRAFT_CHESTS = {
-  mat:  { name: "Скриня для матеріалів", size: 25, max: 4, price: 5000, allow: ["material"], stack: 1000 },
-  pot:  { name: "Скриня для зілля",      size: 10, max: 1, price: 2000, allow: ["consumable"], stack: 1000 },
+  mat:  { name: "Скриня для матеріалів", size: 25, max: 4, price: 5000, allow: ["material"], stack: RPG.MATERIAL_STACK },
+  pot:  { name: "Скриня для зілля",      size: 10, max: 1, price: 2000, allow: ["consumable"], stack: RPG.POTION_STACK },
   item: { name: "Скриня для речей",      size: 25, max: 4, price: 5000, allow: ["weapon", "shield", "offhand", "armor", "accessory"], stack: 1 }
 };
 const CRAFT_CHEST_ALLOW_TEXT = { mat: "лише матеріали", pot: "лише зілля", item: "лише зброя, броня й прикраси" };

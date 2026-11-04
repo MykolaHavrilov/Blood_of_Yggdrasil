@@ -9,8 +9,8 @@
 // price   — базова вартість. Торговець продає за 150%, купує за 50%.
 // noShop  — торговець цю річ НЕ продає (лише здобич з ворогів).
 // rarity  — "rare" підсвічується в інвентарі.
-// maxStack — скільки штук в одній клітинці ІНВЕНТАРЯ: зілля 100, ресурси 200.
-//           У скрині свої ліміти: матеріали 1000, зілля 500 (character.js → CHEST_DEFAULTS).
+// maxStack — скільки штук в одній клітинці: ресурси (матеріали) — MATERIAL_STACK = 10 000, зілля — POTION_STACK = 5 000.
+//           Ті самі ліміти і в інвентарі, і в усіх скринях (character.js → CHEST_DEFAULTS, CRAFT_CHESTS).
 // tier    — вид/клас речі: 1 — дерев'яна/лляна/мідна (з 1 рівня, біжутерія з 2),
 //           2 — кам'яна/шкіряна/срібна (з 10 рівня), 3 — залізна/золота (з 20 рівня),
 //           4 — сталева/платинова (з 30), 5 — двергська/самоцвітна (з 40), 6 — асгардська/сонячна (з 50),
@@ -29,6 +29,8 @@
 // ============================================================
 
 (function (RPG) {
+const MATERIAL_STACK = 10000;   // ресурсів в одній клітинці (інвентар і скрині)
+const POTION_STACK = 5000;     // зілля в одній клітинці (інвентар і скрині)
 // Папка зі спрайт-листами предметів (шлях рахує core.js від кореня гри)
 const IMG_BASE = RPG.asset("assets/img/items/");
 
@@ -905,43 +907,43 @@ const ITEMS = {
   // Малі та середні продає шинкар; великі та чарівне — лише з ворогів.
   potion_hp_small: {
     name: "Мале зілля здоров'я", icon: ["consumable", 0],
-    type: "consumable", price: 5, stackable: true, maxStack: 100,
+    type: "consumable", price: 5, stackable: true, maxStack: POTION_STACK,
     effect: { healHp: 30 },
     description: "Відновлює 30 здоров'я."
   },
   potion_hp_medium: {
     name: "Середнє зілля здоров'я", icon: ["consumable", 1],
-    type: "consumable", price: 15, stackable: true, maxStack: 100,
+    type: "consumable", price: 15, stackable: true, maxStack: POTION_STACK,
     effect: { healHp: 80 },
     description: "Відновлює 80 здоров'я."
   },
   potion_hp_large: {
     name: "Велике зілля здоров'я", icon: ["consumable", 2],
-    type: "consumable", price: 45, stackable: true, maxStack: 100, noShop: true,
+    type: "consumable", price: 45, stackable: true, maxStack: POTION_STACK, noShop: true,
     effect: { healHp: 200 },
     description: "Відновлює 200 здоров'я. Торговці таким не торгують."
   },
   potion_mp_small: {
     name: "Мале зілля мани", icon: ["consumable", 3],
-    type: "consumable", price: 6, stackable: true, maxStack: 100,
+    type: "consumable", price: 6, stackable: true, maxStack: POTION_STACK,
     effect: { healMp: 20 },
     description: "Відновлює 20 мани."
   },
   potion_mp_medium: {
     name: "Середнє зілля мани", icon: ["consumable", 4],
-    type: "consumable", price: 18, stackable: true, maxStack: 100,
+    type: "consumable", price: 18, stackable: true, maxStack: POTION_STACK,
     effect: { healMp: 50 },
     description: "Відновлює 50 мани."
   },
   potion_mp_large: {
     name: "Велике зілля мани", icon: ["consumable", 5],
-    type: "consumable", price: 50, stackable: true, maxStack: 100, noShop: true,
+    type: "consumable", price: 50, stackable: true, maxStack: POTION_STACK, noShop: true,
     effect: { healMp: 120 },
     description: "Відновлює 120 мани. Торговці таким не торгують."
   },
   potion_magic: {
     name: "Чарівне зілля", icon: ["consumable", 6],
-    type: "consumable", price: 150, stackable: true, maxStack: 100, noShop: true, rarity: "rare",
+    type: "consumable", price: 150, stackable: true, maxStack: POTION_STACK, noShop: true, rarity: "rare",
     effect: { healHpPct: 0.5, healMpPct: 0.3 },
     description: "Дуже рідкісне. Відновлює 50% здоров'я та 30% мани."
   },
@@ -949,32 +951,32 @@ const ITEMS = {
   // ---------- МАТЕРІАЛИ (здобич з ворогів) ----------
   rat_tail: {
     name: "Щурячий хвіст", icon: ["material", 0],
-    type: "material", price: 2, stackable: true, maxStack: 200,
+    type: "material", price: 2, stackable: true, maxStack: MATERIAL_STACK,
     description: "Трофей з льоху. Торговці купують за мідяк."
   },
   rat_skin: {
     name: "Щуряча шкурка", icon: ["material", 1],
-    type: "material", price: 3, stackable: true, maxStack: 200,
+    type: "material", price: 3, stackable: true, maxStack: MATERIAL_STACK,
     description: "Дрібна, але шкірник візьме."
   },
   wolf_pelt: {
     name: "Вовча шкура", icon: ["material", 2],
-    type: "material", price: 6, stackable: true, maxStack: 200,
+    type: "material", price: 6, stackable: true, maxStack: MATERIAL_STACK,
     description: "Можна продати торговцю."
   },
   wolf_fang: {
     name: "Вовче ікло", icon: ["material", 3],
-    type: "material", price: 5, stackable: true, maxStack: 200,
+    type: "material", price: 5, stackable: true, maxStack: MATERIAL_STACK,
     description: "Гостре. Згодиться на амулет."
   },
   white_pelt: {
     name: "Біла вовча шкура", icon: ["material", 4],
-    type: "material", price: 12, stackable: true, maxStack: 200,
+    type: "material", price: 12, stackable: true, maxStack: MATERIAL_STACK,
     description: "Рідкісне хутро, за нього добре платять."
   },
   slime_gel: {
     name: "Слиз", icon: ["material", 5],
-    type: "material", price: 2, stackable: true, maxStack: 200,
+    type: "material", price: 2, stackable: true, maxStack: MATERIAL_STACK,
     description: "Липкий і трохи світиться."
   },
 
@@ -1120,12 +1122,12 @@ const CRAFT_MATERIALS = {
 };
 for (const [id, m] of Object.entries(CRAFT_MATERIALS)) {
   ITEMS[id] = { name: m.name, g: m.g, craftTier: m.craftTier, type: "material", price: m.price,
-                stackable: true, maxStack: 200, noShop: true, description: m.description };
+                stackable: true, maxStack: MATERIAL_STACK, noShop: true, description: m.description };
 }
 // Небесна іскра — лише легендарна, без інших рідкостей
 ITEMS.heavenly_spark = {
   name: "Небесна іскра", type: "material", grade: "legendary", noGrades: true, price: 1000,
-  stackable: true, maxStack: 200, noShop: true,
+  stackable: true, maxStack: MATERIAL_STACK, noShop: true,
   description: "Вогник з горна Сварога. Без нього легендарна річ майже не народжується. Згоряє при куванні."
 };
 
@@ -1252,7 +1254,7 @@ const SHOP_BUY_RATE = 0.5;
 function shopSellPrice(id) { return Math.ceil((ITEMS[id]?.price || 0) * SHOP_SELL_RATE); }
 function shopBuyPrice(id)  { return Math.max(1, Math.floor((ITEMS[id]?.price || 0) * SHOP_BUY_RATE)); }
 
-Object.assign(RPG, {
+Object.assign(RPG, { MATERIAL_STACK, POTION_STACK,
   SLOTS, SLOT_GROUPS, slotsFor, ITEM_RENAMES, STAT_NAMES, ITEMS, getItem, ITEM_ICON_FILES: ICON_FILES, CRAFT_MATERIALS, MATERIAL_GRADES, materialBase, materialOfGrade, itemIconStyle, spriteStyle, ICON_SHEETS, isEquippable,
   OFFHAND_RULES, OFF_TYPE_NAMES, offHandAllowed, offHandRuleText, ITEM_SETS, equippedSetCounts,
   SHOP_SELL_RATE, SHOP_BUY_RATE, shopSellPrice, shopBuyPrice
