@@ -312,7 +312,7 @@
       banner.append(el("h2", null, p.name));
       details.append(banner);
       details.append(noteP(p.desc));
-      if (save.expedition) {
+      if (RPG.expeditionList(save).length) {
         const panel = RPG.ui.expeditionPanel(save, () => render());
         if (panel) details.prepend(panel);
       }
@@ -335,9 +335,18 @@
       if (p.loc && RPG.isExpeditionLoc?.(selected)) {
         if (st.kind === "closed" && isSite(selected)) { details.append(el("p", "status", st.text)); return; }
         const b = button("Відправити експедицію · 4 год", "wf " + (isSite(selected) ? "wf-button" : "wf-secondary"), () => showExpeditionDialog(selected));
-        if (save.expedition) { b.disabled = true; b.title = RPG.expeditionActive(save) ? "Одна експедиція вже в дорозі." : "Спершу заберіть здобич попередньої експедиції."; }
+        const freeN = RPG.partyMembers(save).filter(ms => !RPG.isMemberDead(ms) && !RPG.isAway(ms)).length;
+        const bags = RPG.expeditionList(save).filter(e => e.done).length;
+        if (bags >= RPG.EXP_MAX_BAGS) { b.disabled = true; b.title = "Спершу заберіть здобич повернених експедицій."; }
+        else if (RPG.expeditionActive(save) && freeN < RPG.EXP_SIZES[0]) { b.disabled = true; b.title = `Удома лишилось ${freeN} вільних героїв — для ще однієї експедиції треба ${RPG.EXP_SIZES[0]}.`; }
         details.append(b);
         if (isSite(selected)) { details.append(noteP("До Шахти й Лісопилки немає дороги: туди лише відправляють експедицію з мапи.")); return; }
+      }
+      if (RPG.expeditionActive(save)) {
+        const freeHome = RPG.partyMembers(save).filter(ms => !RPG.isMemberDead(ms) && !RPG.isAway(ms)).length;
+        details.append(el("p", "status", "Поки експедиція в дорозі, переходити між локаціями не можна — доступні лише «Персонаж», «Інвентар» і «Мапа»." +
+          (freeHome >= RPG.EXP_SIZES[0] ? ` Удома лишилось вільних героїв: ${freeHome} — з них можна відправити ще одну експедицію (оберіть бойову локацію, Шахту чи Лісопилку).` : "")));
+        return;
       }
       if (st.kind === "here") {
         details.append(link("Ви тут — відкрити локацію", "game.html"));
@@ -378,7 +387,8 @@
         dlg.append(el("p", "note keep", ap && (ap.hp.on || ap.mp.on)
           ? `Автозілля ввімкнено (Налаштування): після кожного бою герої п'ють зілля з інвентаря за тими ж правилами${ap.hp.on ? ` — HP нижче ${ap.hp.below}% до ${ap.hp.upTo}%` : ""}${ap.mp.on ? `${ap.hp.on ? "," : " —"} MP нижче ${ap.mp.below}% до ${ap.mp.upTo}%` : ""}. Зілля спільні з тими, хто лишився вдома.`
           : "Автозілля вимкнено (Налаштування) — в експедиції зілля не п'ють, лише привал."));
-        dlg.append(el("p", "note keep", "Поки триває експедиція, її герої не б'ються вдома, не міняють речей і їх не можна звільнити. Решта групи грає далі. Будьте обережні: чемпіони (утричі сильніші) трапляються часто, а полеглі до кінця експедиції не встають."));
+        dlg.append(el("p", "note keep", "Поки експедиція в дорозі, переходити між локаціями не можна — доступні лише «Персонаж», «Інвентар» і «Мапа». Її герої не міняють речей і їх не можна звільнити. " +
+          "З тих, хто лишився вдома, можна відправити ще одну експедицію (одночасно — дві по 3 героя або одна на 6). Будьте обережні: чемпіони (утричі сильніші) трапляються часто, а полеглі до кінця експедиції не встають."));
         const sizes = el("div", "row exp-sizes");
         for (const n of RPG.EXP_SIZES) {
           const b = button(`${n} героїв`, "wf " + (size === n ? "wf-button" : "wf-link"), () => {
@@ -423,7 +433,7 @@
 
     // Експедиція: бої йдуть і поки відкрита мапа
     setInterval(async () => {
-      if (!save.expedition || save.expedition.done) return;
+      if (!RPG.expeditionActive(save)) return;
       if (RPG.expeditionTick(save)) await RPG.saveGame(save).catch(e => console.error(e));
       if (!document.querySelector("dialog[open]")) renderDetails();
     }, 15000);

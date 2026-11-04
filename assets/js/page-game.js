@@ -2348,14 +2348,15 @@
     }
 
     // Експедиція (expedition.js): панель стану під назвою локації
-    let expBox = null, expWasActive = RPG.expeditionActive?.(save);
+    const activeExpN = () => (RPG.expeditionList?.(save) || []).filter(e => !e.done).length;
+    let expBox = null, expWasActive = activeExpN();
     function renderExpedition() {
-      const panel = save.expedition ? RPG.ui.expeditionPanel(save, () => renderAll()) : null;
+      const panel = RPG.ui.expeditionPanel(save, () => renderAll());
       if (expBox) expBox.remove();
       expBox = panel;
       if (panel) document.querySelector("a.location")?.after(panel);
-      const active = RPG.expeditionActive?.(save);
-      if (expWasActive && !active && save.expedition) showMsg(msg, "Експедиція повернулась — заберіть здобич.");
+      const active = activeExpN();
+      if (active < expWasActive) showMsg(msg, "Експедиція повернулась — заберіть здобич.");
       expWasActive = active;
     }
 
@@ -2850,7 +2851,7 @@
 
     renderAll();
     // У мирних локаціях не перемальовуємо панель щосекунди — лише смужки героя
-    startRegenTimer(save, () => { drawHero(); if (save.expedition) renderExpedition(); }, () => fighting);
+    startRegenTimer(save, () => { drawHero(); if (RPG.expeditionList?.(save).length) renderExpedition(); }, () => fighting);
   }
 
   // ============================================================

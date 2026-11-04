@@ -11,18 +11,23 @@
 // і щосекундний таймер). Один бій — EXP_BATTLE_MS; після бою, якщо в когось менше EXP_REST_BELOW HP, група стає на привал
 // і відновлюється (звичайне відновлення + EXP_CAMP_PCT за кожні 10 с), доки всі не матимуть EXP_REST_UNTIL HP.
 // Автозілля: якщо в Налаштуваннях увімкнено автозілля (core.js → getAutoPotion), після кожного бою герої експедиції
-// п'ють зілля з інвентаря за тими самими правилами (character.js → autoPotion), ще до привалу. Випите — save.expedition.potions.
+// п'ють зілля з інвентаря за тими самими правилами (character.js → autoPotion), ще до привалу. Випите — e.potions.
 // Кінець: минуло 4 години, гравець відкликав групу, або загинули всі герої експедиції.
 //   Полеглі (і при поразці всієї групи — усі) після повернення лежать полеглими, як після звичайного бою: молитва в Храмі.
 //   Поразка всієї групи: штраф досвіду кожному (як у звичайному бою, без втрати речей). Якщо вдома теж ніхто не стоїть
 //   на ногах — усі прокидаються в Храмі (як після звичайної загибелі групи).
-// Здобич лежить у save.expedition.bag, доки гравець її не забере (collectExpedition) — в інвентар (що влізе).
+// Здобич лежить у мішку експедиції (e.bag), доки гравець її не забере (collectExpedition) — в інвентар (що влізе).
+// Кілька експедицій одночасно: поки одна в дорозі, можна відправити ще одну з тих героїв, що лишились удома
+// (3 або 6 вільних героїв; у групі до 6, тож у дорозі буває до двох експедицій по 3). Мішків зі здобиччю, які ще
+// не забрали, — не більше EXP_MAX_BAGS: спершу заберіть здобич, потім відправляйте нову.
 // Поки експедиція триває, її герої «у від'їзді»: не б'ються вдома (party.js → aliveMembers), не відновлюються звичайним
 // відновленням (його рахує експедиція), не міняють речей (character.js → equipItem / unequipItem) і їх не звільнити.
+// Уся гра в цей час — як у дорозі: лише «Персонаж», «Інвентар» і «Мапа» (game-common.js → requireSave),
+// переходити між локаціями не можна (travel.js → startTravel); з Мапи можна відправити другу експедицію.
 //
-// Стан: save.expedition = { loc, members: [id], start, end, at, battles, wins, champions, done, reason, finishedAt,
+// Стан: save.expeditions = [{ id, loc, members: [id], start, end, at, battles, wins, champions, done, reason, finishedAt,
 //                          bag: { gold, items: [ref], stacks: { id: qty }, filtered, exp: { id: n }, levels: { id: [from, to] } },
-//                          fallen: [id] }
+//                          fallen: [id] }]  (старий сейв: одна save.expedition — переноситься в масив, expList)
 //   id героя: "main" — головний, інакше id напарника з save.party.
 // Підключається ПІСЛЯ party.js, battle.js, quests.js, dungeon.js, rarity.js.
 // ============================================================
@@ -36,6 +41,7 @@
   const EXP_REST_UNTIL = 0.8;                    // …до 80% HP у всіх
   const EXP_SIZES = [3, 6];
   const EXP_MAX_STEPS = 2000;                    // запобіжник для одного виклику
+  const EXP_MAX_BAGS = 3;                        // скільки повернених експедицій з незабраною здобиччю може чекати
 
   // ---------- Герої ----------
   function memberIdOf(save, ms) {
@@ -47,20 +53,38 @@
     const i = (save.party || []).findIndex(m => m.id === id);
     return i >= 0 ? RPG.memberSave(save, i + 1) : null;
   }
+  // Усі експедиції сейву (у дорозі й повернені зі здобиччю). Старий сейв з однією save.expedition — переноситься.
+  function expList(save) {
+    let root = save;
+    while (root && root.memberIndex) root = Object.getPrototypeOf(root);   // «вигляд» напарника → спільний сейв
+    if (!root) return [];
+    if (root.expedition && !Array.isArray(root.expedition)) {
+      root.expeditions ??= [];
+      root.expedition.id ??= "e" + (root.expedition.start || Date.now()).toString(36);
+      root.expeditions.push(root.expedition);
+      delete root.expedition;
+    }
+    root.expeditions ??= [];
+    return root.expeditions;
+  }
+  const activeList = save => expList(save).filter(e => !e.done);
+  function expById(save, eid) {
+    const list = expList(save);
+    return eid ? list.find(e => e.id === eid) || null : list[0] || null;
+  }
   function expeditionActive(save) {
-    const e = save.expedition;
-    return !!(e && !e.done);
+    return activeList(save).length > 0;
   }
   // Чи герой (вигляд з party.js → memberSave або сам save) зараз в експедиції
   function isAway(ms) {
-    const e = ms?.expedition;
-    if (!e || e.done) return false;
+    if (!ms) return false;
     const idx = ms.memberIndex || 0;
     const id = idx ? ms.party?.[idx - 1]?.id : "main";
-    return e.members.includes(id);
+    const list = ms.expeditions || (ms.expedition ? [ms.expedition] : []);
+    return list.some(e => !e.done && e.members.includes(id));
   }
-  function expMembers(save) {
-    return (save.expedition?.members || []).map(id => viewById(save, id)).filter(Boolean);
+  function expMembers(save, e) {
+    return (e?.members || []).map(id => viewById(save, id)).filter(Boolean);
   }
   const isDown = ms => !!ms.character.dead || ms.character.hp <= 0;
 
@@ -73,8 +97,7 @@
   function canStartExpedition(save, locId, ids) {
     const loc = RPG.LOCATIONS[locId];
     if (!isExpeditionLoc(locId)) return { ok: false, reason: "Сюди експедицію не відправити." };
-    if (expeditionActive(save)) return { ok: false, reason: "Одна експедиція вже в дорозі — дочекайтеся її повернення." };
-    if (save.expedition) return { ok: false, reason: "Спершу заберіть здобич попередньої експедиції." };
+    if (expList(save).filter(e => e.done).length >= EXP_MAX_BAGS) return { ok: false, reason: `Спершу заберіть здобич повернених експедицій (чекають ${EXP_MAX_BAGS}).` };
     if (RPG.isTraveling?.(save)) return { ok: false, reason: "Ви в дорозі — експедицію можна відправити, коли дійдете." };
     if (save.dungeon) return { ok: false, reason: "Група в данжі — спершу завершіть його." };
     if (!EXP_SIZES.includes(ids.length)) return { ok: false, reason: "В експедицію йдуть 3 або 6 героїв." };
@@ -83,6 +106,7 @@
       const ms = viewById(save, id);
       if (!ms) return { ok: false, reason: "Такого героя в групі немає." };
       if (isDown(ms)) return { ok: false, reason: `${ms.character.name} поліг — спершу помоліться за нього в Храмі.` };
+      if (isAway(ms)) return { ok: false, reason: `${ms.character.name} уже в іншій експедиції.` };
       if (loc.minLevel && ms.character.level < loc.minLevel) return { ok: false, reason: `${loc.name}: експедиція — з ${loc.minLevel} рівня кожного героя (${ms.character.name} — ${ms.character.level}).` };
     }
     const lvl = Math.min(...ids.map(id => viewById(save, id).character.level));
@@ -94,16 +118,18 @@
   function startExpedition(save, locId, ids, now = Date.now()) {
     const can = canStartExpedition(save, locId, ids);
     if (!can.ok) return can;
-    save.expedition = {
+    const e = {
+      id: "e" + now.toString(36) + Math.floor(Math.random() * 1000),
       loc: locId, members: ids.slice(), start: now, end: now + EXP_DURATION_MS, at: now,
       battles: 0, wins: 0, champions: 0, done: false, reason: "", finishedAt: 0,
       bag: { gold: 0, items: [], stacks: {}, filtered: 0, exp: {}, levels: {} }, fallen: [], potions: {}
     };
-    for (const ms of expMembers(save)) {
+    expList(save).push(e);
+    for (const ms of expMembers(save, e)) {
       ms.character.regenAt = now;
-      save.expedition.bag.levels[memberIdOf(save, ms)] = [ms.character.level, ms.character.level];
+      e.bag.levels[memberIdOf(save, ms)] = [ms.character.level, ms.character.level];
     }
-    return { ok: true, end: save.expedition.end };
+    return { ok: true, end: e.end, id: e.id };
   }
 
   // ---------- Один бій ----------
@@ -133,10 +159,9 @@
     }
   }
 
-  function fightOne(save) {
-    const e = save.expedition;
+  function fightOne(save, e) {
     const loc = RPG.LOCATIONS[e.loc];
-    const team = expMembers(save).filter(ms => !isDown(ms));
+    const team = expMembers(save, e).filter(ms => !isDown(ms));
     if (!team.length) return "wiped";
     const specs = rollGroup(save, e.loc, team);
     if (!specs.length) return "empty";
@@ -219,11 +244,10 @@
   }
 
   // ---------- Кінець ----------
-  function finishExpedition(save, reason, now = Date.now(), wipeIds = null) {
-    const e = save.expedition;
+  function finishExpedition(save, e, reason, now = Date.now(), wipeIds = null) {
     if (!e || e.done) return false;
     e.done = true; e.reason = reason; e.finishedAt = now;
-    const team = expMembers(save);
+    const team = expMembers(save, e);
     const fallen = team.filter(isDown);
     e.fallen = fallen.map(ms => memberIdOf(save, ms));
     if (reason === "wiped") {
@@ -235,8 +259,8 @@
         e.penalty[memberIdOf(save, ms)] = d.expLost;
         ms.character.deaths = (ms.character.deaths || 0) + 1;
       }
-      // удома теж ніхто не стоїть на ногах — усі прокидаються в Храмі
-      const homeAlive = RPG.partyMembers(save).filter(ms => !team.includes(ms) && !e.members.includes(memberIdOf(save, ms)) && !isDown(ms));
+      // удома теж ніхто не стоїть на ногах (і немає інших експедицій у дорозі) — усі прокидаються в Храмі
+      const homeAlive = RPG.partyMembers(save).filter(ms => !e.members.includes(memberIdOf(save, ms)) && !isDown(ms));
       if (!homeAlive.length) {
         for (const ms of RPG.partyMembers(save)) {
           const s = RPG.calcStats(ms);
@@ -258,27 +282,32 @@
     return true;
   }
   // Відкликати групу достроково
-  function recallExpedition(save, now = Date.now()) {
-    if (!expeditionActive(save)) return { ok: false, reason: "Експедиції немає." };
+  function recallExpedition(save, eid, now = Date.now()) {
+    const e = expById(save, eid);
+    if (!e || e.done) return { ok: false, reason: "Експедиції немає." };
     expeditionTick(save, now);
-    if (save.expedition.done) return { ok: true };
-    finishExpedition(save, "recalled", now);
+    if (e.done) return { ok: true };
+    finishExpedition(save, e, "recalled", now);
     return { ok: true };
   }
 
   // ---------- «Доганяння» боїв до поточного часу. Повертає true, якщо щось змінилось ----------
   function expeditionTick(save, now = Date.now()) {
-    const e = save.expedition;
-    if (!e || e.done || !RPG.simulatePartyBattle) return false;
+    if (!RPG.simulatePartyBattle) return false;
+    let changed = false;
+    for (const e of activeList(save)) changed = tickOne(save, e, now) || changed;
+    return changed;
+  }
+  function tickOne(save, e, now) {
     const limit = Math.min(now, e.end);
     let changed = false, steps = 0;
     while (!e.done && e.at + EXP_BATTLE_MS <= limit && steps++ < EXP_MAX_STEPS) {
-      const r = fightOne(save);
+      const r = fightOne(save, e);
       changed = true;
-      if (r === "wiped" || r?.wiped) { finishExpedition(save, "wiped", e.at + EXP_BATTLE_MS, r?.enemyIds); break; }
+      if (r === "wiped" || r?.wiped) { finishExpedition(save, e, "wiped", e.at + EXP_BATTLE_MS, r?.enemyIds); break; }
       e.at += EXP_BATTLE_MS;
       // автозілля (якщо ввімкнено в Налаштуваннях), потім відновлення за час бою, а коли треба — привал
-      const team = expMembers(save).filter(ms => !isDown(ms));
+      const team = expMembers(save, e).filter(ms => !isDown(ms));
       const cfg = RPG.getAutoPotion ? RPG.getAutoPotion() : null;
       if (cfg && (cfg.hp.on || cfg.mp.on) && RPG.autoPotion && team.length) {
         const pr = RPG.autoPotion(save, cfg, team);
@@ -294,7 +323,7 @@
         e.at += t * EXP_TICK_MS;
       }
     }
-    if (!e.done && e.at + EXP_BATTLE_MS > e.end && now >= e.end) { finishExpedition(save, "time", e.end); changed = true; }
+    if (!e.done && e.at + EXP_BATTLE_MS > e.end && now >= e.end) { finishExpedition(save, e, "time", e.end); changed = true; }
     return changed;
   }
 
@@ -303,8 +332,12 @@
     return !bag || (!bag.gold && !bag.items.length && !Object.keys(bag.stacks).length);
   }
   // Забрати здобич (лише після повернення): золото, матеріали й речі — в інвентар, що влізе. Решта лишається в мішку.
-  function collectExpedition(save) {
-    const e = save.expedition;
+  function removeExp(save, e) {
+    const list = expList(save), i = list.indexOf(e);
+    if (i >= 0) list.splice(i, 1);
+  }
+  function collectExpedition(save, eid) {
+    const e = expById(save, eid);
     if (!e) return { ok: false, reason: "Експедиції немає." };
     if (!e.done) return { ok: false, reason: "Група ще в експедиції." };
     const bag = e.bag, got = { gold: bag.gold, stacks: {}, items: [] };
@@ -321,23 +354,23 @@
     }
     bag.items = left;
     const empty = bagEmpty(bag);
-    if (empty) delete save.expedition;
+    if (empty) removeExp(save, e);
     return { ok: true, got, empty, left: left.length + Object.values(bag.stacks || {}).reduce((a, b) => a + b, 0) };
   }
   // Викинути решту здобичі (якщо інвентар повний і решта не потрібна)
-  function dropExpeditionLoot(save) {
-    const e = save.expedition;
+  function dropExpeditionLoot(save, eid) {
+    const e = expById(save, eid);
     if (!e || !e.done) return { ok: false, reason: "Група ще в експедиції." };
-    delete save.expedition;
+    removeExp(save, e);
     return { ok: true };
   }
 
   // Короткий стан для показу: { active, done, loc, leftMs, battles, wins, alive, total, bag }
-  function expeditionInfo(save, now = Date.now()) {
-    const e = save.expedition;
+  function expeditionInfo(save, eid = null, now = Date.now()) {
+    const e = expById(save, eid);
     if (!e) return null;
-    const team = expMembers(save);
-    return {
+    const team = expMembers(save, e);
+    return { id: e.id,
       active: !e.done, done: e.done, reason: e.reason, loc: RPG.LOCATIONS[e.loc], locId: e.loc,
       leftMs: Math.max(0, e.end - now), elapsedMs: Math.min(now, e.end) - e.start,
       battles: e.battles, wins: e.wins, champions: e.champions,
@@ -347,8 +380,8 @@
   }
 
   Object.assign(RPG, {
-    EXP_DURATION_MS, EXP_BATTLE_MS, EXP_SIZES, EXP_REST_BELOW, EXP_REST_UNTIL, EXP_CAMP_PCT,
-    expeditionActive, isAway, memberIdOf, viewById, isExpeditionLoc, canStartExpedition, startExpedition,
+    EXP_DURATION_MS, EXP_BATTLE_MS, EXP_SIZES, EXP_REST_BELOW, EXP_REST_UNTIL, EXP_CAMP_PCT, EXP_MAX_BAGS,
+    expeditionList: expList, expeditionActive, isAway, memberIdOf, viewById, isExpeditionLoc, canStartExpedition, startExpedition,
     expeditionTick, recallExpedition, finishExpedition, collectExpedition, dropExpeditionLoot, expeditionInfo
   });
 })(window.RPG);

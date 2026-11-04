@@ -155,6 +155,13 @@
         lockNavForTravel();
         if (page !== "maps") showTravelBanner(save);
       }
+      // Поки експедиція в дорозі — як у дорозі: лише «Персонаж», «Інвентар» і «Мапа» (expedition.js)
+      else if (RPG.expeditionActive?.(save)) {
+        const page = document.body.dataset.page;
+        if (!RPG.TRAVEL_PAGES.includes(page)) { location.replace("maps.html"); return null; }
+        lockNavForTravel("Недоступно, поки експедиція в дорозі");
+        showExpeditionBanner(save, page !== "maps");
+      }
       return save;
     } catch (e) {
       console.error(e);
@@ -861,14 +868,14 @@
     ev.preventDefault();
     ev.stopImmediatePropagation();
   }
-  function lockNavForTravel() {
+  function lockNavForTravel(why = "Недоступно в дорозі") {
     document.body.classList.add("is-traveling");
     document.querySelectorAll("header nav a, main a[href]").forEach(a => {
       const href = (a.getAttribute("href") || "").split("?")[0];
       if (TRAVEL_HREFS.includes(href)) return;
       a.classList.add("travel-locked");
       a.setAttribute("aria-disabled", "true");
-      a.title = "Недоступно в дорозі";
+      a.title = why;
       a.addEventListener("click", blockLink, true);
     });
   }
@@ -905,6 +912,36 @@
       unlockNavAfterTravel();
     };
     const timer = setInterval(upd, 250);
+    upd();
+  }
+
+  // Банер «Експедиція в дорозі» (Персонаж / Інвентар); на Мапі — лише стежить, коли зняти обмеження
+  function showExpeditionBanner(save, visible = true) {
+    const main = document.querySelector("main");
+    let text = null, bar = null;
+    if (visible && main) {
+      bar = el("div", "travel-banner");
+      bar.setAttribute("role", "status");
+      text = el("span");
+      bar.append(text, link("Мапа", "maps.html"));
+      main.prepend(bar);
+    }
+    const upd = async () => {
+      if (RPG.expeditionTick(save)) await RPG.saveGame(save).catch(e => console.error(e));
+      const act = (RPG.expeditionList(save) || []).filter(e => !e.done);
+      if (act.length) {
+        if (text) {
+          const left = Math.min(...act.map(e => e.end)) - Date.now();
+          text.textContent = (act.length > 1 ? `Експедицій у дорозі: ${act.length}` : `Експедиція в дорозі: ${RPG.LOCATIONS[act[0].loc]?.name || ""}`) +
+            ` — найближча повернеться за ${fmtHours(Math.max(0, left))}. Переходити між локаціями не можна.`;
+        }
+        return;
+      }
+      clearInterval(timer);
+      if (text) { text.textContent = "Експедиція повернулась — заберіть здобич на Мапі."; bar.classList.add("is-done"); }
+      unlockNavAfterTravel();
+    };
+    const timer = setInterval(upd, 5000);
     upd();
   }
 
@@ -1242,8 +1279,17 @@
     const m = Math.ceil(ms / 60000), h = Math.floor(m / 60);
     return h ? `${h} год ${m % 60} хв` : `${m} хв`;
   }
+  // Панелі всіх експедицій (у дорозі й повернених); null — експедицій немає
   function expeditionPanel(save, onChange) {
-    const info = RPG.expeditionInfo?.(save);
+    const list = RPG.expeditionList?.(save) || [];
+    if (!list.length) return null;
+    if (list.length === 1) return expeditionOnePanel(save, list[0].id, onChange);
+    const wrap = el("div", "stack exp-panels");
+    for (const e of list) { const p = expeditionOnePanel(save, e.id, onChange); if (p) wrap.append(p); }
+    return wrap;
+  }
+  function expeditionOnePanel(save, eid, onChange) {
+    const info = RPG.expeditionInfo?.(save, eid);
     if (!info) return null;
     const box = el("div", "exp-panel" + (info.done ? " is-done" : "") + (info.reason === "wiped" ? " is-lost" : ""));
     const region = RPG.MAP_REGIONS?.[info.loc?.region || "start"]?.name || "";
@@ -1262,7 +1308,7 @@
       let armed = false;
       const recall = button("Відкликати групу", "wf wf-secondary", async () => {
         if (!armed) { armed = true; recall.textContent = "Точно відкликати? Натисніть ще раз"; return; }
-        RPG.recallExpedition(save);
+        RPG.recallExpedition(save, eid);
         await RPG.saveGame(save);
         onChange?.();
       });
@@ -1286,7 +1332,7 @@
     const bagIsEmpty = !bag.gold && !bag.items.length && !Object.keys(bag.stacks).length;
     const row = el("div", "row exp-btns");
     row.append(button(bagIsEmpty ? "Гаразд" : "Забрати здобич", "wf wf-button", async () => {
-      const r = RPG.collectExpedition(save);
+      const r = RPG.collectExpedition(save, eid);
       await RPG.saveGame(save);
       if (r.ok && !r.empty) showMsg(box, `Інвентар повний — у мішку експедиції лишилось ${fmtNum(r.left)}. Звільніть місце й заберіть решту.`, true);
       else onChange?.();
@@ -1294,7 +1340,7 @@
     let armedDrop = false;
     const drop = button("Викинути решту", "wf wf-secondary", async () => {
       if (!armedDrop) { armedDrop = true; drop.textContent = "Точно викинути? Натисніть ще раз"; return; }
-      RPG.dropExpeditionLoot(save);
+      RPG.dropExpeditionLoot(save, eid);
       await RPG.saveGame(save);
       onChange?.();
     });
@@ -1405,5 +1451,5 @@
   // ============================================================
 
   RPG.pages = {};
-  RPG.ui = { expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
+  RPG.ui = { expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, showExpeditionBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
 })(window.RPG);

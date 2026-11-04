@@ -63,6 +63,7 @@
 
   function startTravel(save, to, now = Date.now()) {
     if (isTraveling(save, now)) return { ok: false, reason: "Ви вже в дорозі — переміщення не скасувати." };
+    if (RPG.expeditionActive?.(save)) return { ok: false, reason: "Поки експедиція в дорозі, переходити між локаціями не можна." };
     const { region, spot } = whereIs(save);
     if (spot === to) return { ok: false, reason: "Ви вже тут." };
     const can = canGo(save, region, to);
