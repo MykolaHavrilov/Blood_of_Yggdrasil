@@ -2052,7 +2052,7 @@
       t.title = label;
       t.setAttribute("aria-label", label);
     }
-    const heroTokenFor = ms => fieldToken("hero", ms.character.name, RPG.heroSpriteStyle(ms.character.classId));
+    const heroTokenFor = ms => fieldToken("hero", ms.character.name, RPG.heroSpriteStyle(ms.character.classId, RPG.heroGender(ms)));
     const foeTokenFor = (f, e) => fieldToken("enemy", e.name + weaponText(e), RPG.enemySpriteStyle(f.id),
       (f.champion ? "is-champion" : "") + (e.boss ? " is-boss" : ""));
 

@@ -359,7 +359,8 @@ await RPG.saveGame(save);
   Види: `attack`, `buff`, `heal` (лікує себе, `healPct`), `passive` (постійні бонуси, рівень — до половини рівня героя).
   Особливі поля навичок (`turns`, `area`, `spread`, `splash`, `vsDefDown`, `vsUndead`, `freeze`, `shadow`, `extra`, `group`) —
   описані на початку `data/skills.js`.
-- Свій вигляд професії: `assets/images/heroes/hero_<id>.webp` (поки немає — основа з `Heroes_start`).
+- Свій вигляд професії: `assets/images/heroes/hero_<id>.webp` (чоловік) і `hero_<id>_f.webp` (жінка), 512×512 — є для всіх 13 професій
+  (`classes.js → HERO_SPRITE_FILES`). Стать — `character.js → heroGender`; немає жіночого файлу — чоловічий, немає професії — Селянин.
 
 ## Квест «Долоні Велеса» (`quests.js → VELES`)
 

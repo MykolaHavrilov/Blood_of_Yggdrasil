@@ -17,12 +17,6 @@
     "maps": pageMaps
   };
 
-  // Картинка професії завантажилась пізніше за сторінку — перемалювати героя
-  document.addEventListener("rpg:hero-sprite", () => {
-    const img = document.getElementById("hero-img");
-    if (img && img._save) renderHeroDoll(img, img._save);
-  });
-
   // Музика сторінок без власної логіки звуку (Локація й Мапа обирають трек самі)
   async function pageMusic(page) {
     const A = RPG.audio;

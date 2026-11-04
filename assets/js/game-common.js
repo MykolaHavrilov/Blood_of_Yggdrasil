@@ -1099,7 +1099,7 @@
         row.addEventListener("keydown", ev => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); onPick(i); } });
       }
       const face = el("span", "party-face");
-      Object.assign(face.style, RPG.heroSpriteStyle(ms.character.classId));
+      Object.assign(face.style, RPG.heroSpriteStyle(ms.character.classId, RPG.heroGender(ms)));
       const info = el("div", "party-info");
       info.append(el("strong", null, `${ms.character.name} · рів. ${ms.character.level}${dead ? (RPG.heroGender(ms) === "f" ? " · полегла" : " · полеглий") : ""}`));
       const hp = miniBar("bar-hp", "HP", "party-hp-" + i), mp = miniBar("bar-mp", "MP", "party-mp-" + i);

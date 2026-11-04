@@ -157,7 +157,7 @@
   // Опис шарів героя: { base, layers: [{ ref, behind, style, fist }], fists: [[x, y]] }
   function heroDoll(save) {
     const eq = save.equipment || {};
-    const base = heroBaseStyle(save.character?.classId);
+    const base = heroBaseStyle(save.character?.classId, RPG.heroGender ? RPG.heroGender(save) : "m");
     const layers = [];
     const fists = [];
     const add = (slot, hand, cfg) => {
@@ -192,9 +192,9 @@
     return Object.assign({}, base, { clipPath: `circle(${pct(HERO_FIST_R)} at ${pct(x)} ${pct(y)})` });
   }
 
-  // CSS-стиль основи (герой з порожніми руками) — для простих місць без шарів
-  function heroSpriteStyle(classId) {
-    return heroBaseStyle(classId);
+  // CSS-стиль основи (герой з порожніми руками) — для простих місць без шарів; gender — "m" | "f"
+  function heroSpriteStyle(classId, gender) {
+    return heroBaseStyle(classId, gender);
   }
 
   // Список професій, на які персонаж може перейти зараз «вручну».
@@ -250,36 +250,30 @@
   }
 
   // ---------- Свій вигляд для кожної професії ----------
-  // assets/images/heroes/hero_<id>.webp — 256×256 (або більше, квадрат), герой з порожніми руками
-  // у тій самій позі й масштабі, що й основа Heroes_start (кулаки — у точках HERO_HANDS).
-  // Поки картинки немає — показується основа з Heroes_start.
-  const HERO_SPRITE_OK = {};
-  // Для яких професій уже є картинка (додати ID, коли з'явиться новий файл)
-  const HERO_SPRITE_FILES = ["peasant"];
-  function preloadHeroSprites() {
-    if (typeof Image === "undefined") return;
-    for (const id of HERO_SPRITE_FILES) {
-      const img = new Image();
-      img.onload = () => { HERO_SPRITE_OK[id] = true; document.dispatchEvent(new CustomEvent("rpg:hero-sprite", { detail: id })); };
-      img.src = RPG.asset(`assets/images/heroes/hero_${id}.webp`);
-    }
+  // assets/images/heroes/hero_<id>.webp (чоловік) і hero_<id>_f.webp (жінка) — 512×512, герой з порожніми руками
+  // у тій самій позі й масштабі, що й Селянин (кулаки — у точках HERO_HANDS). Стать — character.js → heroGender.
+  // Немає жіночого файлу — показується чоловічий тієї ж професії; немає професії в списку — Селянин.
+  const HERO_SPRITE_FILES = new Set([
+    "peasant", "peasant_f",
+    "warrior", "warrior_f", "knight", "knight_f", "berserker", "berserker_f", "rogue", "rogue_f", "hunter", "hunter_f",
+    "mage_fire", "mage_fire_f", "mage_water", "mage_water_f", "mage_wind", "mage_wind_f", "mage_earth", "mage_earth_f",
+    "paladin", "paladin_f", "priest", "priest_f", "monk", "monk_f"
+  ]);
+  function heroSpriteId(classId, gender) {
+    const cls = HERO_SPRITE_FILES.has(classId) ? classId : DEFAULT_CLASS;
+    return gender === "f" && HERO_SPRITE_FILES.has(cls + "_f") ? cls + "_f" : cls;
   }
-  function heroBaseStyle(classId) {
-    // Поки в професії немає свого вигляду — показуємо Селянина (той самий кадр і пози рук)
-    if (!HERO_SPRITE_OK[classId] && HERO_SPRITE_OK[DEFAULT_CLASS]) classId = DEFAULT_CLASS;
-    if (HERO_SPRITE_OK[classId]) {
-      return { backgroundImage: `url("${RPG.asset(`assets/images/heroes/hero_${classId}.webp`)}")`,
+  function heroBaseStyle(classId, gender) {
+    const id = heroSpriteId(classId, gender);
+    if (HERO_SPRITE_FILES.has(id)) {
+      return { backgroundImage: `url("${RPG.asset(`assets/images/heroes/hero_${id}.webp`)}")`,
                backgroundSize: "100% 100%", backgroundPosition: "0 0", backgroundRepeat: "no-repeat" };
     }
     return RPG.spriteStyle(RPG.asset(HERO_BASE.sheet + HERO_EXT), HERO_BASE.cols, HERO_BASE.rows,
                            HERO_BASE.size, HERO_BASE.gap, HERO_BASE.index);
   }
 
-  Object.assign(RPG, { DEFAULT_CLASS, CLASSES, PROFESSION_LEVEL, getClass, heroDoll, heroFistStyle, heroSpriteStyle,
+  Object.assign(RPG, { DEFAULT_CLASS, CLASSES, PROFESSION_LEVEL, getClass, heroDoll, heroFistStyle, heroSpriteStyle, heroSpriteId,
                        availableClassChanges, pickProfession,
                        investedAttrPoints, professionLack, eligibleProfessions, classAllowsWeapon, classAllowsOffHand });
-  if (typeof document !== "undefined") {
-    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", preloadHeroSprites);
-    else preloadHeroSprites();
-  }
 })(window.RPG);
