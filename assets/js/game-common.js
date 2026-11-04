@@ -159,7 +159,7 @@
       else if (RPG.expeditionActive?.(save)) {
         const page = document.body.dataset.page;
         if (!RPG.TRAVEL_PAGES.includes(page)) { location.replace("maps.html"); return null; }
-        lockNavForTravel("Недоступно, поки експедиція в дорозі");
+        lockNavForTravel("Недоступно, поки експедиція в дорозі", EXPEDITION_HREFS);
         showExpeditionBanner(save, page !== "maps");
       }
       return save;
@@ -868,11 +868,13 @@
     ev.preventDefault();
     ev.stopImmediatePropagation();
   }
-  function lockNavForTravel(why = "Недоступно в дорозі") {
+  // extra — ще дозволені сторінки (ім'я файлу), напр. під час експедиції — «Налаштування» і «Головне меню»
+  const EXPEDITION_HREFS = ["settings.html", "index.html"];
+  function lockNavForTravel(why = "Недоступно в дорозі", extra = []) {
     document.body.classList.add("is-traveling");
     document.querySelectorAll("header nav a, main a[href]").forEach(a => {
       const href = (a.getAttribute("href") || "").split("?")[0];
-      if (TRAVEL_HREFS.includes(href)) return;
+      if (TRAVEL_HREFS.includes(href) || extra.includes(href.split("/").pop())) return;
       a.classList.add("travel-locked");
       a.setAttribute("aria-disabled", "true");
       a.title = why;
