@@ -1262,22 +1262,28 @@
       const cost = RPG.nextHireCost(save);
       if (cost == null) { box.append(el("p", "status", "Група вже повна.")); return; }
       const profOpen = RPG.getClass(save.character.classId).tier > 1;
-      box.append(el("p", "status", `Внесок у Мерію за наступного (${size + 1}-го) героя групи: ${fmtNum(cost)} золота. ` +
-        `Далі — ${RPG.HIRE_COSTS.slice(size).map(fmtNum).join(" → ")} золота.`));
+      box.append(el("p", "status", `Внесок у Мерію за наступного (${size + 1}-го) героя групи: Селянин — ${fmtNum(cost)} золота. ` +
+        `Далі — ${RPG.HIRE_COSTS.slice(size).map(fmtNum).join(" → ")} золота.` + (profOpen
+        ? ` Герой з професією — дорожче: +${fmtNum(RPG.HIRE_PROF_FEE)} за професію і +${fmtNum(RPG.HIRE_LEVEL_FEE)} за кожен рівень понад ${RPG.HIRE_FREE_LEVELS}-й.` : "")));
       box.append(noteP(`Оголошення змінюються раз на ${RPG.BOARD_HOURS} годин. ` + (profOpen
         ? `Тут шукають групу Селяни 1–${RPG.RECRUIT_PEASANT_MAX} рівня і герої з професією — до вашого рівня (${save.character.level}).`
         : `Поки у вас немає професії, групу тут шукають лише Селяни 1–${RPG.RECRUIT_PEASANT_MAX} рівня. ` +
           "Коли пройдете «Шлях професії», на дошці з'являться й герої з професією — до вашого рівня.")));
       const can = RPG.canHire(save);
-      if (!can.ok) box.append(el("p", "status", can.reason));
+      if (!can.ok && !can.gold) box.append(el("p", "status", can.reason));
       const cards = RPG.boardState(save);
       for (const c of cards) {
         const r = el("div", "shop-row board-card");
         const face = el("span", "party-face board-face");
         Object.assign(face.style, RPG.heroSpriteStyle(c.classId, c.gender));
         const cls = c.classId === RPG.DEFAULT_CLASS && c.gender === "f" ? "Селянка" : RPG.getClass(c.classId).name;
-        r.append(face, el("span", "shop-name", `«Шукаю групу. ${c.name}, ${cls}, ${c.level} рівень.»`));
-        const b = button(`Найняти (${fmtNum(cost)} зол.)`, "wf wf-button", async () => {
+        const price = RPG.hireCost(save, c);
+        const name = el("span", "shop-name", `«Шукаю групу. ${c.name}, ${cls}, ${c.level} рівень.»`);
+        if (price.prof) name.append(el("small", "board-price", `Внесок: ${fmtNum(price.base)} + ${fmtNum(price.prof)} за професію` +
+          (price.levels ? ` + ${fmtNum(price.levels * price.perLevel)} за ${price.levels} рів. понад ${RPG.HIRE_FREE_LEVELS}-й` : "") + "."));
+        r.append(face, name);
+        const canThis = RPG.canHire(save, c);
+        const b = button(`Найняти (${fmtNum(price.total)} зол.)`, "wf wf-button", async () => {
           const res = RPG.hireMember(save, c.name);
           if (!res.ok) { showMsg(msg, res.reason, true); return; }
           await RPG.saveGame(save);
@@ -1286,10 +1292,13 @@
             " і навички — на сторінці «Персонаж».");
           renderAll();
         });
-        b.disabled = !can.ok;
+        b.disabled = !canThis.ok;
+        if (!canThis.ok && canThis.gold) b.title = canThis.reason;
         r.append(b);
         box.append(r);
       }
+      if (can.ok && cards.length && cards.every(c => !RPG.canHire(save, c).ok)) box.append(el("p", "status", "Не вистачає золота на жодне з оголошень."));
+      else if (!can.ok && can.gold) box.append(el("p", "status", can.reason));
       if (!cards.length) box.append(el("p", "status", "Усіх, хто шукав групу, вже найнято."));
       const next = new Date(RPG.boardNextAt());
       const left = Math.max(0, RPG.boardNextAt() - Date.now());

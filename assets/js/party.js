@@ -13,7 +13,7 @@
 //
 // Найм — на Дошці оголошень біля Мерії (Центральний район Дубової Застави), який
 // відкривається після особливого завдання «Час дослідити» (quests.js).
-// Внесок у Мерію за кожного нового напарника — HIRE_COSTS.
+// Внесок у Мерію за кожного нового напарника — HIRE_COSTS (ціна Селянина); герой з професією — дорожчий (hireCost).
 // Оголошення оновлюються раз на BOARD_HOURS годин (о 0:00, 6:00, 12:00, 18:00 за місцевим часом):
 //   • поки в головного героя немає професії — лише Селяни 1–5 рівня;
 //   • коли професія вже є — один Селянин 1–5 рівня і BOARD_SIZE−1 героїв з професією:
@@ -26,8 +26,12 @@
 
 (function (RPG) {
   const MAX_PARTY = 6;
-  // Внесок у Мерію: 2-й герой групи, 3-й, 4-й, 5-й, 6-й (перший — безкоштовно)
+  // Внесок у Мерію: 2-й герой групи, 3-й, 4-й, 5-й, 6-й (перший — безкоштовно). Це ціна Селянина.
   const HIRE_COSTS = [1000, 3000, 5000, 8000, 12000];
+  // Герой з професією дорожчий: + HIRE_PROF_FEE за професію і + HIRE_LEVEL_FEE за кожен рівень понад HIRE_FREE_LEVELS
+  const HIRE_PROF_FEE = 3000;
+  const HIRE_LEVEL_FEE = 500;
+  const HIRE_FREE_LEVELS = 5;
   const BOARD_SIZE = 3;      // скільки оголошень висить на дошці
   const BOARD_HOURS = 6;     // як часто оновлюються оголошення
   const BOARD_NEAR = 3;      // «трохи нижче» за рівень головного героя
@@ -179,22 +183,32 @@
     return fresh;
   }
 
-  // Чи можна зараз наймати: { ok, reason }
-  function canHire(save) {
+  // Внесок за конкретне оголошення: { total, base, prof, levels, perLevel }
+  function hireCost(save, card) {
+    const base = nextHireCost(save);
+    if (base == null) return null;
+    const isProf = !!card && card.classId !== RPG.DEFAULT_CLASS;
+    const levels = isProf ? Math.max(0, card.level - HIRE_FREE_LEVELS) : 0;
+    const prof = isProf ? HIRE_PROF_FEE : 0;
+    return { total: base + prof + levels * HIRE_LEVEL_FEE, base, prof, levels, perLevel: HIRE_LEVEL_FEE };
+  }
+
+  // Чи можна зараз наймати: { ok, reason } (card — оголошення; без нього — ціна Селянина)
+  function canHire(save, card = null) {
     if (!RPG.isHiringOpen(save)) return { ok: false, reason: `Дошка оголошень відкривається після особливого завдання «${RPG.EXPLORE.name}» (Артеміда, Гільдія авантюристів).` };
     if (save.character.level < HIRE_MIN_LEVEL) return { ok: false, reason: `Наймати можна з ${HIRE_MIN_LEVEL} рівня головного героя.` };
     if (partySize(save) >= MAX_PARTY) return { ok: false, reason: `У групі вже ${MAX_PARTY} героїв — це максимум.` };
-    const cost = nextHireCost(save);
-    if (save.character.gold < cost) return { ok: false, reason: `Внесок у Мерію: ${cost} золота (у вас ${save.character.gold}).` };
+    const cost = hireCost(save, card).total;
+    if (save.character.gold < cost) return { ok: false, gold: true, reason: `Внесок у Мерію: ${cost} золота (у вас ${save.character.gold}).` };
     return { ok: true, cost };
   }
 
   // Найняти напарника з дошки (name — ім'я з оголошення)
   function hireMember(save, name) {
-    const can = canHire(save);
-    if (!can.ok) return can;
     const card = boardState(save).find(c => c.name === name);
     if (!card) return { ok: false, reason: "Цього оголошення вже немає." };
+    const can = canHire(save, card);
+    if (!can.ok) return can;
     const fresh = makeRecruit(save, card);
     const member = {
       id: "m" + Date.now().toString(36) + Math.floor(Math.random() * 1000),
@@ -220,8 +234,8 @@
   }
 
   Object.assign(RPG, { PARTY_EXP_BONUS,
-    MAX_PARTY, HIRE_COSTS, HIRE_MIN_LEVEL, BOARD_HOURS, RECRUIT_PEASANT_MAX,
+    MAX_PARTY, HIRE_COSTS, HIRE_PROF_FEE, HIRE_LEVEL_FEE, HIRE_FREE_LEVELS, HIRE_MIN_LEVEL, BOARD_HOURS, RECRUIT_PEASANT_MAX,
     partyState, partySize, memberSave, partyMembers, aliveMembers, isMemberDead: isDead, applyRegenAll,
-    nextHireCost, boardState, boardNextAt, canHire, hireMember, dismissMember
+    nextHireCost, hireCost, boardState, boardNextAt, canHire, hireMember, dismissMember
   });
 })(window.RPG);
