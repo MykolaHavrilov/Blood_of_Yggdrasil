@@ -43,7 +43,7 @@
     magicDefense: "secondary", hp: "secondary", mp: "secondary",
     crit: "auxiliary", dodge: "auxiliary", speed: "auxiliary",
     blockPhys: "auxiliary", blockMag: "auxiliary",
-    hpRegen: "auxiliary", mpRegen: "auxiliary", attackSpeedPct: "auxiliary", skillPct: "auxiliary"
+    hpRegen: "auxiliary", mpRegen: "auxiliary", attackSpeedPct: "auxiliary", skillPct: "auxiliary", critDmg: "auxiliary"
   };
 
   // Варіант 2 і 3: скільки «сирих» очок складають 1 одиницю

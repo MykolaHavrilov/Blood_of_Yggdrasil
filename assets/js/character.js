@@ -109,12 +109,23 @@ function createNewSave(name, classId = DEFAULT_CLASS, gender = null) {
 // база професії + приріст за рівні + атрибути + екіпірування
 
 const STAT_KEYS = ["hp", "mp", "attack", "magic", "defense", "magicDefense", "speed",
-                   "crit", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct", "skillPct"];
+                   "crit", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct", "skillPct", "critDmg"];
 const DECIMAL_KEYS = ["crit", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct"];
 
 // trace — необов'язковий об'єкт: якщо передати {}, у нього запишеться, з чого склалась
 // кожна характеристика: trace[key] = [{ label, value }] (сторінка «Персонаж» → підказки «i»).
 // Сума value дорівнює результату до округлення; округлення — окремим рядком.
+// Межа швидкості залежить від професії й рівня (stats.js → STAT_CAP):
+// без професії — 250; професія (тір 2) і рівень 25+ — 350; друга професія (тір 3) і рівень 51+ — 450
+function speedCap(save) {
+  const CAP = RPG.STAT_CAP;
+  const tier = getClass(save.character.classId).tier || 1;
+  const lvl = save.character.level || 1;
+  if (tier >= 3 && lvl >= 51) return CAP.speedProf2;
+  if (tier >= 2 && lvl >= 25) return CAP.speedProf;
+  return CAP.speed;
+}
+
 function calcStats(save, trace = null) {
   const cls = getClass(save.character.classId);
   const lvl = save.character.level;
@@ -138,6 +149,9 @@ function calcStats(save, trace = null) {
     note(key, `Професія «${cls.name}»`, cls.baseStats[key]);
     note(key, "Рівень", grow);
   }
+  // Сила криту: база ×1,5 (150%) у всіх; бонуси — зі зброї та сережок
+  stats.critDmg = RPG.STAT_CAP.critDmgBase;
+  note("critDmg", "Основа: критичний удар ×1,5", stats.critDmg);
 
   // Атрибути (власні + з речей)
   const attrs = RPG.totalAttrs(save);
@@ -218,7 +232,8 @@ function calcStats(save, trace = null) {
   // (підказка «i» показує, скільки зрізано понад межу)
   change("crit", "Обмеження максимуму", v => Math.min(v, CAP.crit));
   change("dodge", "Обмеження максимуму", v => Math.min(v, CAP.dodge));
-  change("speed", "Обмеження максимуму", v => Math.min(v, CAP.speed));
+  change("speed", "Обмеження максимуму", v => Math.min(v, speedCap(save)));
+  change("critDmg", "Обмеження максимуму", v => Math.min(v, CAP.critDmg));
   change("blockPhys", "Обмеження максимуму", v => Math.min(v, CAP.block));
   change("blockMag", "Обмеження максимуму", v => Math.min(v, CAP.block));
 
@@ -1515,7 +1530,7 @@ Object.assign(RPG, {
   WAREHOUSE_PRICE, CRAFT_CHESTS, CRAFT_CHEST_ALLOW_TEXT, parseCraftChest, chestAllows, chestsHere, buildWarehouse, buyCraftChest, sortToCraftChests,
   QUEUE_SIZE, BUY_MAX, GRACE, graceCost, graceLeft, buyGrace, attrResetCost, attrResetPrice, investedAttrs, resetAttrs,
   REGEN_TICK_MS, HOME_REGEN_PCT, RESPAWN_HP_PCT, DEATH_EXP_MULT, ITEM_LOSS_CHANCE, maxItemLoss,
-  createNewSave, calcStats, clampHpMp, fullHeal, FEMALE_NAMES, heroGender, gw,
+  createNewSave, calcStats, speedCap, clampHpMp, fullHeal, FEMALE_NAMES, heroGender, gw,
   regenPerTick, applyRegen, msToNextRegen,
   addExp, levelCap, levelCapOpen, LEVEL_CAP_BASE, LEVEL_CAP_PROFESSION, LEVEL_CAP_BOSS, removeExp, deathExpPenalty, DEATH_MAX_PCT, expProgress, applyDeath, markFallen, pray,
   getClassChanges, changeClass,

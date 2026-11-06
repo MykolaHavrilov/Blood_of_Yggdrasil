@@ -281,13 +281,16 @@
   const mitigate = (damage, defense) => damage * 100 / (100 + Math.max(0, defense || 0));
   const roll = pct => Math.random() * 100 < (pct || 0);
 
-  function finishHit(dmg, crit, blocked) {
-    if (crit) dmg *= CRIT_MULT;
+  // mult — сила криту (герой: calcStats → critDmg / 100; вороги — CRIT_MULT)
+  function finishHit(dmg, crit, blocked, mult = CRIT_MULT) {
+    if (crit) dmg *= mult;
     if (blocked) dmg *= 0.5;
     return Math.max(1, Math.round(dmg));
   }
 
   // Чим б'є герой
+  const critMul = H => (H.base.critDmg || CRIT_MULT * 100) / 100;
+
   function heroWeapon(save) {
     const ref = save.equipment.mainHand;
     const item = RPG.ITEMS[RPG.refId(ref)];
@@ -303,6 +306,7 @@
       side: "hero", ms, name: ms.character.name, classId: ms.character.classId,
       g: RPG.heroGender ? RPG.heroGender(ms) : "m",      // стать — для тексту журналу бою
       base: RPG.calcStats(ms), weapon: heroWeapon(ms),
+      speedCap: RPG.speedCap ? RPG.speedCap(ms) : RPG.STAT_CAP.speed,   // межа швидкості: 250 / 350 / 450 (character.js)
       skillLevels: { ...(ms.character.skills || {}) }, queue, qi: 0,
       hp: Math.floor(ms.character.hp), mp: Math.floor(ms.character.mp), buffs: {}, stun: 0,
       turnNo: 0, cdUntil: {},                              // перезарядка навичок: id → з якого ходу героя знову доступна
@@ -422,7 +426,7 @@
     if (sum.magicDefensePct) h.magicDefense *= 1 + sum.magicDefensePct / 100;
     if (sum.crit) h.crit = Math.min(h.crit + sum.crit, RPG.STAT_CAP.crit);
     if (sum.dodge) h.dodge = Math.min((h.dodge || 0) + sum.dodge, RPG.STAT_CAP.dodge);
-    if (sum.speedPct) h.speed = Math.min(h.speed * (1 + sum.speedPct / 100), RPG.STAT_CAP.speed);
+    if (sum.speedPct) h.speed = Math.min(h.speed * (1 + sum.speedPct / 100), H.speedCap || RPG.STAT_CAP.speed);
     return h;
   }
 
@@ -492,7 +496,7 @@
     const crit = roll(h.crit + RPG.skillValue(sk.critBonus, lvl));
     const blocked = roll(sk.magic ? es.blockMag : es.blockPhys);
     const raw = (sk.magic ? h.magic : h.attack) * mult * skillMul(H) * variance() * runeEliteMult(H, E);
-    const dmg = finishHit(mitigate(raw, sk.magic ? enemyMagDef(E) : penDef(H, E)), crit, blocked);
+    const dmg = finishHit(mitigate(raw, sk.magic ? enemyMagDef(E) : penDef(H, E)), crit, blocked, critMul(H));
     E.hp = Math.max(0, E.hp - dmg);
     const lh = leech(H, dmg);
     const rt = sk.magic ? "" : runeOnHit(H, E, dmg);
@@ -582,7 +586,7 @@
     }
     const crit = roll(h.crit);
     const blocked = roll(es.blockPhys);
-    const dmg = finishHit(mitigate(h.attack * variance() * runeEliteMult(H, E), penDef(H, E)), crit, blocked);
+    const dmg = finishHit(mitigate(h.attack * variance() * runeEliteMult(H, E), penDef(H, E)), crit, blocked, critMul(H));
     E.hp = Math.max(0, E.hp - dmg);
     const fire = runeFire(H, E);
     const lh = leech(H, dmg + fire);
@@ -608,7 +612,7 @@
       const crit = roll(h.crit);
       anyCrit = anyCrit || crit;
       const blocked = roll(es.blockPhys);
-      const dmg = finishHit(mitigate(atk * DUAL_MULT * variance() * runeEliteMult(H, E), penDef(H, E)), crit, blocked);
+      const dmg = finishHit(mitigate(atk * DUAL_MULT * variance() * runeEliteMult(H, E), penDef(H, E)), crit, blocked, critMul(H));
       E.hp = Math.max(0, E.hp - dmg);
       const fire = runeFire(H, E);
       healed += leech(H, dmg + fire);
@@ -622,7 +626,7 @@
     H.mp -= SPELL_COST;
     const crit = roll(h.crit);
     const blocked = roll(E.enemy.stats.blockMag);
-    const dmg = finishHit(mitigate(h.magic * SPELL_MULT * variance() * runeEliteMult(H, E), enemyMagDef(E)), crit, blocked);
+    const dmg = finishHit(mitigate(h.magic * SPELL_MULT * variance() * runeEliteMult(H, E), enemyMagDef(E)), crit, blocked, critMul(H));
     E.hp = Math.max(0, E.hp - dmg);
     const lh = leech(H, dmg);
     let text = `${H.name} кидає «Іскру» (−${SPELL_COST} MP) в «${E.name}»: ${dmg} шкоди${leechTxt(lh)}`;
@@ -906,7 +910,7 @@
       if (roll(es.dodge)) text = `${H.name} виринає з тіні за спиною «${E.name}», але той ухиляється`;
       else {
         const crit = roll(h.crit);
-        const dmg = finishHit(mitigate(h.attack * skillMul(H) * variance(), enemyDefense(E)), crit, roll(es.blockPhys));
+        const dmg = finishHit(mitigate(h.attack * skillMul(H) * variance(), enemyDefense(E)), crit, roll(es.blockPhys), critMul(H));
         E.hp = Math.max(0, E.hp - dmg);
         text = `${H.name} виринає з тіні за спиною «${E.name}»: ${dmg} шкоди${crit ? " (крит)" : ""}${leechTxt(leech(H, dmg))}`;
         if (E.hp > 0) {

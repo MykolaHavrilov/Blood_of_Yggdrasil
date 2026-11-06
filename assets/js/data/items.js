@@ -101,6 +101,7 @@ const STAT_NAMES = {
   magicDefense: "Магічний захист",
   speed: "Швидкість",
   crit: "Шанс криту, %",
+  critDmg: "Сила криту, %",
   blockPhys: "Блок фіз. шкоди, %",
   blockMag: "Блок маг. шкоди, %",
   attackSpeedPct: "Швидкість атаки (володіння), %",

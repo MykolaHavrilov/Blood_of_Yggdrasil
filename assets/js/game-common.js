@@ -54,7 +54,7 @@
   }
 
   function fmtStat(key, value) {
-    const pct = ["crit", "dodge", "blockPhys", "blockMag", "skillPct"].includes(key);
+    const pct = ["crit", "dodge", "blockPhys", "blockMag", "skillPct", "critDmg"].includes(key);
     return fmtNum(value) + (pct ? "%" : "");
   }
 

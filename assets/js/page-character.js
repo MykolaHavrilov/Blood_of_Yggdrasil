@@ -24,7 +24,7 @@
     function renderMemberTabs() { members.tabs(); }
 
     const DERIVED = ["hp", "mp", "attack", "magic", "skillPct", "defense", "magicDefense", "speed",
-                     "crit", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct"];
+                     "crit", "critDmg", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct"];
 
     // ---------- Карусель «Атрибути / Характеристики / Розвиток» ----------
     const CAROUSEL_KEY = "rpg.charPage";
@@ -97,8 +97,9 @@
       magic: "Сила заклинань і магічних навичок.",
       defense: "Зменшує фізичну шкоду, яку отримує герой.",
       magicDefense: "Зменшує магічну шкоду, яку отримує герой.",
-      speed: "Як часто герой ходить у бою.",
+      speed: "Як часто герой ходить у бою. Межа: 250 без професії; 350 — з професією від 25 рівня; 450 — з другою професією від 51 рівня.",
       crit: "Шанс завдати посиленого (критичного) удару.",
+      critDmg: "У скільки разів посилюється критичний удар: 150% — це ×1,5 шкоди. Бонус дають лише зброя та сережки. Межа — 250%.",
       dodge: "Шанс повністю ухилитися від фізичного удару.",
       blockPhys: "Шанс заблокувати половину фізичної шкоди.",
       blockMag: "Шанс заблокувати половину магічної шкоди.",
@@ -163,7 +164,7 @@
       box.append(el("p", "stat-info-sub", "Впливає на:"));
       const eff = el("ul", "stat-parts");
       for (const e of RPG.attrEffects(key, total, ms.character.classId)) {
-        eff.append(partRow(RPG.STAT_NAMES[e.key], e.value, "", ["crit", "dodge", "blockPhys", "blockMag", "skillPct"].includes(e.key) ? "%" : ""));
+        eff.append(partRow(RPG.STAT_NAMES[e.key], e.value, "", ["crit", "dodge", "blockPhys", "blockMag", "skillPct", "critDmg"].includes(e.key) ? "%" : ""));
       }
       box.append(eff);
       return box;

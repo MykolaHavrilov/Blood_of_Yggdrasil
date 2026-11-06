@@ -2669,7 +2669,11 @@ RPG.I18N.en = {
 "Локалізатор -": "Localizer -",
 "Версія": "Version",
 "кеш": "cache",
-"Версія гри": "Game version"
+"Версія гри": "Game version",
+"Сила криту, %": "Crit Damage, %",
+"Основа: критичний удар ×1,5": "Base: critical hit ×1.5",
+"Як часто герой ходить у бою. Межа: 250 без професії; 350 — з професією від 25 рівня; 450 — з другою професією від 51 рівня.": "How often the hero acts in battle. Cap: 250 without a profession; 350 with a profession from level 25; 450 with a second profession from level 51.",
+"У скільки разів посилюється критичний удар: 150% — це ×1,5 шкоди. Бонус дають лише зброя та сережки. Межа — 250%.": "How much a critical hit is amplified: 150% means ×1.5 damage. Only weapons and earrings give this bonus. Cap: 250%."
 },
 "patterns": [
 [
