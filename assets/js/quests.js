@@ -477,7 +477,7 @@
   }
 
   // ---------- Квест капітана варти «Варта Центральної брами» ----------
-  // Видає Капітан Северин Залізняк (Дубова Застава, Північний район — відкритий після професії).
+  // Видає Капітан Северин Залізняк (Дубова Застава, Північний район — з професією або Селянину з 16 рівня).
   // Після здачі брама відчиняється: можна йти в Темний ліс.
   const GATE = {
     name: "Варта Центральної брами",
@@ -496,6 +496,13 @@
     save.story.gate ??= { part: 0, kills: 0 };
     return save.story.gate;
   }
+  // Хто може в Північний район і взяти квест капітана: з професією або Селянин з NORTH_PEASANT_LEVEL рівня
+  // (щоб качатися в Темному лісі); «Знак відреченого» пропускає ще й без квесту капітана
+  const NORTH_PEASANT_LEVEL = 16;
+  function canPassNorth(save) {
+    const ch = save.character;
+    return RPG.getClass(ch.classId).tier > 1 || ch.level >= NORTH_PEASANT_LEVEL || shamanSign(save);
+  }
   function isGateOpen(save) {
     // «Знак відреченого» (квест «Шлях відреченого»): варта пропускає Селянина й без свого квесту
     return gateState(save).part > GATE.parts.length || shamanSign(save);
@@ -504,7 +511,7 @@
     const st = gateState(save);
     const total = GATE.parts.length;
     if (st.part > total) return { done: true, st, total };
-    if (st.part === 0) return { canStart: RPG.getClass(save.character.classId).tier > 1, st, total };
+    if (st.part === 0) return { canStart: canPassNorth(save), st, total };
     const part = GATE.parts[st.part - 1];
     const progress = part.bring
       ? part.bring.map(b => ({ label: RPG.ITEMS[b.id].name, have: Math.min(RPG.countItem(save, b.id), b.qty), need: b.qty }))
@@ -513,7 +520,7 @@
   }
   function startGate(save) {
     const info = gateInfo(save);
-    if (!info.canStart) return { ok: false, reason: "Капітан говорить лише з тими, хто вже має професію." };
+    if (!info.canStart) return { ok: false, reason: `Капітан говорить лише з тими, хто має професію або досяг ${NORTH_PEASANT_LEVEL} рівня.` };
     info.st.part = 1; info.st.kills = 0;
     return { ok: true };
   }
@@ -877,6 +884,7 @@
     questState: state, fillOffers, questTitle, questProgress, isQuestComplete: isComplete,
     describeReward, acceptQuest, abandonQuest, turnInQuest, questOnKill,
     EXPLORE, storyState, isCentralOpen, isHiringOpen, CENTRAL_MIN_LEVEL, exploreInfo, describeExploreReward, startExplore, turnInExplore,
+    NORTH_PEASANT_LEVEL, canPassNorth,
     SHAMAN, shamanState, shamanDue, shamanMeet, shamanInfo, shamanAdvance, shamanRite, shamanSign,
     VELES, velesState, velesStrangerDue, velesGiveOrb, velesAdvance, velesPlaceOrb, springLeft, springCooldown, drinkSpring, springExpMult,
     PROFESSION, PROFESSION_BRANCHES, PROFESSION_QUEST_LEVEL, PROFESSION_END, PROFESSION_REFUSE,

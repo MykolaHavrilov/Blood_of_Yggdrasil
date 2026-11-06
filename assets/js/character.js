@@ -1415,14 +1415,14 @@ function isDistrictOpen(save, d) {
   if (!d.locked) return true;
   if (d.id === "center") return RPG.isCentralOpen(save);
   if (d.id === "trade") return save.character.level >= TRADE_MIN_LEVEL || hasCraftAccess(save);   // з професією — лише Гільдія ремісників
-  if (d.id === "north") return getClass(save.character.classId).tier > 1 || !!RPG.shamanSign?.(save);   // «Знак відреченого»
+  if (d.id === "north") return RPG.canPassNorth ? RPG.canPassNorth(save) : getClass(save.character.classId).tier > 1;   // професія, Селянин з 16 рівня або «Знак відреченого»
   if (d.id === "rest") return !!RPG.isCoalDone?.(save);
   return false;
 }
 function districtLockText(d) {
   if (d.id === "center") return `Варта не пускає до Мерії новачків. Повертайтеся з ${RPG.CENTRAL_MIN_LEVEL} рівня.`;
   if (d.id === "trade") return `Торговий район: Гільдія ремісників пускає героїв, що вже мають професію; Торгова гільдія — з ${TRADE_MIN_LEVEL} рівня.`;
-  if (d.id === "north") return "Варта не пускає до брами простих селян. Повертайтеся, коли матимете професію (квест «Шлях професії», з 15 рівня).";
+  if (d.id === "north") return `Варта не пускає до брами слабких селян. Повертайтеся з ${RPG.NORTH_PEASANT_LEVEL || 16} рівня або з професією (квест «Шлях професії»).`;
   if (d.id === "rest") return "Спальний район відкривається після завдання Мерії «Збір вугілля» (Розпорядник Захар, Центральний район).";
   return "Закрито — відкриється згодом.";
 }
