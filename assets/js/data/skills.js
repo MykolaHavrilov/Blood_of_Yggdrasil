@@ -25,6 +25,15 @@
 // weapon — тип зброї або масив типів; для пасивних — null.
 // Додаткові поля (battle.js):
 //   turns: [n, n10]   — бaф діє рівно n ходів, а на 10 рівні навички — n10 (замість 3 + рівень/4)
+//   kind: "curse"     — прокляття без прямої шкоди (Шаман потойбіччя): потрібна ціль у межах range
+//   range: n          — дальність навички (замість звичайної для зброї)
+//   cooldown: n       — після використання навичка недоступна n наступних ходів героя (у черзі — звичайний удар)
+//   area: n (curse)   — діє на всіх ворогів у радіусі n клітинок від цілі
+//   root: n           — ціль n своїх ходів не може рухатися (бити може)
+//   bleed: { pct, turns } — кровотеча: pct% макс. здоров'я ворога щоходу, turns ходів (окремо від отрути / вогню)
+//   magDown: { pct, turns, count } — −pct% маг. захисту цілі й ще count−1 випадковим ворогам на turns ходів
+//   magicResist: [%, +за рівень] (passive) — на стільки % менша магічна шкода по герою
+//   bloodPower: cap (passive) — шкода по герою менша на % втраченого здоров'я, але не більше cap%
 //   area: "near" (для buff) — посилення отримують і союзники на відстані ≤ 1 клітини
 //   area: "guard" (для buff) — на себе або на союзника, якого б'ють 2+ ворогів
 //   spread: "adjacent" — удари hits по черзі між усіма ворогами в сусідніх клітинах (≤ 1) від героя
@@ -367,6 +376,20 @@
     paladin_faith: { cls: "paladin", weapon: null, kind: "passive", name: "Віра", req: 0,
                      group: true, effects: { magicDefensePct: [6, 1.5] }, desc: "Магічний захист назавжди — для всієї групи в бою." },
     // Жрець
+    // Шаман потойбіччя (секретна професія, меч + сфера / малий кинджал)
+    shaman_blood_chain: { cls: "shaman", weapon: "sword", kind: "curse", magic: true, name: "Зв'язані кров'ю", mp: 12, req: 1,
+                     range: 2, area: 2, root: 1, bleed: { pct: 5, turns: 3 }, cooldown: 3,
+                     effects: {}, desc: "Кривавий ланцюг на кожного ворога в радіусі 2 клітинок від цілі: 1 хід не можуть рухатися " +
+                     "і 3 ходи втрачають 5% максимуму здоров'я. Перезарядка 3 ходи." },
+    shaman_green_flame: { cls: "shaman", weapon: "sword", kind: "curse", magic: true, name: "Зелене полум'я", mp: 10, req: 3,
+                     range: 2, magDown: { pct: 50, turns: 3, count: 3 }, cooldown: 3,
+                     effects: {}, desc: "Мертвий вогонь роз'їдає захист: −50% магічного захисту цілі й ще 2 випадковим ворогам " +
+                     "на 3 ходи. Перезарядка 3 ходи." },
+    shaman_forgiven: { cls: "shaman", weapon: null, kind: "passive", name: "Сила прощених", req: 0,
+                     magicResist: [4, 21 / 9], effects: {}, desc: "Прощені предки відводять чужі закляття: менше магічної шкоди (від 4% до 25% на 10 рівні)." },
+    shaman_blood_power: { cls: "shaman", weapon: null, kind: "passive", name: "Сила крові", req: 0,
+                     bloodPower: 70, effects: {}, desc: "Чим більше крові втрачено, тим міцніший шаман: менше будь-якої шкоди — " +
+                     "стільки відсотків, скільки втрачено здоров'я, але не більше 70%." },
     priest_light:  { cls: "priest", weapon: "staff", kind: "attack", magic: true, name: "Промінь світла", mp: 7, req: 1,
                      mult: [1.5, 0.06], vsUndead: 50, desc: "Сліпучий промінь. Нежить отримує на 50% більше шкоди." },
     priest_prayer: { cls: "priest", weapon: "staff", kind: "heal", name: "Молитва зцілення", mp: 12, req: 3,
@@ -515,6 +538,9 @@
       if (sk.vsDefDown) parts.push(`×${sk.vsDefDown} по ворогу зі зниженим захистом`);
       if (sk.vsUndead) parts.push(`+${sk.vsUndead}% по нежиті`);
       if (sk.freeze) parts.push(`${skillValue(sk.freeze, s)}% шанс заморозки на 2 ходи`);
+    } else if (sk.kind === "curse") {
+      if (sk.bleed) parts.push(`усім ворогам у радіусі ${sk.area} від цілі: ${sk.root} хід без руху, −${sk.bleed.pct}% макс. здоров'я × ${sk.bleed.turns} ходи`);
+      if (sk.magDown) parts.push(`маг. захист −${sk.magDown.pct}% цілі й ще ${sk.magDown.count - 1} випадковим ворогам на ${sk.magDown.turns} ходи`);
     } else if (sk.kind === "heal") {
       const who = { near: " (собі й союзникам поруч)", group: " (усій групі)", wounded: " (найпоранішому)" }[sk.area] || "";
       parts.push(`лікує ${skillValue(sk.healPct, s)}% здоров'я${who}`);
@@ -526,12 +552,14 @@
         parts.push(`${EFFECT_NAMES[k]} ${v > 0 ? "+" : ""}${v}${unit}`);
       }
       if (sk.shadow) parts.push(`перехід за спину найслабшого ворога (до 3 кл.): удар 100% + отрута ${sk.shadow.pct}% його макс. HP × ${sk.shadow.turns} ходів`);
+      if (sk.magicResist) parts.push(`магічна шкода −${skillValue(sk.magicResist, s)}%`);
+      if (sk.bloodPower) parts.push(`будь-яка шкода менша на стільки %, скільки втрачено здоров'я (до ${sk.bloodPower}%)`);
       if (sk.kind === "buff") parts.push(`${skillTurns(s, sk)} ходи` + (sk.area === "near" ? ", собі й союзникам поруч" : sk.area === "guard" ? ", на союзника під ударами 2+ ворогів або на себе" : ""));
     }
     if (sk.kind === "passive") return `${parts.join(", ")} · постійно${sk.group ? ", уся група" : ""}`;
-    const range = sk.kind === "attack"
+    const range = sk.range ? ` · дальність ${sk.range}` : sk.kind === "attack"
       ? ` · дальність ${actionRange(Array.isArray(sk.weapon) ? sk.weapon[0] : sk.weapon, sk.magic)}` : "";
-    return `${parts.join(", ")} · ${sk.mp} MP${range}`;
+    return `${parts.join(", ")} · ${sk.mp} MP${range}${sk.cooldown ? ` · перезарядка ${sk.cooldown} ходи` : ""}`;
   }
 
   Object.assign(RPG, { masteryTypes,

@@ -318,6 +318,20 @@
     ]);
   }
 
+  // ---------- Відречений (секретний квест «Шлях відреченого», Селянин 30 рівня) ----------
+  async function meetRenouncer(save) {
+    if (!RPG.shamanMeet(save)) return;
+    await RPG.saveGame(save);
+    return showNotice("Незнайомець у запиленому плащі", [
+      "Знайома постать у запиленому плащі виринає з натовпу й зупиняється просто перед вами. Цього разу каптур відкинуто: " +
+      "сиве, хоч і не старе обличчя, а по шиї й щоках — темні, ніби обвуглені, візерунки.",
+      "«Скільки вже зим ти ходиш без шляху. Ні меча гільдії, ні посоха чародія, ні молитви. Я теж колись відрікся від усіх доріг, " +
+      "що пропонували боги. А потім побачив, скільки горя принесла війна Хелли, — і повернувся до коренів. Та повернувся не чистим.»",
+      "«Знайди мене в Храмі, у тіні за вівтарем. Якщо готовий дізнатися, ким може стати той, хто відрікся, — поговоримо.»",
+      "Новий квест: «Шлях відреченого»."
+    ]);
+  }
+
   // ---------- Обірваний пергамент (Домівка) ----------
   function showParchment() {
     const P = RPG.CHRONICLE.PARCHMENT;
@@ -1462,4 +1476,5 @@
 
   RPG.pages = {};
   RPG.ui = { expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, showExpeditionBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
+  RPG.ui.meetRenouncer = meetRenouncer;   // «Шлях відреченого»
 })(window.RPG);

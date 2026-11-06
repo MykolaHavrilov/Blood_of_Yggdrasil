@@ -1415,7 +1415,7 @@ function isDistrictOpen(save, d) {
   if (!d.locked) return true;
   if (d.id === "center") return RPG.isCentralOpen(save);
   if (d.id === "trade") return save.character.level >= TRADE_MIN_LEVEL || hasCraftAccess(save);   // з професією — лише Гільдія ремісників
-  if (d.id === "north") return getClass(save.character.classId).tier > 1;
+  if (d.id === "north") return getClass(save.character.classId).tier > 1 || !!RPG.shamanSign?.(save);   // «Знак відреченого»
   if (d.id === "rest") return !!RPG.isCoalDone?.(save);
   return false;
 }

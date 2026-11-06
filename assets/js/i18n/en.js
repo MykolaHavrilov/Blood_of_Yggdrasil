@@ -3,6 +3,44 @@ window.RPG = window.RPG || {};
 RPG.I18N = RPG.I18N || {};
 RPG.I18N.en = {
 "phrases": {
+"Шаман потойбіччя": "Shaman of the Beyond",
+"Один з тих, хто колись відрікся від усіх шляхів. Побачивши, скільки горя принесла війна, повернувся до своїх коренів — але вже заплямований магією мертвих, тож лікувати не може. Кров, прокляття й тінь предків.": "One of those who once renounced every path. Having seen how much grief the war brought, he returned to his roots — but already stained by the magic of the dead, so he can no longer heal. Blood, curses and the shadow of the ancestors.",
+"Зв'язані кров'ю": "Bound by Blood",
+"Зелене полум'я": "Green Flame",
+"Сила прощених": "Strength of the Forgiven",
+"Сила крові": "Power of Blood",
+"Прокляття": "Curse",
+"Кривавий ланцюг на кожного ворога в радіусі 2 клітинок від цілі: 1 хід не можуть рухатися і 3 ходи втрачають 5% максимуму здоров'я. Перезарядка 3 ходи.": "A blood chain on every enemy within 2 cells of the target: they cannot move for 1 turn and lose 5% of their max health for 3 turns. Cooldown 3 turns.",
+"Мертвий вогонь роз'їдає захист: −50% магічного захисту цілі й ще 2 випадковим ворогам на 3 ходи. Перезарядка 3 ходи.": "Dead fire eats away at defences: −50% magic defence for the target and 2 more random enemies for 3 turns. Cooldown 3 turns.",
+"Прощені предки відводять чужі закляття: менше магічної шкоди (від 4% до 25% на 10 рівні).": "The forgiven ancestors turn aside hostile spells: less magic damage taken (from 4% to 25% at level 10).",
+"Чим більше крові втрачено, тим міцніший шаман: менше будь-якої шкоди — стільки відсотків, скільки втрачено здоров'я, але не більше 70%.": "The more blood is lost, the tougher the shaman: less damage of any kind — as many percent as health lost, but no more than 70%.",
+"Шлях відреченого": "Path of the Renouncer",
+"Упокоїти неспокійних": "Lay the Restless to Rest",
+"Голод, що не вгамовується": "A Hunger Never Sated",
+"«Мертві не знають спокою, доки Хелла тримає їхні душі. Упокой сорок — потопельників, скелетів, привидів, гулів. Хай кожен відчує, що ти прийшов не вбити, а відпустити.»": "\"The dead know no rest while Hel holds their souls. Lay forty to rest — drowned men, skeletons, ghosts, ghouls. Let each of them feel that you came not to kill, but to release.\"",
+"«Гулі — ті, кого голод поглинув навіть після смерті. Упокой десятьох на Старому цвинтарі. Їхня кров — найгірша, і саме вона навчить тебе, чого коштує тавро.»": "\"Ghouls are those whom hunger devoured even after death. Lay ten to rest at the Old Cemetery. Their blood is the foulest — and it will teach you what the brand costs.\"",
+"нежиті": "undead",
+"гулів": "ghouls",
+"Відречений": "The Renouncer",
+"Незнайомець у запиленому плащі": "The stranger in the dusty cloak",
+"Знайома постать у запиленому плащі виринає з натовпу й зупиняється просто перед вами. Цього разу каптур відкинуто: сиве, хоч і не старе обличчя, а по шиї й щоках — темні, ніби обвуглені, візерунки.": "A familiar figure in a dusty cloak emerges from the crowd and stops right in front of you. This time the hood is thrown back: a grey-haired yet not old face, and on the neck and cheeks — dark, as if charred, patterns.",
+"«Скільки вже зим ти ходиш без шляху. Ні меча гільдії, ні посоха чародія, ні молитви. Я теж колись відрікся від усіх доріг, що пропонували боги. А потім побачив, скільки горя принесла війна Хелли, — і повернувся до коренів. Та повернувся не чистим.»": "\"How many winters have you walked without a path. No guild sword, no sorcerer's staff, no prayer. I too once renounced every road the gods offered. Then I saw how much grief Hel's war brought — and returned to my roots. But I did not return clean.\"",
+"«Знайди мене в Храмі, у тіні за вівтарем. Якщо готовий дізнатися, ким може стати той, хто відрікся, — поговоримо.»": "\"Find me in the Temple, in the shadow behind the altar. If you are ready to learn who one who renounced can become — we will talk.\"",
+"Новий квест: «Шлях відреченого».": "New quest: \"Path of the Renouncer\".",
+"У тіні за вівтарем, де не дістає світло свічок, стоїть чоловік у запиленому плащі. Темні візерунки на його шкірі ледь помітно ворушаться, коли він говорить.": "In the shadow behind the altar, where the candlelight does not reach, stands a man in a dusty cloak. The dark patterns on his skin stir faintly as he speaks.",
+"«Нас було багато — тих, хто відмовився від шляхів, які давали боги. Ми думали, що вільні. А потім прийшла Хелла, і мертві встали з могил. Я пішов до коренів, до Велеса, щоб навчитися їх упокоювати. Навчився. Але магія мертвих лишає тавро: відтоді мої руки не лікують — лише зв'язують кров'ю і палять зеленим вогнем.»": "\"There were many of us — those who refused the paths the gods gave. We thought we were free. Then Hel came, and the dead rose from their graves. I went to the roots, to Veles, to learn to lay them to rest. I learned. But the magic of the dead leaves a brand: since then my hands do not heal — they only bind with blood and burn with green fire.\"",
+"Прийняти Знак відреченого": "Accept the Renouncer's Sign",
+"Розповісти Відреченому": "Report to the Renouncer",
+"«Тавро мертвих не змити. Ти більше ніколи не зможеш лікувати — ні себе, ні інших. Зате мертві слухатимуть тебе: кров зв'язуватиме ворогів, зелене полум'я роз'їдатиме їхній захист, прощені предки відводитимуть чужі закляття, а кожна твоя рана робитиме тебе міцнішим.»": "\"The brand of the dead cannot be washed away. You will never again be able to heal — neither yourself nor others. But the dead will listen to you: blood will bind your enemies, green flame will eat away their defences, the forgiven ancestors will turn aside hostile spells, and every wound will make you stronger.\"",
+" — меч і сфера або малий кинджал. Атака й Сила магії — від Інтелекту (і трохи від Спритності).": " — a sword and an orb or a small dagger. Attack and Spell Power come from Intellect (and a little from Agility).",
+"Прийняти тавро мертвих (назавжди)": "Accept the brand of the dead (forever)",
+"«Тепер ти знаєш ціну. Коли будеш готовий — приходь до обряду. Назад дороги не буде.»": "\"Now you know the price. When you are ready — come for the rite. There will be no way back.\"",
+"Знайти Відреченого в Храмі.": "Find the Renouncer in the Temple.",
+"Повернутися до Відреченого в Храмі — обряд.": "Return to the Renouncer in the Temple — the rite.",
+"Покажіть мені дорогу до мертвих. (Показати Знак відреченого)": "Show me the way to the dead. (Show the Renouncer's Sign)",
+"«Мертві ще не упокоєні.»": "\"The dead are not yet at rest.\"",
+"«Ще не час.»": "\"It is not yet time.\"",
+"«Ти вже обрав інший шлях.»": "\"You have already chosen another path.\"",
 "Кров Іггдрасиля — Головне меню": "Blood of Yggdrasil — Main Menu",
 "Кров Іггдрасиля": "Blood of Yggdrasil",
 "Перунові діти проти володарки мертвих": "Perun's children against the Mistress of the Dead",
@@ -2599,6 +2637,174 @@ RPG.I18N.en = {
 "Готово — ось.": "Done — here you go."
 },
 "patterns": [
+[
+"^(.*?) — «(.*?)» \\(−(.*?) MP\\): кривавий ланцюг сковує (.*?) — (.*?) хід без руху, (.*?)% здоров'я щоходу × (.*?)$",
+"$1 — \"$2\" (−$3 MP): a blood chain binds $4 — $5 turn without moving, $6% health per turn × $7",
+1,
+0,
+" MP): кривавий ланцюг сковує "
+],
+[
+"(.*?) — «(.*?)» \\(−(.*?) MP\\): кривавий ланцюг сковує (.*?) — (.*?) хід без руху, (.*?)% здоров'я щоходу × (.*?)",
+"$1 — \"$2\" (−$3 MP): a blood chain binds $4 — $5 turn without moving, $6% health per turn × $7",
+0,
+0,
+" MP): кривавий ланцюг сковує "
+],
+[
+"^(.*?) — «(.*?)» \\(−(.*?) MP\\): мертвий вогонь роз'їдає захист (.*?) — маг\\. захист −(.*?)% на (.*?) ходи$",
+"$1 — \"$2\" (−$3 MP): dead fire eats away the defences of $4 — magic defence −$5% for $6 turns",
+1,
+0,
+" MP): мертвий вогонь роз'їдає захист "
+],
+[
+"(.*?) — «(.*?)» \\(−(.*?) MP\\): мертвий вогонь роз'їдає захист (.*?) — маг\\. захист −(.*?)% на (.*?) ходи",
+"$1 — \"$2\" (−$3 MP): dead fire eats away the defences of $4 — magic defence −$5% for $6 turns",
+0,
+0,
+" MP): мертвий вогонь роз'їдає захист "
+],
+[
+"^Кривавий ланцюг: (.*?) шкоди «(.*?)»$",
+"Blood chain: $1 damage to \"$2\"",
+1,
+0,
+"Кривавий ланцюг: "
+],
+[
+"Кривавий ланцюг: (.*?) шкоди «(.*?)»",
+"Blood chain: $1 damage to \"$2\"",
+0,
+0,
+"Кривавий ланцюг: "
+],
+[
+"^«(.*?)» скутий кривавим ланцюгом і не може зрушити з місця$",
+"\"$1\" is bound by a blood chain and cannot move",
+1,
+0,
+"» скутий кривавим ланцюгом і не може зрушити з місця"
+],
+[
+"«(.*?)» скутий кривавим ланцюгом і не може зрушити з місця",
+"\"$1\" is bound by a blood chain and cannot move",
+0,
+0,
+"» скутий кривавим ланцюгом і не може зрушити з місця"
+],
+[
+"^усім ворогам у радіусі (.*?) від цілі: (.*?) хід без руху, −(.*?)% макс\\. здоров'я × (.*?) ходи$",
+"all enemies within $1 of the target: $2 turn without moving, −$3% max health × $4 turns",
+1,
+0,
+"усім ворогам у радіусі "
+],
+[
+"усім ворогам у радіусі (.*?) від цілі: (.*?) хід без руху, −(.*?)% макс\\. здоров'я × (.*?) ходи",
+"all enemies within $1 of the target: $2 turn without moving, −$3% max health × $4 turns",
+0,
+0,
+"усім ворогам у радіусі "
+],
+[
+"^маг\\. захист −(.*?)% цілі й ще (.*?) випадковим ворогам на (.*?) ходи$",
+"magic defence −$1% for the target and $2 more random enemies for $3 turns",
+1,
+0,
+" випадковим ворогам на "
+],
+[
+"маг\\. захист −(.*?)% цілі й ще (.*?) випадковим ворогам на (.*?) ходи",
+"magic defence −$1% for the target and $2 more random enemies for $3 turns",
+0,
+0,
+" випадковим ворогам на "
+],
+[
+"^магічна шкода −(.*?)%$",
+"magic damage −$1%",
+1,
+0,
+"магічна шкода −"
+],
+[
+"магічна шкода −(.*?)%",
+"magic damage −$1%",
+0,
+0,
+"магічна шкода −"
+],
+[
+"^будь-яка шкода менша на стільки %, скільки втрачено здоров'я \\(до (.*?)%\\)$",
+"any damage reduced by as many % as health lost (up to $1%)",
+1,
+0,
+"будь-яка шкода менша на стільки %, скільки втрачено здоров'я (до "
+],
+[
+"будь-яка шкода менша на стільки %, скільки втрачено здоров'я \\(до (.*?)%\\)",
+"any damage reduced by as many % as health lost (up to $1%)",
+0,
+0,
+"будь-яка шкода менша на стільки %, скільки втрачено здоров'я (до "
+],
+[
+"^перезарядка (.*?) ходи$",
+"cooldown $1 turns",
+1,
+0,
+"перезарядка "
+],
+[
+"перезарядка (.*?) ходи",
+"cooldown $1 turns",
+0,
+0,
+"перезарядка "
+],
+[
+"^(.*?): упокоєно (.*?) / (.*?)$",
+"$1: laid to rest $2 / $3",
+1,
+0,
+": упокоєно "
+],
+[
+"(.*?): упокоєно (.*?) / (.*?)",
+"$1: laid to rest $2 / $3",
+0,
+0,
+": упокоєно "
+],
+[
+"^«(.*?)»: (.*?) (.*?)/(.*?)$",
+"\"$1\": $2 $3/$4",
+1,
+0,
+"»: "
+],
+[
+"«(.*?)»: (.*?) (.*?)/(.*?)",
+"\"$1\": $2 $3/$4",
+0,
+0,
+"»: "
+],
+[
+"^Стати «(.*?)»\\? Інші професії стануть недоступні назавжди\\.$",
+"Become \"$1\"? Other professions will become unavailable forever.",
+1,
+0,
+"»? Інші професії стануть недоступні назавжди."
+],
+[
+"Стати «(.*?)»\\? Інші професії стануть недоступні назавжди\\.",
+"Become \"$1\"? Other professions will become unavailable forever.",
+0,
+0,
+"»? Інші професії стануть недоступні назавжди."
+],
 [
 "^Покладіть у горно (.*?) будь-яких рун, зламані теж\\. Сварог переплавить їх в одну нову — від звичайної до епічної\\. Якщо всі шість одного виду, нова руна буде того ж виду\\. Данина — (.*?) золота \\(у вас (.*?)\\)\\.$",
 "Put $1 runes of any kind into the forge, broken ones too. Svarog will smelt them into one new rune — from common to epic. If all six are of the same kind, the new rune will be of that kind. Tribute — $2 gold (you have $3).",

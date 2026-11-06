@@ -34,6 +34,7 @@
     }
     if (locParam || distParam) history.replaceState(null, "", "game.html");
     if (RPG.velesStrangerDue(save)) setTimeout(() => meetStranger(save).then(() => renderAll()), 300);
+    else if (RPG.shamanDue(save)) setTimeout(() => RPG.ui.meetRenouncer(save).then(() => renderAll()), 300);
     if (save.fieldLoot && save.fieldLoot.loc !== save.location.map) setTimeout(() => showFieldLoot(save), 0);
     const locId = save.location.map;
     const locData = RPG.getLocation(locId);
@@ -610,6 +611,8 @@
         `Сюди повертаються загиблі. Відроджені мають ${Math.round(RPG.RESPAWN_HP_PCT * 100)}% здоров'я та 0% мани — ` +
         "відновіться зіллям або вирушайте відпочити в Домівку."));
       renderNpc(place, "nun");
+      const sh = RPG.shamanState(save).stage;
+      if (sh >= 1 && sh <= 4) renderRenouncer(place);
       if (RPG.velesState(save).stage >= 4) renderCourtyard(place);
       const row = el("div", "row");
       row.append(link("Мапа", "maps.html"));
@@ -618,6 +621,67 @@
 
     // --- Внутрішній двір Храму: статуя Велеса й джерело (квест «Долоні Велеса») ---
     let springWaking = false;      // сферу щойно поклали — 5 секунд «нічого не відбувається»
+    // --- Відречений у тіні за вівтарем (секретний квест «Шлях відреченого» → Шаман потойбіччя) ---
+    function renderRenouncer(box) {
+      const S = RPG.SHAMAN;
+      const info = RPG.shamanInfo(save);
+      const card = el("div", "stack explore-card");
+      card.append(el("h3", null, "Відречений"));
+      card.append(el("p", null, "У тіні за вівтарем, де не дістає світло свічок, стоїть чоловік у запиленому плащі. " +
+        "Темні візерунки на його шкірі ледь помітно ворушаться, коли він говорить."));
+      const act = (label, fn) => card.append(button(label, "wf wf-button", fn));
+      if (info.stage === 1) {
+        card.append(el("p", null, "«Нас було багато — тих, хто відмовився від шляхів, які давали боги. Ми думали, що вільні. " +
+          "А потім прийшла Хелла, і мертві встали з могил. Я пішов до коренів, до Велеса, щоб навчитися їх упокоювати. " +
+          "Навчився. Але магія мертвих лишає тавро: відтоді мої руки не лікують — лише зв'язують кров'ю і палять зеленим вогнем.»"));
+        card.append(el("p", null, "«Візьми мій знак — з ним варта Північної брами пропустить тебе й без професії. " +
+          `А там — ${S.parts[0].text.replace(/^«|»$/g, "")}»`));
+        act("Прийняти Знак відреченого", async () => {
+          const r = RPG.shamanAdvance(save);
+          if (!r.ok) { showMsg(msg, r.reason, true); return; }
+          await RPG.saveGame(save);
+          showMsg(msg, `Відречений торкається вашого чола холодними пальцями — шкірою пробігає дрож. Отримано: Знак відреченого. ` +
+            `Завдання: ${S.parts[0].title} (Темний ліс, за Північною брамою).`);
+          renderAll();
+        });
+      } else if (info.part) {
+        card.append(el("p", "note", info.part.text));
+        card.append(el("div", info.complete ? "rt-magic" : null,
+          `${info.part.title}: упокоєно ${info.have} / ${info.need}`));
+        const b = button("Розповісти Відреченому", "wf wf-button", async () => {
+          const r = RPG.shamanAdvance(save);
+          if (!r.ok) { showMsg(msg, r.reason, true); return; }
+          await RPG.saveGame(save);
+          showMsg(msg, r.stage === 3
+            ? `Відречений повільно киває. «Ти чув, як вони видихають, коли відпускаєш? Це і є наша робота.» ${S.parts[1].text}`
+            : "«Тепер ти знаєш ціну. Коли будеш готовий — приходь до обряду. Назад дороги не буде.»");
+          renderAll();
+        });
+        b.disabled = !info.complete;
+        card.append(b);
+      } else if (info.stage === 4) {
+        card.append(el("p", null, "«Тавро мертвих не змити. Ти більше ніколи не зможеш лікувати — ні себе, ні інших. Зате мертві " +
+          "слухатимуть тебе: кров зв'язуватиме ворогів, зелене полум'я роз'їдатиме їхній захист, прощені предки відводитимуть чужі " +
+          "закляття, а кожна твоя рана робитиме тебе міцнішим.»"));
+        const c = RPG.getClass(S.classId);
+        const p = el("p", null);
+        p.append(el("strong", null, c.name), RPG.roleTags(S.classId), " — меч і сфера або малий кинджал. Атака й Сила магії — від Інтелекту (і трохи від Спритності).");
+        card.append(p);
+        act("Прийняти тавро мертвих (назавжди)", async () => {
+          if (!confirm(`Стати «${c.name}»? Інші професії стануть недоступні назавжди.`)) return;
+          const r = RPG.shamanRite(save);
+          if (!r.ok) { showMsg(msg, r.reason, true); return; }
+          await RPG.saveGame(save);
+          showMsg(msg, `Темні візерунки повзуть вашими руками, і на мить ви чуєте сотні голосів — а тоді тиша. ` +
+            `Ваша нова професія — ${c.name}! Рівень професії почався з 1, а все, чого навчились Селянином, лишилося. ` +
+            "Навички шамана — у Тренера гільдії." +
+            (r.change?.removed?.length ? " Річ, якою шаман не користується, знято в інвентар." : ""));
+          renderAll();
+        });
+      }
+      box.append(card);
+    }
+
     function renderCourtyard(box) {
       const V = RPG.VELES;
       const st = RPG.velesState(save);
@@ -1731,7 +1795,7 @@
       box.append(el("h3", null, "Навички, заклинання та пасивні вміння"));
       const ids = RPG.trainerSkills(tms);
       if (!ids.length) { box.append(el("p", "status", "Вдягніть зброю, щоб тренер показав навички для неї.")); return; }
-      const KIND = { buff: "Баф", heal: "Лікування", passive: "Пасивне" };
+      const KIND = { buff: "Баф", heal: "Лікування", passive: "Пасивне", curse: "Прокляття" };
       const wName = sk => (Array.isArray(sk.weapon) ? sk.weapon : [sk.weapon]).map(t => RPG.WEAPON_TYPES[t].name.toLowerCase()).join(" / ");
       for (const id of ids) {
         const sk = RPG.SKILLS[id];
@@ -2810,6 +2874,8 @@
       if (!fighters().length) startBtn.disabled = true;
       // Герой досяг 12 рівня — підходить незнайомець зі сферою (квест «Долоні Велеса»)
       if (RPG.velesStrangerDue(save)) setTimeout(() => meetStranger(save).then(renderAll), 800);
+      // Селянин дійшов до 30 рівня без професії — повертається Відречений (секретний «Шлях відреченого»)
+      else if (RPG.shamanDue(save)) setTimeout(() => RPG.ui.meetRenouncer(save).then(renderAll), 800);
       // Інвентар заповнився (або щось уже пропало) — окреме повідомлення, щоб не пропустити
       if (result.win && (Object.keys(lost).length || (freeBefore > 0 && !RPG.invFree(save)))) {
         showNotice("Інвентар заповнено!", [

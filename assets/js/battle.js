@@ -305,6 +305,7 @@
       base: RPG.calcStats(ms), weapon: heroWeapon(ms),
       skillLevels: { ...(ms.character.skills || {}) }, queue, qi: 0,
       hp: Math.floor(ms.character.hp), mp: Math.floor(ms.character.mp), buffs: {}, stun: 0,
+      turnNo: 0, cdUntil: {},                              // перезарядка навичок: id → з якого ходу героя знову доступна
       dual: dualOf(ms),
       lifesteal: (RPG.godsOrb ? (RPG.godsOrb(ms)?.lifestealPct || 0) : 0) + (runeB(ms).lifesteal || 0),   // Сфера Богів + руна Треба
       rb: runeB(ms),                                     // бойові ефекти рун (data/runes.js → runeTotals().battle)
@@ -400,6 +401,7 @@
       side: "enemy", id: spec.id, champion: !!(spec.champion && !base.noChampion), enemy, name: enemy.name,
       hp: enemy.stats.hp, mp: enemy.stats.mp || 0, turn: 0,
       dot: null, defDown: 0, atkDown: { pct: 0, turns: 0 }, frozen: 0,
+      bleed: null, rooted: 0, magDown: { pct: 0, turns: 0 },   // прокляття Шамана потойбіччя
       undead: !!enemy.undead,
       range: RPG.enemyRange ? RPG.enemyRange(enemy) : 1,
       move: RPG.enemyMove ? RPG.enemyMove(enemy) : null,
@@ -428,7 +430,24 @@
   const dist = (A, B) => cellDist(A.pos, B.pos);
   const CURSE_PCT = 10;
   const enemyDefense = E => E.enemy.stats.defense * (1 - Math.min(90, E.defDown + (E.curse > 0 ? CURSE_PCT : 0)) / 100);
-  const enemyMagDef = E => E.enemy.stats.magicDefense ?? Math.floor(E.enemy.stats.defense / 2);
+  const enemyMagDef = E => (E.enemy.stats.magicDefense ?? Math.floor(E.enemy.stats.defense / 2)) *
+    (E.magDown?.turns > 0 ? 1 - E.magDown.pct / 100 : 1);                    // «Зелене полум'я»
+
+  // Пасивки Шамана потойбіччя: «Сила прощених» (менше магічної шкоди) і «Сила крові» (менше будь-якої
+  // шкоди — на % втраченого здоров'я, до межі). Повертає шкоду після зменшення
+  function heroTakes(H, dmg, magic) {
+    let mult = 1;
+    for (const [id, lvl] of Object.entries(H.skillLevels)) {
+      const sk = RPG.SKILLS?.[id];
+      if (!sk || sk.kind !== "passive" || lvl < 1) continue;
+      if (magic && sk.magicResist) mult *= 1 - RPG.skillValue(sk.magicResist, lvl) / 100;
+      if (sk.bloodPower) {
+        const lost = Math.max(0, 1 - H.hp / Math.max(1, H.base.hp)) * 100;
+        mult *= 1 - Math.min(sk.bloodPower, lost) / 100;
+      }
+    }
+    return mult < 1 ? Math.max(1, Math.round(dmg * mult)) : dmg;
+  }
   const atkDownOf = E => (E.atkDown.turns > 0 ? E.atkDown.pct : 0);
 
   // ---------- Дії героя ----------
@@ -439,7 +458,8 @@
     if (sk) {
       const lvl = H.skillLevels[action] || 0;
       const weaponOk = RPG.skillWeaponOk ? RPG.skillWeaponOk(sk, H.weapon.type) : sk.weapon === H.weapon.type;
-      if (lvl >= 1 && sk.kind !== "passive" && weaponOk && H.weapon.type && H.mp >= sk.mp) {
+      const ready = (H.cdUntil?.[action] || 0) <= H.turnNo;          // не на перезарядці
+      if (lvl >= 1 && sk.kind !== "passive" && weaponOk && H.weapon.type && H.mp >= sk.mp && ready) {
         return { type: "skill", id: action, sk, lvl };
       }
     }
@@ -450,7 +470,7 @@
   function rangeOf(act, H) {
     const range = RPG.actionRange || ((t, m) => (t === "bow" ? 3 : m && t === "staff" ? 2 : 1));
     if (act.type === "spell") return range("staff", true);
-    if (act.type === "skill") return range(H.weapon.type, act.sk.magic);
+    if (act.type === "skill") return act.sk.range || range(H.weapon.type, act.sk.magic);
     return range(H.weapon.type, false);
   }
 
@@ -617,7 +637,7 @@
     E.mp -= mp;
     const crit = roll(E.enemy.stats.crit);
     const blocked = roll(hero.blockMag);
-    const dmg = runeUndead(H, E, finishHit(mitigate((E.enemy.stats.magic || 0) * mult * (1 - atkDownOf(E) / 100) * variance(), hero.magicDefense), crit, blocked));
+    const dmg = heroTakes(H, runeUndead(H, E, finishHit(mitigate((E.enemy.stats.magic || 0) * mult * (1 - atkDownOf(E) / 100) * variance(), hero.magicDefense), crit, blocked)), true);
     H.hp = Math.max(0, H.hp - dmg);
     let text = `${E.name} — «${name}» (−${mp} MP) по ${H.name}: ${dmg} магічної шкоди`;
     if (blocked) text += ` (${H.name} частково блокує)`;
@@ -633,7 +653,7 @@
     }
     const crit = roll(E.enemy.stats.crit);
     const blocked = roll(hero.blockPhys);
-    const dmg = runeUndead(H, E, finishHit(mitigate(E.enemy.stats.attack * (mult || 1) * (1 - atkDownOf(E) / 100) * variance(), hero.defense), crit, blocked));
+    const dmg = heroTakes(H, runeUndead(H, E, finishHit(mitigate(E.enemy.stats.attack * (mult || 1) * (1 - atkDownOf(E) / 100) * variance(), hero.defense), crit, blocked)), false);
     H.hp = Math.max(0, H.hp - dmg);
     const verb = E.enemy.verb || "кусає";
     let text = moveName
@@ -914,7 +934,33 @@
     }
 
     // --- Хід героя ---
+    // Прокляття Шамана потойбіччя (kind: "curse"): кривавий ланцюг по площі / зелене полум'я на 3 ворогів
+    function castCurse(H, act, target) {
+      const sk = act.sk;
+      const hit = [];
+      if (sk.bleed) {
+        for (const T of targetE().filter(T => dist(target, T) <= sk.area)) {
+          T.rooted = Math.max(T.rooted, sk.root || 0);
+          T.bleed = { dmg: Math.max(1, Math.round(T.enemy.stats.hp * sk.bleed.pct / 100)), turns: sk.bleed.turns };
+          hit.push(`«${T.name}»`);
+        }
+        return { who: "hero", text: `${H.name} — «${sk.name}» (−${sk.mp} MP): кривавий ланцюг сковує ${hit.join(", ")} — ` +
+          `${sk.root} хід без руху, ${sk.bleed.pct}% здоров'я щоходу × ${sk.bleed.turns}`, crit: false };
+      }
+      if (sk.magDown) {
+        const others = targetE().filter(T => T !== target).sort(() => Math.random() - 0.5).slice(0, sk.magDown.count - 1);
+        for (const T of [target, ...others]) {
+          T.magDown = { pct: sk.magDown.pct, turns: sk.magDown.turns };
+          hit.push(`«${T.name}»`);
+        }
+        return { who: "hero", text: `${H.name} — «${sk.name}» (−${sk.mp} MP): мертвий вогонь роз'їдає захист ${hit.join(", ")} — ` +
+          `маг. захист −${sk.magDown.pct}% на ${sk.magDown.turns} ходи`, crit: false };
+      }
+      return { who: "hero", text: `${H.name} — «${sk.name}»`, crit: false };
+    }
+
     function heroTurn(H) {
+      H.turnNo++;
       if (H.stun > 0) {
         H.stun--;
         push({ who: "hero", text: `${H.name} ${H.g === "f" ? "застрягла" : "застряг"} у слизу й пропускає хід`, crit: false, sound: "squish" });
@@ -935,6 +981,12 @@
       cur.target = target;
       H.qi++;
       const before = new Set(aliveE());
+      if (act.type === "skill" && act.sk.cooldown) H.cdUntil[act.id] = H.turnNo + act.sk.cooldown + 1;
+      if (act.type === "skill" && act.sk.kind === "curse") {
+        H.mp -= act.sk.mp;
+        push(Object.assign(castCurse(H, act, target), { sound: "dark" }));
+        return;
+      }
       if (act.type === "skill") {
         H.mp -= act.sk.mp;
         const sk = act.sk;
@@ -967,6 +1019,14 @@
         push({ who: "hero", text: `Отрута / вогонь: ${E.dot.dmg} шкоди «${E.name}»`, crit: false, sound: "hit" });
         if (E.hp <= 0) { if (foes.length > 1) push({ who: "info", text: `«${E.name}» переможений.`, sound: "death" }); return; }
       }
+      if (firstInRound && E.bleed && E.bleed.turns > 0) {
+        E.hp = Math.max(0, E.hp - E.bleed.dmg);
+        E.bleed.turns--;
+        push({ who: "hero", text: `Кривавий ланцюг: ${E.bleed.dmg} шкоди «${E.name}»`, crit: false, sound: "hit" });
+        if (E.hp <= 0) { if (foes.length > 1) push({ who: "info", text: `«${E.name}» переможений.`, sound: "death" }); return; }
+      }
+      const rootedNow = E.rooted > 0;                    // «Зв'язані кров'ю»: цей хід без руху
+      if (rootedNow) E.rooted--;
       E.turn++;
       const inReach = () => nearestInReach(E, aliveH(), E.range);
       const hit = (H, ev) => {
@@ -1013,6 +1073,10 @@
       }
 
       const H = inReach();
+      if (!H && rootedNow) {
+        push({ who: "enemy", text: `«${E.name}» скутий кривавим ланцюгом і не може зрушити з місця`, crit: false });
+        return;
+      }
       if (!H) {
         const d = moveToward(E, aliveH(), E.range || 1);
         if (d !== null) push({ who: "enemy", move: true, text: `${E.name} наближається (до героя ${d} кл.)`, crit: false });
@@ -1051,7 +1115,11 @@
           }
         }
       }
-      for (const f of foes) { if (f.atkDown.turns > 0) f.atkDown.turns--; if (f.curse > 0) f.curse--; }
+      for (const f of foes) {
+        if (f.atkDown.turns > 0) f.atkDown.turns--;
+        if (f.curse > 0) f.curse--;
+        if (f.magDown.turns > 0) f.magDown.turns--;
+      }
     }
 
     const win = aliveE().length === 0;

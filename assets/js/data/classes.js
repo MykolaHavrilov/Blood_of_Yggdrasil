@@ -116,7 +116,23 @@
     monk: prof("Монах", "Посох як продовження тіла: швидкі удари й самозцілення.",
       { hp: 270, mp: 70, attack: 32, magic: 14, defense: 16, magicDefense: 14, speed: 15, crit: 9 },
       { hp: 17, mp: 5, attack: 3, magic: 1, defense: 1.4, magicDefense: 1.2, speed: 0.7, crit: 0.35 },
-      { spi: 2, agi: 2, str: 1 }, { spi: 4, agi: 4 }, { attrs: { agi: 6, spi: 4, int: 4, str: 6 }, weapons: ["staff"], offHand: MELEE_OFF })
+      { spi: 2, agi: 2, str: 1 }, { spi: 4, agi: 4 }, { attrs: { agi: 6, spi: 4, int: 4, str: 6 }, weapons: ["staff"], offHand: MELEE_OFF }),
+
+    // ---------- Секретна професія ----------
+    // Лише для Селянина 30 рівня, що так і не обрав шляху: квест «Шлях відреченого» (quests.js → SHAMAN).
+    // Не з'являється в «Шляху професії», у порадах Остапа й Захара (requires.quest — не "profession").
+    shaman: {
+      name: "Шаман потойбіччя",
+      description: "Один з тих, хто колись відрікся від усіх шляхів. Побачивши, скільки горя принесла війна, повернувся до " +
+        "своїх коренів — але вже заплямований магією мертвих, тож лікувати не може. Кров, прокляття й тінь предків.",
+      tier: 2, secret: true, levelTable: "standard",
+      requires: { from: ["peasant"], level: 30, quest: "shaman" },
+      weapons: ["sword"], offHand: ["orb", "knife"],
+      baseStats: { hp: 310, mp: 120, attack: 26, magic: 26, defense: 17, magicDefense: 20, speed: 12, crit: 7 },
+      growth:    { hp: 17, mp: 9, attack: 2.4, magic: 2.4, defense: 1.3, magicDefense: 1.6, speed: 0.55, crit: 0.3 },
+      levelAttrs: { int: 3, agi: 1, vit: 1 },
+      changeBonus: { int: 8, agi: 4, vit: 4 }
+    }
   };
 
   // ---------- Які атрибути дають шкоду (stats.js → attrBonuses) ----------
@@ -136,7 +152,8 @@
     mage_water: { attack: { str: 0.5 }, magic: { int: 1, spi: 0.5 } },
     mage_wind:  { attack: { str: 0.5 }, magic: { int: 1, spi: 0.5 } },
     mage_earth: { attack: { str: 0.5 }, magic: { int: 1, spi: 0.5 } },
-    priest:     { attack: { str: 0.5 }, magic: { spi: 0.75, int: 0.75 } }
+    priest:     { attack: { str: 0.5 }, magic: { spi: 0.75, int: 0.75 } },
+    shaman:     { attack: { int: 1, agi: 0.25 }, magic: { int: 1, agi: 0.25 } }   // Інтелект 100%, Спритність 25% — і фіз., і маг.
   };
   for (const [id, d] of Object.entries(DMG_ATTRS)) if (CLASSES[id]) CLASSES[id].dmgAttrs = d;
 
@@ -305,7 +322,8 @@
   const CLASS_ROLES = {
     warrior: ["damage"], knight: ["tank"], berserker: ["damage"], rogue: ["damage"], hunter: ["damage"],
     mage_fire: ["damage"], mage_water: ["healer"], mage_wind: ["damage"], mage_earth: ["damage"],
-    paladin: ["tank", "healer"], priest: ["healer"], monk: ["damage", "healer"]
+    paladin: ["tank", "healer"], priest: ["healer"], monk: ["damage", "healer"],
+    shaman: ["damage"]
   };
   for (const [id, roles] of Object.entries(CLASS_ROLES)) if (CLASSES[id]) CLASSES[id].roles = roles;
   // Ролі професії: ["tank", ...] (Селянин — порожньо)

@@ -50,7 +50,9 @@
     wolf: { name: "вовків", match: id => id.startsWith("wolf"), minLevel: 3 },
     slime: { name: "слаймів", match: id => id.startsWith("slime"), minLevel: 6 },
     slime_king: { name: "Королів слайм", match: id => id === "slime_king", minLevel: 99 },
-    white_wolf: { name: "білих вовків", match: id => id === "wolf3", minLevel: 99 }
+    white_wolf: { name: "білих вовків", match: id => id === "wolf3", minLevel: 99 },
+    undead: { name: "нежиті", match: id => !!RPG.ENEMIES?.[id]?.undead, minLevel: 99 },
+    ghoul: { name: "гулів", match: id => id === "ghoul", minLevel: 99 }
   };
 
   // Шаблони: amounts — варіанти кількості; exp/gold — за 1 одиницю
@@ -193,6 +195,13 @@
     if (gpart?.kill && TARGETS[gpart.kill.target].match(enemyId) && gs.kills < gpart.kill.need) {
       gs.kills++;
       lines.push(`«${GATE.name}»: ${TARGETS[gpart.kill.target].name} ${gs.kills}/${gpart.kill.need}`);
+    }
+    // «Шлях відреченого» (секретний квест Шамана потойбіччя): частина «убити»
+    const sh = shamanState(save);
+    const spart = SHAMAN.parts[sh.stage - 2];
+    if (spart?.kill && TARGETS[spart.kill.target].match(enemyId) && sh.kills < spart.kill.need) {
+      sh.kills++;
+      lines.push(`«${SHAMAN.name}»: ${TARGETS[spart.kill.target].name} ${sh.kills}/${spart.kill.need}`);
     }
     // Особливе завдання: частина «убити»
     const st = storyState(save);
@@ -488,7 +497,8 @@
     return save.story.gate;
   }
   function isGateOpen(save) {
-    return gateState(save).part > GATE.parts.length;
+    // «Знак відреченого» (квест «Шлях відреченого»): варта пропускає Селянина й без свого квесту
+    return gateState(save).part > GATE.parts.length || shamanSign(save);
   }
   function gateInfo(save) {
     const st = gateState(save);
@@ -742,6 +752,80 @@
     return springLeft(save, now) ? 1 + VELES.expBonusPct / 100 : 1;
   }
 
+  // ---------- Секретний квест «Шлях відреченого» → професія «Шаман потойбіччя» ----------
+  // Лише головний герой-Селянин, що дійшов до 30 рівня й так і не обрав професії.
+  // 1) На 30 рівні знову з'являється незнайомець у запиленому плащі (вікно на сторінці «Локація») —
+  //    це Відречений; кличе до Храму.
+  // 2) Храм, «Відречений»: розповідь; дає «Знак відреченого» — варта пропускає Селянина через Північну браму
+  //    (character.js → isDistrictOpen). Завдання: упокоїти 40 нежиті (Туманні болота, Старий цвинтар…).
+  // 3) Упокоїти 10 гулів (Старий цвинтар).
+  // 4) Храм, «Відречений»: обряд — «Прийняти тавро мертвих» → професія shaman (назавжди).
+  // Поки квест не почався — його ніде не видно (секретний).
+  // Стан: save.story.shaman = { stage: 0 | 1 (зустрів) | 2..3 (завдання) | 4 (обряд) | 5 (Шаман), kills }
+  const SHAMAN = {
+    name: "Шлях відреченого",
+    classId: "shaman",
+    level: 30,
+    parts: [
+      { title: "Упокоїти неспокійних", kill: { target: "undead", need: 40 },
+        text: "«Мертві не знають спокою, доки Хелла тримає їхні душі. Упокой сорок — потопельників, скелетів, привидів, гулів. " +
+              "Хай кожен відчує, що ти прийшов не вбити, а відпустити.»" },
+      { title: "Голод, що не вгамовується", kill: { target: "ghoul", need: 10 },
+        text: "«Гулі — ті, кого голод поглинув навіть після смерті. Упокой десятьох на Старому цвинтарі. " +
+              "Їхня кров — найгірша, і саме вона навчить тебе, чого коштує тавро.»" }
+    ]
+  };
+  function shamanState(save) {
+    save.story ??= {};
+    const st = save.story.shaman ??= { stage: 0, kills: 0 };
+    st.kills ??= 0;
+    return st;
+  }
+  // Чи час Відреченому з'явитися: Селянин 30 рівня (головний герой), квест ще не почався
+  function shamanDue(save) {
+    const ch = save.character;
+    return shamanState(save).stage === 0 && ch.classId === RPG.DEFAULT_CLASS && ch.level >= SHAMAN.level;
+  }
+  function shamanMeet(save) {
+    if (!shamanDue(save)) return false;
+    shamanState(save).stage = 1;
+    return true;
+  }
+  // Що зараз: { stage, part?, have, need, complete }
+  function shamanInfo(save) {
+    const st = shamanState(save);
+    const part = SHAMAN.parts[st.stage - 2] || null;
+    if (!part) return { stage: st.stage, part: null, complete: st.stage === 1 || st.stage === 4 };
+    return { stage: st.stage, part, have: Math.min(st.kills, part.kill.need), need: part.kill.need,
+             complete: st.kills >= part.kill.need };
+  }
+  // Поговорити з Відреченим у Храмі: взяти перше завдання / здати поточне → { ok, stage }
+  function shamanAdvance(save) {
+    const st = shamanState(save);
+    const info = shamanInfo(save);
+    if (save.character.classId !== RPG.DEFAULT_CLASS && st.stage < 5) return { ok: false, reason: "«Ти вже обрав інший шлях.»" };
+    if (st.stage < 1 || st.stage >= 4) return { ok: false, reason: "«Ще не час.»" };
+    if (!info.complete) return { ok: false, reason: "«Мертві ще не упокоєні.»" };
+    st.stage++;
+    st.kills = 0;
+    return { ok: true, stage: st.stage };
+  }
+  // Обряд: стати Шаманом потойбіччя (назавжди) → { ok, change }
+  function shamanRite(save) {
+    const st = shamanState(save);
+    if (st.stage !== 4) return { ok: false, reason: "«Ще не час.»" };
+    if (save.character.classId !== RPG.DEFAULT_CLASS) return { ok: false, reason: "«Ти вже обрав інший шлях.»" };
+    const change = RPG.changeClass(save, SHAMAN.classId, { force: true });
+    if (!change.ok) return change;
+    st.stage = 5;
+    // Квест «Шлях професії», якщо був розпочатий, — закрито: шлях уже обрано
+    const ps = save.story.profession;
+    if (ps && !ps.result) ps.result = SHAMAN.classId;
+    return { ok: true, change };
+  }
+  // «Знак відреченого»: Селянин з ним проходить Північну браму
+  const shamanSign = save => shamanState(save).stage >= 2;
+
   // ---------- Журнал квестів (сторінка «Персонаж») ----------
   // [{ title, lines: [рядки прогресу], where, ready }]
   const GUILD_PLACE = "Артеміда, адміністратор гільдії — Дубова Застава, Південний район";
@@ -761,6 +845,11 @@
       if (pr?.final) out.push({ title: `${who}«${professionName(ms)}»: завершення шляху`, special: true,
         lines: ["Усі 10 завдань виконано. Нагорода за шлях — ???"], where: GUILD_PLACE, ready: true });
     }
+    const sq = shamanInfo(save);
+    if (sq.stage >= 1 && sq.stage <= 4) out.push({ title: `«${SHAMAN.name}»`, special: true,
+      lines: sq.part ? [`${sq.part.title}: ${TARGETS[sq.part.kill.target].name} ${sq.have}/${sq.need}`]
+        : [sq.stage === 1 ? "Знайти Відреченого в Храмі." : "Повернутися до Відреченого в Храмі — обряд."],
+      where: "Храм", ready: sq.complete });
     const vs = velesState(save);
     if (vs.stage >= 1 && vs.stage <= 4) out.push({ title: `«${VELES.name}»`, special: true,
       lines: [VELES.stages[vs.stage]], where: vs.stage >= 3 ? "Храм" : "Дубова Застава, Шинок біля млина, Храм", ready: false });
@@ -788,6 +877,7 @@
     questState: state, fillOffers, questTitle, questProgress, isQuestComplete: isComplete,
     describeReward, acceptQuest, abandonQuest, turnInQuest, questOnKill,
     EXPLORE, storyState, isCentralOpen, isHiringOpen, CENTRAL_MIN_LEVEL, exploreInfo, describeExploreReward, startExplore, turnInExplore,
+    SHAMAN, shamanState, shamanDue, shamanMeet, shamanInfo, shamanAdvance, shamanRite, shamanSign,
     VELES, velesState, velesStrangerDue, velesGiveOrb, velesAdvance, velesPlaceOrb, springLeft, springCooldown, drinkSpring, springExpMult,
     PROFESSION, PROFESSION_BRANCHES, PROFESSION_QUEST_LEVEL, PROFESSION_END, PROFESSION_REFUSE,
     professionState, professionInfo, professionName, professionBranches, professionCheckpoint, startProfession, turnInProfession,

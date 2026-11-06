@@ -390,6 +390,8 @@
           { text: "Хочу пройти за браму.", to: "offer", show: save => !outside(save) && gate(save).st.part === 0 },
           { text: "Щодо вашого доручення…", to: "progress", show: save => !outside(save) && !!gate(save).part },
           { text: "Відчиніть браму — я йду в Темний ліс.", action: "gate_go", show: save => !outside(save) && !!gate(save).done },
+          { text: "Покажіть мені дорогу до мертвих. (Показати Знак відреченого)", action: "gate_go",
+            show: save => !outside(save) && !gate(save).done && !!RPG.shamanSign?.(save) && save.character.classId === RPG.DEFAULT_CLASS },
           { text: "Пропустіть мене в Заставу.", action: "gate_back", show: save => outside(save) },
           { text: "Бувай, капітане.", to: "bye" }
         ]
