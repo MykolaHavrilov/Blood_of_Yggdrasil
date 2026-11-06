@@ -385,9 +385,17 @@
         const curOpen = tierOpen(curTier);
         if (!curOpen.ok) dlg.append(el("p", "forge-closed-note", curOpen.reason + " Рецепти можна переглянути, але кувати — ні."));
         const list = el("div", "stack forge-list");
+        // Комплекти професій (data/profsets.js): у списку — лише вивчені за кресленнями
+        const bpAll = Object.entries(RPG.RECIPES).filter(([id, rc]) => rc.blueprint && rc.tier === curTier && group.types.includes(RPG.ITEMS[id]?.type));
+        if (bpAll.length) {
+          const known = bpAll.filter(([id]) => RPG.knowsRecipe(save, id)).length;
+          list.append(el("p", "forge-why", `Комплекти професій: вивчено креслень ${known} з ${bpAll.length}. ` +
+            "Креслення падають з босів Альвгейму; використайте креслення в інвентарі — і рецепт з'явиться тут."));
+        }
         for (const [id, rc] of Object.entries(RPG.RECIPES)) {
           const item = RPG.ITEMS[id];
           if (!item || !group.types.includes(item.type) || rc.tier !== curTier) continue;
+          if (rc.blueprint && !RPG.knowsRecipe(save, id)) continue;
           const info = RPG.recipeInfo(save, id);
           const row = el("div", "forge-row" + (!info.tierOpen ? " is-closed" : info.levelOk ? "" : " is-locked"));
           const head = el("div", "forge-head");
@@ -2693,6 +2701,19 @@
           // Книга «Руни Небесної Кузні»: після ПЕРШОЇ перемоги над Володарем Темного лісу — у бібліотеку дому
           if (e.id === "forest_lord" && RPG.RUNE_BOOK && RPG.addToLibrary(save, "runes")) {
             summary.push(`📜 Серед трофеїв Володаря — книга Сварога «${RPG.RUNE_BOOK.title}»! Вона чекатиме в бібліотеці вашого дому (Спальний район Дубової Застави).`);
+          }
+          // Креслення комплекту професії (боси Альвгейму, data/profsets.js)
+          const bp = RPG.rollBlueprintDrop?.(save, e.id);
+          if (bp) {
+            const n = RPG.ITEMS[bp].name;
+            if (RPG.fitQty(save, bp, 1)) {
+              RPG.addItem(save, bp, 1);
+              summary.push(`📐 Трофей боса: ${n}!`);
+              got[n] = (got[n] || 0) + 1;
+            } else {
+              summary.push(`📐 Трофей боса: ${n} — пропав, інвентар повний!`);
+              lost[n] = (lost[n] || 0) + 1;
+            }
           }
           // Мішечок на пояс: 1% з кожного переможеного боса, окремо від звичайної здобичі
           const pouch = RPG.rollPouchDrop?.(e.id);

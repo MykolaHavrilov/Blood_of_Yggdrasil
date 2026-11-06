@@ -201,10 +201,17 @@ function calcStats(save, trace = null) {
 
   // Бонуси комплектів (data/items.js → ITEM_SETS), поверх усього іншого
   const setCounts = RPG.equippedSetCounts ? RPG.equippedSetCounts(save) : {};
+  // steps — ступені комплекту (3 і 5 частин, data/profsets.js); без steps — один бонус за set.pieces
   for (const [setId, n] of Object.entries(setCounts)) {
     const set = RPG.ITEM_SETS[setId];
-    if (!set || n < set.pieces) continue;
-    for (const [key, pct] of Object.entries(set.bonusPct || {})) change(key, set.name, v => (v || 0) * (1 + pct / 100));
+    if (!set) continue;
+    const steps = set.steps || [{ pieces: set.pieces, pct: set.bonusPct }];
+    for (const st of steps) {
+      if (n < st.pieces) continue;
+      const label = set.steps ? `${set.name} (${st.pieces})` : set.name;
+      for (const [key, pct] of Object.entries(st.pct || {})) change(key, label, v => (v || 0) * (1 + pct / 100));
+      for (const [key, add] of Object.entries(st.add || {})) change(key, label, v => (v || 0) + add);
+    }
   }
 
   // Остаточні межі — і з легендарними речами, володінням зброєю та комплектами: більше не враховується
@@ -1084,6 +1091,7 @@ function previewEquip(save, what) {
 
 function useItem(save, id) {
   const item = ITEMS[id];
+  if (item?.type === "blueprint" && RPG.learnBlueprint) return RPG.learnBlueprint(save, id);   // креслення → рецепт у кузні
   if (item?.type !== "consumable") return { ok: false, reason: "Цей предмет не можна використати." };
   // У данжі (dungeon.js) зілля не діють — лікування лише навичками й відновленням
   if (save.dungeon) return { ok: false, reason: "У данжі не можна пити зілля — лікують лише навички." };
@@ -1202,7 +1210,7 @@ function currentShop(save) {
 const TRADE_MIN_LEVEL = 20;
 const TRADE_PRICE_MULT = 3;
 function tradeStock() {
-  return Object.keys(ITEMS).filter(id => ITEMS[id].tier === 3);
+  return Object.keys(ITEMS).filter(id => ITEMS[id].tier === 3 && !ITEMS[id].profSet);   // комплекти професій — лише з кузні
 }
 // ---------- Власні доми (план крафту, етап 4) ----------
 // Дім купують в управителя Спального району Дубової Застави. Гравець дає дому назву один раз, при купівлі —

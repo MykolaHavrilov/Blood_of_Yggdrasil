@@ -1285,6 +1285,7 @@
     const parts = [];
     if (r.healedHp) parts.push(`+${r.healedHp} HP`);
     if (r.healedMp) parts.push(`+${r.healedMp} MP`);
+    if (r.recipe) return `Креслення вивчено: «${RPG.ITEMS[r.recipe].name}» — рецепт тепер у кузні.`;
     return `${item.name}: ${parts.join(", ") || "нічого не змінилось"}`;
   }
 
@@ -1376,7 +1377,7 @@
   // ---------- Опис предмета для спливаючого вікна та інвентаря ----------
   const TYPE_NAMES = {
     weapon: "Зброя", armor: "Броня", accessory: "Прикраса", consumable: "Зілля",
-    material: "Матеріал", offhand: "Ліва рука", shield: "Щит", quest: "Квестовий предмет", admin: "Предмет адміністратора"
+    material: "Матеріал", offhand: "Ліва рука", shield: "Щит", quest: "Квестовий предмет", admin: "Предмет адміністратора", blueprint: "Креслення"
   };
   const RARITY_NAMES = {
     broken: "зламана", common: "звичайна", magic: "магічна", epic: "епічна", legendary: "легендарна"
@@ -1446,8 +1447,16 @@
     const set = item.set && RPG.ITEM_SETS && RPG.ITEM_SETS[item.set];
     if (set) {
       const have = ms && RPG.equippedSetCounts ? (RPG.equippedSetCounts(ms)[item.set] || 0) : 0;
-      box.append(el("div", "tip-set" + (have >= set.pieces ? " rt-magic" : ""),
-        `${set.name}: ${set.pieces} речі — ${set.text}` + (ms ? ` (вдягнено ${Math.min(have, set.pieces)}/${set.pieces})` : "")));
+      if (set.steps) {
+        // комплект професії: ступені за 3 і 5 частин
+        const full = set.steps.at(-1).pieces;
+        box.append(el("div", "tip-set", `${set.name}` + (ms ? ` (вдягнено ${Math.min(have, full)}/${full})` : "")));
+        for (const st of set.steps)
+          box.append(el("div", "tip-set" + (have >= st.pieces ? " rt-magic" : ""), `${st.pieces} речі: ${st.text}`));
+      } else {
+        box.append(el("div", "tip-set" + (have >= set.pieces ? " rt-magic" : ""),
+          `${set.name}: ${set.pieces} речі — ${set.text}` + (ms ? ` (вдягнено ${Math.min(have, set.pieces)}/${set.pieces})` : "")));
+      }
     }
 
     const req = [];
@@ -1466,7 +1475,7 @@
     box.append(el("div", "tip-price", item.locked
       ? "Не продається, не викидається й не розбирається — лише в спільну скриню Домівки."
       : `Ціна: ${fmtNum(item.price || 0)} зол. · продаж: ${fmtNum(RPG.refSellPrice(ref))} зол.` +
-        (item.noShop ? (item.tier === 3 ? " · продає лише Торгова гільдія" : " · не продається") : "")));
+        (item.noShop ? (item.profSet ? " · лише кування за кресленням" : item.tier === 3 ? " · продає лише Торгова гільдія" : " · не продається") : "")));
     return box;
   }
 

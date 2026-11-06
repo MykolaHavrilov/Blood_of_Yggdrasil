@@ -141,7 +141,7 @@
   const GEAR_SLOT = { ring1: "ring", ring2: "ring", earring1: "earring", earring2: "earring" };
   function gearCandidates(level, slot, filter = () => true) {
     const want = GEAR_SLOT[slot] || slot;
-    const list = Object.entries(RPG.ITEMS).filter(([id, it]) => it.slot === want && RPG.hasRarity(id) && !id.startsWith("slime_") &&
+    const list = Object.entries(RPG.ITEMS).filter(([id, it]) => it.slot === want && RPG.hasRarity(id) && !id.startsWith("slime_") && !it.profSet &&
       (it.levelReq || 1) <= level && filter(it, id));
     const top = Math.max(0, ...list.map(([, it]) => it.levelReq || 1));
     return list.filter(([, it]) => (it.levelReq || 1) === top).map(([id]) => id);

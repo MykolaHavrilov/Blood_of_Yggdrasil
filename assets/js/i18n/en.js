@@ -1525,6 +1525,10 @@ RPG.I18N.en = {
 "✦ Кінець другої книги ✦": "✦ End of the second book ✦",
 "Мова": "Language",
 "Відновлення": "Regeneration",
+"Креслення": "Blueprint",
+"Креслення падають з босів Альвгейму; використайте креслення в інвентарі — і рецепт з'явиться тут.": "Blueprints drop from the bosses of Alfheim; use a blueprint in the inventory — and the recipe will appear here.",
+"Це не креслення.": "This is not a blueprint.",
+"Креслення немає в інвентарі.": "The blueprint is not in the inventory.",
 "Українська": "Українська",
 "Закрити": "Close",
 "Немає активної гри": "No active game",
@@ -9736,6 +9740,62 @@ RPG.I18N.en = {
 1,
 1,
 "➤"
+],
+[
+"^Креслення вивчено: «(.*?)» — рецепт тепер у кузні\\.$",
+"Blueprint learned: \"$1\" — the recipe is now in the forge.",
+1,
+0,
+"Креслення вивчено"
+],
+[
+"^Потрібне креслення — падає з боса «(.*?)»\\.$",
+"Requires a blueprint — dropped by the boss \"$1\".",
+1,
+0,
+"Потрібне креслення"
+],
+[
+"Комплекти професій: вивчено креслень (\\S+) з (\\S+)\\. ",
+"Profession sets: blueprints learned $1 of $2. ",
+0,
+0,
+"Комплекти професій"
+],
+[
+"^📐 Трофей боса: (.*?) — пропав, інвентар повний!$",
+"📐 Boss trophy: $1 — lost, the inventory is full!",
+1,
+0,
+"Трофей боса"
+],
+[
+"^📐 Трофей боса: (.*?)!$",
+"📐 Boss trophy: $1!",
+1,
+0,
+"Трофей боса"
+],
+[
+"^Рецепт «(.*?)» уже є у вашій кузні\\.$",
+"The recipe \"$1\" is already in your forge.",
+1,
+0,
+"уже є у вашій кузні"
+],
+[
+"^(\\d+) речі: (.*)$",
+"$1 pieces: $2",
+1,
+0,
+" речі: "
+],
+[
+" · лише кування за кресленням",
+" · forged only from a blueprint",
+0,
+0,
+"лише кування за кресленням"
 ]
 ],
 "fragments": [

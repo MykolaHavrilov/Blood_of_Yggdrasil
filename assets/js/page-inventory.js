@@ -203,7 +203,7 @@
         btnEquip.title = check.ok ? "" : check.reason;
       }
       if (selected.kind === "eq") btnUnequip.disabled = false;
-      if (selected.kind === "inv" && item.type === "consumable") btnUse.disabled = false;
+      if (selected.kind === "inv" && (item.type === "consumable" || item.type === "blueprint")) btnUse.disabled = false;
       if (selected.kind === "inv") btnDrop.disabled = !!RPG.ITEMS[ms.inventory[selected.index]?.id]?.locked;   // Сфера Богів не викидається
       if (selected.kind === "inv" && atHome) btnToChest.disabled = false;
       if (selected.kind === "chest" && atHome) btnFromChest.disabled = false;

@@ -207,12 +207,14 @@
     const ready = forgeReady(save, recipe.tools);
     const open = RPG.craftTierOpen ? RPG.craftTierOpen(save, recipe.tier) : { ok: true };
     let reason = "";
-    if (!open.ok) reason = open.reason;
+    const known = RPG.knowsRecipe ? RPG.knowsRecipe(save, itemId) : true;   // рецепт комплекту професії — лише за кресленням
+    if (!known) reason = `Потрібне креслення — падає з боса «${RPG.blueprintSource(itemId)}».`;
+    else if (!open.ok) reason = open.reason;
     else if (st.level < tierLevel) reason = `Потрібен рівень «${g?.name || "майстерності"}» ${tierLevel}.`;
     else if (!ready.ok) reason = ready.reason;
     else if (mats.some(m => m.have < m.need)) reason = "Бракує матеріалів.";
     else if (!RPG.invFree(save)) reason = "Інвентар повний.";
-    return { recipe, cat, tierLevel, levelOk: st.level >= tierLevel, tierOpen: open.ok, mats, tools, canCraft: !reason, reason };
+    return { recipe, cat, tierLevel, levelOk: st.level >= tierLevel, tierOpen: open.ok, known, mats, tools, canCraft: !reason, reason };
   }
 
   function addCraftExp(save, amount) {
