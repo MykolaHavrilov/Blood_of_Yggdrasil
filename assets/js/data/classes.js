@@ -294,7 +294,24 @@
                            HERO_BASE.size, HERO_BASE.gap, HERO_BASE.index);
   }
 
-  Object.assign(RPG, { DEFAULT_CLASS, CLASSES, PROFESSION_LEVEL, getClass, heroDoll, heroFistStyle, heroSpriteStyle, heroSpriteId,
+  // ---------- Ролі в групі (лише підказка гравцю, на бій не впливають) ----------
+  // tank — тримає ворогів і захищає; damage — завдає шкоди; healer — лікує.
+  // Перша роль — головна; друга — для змішаних професій (Паладин, Монах).
+  const ROLES = {
+    tank:   { name: "Танк" },
+    damage: { name: "Дамагер" },
+    healer: { name: "Хілер" }
+  };
+  const CLASS_ROLES = {
+    warrior: ["damage"], knight: ["tank"], berserker: ["damage"], rogue: ["damage"], hunter: ["damage"],
+    mage_fire: ["damage"], mage_water: ["healer"], mage_wind: ["damage"], mage_earth: ["damage"],
+    paladin: ["tank", "healer"], priest: ["healer"], monk: ["damage", "healer"]
+  };
+  for (const [id, roles] of Object.entries(CLASS_ROLES)) if (CLASSES[id]) CLASSES[id].roles = roles;
+  // Ролі професії: ["tank", ...] (Селянин — порожньо)
+  const classRoles = id => CLASSES[id]?.roles || [];
+
+  Object.assign(RPG, { DEFAULT_CLASS, CLASSES, ROLES, classRoles, PROFESSION_LEVEL, getClass, heroDoll, heroFistStyle, heroSpriteStyle, heroSpriteId,
                        availableClassChanges, pickProfession,
                        investedAttrPoints, professionLack, eligibleProfessions, classAllowsWeapon, classAllowsOffHand });
 })(window.RPG);

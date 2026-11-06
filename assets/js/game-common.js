@@ -13,6 +13,14 @@
   const el = RPG.el;   // спільний помічник (core.js)
   const noteP = text => el("p", "note", text);   // абзац-примітка (клас note)
 
+  // Значки ролей професії: «Танк» «Хілер» (data/classes.js → ROLES; Селянин — порожній span)
+  function roleTags(classId) {
+    const box = el("span", "role-tags");
+    for (const r of RPG.classRoles(classId)) box.append(el("span", `role-tag role-${r}`, RPG.ROLES[r].name));
+    return box;
+  }
+  RPG.roleTags = roleTags;
+
   function link(text, href, className = "wf wf-link") {
     const a = el("a", className, text);
     a.href = href;

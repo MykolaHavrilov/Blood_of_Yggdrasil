@@ -1561,7 +1561,9 @@
       card.append(el("h3", null, `${group ? ms.character.name + " — к" : "К"}вест: «${name}»`));
       const levelTxt = lv => lv.length ? ` Новий рівень: ${lv[lv.length - 1]}!` : "";
       if (info.done) {
-        card.append(el("p", null, `${group ? ms.character.name + " — професія" : "Ваша професія"}: ${RPG.getClass(ms.character.classId).name}.`));
+        const done = el("p", null, `${group ? ms.character.name + " — професія" : "Ваша професія"}: ${RPG.getClass(ms.character.classId).name}.`);
+        done.append(" ", RPG.roleTags(ms.character.classId));
+        card.append(done);
       } else if (info.canStart) {
         card.append(noteP("«Ти переріс селянське життя. Пройди десять випробувань — і на 15 рівні я скажу, ким тобі судилося стати. " +
           "Яким шляхом ти підеш, залежить від того, що ти в собі розвивав.»"));
@@ -1574,7 +1576,12 @@
             for (const id of r.choose) {
               const B = RPG.PROFESSION_BRANCHES[id];
               pick.append(button(B.name, "wf wf-button", () => take(id)));
-              pick.append(el("p", null, "Професії: " + B.classes.map(c => RPG.getClass(c).name).join(", ") + "."));
+              const list = el("p", "role-list", "Професії: ");
+              B.classes.forEach((c, i) => {
+                list.append(el("span", null, RPG.getClass(c).name), RPG.roleTags(c));
+                if (i < B.classes.length - 1) list.append(", ");
+              });
+              pick.append(list);
             }
             takeBtn.replaceWith(pick);
             return;
@@ -1601,7 +1608,9 @@
               const c = RPG.getClass(id);
               const w = (c.weapons || []).map(t => RPG.WEAPON_TYPES[t]?.name || t).join(" / ");
               pick.append(button(`${c.name} — ${w}`, "wf wf-button", () => finish(id)));
-              pick.append(el("p", null, c.description));
+              const d = el("p", null);
+              d.append(RPG.roleTags(id), " ", c.description);
+              pick.append(d);
             }
             b.replaceWith(pick);
             return;

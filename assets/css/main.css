@@ -463,6 +463,18 @@ dialog::backdrop { background: var(--overlay); }
 .rt-broken    { color: #a3a3a3; }
 .rt-common    { color: inherit; }
 .rt-magic     { color: #6ea2ff; }
+
+/* Ролі професій у групі (data/classes.js → ROLES): Танк / Дамагер / Хілер */
+.role-tags { display: inline-flex; gap: 4px; margin-left: 6px; vertical-align: middle; flex-wrap: wrap; }
+.role-tags:empty { display: none; }
+.role-tag {
+  display: inline-block; padding: 1px 7px; border-radius: 9px; border: 1px solid currentColor;
+  font-size: 0.78em; font-weight: 600; line-height: 1.5; letter-spacing: 0.02em; white-space: nowrap;
+}
+.role-tank   { color: #8fb4d9; background: rgba(143, 180, 217, 0.12); }
+.role-damage { color: #e07a5f; background: rgba(224, 122, 95, 0.12); }
+.role-healer { color: #7fc98a; background: rgba(127, 201, 138, 0.12); }
+p > .role-tags:first-child { margin-left: 0; margin-right: 4px; }
 .rt-epic      { color: #c58bff; }
 .rt-legendary { color: #ffb04d; text-shadow: 0 0 6px rgba(255, 157, 46, .5); }
 

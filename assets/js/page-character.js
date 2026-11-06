@@ -278,6 +278,14 @@
         const row = el("div", "stat-row");
         row.append(el("span", null, k), el("strong", null, String(v)));
         info.append(row);
+        // Під професією — її роль у групі (танк / дамагер / хілер)
+        if (k === "Професія" && RPG.classRoles(ch.classId).length) {
+          const rr = el("div", "stat-row");
+          const tags = el("strong", null);
+          tags.append(RPG.roleTags(ch.classId));
+          rr.append(el("span", null, "Роль"), tags);
+          info.append(rr);
+        }
       }
 
       const slots = $("equip-slots");
