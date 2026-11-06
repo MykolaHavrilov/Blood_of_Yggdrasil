@@ -104,6 +104,7 @@ const STAT_NAMES = {
   blockPhys: "Блок фіз. шкоди, %",
   blockMag: "Блок маг. шкоди, %",
   attackSpeedPct: "Швидкість атаки (володіння), %",
+  skillPct: "Сила навичок, %",
   dodge: "Ухилення, %",
   hpRegen: "Відновлення HP за 10 с",
   mpRegen: "Відновлення MP за 10 с",

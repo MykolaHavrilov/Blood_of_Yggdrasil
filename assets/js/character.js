@@ -109,7 +109,7 @@ function createNewSave(name, classId = DEFAULT_CLASS, gender = null) {
 // база професії + приріст за рівні + атрибути + екіпірування
 
 const STAT_KEYS = ["hp", "mp", "attack", "magic", "defense", "magicDefense", "speed",
-                   "crit", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct"];
+                   "crit", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct", "skillPct"];
 const DECIMAL_KEYS = ["crit", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct"];
 
 // trace — необов'язковий об'єкт: якщо передати {}, у нього запишеться, з чого склалась

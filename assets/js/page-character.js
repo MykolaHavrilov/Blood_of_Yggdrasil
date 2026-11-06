@@ -23,7 +23,7 @@
     });
     function renderMemberTabs() { members.tabs(); }
 
-    const DERIVED = ["hp", "mp", "attack", "magic", "defense", "magicDefense", "speed",
+    const DERIVED = ["hp", "mp", "attack", "magic", "skillPct", "defense", "magicDefense", "speed",
                      "crit", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct"];
 
     // ---------- Карусель «Атрибути / Характеристики / Розвиток» ----------
@@ -104,7 +104,8 @@
       blockMag: "Шанс заблокувати половину магічної шкоди.",
       hpRegen: "Скільки здоров'я відновлюється з часом поза боєм (у Домівці — швидше).",
       mpRegen: "Скільки мани відновлюється з часом поза боєм (у Домівці — швидше).",
-      attackSpeedPct: "Бонус володіння зброєю до швидкості."
+      attackSpeedPct: "Бонус володіння зброєю до швидкості.",
+      skillPct: "Посилює всі навички однаково: фізичні удари (від Атаки), заклинання (від Сили магії) і лікування. Дають речі (випадковий бонус) і руна Манназ."
     };
     const PASSIVE_KEYS = { hp: "hpPct", mp: "mpPct", attack: "attackPct", magic: "magicPct", defense: "defensePct",
                            magicDefense: "magicDefensePct", speed: "speedPct", crit: "crit", dodge: "dodge" };
@@ -162,7 +163,7 @@
       box.append(el("p", "stat-info-sub", "Впливає на:"));
       const eff = el("ul", "stat-parts");
       for (const e of RPG.attrEffects(key, total)) {
-        eff.append(partRow(RPG.STAT_NAMES[e.key], e.value, "", ["crit", "dodge", "blockPhys", "blockMag"].includes(e.key) ? "%" : ""));
+        eff.append(partRow(RPG.STAT_NAMES[e.key], e.value, "", ["crit", "dodge", "blockPhys", "blockMag", "skillPct"].includes(e.key) ? "%" : ""));
       }
       box.append(eff);
       return box;

@@ -2,7 +2,7 @@
 // HTML / JS / CSS: спершу мережа (щоб оновлення гри підтягувались одразу),
 // а без інтернету — з кешу. Картинки: спершу кеш.
 // Після великих змін можна збільшити номер версії — старий кеш видалиться.
-const CACHE = "rpg-game-v147";
+const CACHE = "rpg-game-v148";
 const PRECACHE = [
   "./",
   "./assets/css/game.css",
@@ -75,6 +75,7 @@ const PRECACHE = [
   "./assets/images/items/icon_rune_sila.webp",
   "./assets/images/items/icon_rune_sowilo.webp",
   "./assets/images/items/icon_rune_teiwaz.webp",
+  "./assets/images/items/icon_rune_mannaz.webp",
   "./assets/images/items/icon_rune_thurisaz.webp",
   "./assets/images/items/icon_rune_treba.webp",
   "./assets/images/items/icon_rune_uruz.webp",

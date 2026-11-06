@@ -27,6 +27,8 @@
                 effect: "Сила", stat: "str", vals: ["+3", "+5", "+7", "+9"] },
     hagalaz:  { name: "Хагалаз",  kind: "weapon", pantheon: "norse", glyph: "ᚺ", meaning: "Град, що трощить усе",
                 effect: "Пробиття захисту ворога", stat: "armorPenPct", vals: ["6%", "9%", "13%", "18%"] },
+    mannaz:   { name: "Манназ",   kind: "weapon", pantheon: "norse", glyph: "ᛗ", meaning: "Людина та її вміння",
+                effect: "Сила навичок: удари, заклинання й лікування", stat: "skillPct", vals: ["+6%", "+9%", "+13%", "+18%"] },
     // ---------- Руни зброї: слов'янські (дар Ірію) ----------
     perun:      { name: "Перун",     kind: "weapon", pantheon: "slavic", path: "M24 4 V60 M24 4 L36 18 L18 30 L32 42", meaning: "Блискавка Громовержця",
                   effect: "Атака зброї / Швидкість", stat: "weaponAtkPct+speed", vals: ["+5%/+2", "+8%/+3", "+11%/+4", "+15%/+6"] },
@@ -114,7 +116,7 @@
 
   // ---------- Горно Сварога (Гільдія ремісників, Торговий район) ----------
   // 6 будь-яких рун (зламані теж) → 1 нова руна від звичайної до епічної (легендарна з горна не виходить).
-  // Кожна руна дає 1/6 свого рядка ODDS. Вид нової: усі шість одного виду → той самий вид, інакше — будь-яка з 28.
+  // Кожна руна дає 1/6 свого рядка ODDS. Вид нової: усі шість одного виду → той самий вид, інакше — будь-яка з 29.
   // За кожне розпалювання — данина fee золота.
   // Горно з'являється в гільдії лише після того, як герой знайшов другу книгу Сварога (save.books.runes).
   const RUNE_FORGE = {
@@ -233,6 +235,7 @@
           case "defPct": add(T.pct, "defense", n[0], label); break;
           case "mdefPct+int": add(T.pct, "magicDefense", n[0], label); add(T.attrs, "int", n[1], label); break;
           case "crit": add(T.flat, "crit", n[0], label); break;
+          case "skillPct": add(T.flat, "skillPct", n[0], label); break;
           case "speed": add(T.flat, "speed", n[0], label); break;
           case "dodge": add(T.flat, "dodge", n[0], label); break;
           case "physBlockPct": add(T.flat, "blockPhys", n[0], label); break;

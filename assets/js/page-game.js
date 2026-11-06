@@ -1081,7 +1081,7 @@
         dlg.append(slots);
         if (picked.length) {
           const o = RPG.runeForgeOdds(picked);
-          const k = o.kind ? RPG.RUNE_KIND_NAME[o.kind].toLowerCase() : "будь-яка з 28";
+          const k = o.kind ? RPG.RUNE_KIND_NAME[o.kind].toLowerCase() : `будь-яка з ${Object.keys(RPG.RUNES).length}`;
           dlg.append(el("p", "forge-odds", (picked.length < F.count ? `Ще ${F.count - picked.length} — і горно готове. ` : "") +
             `Вийде: ${F.out.filter(g => o[g] >= 0.005).map(g => `${RPG.RUNE_GRADES[g].prefix.replace(/ руна$/, "").replace(/^Руна$/, "звичайна").toLowerCase()} ${Math.round(o[g] * 100 * (F.count / picked.length))}%`).join(" · ")} · ${k}`));
         }

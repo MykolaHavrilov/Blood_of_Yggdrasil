@@ -454,6 +454,10 @@
     return range(H.weapon.type, false);
   }
 
+  // «Сила навичок, %» (речі, руна Манназ): однаково посилює фізичні навички (від Атаки),
+  // магічні (від Сили магії) і лікування. Звичайний удар і простий удар посохом — без неї.
+  const skillMul = H => 1 + Math.max(0, H.base?.skillPct || 0) / 100;
+
   // Один удар навички по ворогу E. Повертає рядок шкоди ("123 (крит)" / "промах")
   function skillHit(H, E, sk, lvl) {
     const h = heroNow(H);
@@ -464,7 +468,7 @@
     if (sk.vsUndead && E.undead) mult *= 1 + sk.vsUndead / 100;
     const crit = roll(h.crit + RPG.skillValue(sk.critBonus, lvl));
     const blocked = roll(sk.magic ? es.blockMag : es.blockPhys);
-    const raw = (sk.magic ? h.magic : h.attack) * mult * variance() * runeEliteMult(H, E);
+    const raw = (sk.magic ? h.magic : h.attack) * mult * skillMul(H) * variance() * runeEliteMult(H, E);
     const dmg = finishHit(mitigate(raw, sk.magic ? enemyMagDef(E) : penDef(H, E)), crit, blocked);
     E.hp = Math.max(0, E.hp - dmg);
     const lh = leech(H, dmg);
@@ -500,7 +504,7 @@
     if (sk.vsUndead && E.undead) text += " (нежить!)";
     if (sk.vsDefDown && E.defDown > 0) text += " (захист ворога пробито — подвійна сила)";
     if (sk.dot && E.hp > 0) {
-      E.dot = { dmg: Math.round(RPG.skillValue(sk.dot, lvl)), turns: 3 };
+      E.dot = { dmg: Math.round(RPG.skillValue(sk.dot, lvl) * skillMul(H)), turns: 3 };
       text += `, ${sk.school === "fire" ? "ворог горить" : "ворог отруєний"}`;
     }
     if (sk.debuff?.defensePct) {
@@ -536,8 +540,9 @@
   // pcts — свій % для кожної цілі (за замовчуванням усім healPct)
   function castHeal(H, sk, lvl, targets = [H], pcts = null) {
     const main = RPG.skillValue(sk.healPct, lvl) / 100;
+    const k = skillMul(H);                          // Сила навичок посилює й лікування
     const parts = targets.map((T, i) => {
-      const pct = pcts ? pcts[i] / 100 : main;
+      const pct = (pcts ? pcts[i] / 100 : main) * k;
       const before = T.hp;
       T.hp = Math.min(T.base.hp, T.hp + Math.round(T.base.hp * pct));
       return targets.length === 1 && T === H ? `+${T.hp - before} HP` : `${T.name} +${T.hp - before} HP`;
@@ -878,7 +883,7 @@
       if (roll(es.dodge)) text = `${H.name} виринає з тіні за спиною «${E.name}», але той ухиляється`;
       else {
         const crit = roll(h.crit);
-        const dmg = finishHit(mitigate(h.attack * variance(), enemyDefense(E)), crit, roll(es.blockPhys));
+        const dmg = finishHit(mitigate(h.attack * skillMul(H) * variance(), enemyDefense(E)), crit, roll(es.blockPhys));
         E.hp = Math.max(0, E.hp - dmg);
         text = `${H.name} виринає з тіні за спиною «${E.name}»: ${dmg} шкоди${crit ? " (крит)" : ""}${leechTxt(leech(H, dmg))}`;
         if (E.hp > 0) {
