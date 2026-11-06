@@ -2,8 +2,9 @@
 // data/skills.js — ВОЛОДІННЯ ЗБРОЄЮ та АКТИВНІ НАВИЧКИ
 //
 // Володіння (save.character.mastery, досвід — masteryExp): меч, кинджал, сокира, лук, посох. Росте за виграні бої (крива 5·n²).
-//   Рівень 0–20. Тренується в Гільдії авантюристів у Тренера (за золото).
-//   Персонаж 1–9 рівня — максимум 10; з 10 рівня — максимум 20.
+//   Рівень 0–50. Росте в боях; Тренер гільдії (Брут) прискорює.
+//   Персонаж 1–9 рівня — максимум 10; з 10 рівня — максимум 20; з професією (ранг 2+) — максимум 50 (MASTERY_PRO_MAX).
+//   Бонуси ростуть рівномірно: на 20 — MASTERY_BONUS, на 50 — у 2,5 раза більше (той самий приріст за рівень).
 //   Володіння 10 потрібне для зброї 2 виду (кам'яної), 20 — для 3 виду (залізної).
 //   Бонуси діють лише для ВДЯГНЕНОЇ зброї цього типу і ростуть з рівнем.
 //
@@ -63,11 +64,13 @@
     staff:  { name: "Посох",   mastery: "Володіння посохом" }
   };
 
-  const MASTERY_MAX = 20;
+  const MASTERY_MAX = 20;        // межа Селянина і рівень, на який задано MASTERY_BONUS
+  const MASTERY_PRO_MAX = 50;    // межа з професією (ранг 2+)
   // Скільки володіння треба для виду зброї: 1 — дерев'яна, 2 — кам'яна, 3 — залізна
   const TIER_MASTERY = { 1: 0, 2: 10, 3: 20, 4: 20, 5: 20, 6: 20, 7: 20 };   // 4–7 вид — теж 20 (максимум володіння)
 
-  // Бонус на 20 рівні володіння; на нижчих — пропорційно менше.
+  // Бонус на 20 рівні володіння; на нижчих — пропорційно менше, на вищих (21–50, з професією) — пропорційно більше:
+  // бонус = значення × рівень / 20 (меч на 50: Атака +35, крит +12,5).
   // attackSpeedPct — % до швидкості атаки ПОНАД звичайний ліміт
   // (але не більше 200% ліміту — другий, крайній ліміт).
   const MASTERY_BONUS = {
@@ -85,11 +88,13 @@
     const ch = save.character;
     return Math.max(ch.level || 1, ...(ch.classHistory || []).map(h => h.level || 0));
   }
-  // Максимальний рівень володіння: до 10 рівня персонажа — 10, далі — 20.
+  // Максимальний рівень володіння: до 10 рівня персонажа — 10, далі — 20, з професією (ранг 2+) — 50.
   // arg — рівень персонажа або сам герой (тоді береться peakLevel: професія межу не знижує)
   function masteryCap(arg) {
-    const lvl = typeof arg === "object" && arg ? peakLevel(arg) : arg;
-    return lvl < 10 ? 10 : MASTERY_MAX;
+    const hero = typeof arg === "object" && arg ? arg : null;
+    const lvl = hero ? peakLevel(hero) : arg;
+    if (lvl < 10) return 10;
+    return hero && RPG.getClass && RPG.getClass(hero.character.classId).tier > 1 ? MASTERY_PRO_MAX : MASTERY_MAX;
   }
 
   // Стара ціна тренування за золото (більше не використовується — тепер володіння росте в боях)
@@ -118,7 +123,7 @@
     const ch = save.character;
     const level = (ch.mastery || {})[type] || 0;
     const exp = (ch.masteryExp || {})[type] || 0;
-    return { level, exp, need: level >= MASTERY_MAX ? 0 : masteryExpNeed(level + 1), cap: masteryCap(save) };
+    return { level, exp, need: level >= MASTERY_PRO_MAX ? 0 : masteryExpNeed(level + 1), cap: masteryCap(save) };
   }
 
   // Тренування в Брута: save.trainerBoost = { until } — діє на всю групу, лише одне активне
@@ -181,17 +186,17 @@
     let level = ch.mastery[type] || 0;
     let exp = (ch.masteryExp[type] || 0) + Math.max(0, amount);
     const levelUps = [];
-    while (level < cap && level < MASTERY_MAX && exp >= masteryExpNeed(level + 1)) {
+    while (level < cap && level < MASTERY_PRO_MAX && exp >= masteryExpNeed(level + 1)) {
       exp -= masteryExpNeed(level + 1);
       level++;
       levelUps.push(level);
     }
     const capped = level >= cap;
-    if (level >= MASTERY_MAX) exp = 0;
+    if (level >= MASTERY_PRO_MAX) exp = 0;
     else if (capped) exp = Math.min(exp, masteryExpNeed(level + 1));   // на межі — лише до повного рівня
     ch.mastery[type] = level;
     ch.masteryExp[type] = Math.round(exp * 100) / 100;
-    return { type, gained: amount, levelUps, level, exp: ch.masteryExp[type], need: level >= MASTERY_MAX ? 0 : masteryExpNeed(level + 1), capped };
+    return { type, gained: amount, levelUps, level, exp: ch.masteryExp[type], need: level >= MASTERY_PRO_MAX ? 0 : masteryExpNeed(level + 1), capped };
   }
 
   function getMastery(save, type) {
@@ -229,8 +234,8 @@
     const cur = ch.mastery[type] || 0;
     const cap = masteryCap(save);
     if (cur >= cap) {
-      return { ok: false, reason: cap < MASTERY_MAX
-        ? `Максимум ${cap}. Далі — з 10 рівня персонажа.`
+      return { ok: false, reason: cap < MASTERY_PRO_MAX
+        ? `Максимум ${cap}. Далі — ${cap < MASTERY_MAX ? "з 10 рівня персонажа" : "з професією"}.`
         : "Досягнуто найвищого рівня володіння." };
     }
     const cost = masteryCost(cur + 1);
@@ -563,7 +568,7 @@
   }
 
   Object.assign(RPG, { masteryTypes,
-    WEAPON_TYPES, MASTERY_MAX, TIER_MASTERY, MASTERY_BONUS, SKILLS, SKILL_MAX,
+    WEAPON_TYPES, MASTERY_MAX, MASTERY_PRO_MAX, TIER_MASTERY, MASTERY_BONUS, SKILLS, SKILL_MAX,
     masteryCap, masteryCost, getMastery, weaponTypeOf, masteryBonus, trainMastery,
     peakLevel, masteryExpNeed, masteryProgress, TRAINER_BOOST, trainerBoostLeft, buyTrainerBoost, masteryGainFor, addMasteryExp,
     skillValue, skillTurns, skillCost, skillLevel, skillsForWeapon, skillCap, learnSkill, describeSkill,

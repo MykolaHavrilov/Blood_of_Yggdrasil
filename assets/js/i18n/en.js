@@ -10120,6 +10120,14 @@ RPG.I18N.en = {
 " (from character level 10 — 20)."
 ],
 [
+" (з 10 рівня персонажа — 20, з професією — 50).",
+" (from character level 10 — 20, with a profession — 50)."
+],
+[
+" (з професією — 50; бонуси й далі ростуть так само).",
+" (with a profession — 50; bonuses keep growing at the same rate)."
+],
+[
 " Серед них рідкісний ЧЕМПІОН!",
 " Among them is a rare CHAMPION!"
 ],

@@ -81,7 +81,7 @@ function createNewSave(name, classId = DEFAULT_CLASS, gender = null) {
       hp: 0,   // заповнимо нижче, після підрахунку характеристик
       mp: 0,
       regenAt: Date.now(),  // коли востаннє рахували відновлення
-      mastery: {},          // володіння зброєю: { sword: 0..20, ... } (data/skills.js)
+      mastery: {},          // володіння зброєю: { sword: 0..50, ... } (data/skills.js; без професії — до 20)
       skills: {}            // активні навички: { skillId: 1..10 }
     },
     equipment: {},
