@@ -10,7 +10,7 @@
 // Бонуси комплекту — за 3 і 5 вдягнених частин (ITEM_SETS[…].steps; character.js → calcStats).
 //
 // Для зміни балансу: WEIGHT (база броні за вагою), EXTRA (додатки професії), SETS (бонуси),
-// BLUEPRINT_CHANCE (шанс креслення з боса), MATS (матеріали рецептів).
+// BLUEPRINT_CHANCE (шанс креслення з боса), ARMOR_MATS / WEAPON_MATS / LOC_MAT / BOSS_MAT / DROP (матеріали рецептів і їх здобич).
 // Підключається після даних і словника (i18n/en.js), перед i18n.js; на сторінці гри — після data/recipes.js (додає ITEMS, ITEM_SETS, RECIPES).
 // ============================================================
 
@@ -75,16 +75,53 @@
       steps: [{ pieces: 3, add: { dodge: 4 }, text: L("+4% до ухилення", "+4% dodge") }, { pieces: 5, pct: { speed: 6, hp: 8 }, text: L("+6% до швидкості, +8% до здоров'я", "+6% speed, +8% health") }] },
     // Секретна професія (quests.js → SHAMAN): як і всі, з 25 рівня професії; креслення — з Володаря Темного лісу і лише тоді,
     // коли в групі є Шаман потойбіччя (secret) — інакше про комплект ніхто не дізнається
-    shaman: { weight: "medium", secret: true, name: L("Убрання Відреченого", "Garb of the Renouncer"), of: L("Відреченого", "the Renouncer"), cls: L(null, "shaman of the beyond"), boss: "forest_lord",
+    shaman: { weight: "medium", secret: true, matLoc: "alf_beli", name: L("Убрання Відреченого", "Garb of the Renouncer"), of: L("Відреченого", "the Renouncer"), cls: L(null, "shaman of the beyond"), boss: "forest_lord",
       steps: [{ pieces: 3, pct: { attack: 6, magic: 6 }, text: L("+6% до атаки й сили магії", "+6% attack and magic power") }, { pieces: 5, pct: { hp: 8 }, add: { skillPct: 10 }, text: L("+10% до сили навичок, +8% до здоров'я", "+10% skill power, +8% health") }] }
   };
 
-  // Матеріали рецептів (тір 3) за вагою й частиною
-  const MATS = {
-    heavy:  { tools: ["bellows"], mats: s => [["iron_ingot", { head: 5, chest: 8, legs: 6, hands: 4, feet: 4 }[s]], ["coal", 4], ["leather_strap", 2], ["gold_ingot", 1]] },
-    medium: { tools: ["leatherwork", "bellows"], mats: s => [["white_pelt", { head: 3, chest: 6, legs: 5, hands: 3, feet: 4 }[s]], ["leather_strap", 3], ["iron_ingot", 2], ["gold_ingot", 1]] },
-    cloth:  { tools: ["crucible"], mats: s => [["flax", { head: 5, chest: 9, legs: 7, hands: 4, feet: 5 }[s]], ["onyx", 2], ["gold_ingot", 1], ["white_pelt", 1]] }
+  // ---------- Матеріали рецептів: усе — з Альвгейму ----------
+  // з Шахти й Лісопилки Альвгейму (експедиції): золото, платина (руда → злиток), тис;
+  // LOC_MAT — матеріал, що падає з усіх ворогів локації боса комплекту; BOSS_MAT — рідкісний, лише з цього боса.
+  // Шаман бере матеріали Поля Белі (matLoc), хоч креслення — з Володаря Темного лісу.
+  const LOC_MAT = { alf_grove: "silver_pollen", alf_lake: "mirror_scale", alf_gardens: "spring_shoot",
+                    alf_towers: "dawn_shard", alf_freyr: "golden_bristle", alf_beli: "stag_antler" };
+  const BOSS_OF_LOC = { alf_grove: "alf_boss_moths", alf_lake: "alf_boss_necken", alf_gardens: "alf_boss_gardener",
+                        alf_towers: "alf_boss_high_mage", alf_freyr: "alf_boss_gullinbursti", alf_beli: "alf_boss_beli" };
+  const BOSS_MAT = { alf_boss_moths: "moth_wing", alf_boss_necken: "necken_string", alf_boss_gardener: "rot_rose",
+                     alf_boss_high_mage: "dawn_eye", alf_boss_gullinbursti: "gullin_tusk", alf_boss_beli: "beli_bronze" };
+  const DROP = { loc: { chance: 0.15, qty: [1, 2] }, locBoss: { chance: 0.6, qty: [2, 4] }, rare: { chance: 0.2, qty: [1, 1] } };
+  const PART_Q = { head: 1, chest: 1.6, legs: 1.2, hands: 0.8, feet: 0.8 };
+  const c = v => Math.max(1, Math.ceil(v));
+  // [матеріал, кількість] без локального й рідкісного (їх додає matsFor)
+  const ARMOR_MATS = {
+    heavy:  q => [["platinum_ingot", c(3 * q)], ["gold_ingot", c(q)]],
+    medium: q => [["yew_wood", c(2 * q)], ["gold_ingot", c(q)], ["platinum_ingot", 1]],
+    cloth:  q => [["gold_ingot", c(q)], ["yew_wood", 1]]
   };
+  const ARMOR_LOC = { heavy: 4, medium: 5, cloth: 6 };
+  const ARMOR_TOOLS = { heavy: ["bellows"], medium: ["leatherwork"], cloth: [] };
+  const WEAPON_MATS = {
+    sword: [["platinum_ingot", 4], ["yew_wood", 2], ["gold_ingot", 1]], axe: [["platinum_ingot", 4], ["yew_wood", 2], ["gold_ingot", 1]],
+    axe2: [["platinum_ingot", 4], ["yew_wood", 2], ["gold_ingot", 1]], dagger: [["platinum_ingot", 2], ["yew_wood", 1], ["gold_ingot", 1]],
+    knife: [["platinum_ingot", 2], ["yew_wood", 1], ["gold_ingot", 1]], bow: [["yew_wood", 6], ["platinum_ingot", 1], ["gold_ingot", 1]],
+    staff: [["yew_wood", 5], ["gold_ingot", 2]], shield: [["platinum_ingot", 4], ["yew_wood", 2]],
+    quiver: [["yew_wood", 1], ["gold_ingot", 1]], orb: [["gold_ingot", 2], ["platinum_ingot", 1]]
+  };
+  const matLocOf = set => set.matLoc || Object.keys(BOSS_OF_LOC).find(l => BOSS_OF_LOC[l] === set.boss);
+  function matsFor(set, base, locQty) {
+    const loc = matLocOf(set);
+    return [...base, [LOC_MAT[loc], c(locQty)], [BOSS_MAT[BOSS_OF_LOC[loc]], 1]];
+  }
+  // Здобич: матеріал локації — з усіх її ворогів (бос — більше), рідкісний — лише з боса
+  for (const [loc, mat] of Object.entries(LOC_MAT)) {
+    for (const id of RPG.LOCATIONS?.[loc]?.enemies || []) {
+      const e = RPG.ENEMIES[id];
+      if (!e || e.loot.some(d => d.id === mat)) continue;
+      const boss = id === BOSS_OF_LOC[loc];
+      e.loot.push({ id: mat, ...(boss ? DROP.locBoss : DROP.loc) });
+      if (boss) e.loot.push({ id: BOSS_MAT[id], ...DROP.rare });
+    }
+  }
 
   // Шанс, що бос дасть креслення (одне; спершу — ще не вивчене й не з інвентаря)
   const BLUEPRINT_CHANCE = 0.4;
@@ -126,15 +163,16 @@
         description: L(`Частина комплекту «${set.name}». Носить лише ${RPG.CLASSES[cls].name.toLowerCase()}.`,
           `Part of the "${set.name}" set. Only ${/^[aeiou]/.test(set.cls) ? "an" : "a"} ${set.cls} can wear it.`)
       };
-      const mat = MATS[set.weight];
-      if (RPG.RECIPES) RPG.RECIPES[id] = { tier: TIER, mats: mat.mats(slot), tools: mat.tools, blueprint: true };   // recipes.js є лише на сторінці гри
+      const q = PART_Q[slot];
+      if (RPG.RECIPES) RPG.RECIPES[id] = { tier: TIER, mats: matsFor(set, ARMOR_MATS[set.weight](q), ARMOR_LOC[set.weight] * q),
+                                          tools: ARMOR_TOOLS[set.weight], blueprint: true };   // recipes.js є лише на сторінці гри
       addBlueprint(cls, set, id, name, L("Броня", "Armour"));
     });
   }
 
 
   // ---------- Комплекти зброї професій: зброя + ліва рука (окремий бонус за 2 речі) ----------
-  // base — залізна річ тіру 3, від якої беруться характеристики (× WEAPON_MULT) і рецепт (× 1.5 + золотий злиток)
+  // base — залізна річ тіру 3, від якої беруться характеристики (× WEAPON_MULT) і знаряддя кузні; матеріали — WEAPON_MATS
   const WEAPON_MULT = 1.2;
   const W_NOUN = L(
     { sword: "Меч", axe: "Сокира", axe2: "Топірець", dagger: "Кинджал", bow: "Лук", staff: "Посох", shield: "Щит", quiver: "Сагайдак", orb: "Сфера", knife: "Малий кинджал" },
@@ -178,7 +216,7 @@
           `Part of the "${setName}" set. Only ${/^[aeiou]/.test(set.cls) ? "an" : "a"} ${set.cls} can wear it.`)
       };
       const br = RPG.RECIPES?.[W_BASE[kind]];
-      if (br) RPG.RECIPES[id] = { tier: TIER, mats: [...br.mats.map(([m, q]) => [m, Math.ceil(q * 1.5)]), ["gold_ingot", 1]], tools: br.tools, blueprint: true };
+      if (br) RPG.RECIPES[id] = { tier: TIER, mats: matsFor(set, WEAPON_MATS[kind], part === "main" ? 6 : 4), tools: br.tools, blueprint: true };
       addBlueprint(cls, set, id, name, L("Зброя", "Weapon"));
     }
   }
