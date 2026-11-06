@@ -1279,6 +1279,7 @@
         const cls = c.classId === RPG.DEFAULT_CLASS && c.gender === "f" ? "Селянка" : RPG.getClass(c.classId).name;
         const price = RPG.hireCost(save, c);
         const name = el("span", "shop-name", `«Шукаю групу. ${c.name}, ${cls}, ${c.level} рівень.»`);
+        if (c.gear) name.append(el("small", "board-price rt-" + c.gear, `Спорядження: ${RPG.gearText(c.gear)} свого рівня (зі зброєю).`));
         if (price.prof) name.append(el("small", "board-price", `Внесок: ${fmtNum(price.base)} + ${fmtNum(price.prof)} за професію` +
           (price.levels ? ` + ${fmtNum(price.levels * price.perLevel)} за ${price.levels} рів. понад ${RPG.HIRE_FREE_LEVELS}-й` : "") + "."));
         r.append(face, name);

@@ -36,6 +36,10 @@
   const BOARD_HOURS = 6;     // як часто оновлюються оголошення
   const BOARD_NEAR = 3;      // «трохи нижче» за рівень головного героя
   const RECRUIT_PEASANT_MAX = 5; // Селяни на дошці — 1–5 рівня
+  // Спорядження найманця: випадкові речі свого рівня, однієї рідкості; чим рідкісніші — тим менше (разом зі зброєю)
+  const RECRUIT_GEAR = { common: 8, magic: 6, epic: 4 };
+  const RECRUIT_GEAR_WEIGHTS = { common: 60, magic: 30, epic: 10 };
+  const GEAR_NAMES = { common: ["звичайна річ", "звичайні речі", "звичайних речей"], magic: ["магічна річ", "магічні речі", "магічних речей"], epic: ["епічна річ", "епічні речі", "епічних речей"] };
   const HIRE_MIN_LEVEL = 10; // рівень головного героя для найму
   // Бонус досвіду групи: +PARTY_EXP_BONUS% за кожного героя понад першого — у боях (page-game.js) і за завдання (quests.js → expBonusParts)
   const PARTY_EXP_BONUS = 25;
@@ -120,7 +124,60 @@
   const hasProfession = save => save.character.classId !== RPG.DEFAULT_CLASS;
   const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 
-  // Нові оголошення: [{ name, gender, classId, level }]
+  function rollGearRarity() {
+    const total = Object.values(RECRUIT_GEAR_WEIGHTS).reduce((a, b) => a + b, 0);
+    let x = Math.random() * total;
+    for (const [r, w] of Object.entries(RECRUIT_GEAR_WEIGHTS)) { x -= w; if (x <= 0) return r; }
+    return "common";
+  }
+  // «8 звичайних речей»
+  function gearText(r) {
+    const n = RECRUIT_GEAR[r] || 0, f = GEAR_NAMES[r] || GEAR_NAMES.common;
+    const k = n % 10 === 1 && n % 100 !== 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2;
+    return `${n} ${f[k]}`;
+  }
+
+  // Найкраща доступна річ для слота (найвищий levelReq, не вище рівня героя); filter — додаткова умова
+  const GEAR_SLOT = { ring1: "ring", ring2: "ring", earring1: "earring", earring2: "earring" };
+  function gearCandidates(level, slot, filter = () => true) {
+    const want = GEAR_SLOT[slot] || slot;
+    const list = Object.entries(RPG.ITEMS).filter(([id, it]) => it.slot === want && RPG.hasRarity(id) && !id.startsWith("slime_") &&
+      (it.levelReq || 1) <= level && filter(it, id));
+    const top = Math.max(0, ...list.map(([, it]) => it.levelReq || 1));
+    return list.filter(([, it]) => (it.levelReq || 1) === top).map(([id]) => id);
+  }
+  const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
+
+  // Вдягнути найманця: зброя своєї професії + (n − 1) випадкових інших слотів, усе рідкості r і свого рівня
+  function equipRecruit(fresh, r) {
+    const ch = fresh.character, lvl = ch.level, cls = RPG.getClass(ch.classId);
+    fresh.equipment = {};
+    const weapons = cls.weapons || Object.keys(RPG.WEAPON_TYPES);
+    const wt = pickOne(weapons);
+    const wid = pickOne(gearCandidates(lvl, "mainHand", it => it.weaponType === wt));
+    if (wid) {
+      // досвідчений найманець володіє своєю зброєю настільки, щоб тримати річ свого виду
+      const need = RPG.TIER_MASTERY?.[RPG.ITEMS[wid].tier] || 0;
+      ch.mastery ??= {};
+      if ((ch.mastery[wt] || 0) < need) ch.mastery[wt] = Math.min(need, RPG.masteryCap ? RPG.masteryCap(fresh) : need);
+      if (RPG.canEquip(fresh, wid).ok) fresh.equipment.mainHand = RPG.makeItem(wid, r);
+    }
+    const slots = ["offHand", "head", "chest", "legs", "hands", "feet", "ring1", "ring2", "amulet", "earring1", "earring2"]
+      .sort(() => Math.random() - 0.5);
+    let left = (RECRUIT_GEAR[r] || 8) - (fresh.equipment.mainHand ? 1 : 0);
+    for (const slot of slots) {
+      if (left <= 0) break;
+      const ids = gearCandidates(lvl, slot, (it, id) => RPG.canEquip(fresh, id).ok &&
+        (slot !== "offHand" || !it.weaponType));                   // друга сокира — ні
+      const id = pickOne(ids);
+      if (!id) continue;
+      fresh.equipment[slot] = RPG.makeItem(id, r);
+      left--;
+    }
+    return fresh.equipment;
+  }
+
+  // Нові оголошення: [{ name, gender, classId, level, gear }]
   function rollBoard(save) {
     const taken = takenNames(save);
     const names = NAMES.filter(n => !taken.has(n));
@@ -130,7 +187,7 @@
     const cards = [];
     for (let i = 0; i < BOARD_SIZE && names.length; i++) {
       const name = pickName();
-      const card = { name, gender: RPG.FEMALE_NAMES.has(name) ? "f" : "m", classId: RPG.DEFAULT_CLASS, level: rnd(1, RECRUIT_PEASANT_MAX) };
+      const card = { name, gender: RPG.FEMALE_NAMES.has(name) ? "f" : "m", classId: RPG.DEFAULT_CLASS, level: rnd(1, RECRUIT_PEASANT_MAX), gear: rollGearRarity() };
       if (hasProfession(save) && i > 0) {
         card.classId = profs[Math.floor(Math.random() * profs.length)];
         card.level = i === 1 ? rnd(Math.max(1, main - BOARD_NEAR), main) : rnd(1, main);
@@ -148,6 +205,7 @@
     if (!b || Array.isArray(b) || b.slot !== slot || b.prof !== prof) {
       b = save.story.board = { slot, prof, cards: rollBoard(save) };
     }
+    for (const c of b.cards) c.gear ??= rollGearRarity();          // старі оголошення — без рідкості спорядження
     const taken = takenNames(save);
     const top = save.character.level;
     return b.cards.filter(c => !c.hired && !taken.has(c.name))
@@ -169,14 +227,10 @@
         ch.attrs[k] = (ch.attrs[k] || 0) + put;
         ch.freePoints -= put;
       }
-      RPG.changeClass(fresh, card.classId, { force: true });       // речі, яких професія не носить, — знімаються
+      RPG.changeClass(fresh, card.classId, { force: true });
       if (card.level > 1) RPG.addExp(fresh, RPG.expForLevel(table(card.classId), card.level));
-      // Зброя своєї професії 1 виду, якщо стартову довелося зняти
-      const wt = RPG.CLASSES[card.classId].weapons?.[0];
-      if (!fresh.equipment.mainHand && wt && RPG.ITEMS[wt + "_t1"]) {
-        fresh.equipment.mainHand = RPG.makeItem(wt + "_t1", "common", { fromShop: true });
-      }
     }
+    equipRecruit(fresh, card.gear || rollGearRarity());            // випадкові речі свого рівня (стартові лляні — геть)
     RPG.fullHeal(fresh);
     delete fresh.character.gold;                                     // золото в групі спільне
     fresh.character.regenAt = Date.now();
@@ -234,7 +288,7 @@
   }
 
   Object.assign(RPG, { PARTY_EXP_BONUS,
-    MAX_PARTY, HIRE_COSTS, HIRE_PROF_FEE, HIRE_LEVEL_FEE, HIRE_FREE_LEVELS, HIRE_MIN_LEVEL, BOARD_HOURS, RECRUIT_PEASANT_MAX,
+    RECRUIT_GEAR, gearText, MAX_PARTY, HIRE_COSTS, HIRE_PROF_FEE, HIRE_LEVEL_FEE, HIRE_FREE_LEVELS, HIRE_MIN_LEVEL, BOARD_HOURS, RECRUIT_PEASANT_MAX,
     partyState, partySize, memberSave, partyMembers, aliveMembers, isMemberDead: isDead, applyRegenAll,
     nextHireCost, hireCost, boardState, boardNextAt, canHire, hireMember, dismissMember
   });
