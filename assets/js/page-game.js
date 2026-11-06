@@ -1611,7 +1611,8 @@
           await RPG.saveGame(save);
           showMsg(msg, `${who ? who + "н" : "Н"}агорода за шлях: ${r.exp ? fmtNum(r.exp) + " EXP (15 рівень) і " : ""}нова професія — ${c.name}! ${c.description} ` +
             `Рівень професії почався з 1, а бонуси Селянина лишилися. Тренер Брут навчить новим навичкам.` +
-            (r.change?.removed?.length ? " Зброю, якою ця професія не користується, знято в інвентар." : ""));
+            (r.change?.removed?.length ? " Зброю, якою ця професія не користується, знято в інвентар." : "") +
+            (r.change?.skillsReset?.length ? ` Навички Селянина (${r.change.skillsReset.map(id => RPG.SKILLS[id]?.name || id).join(", ")}) забуто — їх треба вчити знову; володіння зброєю лишилось.` : ""));
           renderAll();
         };
         const b = button("Завершити шлях і отримати професію", "wf wf-button", () => finish(null));
@@ -1687,8 +1688,26 @@
       boost.append(bInfo, bBtn);
       box.append(boost);
 
-      box.append(el("h3", null, "Володіння зброєю"));
+      // Лише види зброї своєї професії; усі рівні — через «i» біля заголовка
+      const ownTypes = RPG.masteryTypes(tms);
+      const mHead = el("h3", "mastery-head", "Володіння зброєю");
+      const mInfo = el("button", "info-tip stat-i");
+      mInfo.type = "button";
+      mInfo.setAttribute("aria-label", "Усі рівні володіння зброєю");
+      mInfo.append(el("span", "info-i", "i"));
+      RPG.bindTip(mInfo, () => {
+        const ib = el("div", "info-body stat-info");
+        ib.append(el("p", "stat-info-head", "Усі рівні володіння зброєю"));
+        for (const [t, wt] of Object.entries(RPG.WEAPON_TYPES)) {
+          ib.append(el("p", null, `${wt.mastery}: ${RPG.masteryProgress(tms, t).level} / ${cap}` + (ownTypes.includes(t) ? "" : " — не для вашої професії")));
+        }
+        return ib;
+      }, null);
+      const mRow = el("div", "mastery-head-row");    // кнопка — поруч із заголовком, не в ньому (ui.js ставить у заголовки свої «i»)
+      mRow.append(mHead, mInfo);
+      box.append(mRow);
       for (const [t, wt] of Object.entries(RPG.WEAPON_TYPES)) {
+        if (!ownTypes.includes(t)) continue;
         const pr = RPG.masteryProgress(tms, t);
         const lvl = pr.level;
         const r = el("div", "shop-row skill-row" + (t === type ? " is-current" : ""));

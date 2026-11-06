@@ -189,6 +189,12 @@
     return (save.character.mastery || {})[type] || 0;
   }
 
+  // Види зброї, якими володіє професія героя (Селянин — усі); інші ховаються, але їхні рівні видно через «i»
+  function masteryTypes(save) {
+    const cls = save.character?.classId;
+    return Object.keys(WEAPON_TYPES).filter(t => !RPG.classAllowsWeapon || RPG.classAllowsWeapon(cls, t));
+  }
+
   function weaponTypeOf(save) {
     const ref = save.equipment?.mainHand;
     return RPG.ITEMS[RPG.refId(ref)]?.weaponType || null;
@@ -528,7 +534,7 @@
     return `${parts.join(", ")} · ${sk.mp} MP${range}`;
   }
 
-  Object.assign(RPG, {
+  Object.assign(RPG, { masteryTypes,
     WEAPON_TYPES, MASTERY_MAX, TIER_MASTERY, MASTERY_BONUS, SKILLS, SKILL_MAX,
     masteryCap, masteryCost, getMastery, weaponTypeOf, masteryBonus, trainMastery,
     peakLevel, masteryExpNeed, masteryProgress, TRAINER_BOOST, trainerBoostLeft, buyTrainerBoost, masteryGainFor, addMasteryExp,

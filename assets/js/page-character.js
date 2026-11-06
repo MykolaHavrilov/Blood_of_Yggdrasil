@@ -299,7 +299,25 @@
         mBox.innerHTML = "";
         const cap = RPG.masteryCap(ms);
         const wtype = RPG.weaponTypeOf(ms);
+        const own = RPG.masteryTypes(ms);
+        // Усі види зброї разом — через «i» (і ті, якими професія не користується)
+        const allRow = el("div", "stat-row");
+        allRow.append(el("span", null, own.length < Object.keys(RPG.WEAPON_TYPES).length ? "Володіння вашої професії" : "Володіння зброєю"),
+          infoButton("Усі рівні володіння зброєю", () => {
+            const box = el("div", "info-body stat-info");
+            box.append(el("p", "stat-info-head", "Усі рівні володіння зброєю"));
+            const ul = el("ul", "stat-parts");
+            for (const [t, wt] of Object.entries(RPG.WEAPON_TYPES)) {
+              const lv = RPG.masteryProgress(ms, t).level;
+              ul.append(partRow(wt.mastery + (own.includes(t) ? "" : " (не для вашої професії)"), null));
+              ul.lastChild.append(el("b", null, `${lv} / ${cap}`));
+            }
+            box.append(ul);
+            return box;
+          }));
+        mBox.append(allRow);
         for (const [t, wt] of Object.entries(RPG.WEAPON_TYPES)) {
+          if (!own.includes(t)) continue;
           const pr = RPG.masteryProgress(ms, t);
           const row = el("div", "stat-row");
           row.append(el("span", null, wt.mastery + (t === wtype ? " (у руках)" : "")),

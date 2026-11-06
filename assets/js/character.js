@@ -574,6 +574,15 @@ function changeClass(save, newClassId, opts = {}) {
     return { ok: false, reason: "Умови для цієї професії не виконані." };
   }
 
+  // Перша професія (з Селянина): вивчені навички Селянина скидаються — їх треба вчити знову (володіння зброєю лишається)
+  const skillsReset = getClass(ch.classId).tier === 1
+    ? Object.entries(ch.skills || {}).filter(([, l]) => l > 0).map(([id]) => id) : [];
+  if (skillsReset.length) {
+    ch.skills = {};
+    const q = save.battleQueue || [];                // у тому ж масиві (у напарника — його черга)
+    q.forEach((a, i) => { if (RPG.SKILLS?.[a]) q[i] = "attack"; });
+  }
+
   ch.classHistory.push({ classId: ch.classId, level: ch.level, exp: ch.exp });
 
   ch.classId = newClassId;
@@ -595,7 +604,7 @@ function changeClass(save, newClassId, opts = {}) {
   if (off) removed.push(off);
 
   fullHeal(save);
-  return { ok: true, removed, changeBonus: { ...(CLASSES[newClassId].changeBonus || {}) } };
+  return { ok: true, removed, skillsReset, changeBonus: { ...(CLASSES[newClassId].changeBonus || {}) } };
 }
 
 // ---------- Списки предметів (інвентар, скриня) ----------

@@ -1447,3 +1447,6 @@ main > a.location { display: flex; margin-bottom: 10px; }
 .exp-heroes { gap: 4px; margin: 6px 0 10px; }
 .exp-hero { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .exp-hero.is-off { opacity: .55; cursor: default; }
+
+.mastery-head-row { display: flex; align-items: center; gap: 8px; }
+.mastery-head-row > h3 { margin: 0; }
