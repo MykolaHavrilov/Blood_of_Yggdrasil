@@ -27,8 +27,6 @@
                 effect: "Сила", stat: "str", vals: ["+3", "+5", "+7", "+9"] },
     hagalaz:  { name: "Хагалаз",  kind: "weapon", pantheon: "norse", glyph: "ᚺ", meaning: "Град, що трощить усе",
                 effect: "Пробиття захисту ворога", stat: "armorPenPct", vals: ["6%", "9%", "13%", "18%"] },
-    mannaz:   { name: "Манназ",   kind: "weapon", pantheon: "norse", glyph: "ᛗ", meaning: "Людина та її вміння",
-                effect: "Сила навичок: удари, заклинання й лікування", stat: "skillPct", vals: ["+6%", "+9%", "+13%", "+18%"] },
     // ---------- Руни зброї: слов'янські (дар Ірію) ----------
     perun:      { name: "Перун",     kind: "weapon", pantheon: "slavic", path: "M24 4 V60 M24 4 L36 18 L18 30 L32 42", meaning: "Блискавка Громовержця",
                   effect: "Атака зброї / Швидкість", stat: "weaponAtkPct+speed", vals: ["+5%/+2", "+8%/+3", "+11%/+4", "+15%/+6"] },
@@ -75,6 +73,8 @@
                  effect: "Більше золота з боїв", stat: "goldPct", vals: ["+5%", "+8%", "+11%", "+15%"] },
     wunjo:     { name: "Вуньо",     kind: "universal", pantheon: "norse", glyph: "ᚹ", meaning: "Радість перемоги",
                  effect: "Більше досвіду за бої", stat: "expPct", vals: ["+4%", "+6%", "+9%", "+12%"] },
+    mannaz:    { name: "Манназ",    kind: "universal", pantheon: "norse", glyph: "ᛗ", meaning: "Людина та її вміння",
+                 effect: "Сила навичок: удари, заклинання й лікування", stat: "skillPct", vals: ["+6%", "+9%", "+13%", "+18%"] },
     rid:       { name: "Рід",       kind: "universal", pantheon: "slavic", path: "M12 60 V4 H34 Q40 4 40 16 Q40 30 30 30 H12 M26 30 L40 60", meaning: "Сила предків, що стоїть за спиною",
                  effect: "Усі атрибути", stat: "allAttr", vals: ["+1", "+2", "+3", "+4"] },
     dazhbog:   { name: "Даждьбог",  kind: "universal", pantheon: "slavic", path: "M10 4 V60 M38 4 V60 M10 20 L38 44", meaning: "Сонце, що дарує",
