@@ -27,11 +27,17 @@
   for (const [re, out, anchored, isWeak, key] of pack.patterns || [])
     (anchored ? (isWeak ? weak : whole) : parts).push([new RegExp(re, anchored ? "" : "g"), out, key || ""]);
   // довгі фрази (речення) шукаються й усередині склеєних рядків
-  const frags = Object.keys(pack.phrases || {}).filter(k => k.length >= 20).sort((a, b) => b.length - a.length)
-    .map(k => [k, pack.phrases[k]]).concat(pack.fragments || []);
+  const longs = Object.keys(pack.phrases || {}).filter(k => k.length >= 20).sort((a, b) => b.length - a.length)
+    .map(k => [k, pack.phrases[k]]);
+  const frags = pack.fragments || [];
   const CYR = /[А-Яа-яІіЇїЄєҐґ]/;
   const memo = new Map();
-  const fill = (rep, m, depth) => rep.replace(/\$(\d)/g, (_, i) => trCore(m[i] || "", depth + 1));
+  // підстановка: мітки вставок (trMixed) і пробіли по краях не заважають перекладу самого значення
+  const EDGE = /^([\s\uE000-\uE0FF]*)([\s\S]*?)([\s\uE000-\uE0FF]*)$/;
+  const fill = (rep, m, depth) => rep.replace(/\$(\d)/g, (_, i) => {
+    const [, pre, mid, post] = (m[i] || "").match(EDGE);
+    return pre + trCore(mid, depth + 1) + post;
+  });
 
   // Цілий рядок: словник → шаблон
   function trWhole(core, depth, list) {
@@ -50,10 +56,11 @@
     const core = s.trim();
     let out = trWhole(core, depth, whole);
     if (out == null && depth <= 3) {
-      // довгі фрази й доклеєні шматки → шаблони всередині рядка → слабкі шаблони → кожна частина між « · » / « — » / «, » окремо
+      // довгі фрази → шаблони всередині рядка → доклеєні шматки → слабкі шаблони → кожна частина між « · » / « — » / «, » окремо
       let t = " " + core + " ";     // пробіли — щоб знайшлися шматки, що починаються з « · »
-      for (const [u, e] of frags) if (t.includes(u)) t = t.split(u).join(e);
+      for (const [u, e] of longs) if (t.includes(u)) t = t.split(u).join(e);
       for (const [re, rep, key] of parts) if (t.includes(key) && CYR.test(t)) { re.lastIndex = 0; if (re.test(t)) { re.lastIndex = 0; t = t.replace(re, (...m) => fill(rep, m, depth)); } }
+      for (const [u, e] of frags) if (t.includes(u)) t = t.split(u).join(e);
       t = t.trim();
       if (CYR.test(t)) t = trWhole(t, depth, whole) || trWhole(t, depth, weak) || t;
       for (const sep of [" · ", " — ", ", "]) {

@@ -2028,7 +2028,286 @@ RPG.I18N.en = {
 ", на союзника під ударами 2+ ворогів або на себе": ", on an ally under attack by 2+ enemies or on self",
 ", уся група": ", the whole party",
 "Шлях закритий: Центральна брама Дубової Застави зачинена — поговоріть з капітаном варти.": "The way is closed: the Central Gate of Oak Outpost is closed — talk to the captain of the guard.",
-"Шлях у цей світ ще закритий.": "The way into this world is still closed."
+"Шлях у цей світ ще закритий.": "The way into this world is still closed.",
+"щурів": "rats",
+"вовків": "wolves",
+"слаймів": "slimes",
+"Королів слайм": "King Slimes",
+"білих вовків": "white wolves",
+"Завдання вже немає.": "The task is gone.",
+"Завдання немає.": "There is no task.",
+"Завдання ще не виконане.": "The task is not complete yet.",
+"Час дослідити": "Time to Explore",
+"Урожай на Фермі": "Harvest at the Farm",
+"Фермерам треба зібрати врожай, але поля заполонили щури. Знищіть їх і принесіть як доказ 100 щурячих шкурок.": "The farmers need to bring in the harvest, but rats have overrun the fields. Destroy them and bring 100 rat skins as proof.",
+"Вовча загроза": "The Wolf Threat",
+"Вовки з Лісової стежки нападають на мандрівників. Вполюйте їх і принесіть по 100 вовчих іклів і вовчих шкур.": "Wolves from the Forest Path attack travellers. Hunt them down and bring 100 wolf fangs and 100 wolf pelts.",
+"Слизова печера": "The Slimy Cave",
+"У Печері в лісі розплодилися слайми. Знищіть 70 слаймів (будь-яких, і Короля теж).": "Slimes have multiplied in the Forest Cave. Destroy 70 slimes (any kind, the King too).",
+"«Ви довели, що на вас можна покластися. Біля Мерії в Центральному районі є Дошка оголошень —": "\"You have proven that you can be relied on. By the Town Hall in the Central District there is a Notice Board —",
+"там інші авантюристи шукають собі напарників, щоб об'єднатися в групу. Тепер і вам там можна шукати товаришів.»": "other adventurers look for companions there to form a party. Now you can look for comrades there too.\"",
+"Убито": "Killed",
+"Дошка оголошень біля Мерії (найм у групу)": "Notice Board by the Town Hall (hiring into the party)",
+"Особливе завдання зараз не можна взяти.": "The special task cannot be taken now.",
+"Немає активної частини завдання.": "There is no active part of the task.",
+"Частина завдання ще не виконана.": "The part of the task is not complete yet.",
+"Шлях воїна: Гарт Перуна": "Path of the Warrior: Perun's Temper",
+"«Перун не дає меча тому, хто не тримав його в бурю. Пройди десять випробувань — і гільдія визнає тебе воїном.»": "\"Perun gives no sword to one who has not held it in a storm. Pass ten trials — and the guild will recognise you as a warrior.\"",
+"Перша кров": "First Blood",
+"«Вовки знову підходять до Лісової стежки. Убий 15 — подивимось, як ти тримаєш зброю.»": "\"The wolves are coming up to the Forest Path again. Kill 15 — let's see how you hold a weapon.\"",
+"Шкури для щитів": "Pelts for Shields",
+"«Щитникам Застави бракує шкіри на обтяжку. Принеси 10 вовчих шкур.»": "\"The Outpost's shieldmakers lack leather for covering. Bring 10 wolf pelts.\"",
+"Вартовий льоху": "Cellar Guard",
+"«Щури підточують комори з харчами для варти. Убий 20 — це теж служба.»": "\"Rats are gnawing at the storerooms with food for the guards. Kill 20 — that's service too.\"",
+"Ікла на обереги": "Fangs for Charms",
+"«Воїни Перуна носять вовчі ікла на шиї — на удачу в бою. Принеси 10.»": "\"Perun's warriors wear wolf fangs around their necks — for luck in battle. Bring 10.\"",
+"Слизька загроза": "The Slippery Threat",
+"«Із Печери в лісі лізуть слайми. Зачисти 15, поки не дісталися до стежки.»": "\"Slimes are crawling out of the Forest Cave. Clear out 15 before they reach the path.\"",
+"Біла зграя": "The White Pack",
+"«Білі вовки — найсильніші в лісі. Убий 10, і про тебе заговорять у гільдії.»": "\"White wolves are the strongest in the forest. Kill 10, and the guild will talk about you.\"",
+"Броня з білого хутра": "White Fur Armour",
+"«Біле хутро тримає холод і удар. Принеси 6 білих вовчих шкур для зброярні.»": "\"White fur holds off cold and blows. Bring 6 white wolf pelts for the armoury.\"",
+"Печерний дозор": "Cave Watch",
+"«Стань у дозор у Печері в лісі й винищ 20 слаймів.»": "\"Stand watch in the Forest Cave and wipe out 20 slimes.\"",
+"Слиз для гарту": "Slime for Tempering",
+"«Ковалі гартують клинки в слизу — так кажуть старі майстри. Принеси 15.»": "\"Smiths temper blades in slime — so the old masters say. Bring 15.\"",
+"Корона слизу": "Crown of Slime",
+"«Останнє випробування: здолай Короля слайм. Хто переміг короля — той воїн.»": "\"The last trial: defeat the King Slime. Whoever has beaten the king is a warrior.\"",
+"Шлях чародія: Таємниці Велеса": "Path of the Sorcerer: Secrets of Veles",
+"«Велес відкриває таємниці лише терплячим. Десять доручень — і ти доторкнешся до стихій.»": "\"Veles reveals his secrets only to the patient. Ten errands — and you will touch the elements.\"",
+"Збір реагентів": "Gathering Reagents",
+"«Для першого обряду потрібен слиз — найчистіша волога печери. Принеси 10.»": "\"The first rite needs slime — the purest moisture of the cave. Bring 10.\"",
+"Хвости для зілля": "Tails for Potions",
+"«Щурячі хвости — основа зілля прозріння. Принеси 15.»": "\"Rat tails are the basis of the potion of insight. Bring 15.\"",
+"Нічні голоси": "Night Voices",
+"«Вовче виття заважає слухати знаки. Убий 15 вовків на Лісовій стежці.»": "\"The howling of wolves keeps me from hearing the signs. Kill 15 wolves on the Forest Path.\"",
+"Ікла місяця": "Moon Fangs",
+"«Вовчі ікла вбирають місячне світло. Принеси 8 для амулетів-фокусів.»": "\"Wolf fangs absorb moonlight. Bring 8 for focus amulets.\"",
+"Слиз, що світиться": "Glowing Slime",
+"«Слайми печери сповнені дикої сили. Розвій 15 — і відчуєш, як вона тече крізь тебе.»": "\"The cave slimes are full of wild power. Disperse 15 — and you'll feel it flow through you.\"",
+"Шкурки для сувоїв": "Skins for Scrolls",
+"«Писати закляття треба на шкурі, а не на папері. Принеси 8 щурячих шкурок.»": "\"Spells must be written on skin, not on paper. Bring 8 rat skins.\"",
+"Холод білого вовка": "The White Wolf's Cold",
+"«У білих вовках живе зимова стихія. Убий 8 і запам'ятай той холод.»": "\"The element of winter lives in white wolves. Kill 8 and remember that cold.\"",
+"Сувій на білому хутрі": "A Scroll on White Fur",
+"«Найсильніші сувої пишуть на білому хутрі. Принеси 5 білих вовчих шкур.»": "\"The strongest scrolls are written on white fur. Bring 5 white wolf pelts.\"",
+"Чиста печера": "A Clean Cave",
+"«Очисти Печеру в лісі: розвій 20 слаймів.»": "\"Cleanse the Forest Cave: disperse 20 slimes.\"",
+"Серце слизу": "Heart of Slime",
+"«Король слайм носить у собі серце печери. Здолай його — і стихії відгукнуться на твій поклик.»": "\"The King Slime carries the heart of the cave within it. Defeat it — and the elements will answer your call.\"",
+"Шлях духу: Світло Даждьбога": "Path of the Spirit: Light of Dazhboh",
+"«Сила духу — у служінні. Допоможи людям Застави десять разів — і Даждьбог дасть тобі своє світло.»": "\"The strength of the spirit is in service. Help the people of the Outpost ten times — and Dazhboh will give you his light.\"",
+"Тиша ферми": "Quiet on the Farm",
+"«Щури не дають спокою людям на Фермі. Прожени 20.»": "\"The rats give the people on the Farm no peace. Drive away 20.\"",
+"Дари для Храму": "Gifts for the Temple",
+"«Храм збирає шкурки, щоб зігріти біженців. Принеси 10 щурячих шкурок.»": "\"The Temple collects skins to warm the refugees. Bring 10 rat skins.\"",
+"Захист пастухів": "Protecting the Shepherds",
+"«Вовки ріжуть худобу. Убий 15 — пастухи помоляться за тебе.»": "\"Wolves are killing the cattle. Kill 15 — the shepherds will pray for you.\"",
+"Шкури для бідних": "Pelts for the Poor",
+"«Наближається зима. Принеси 10 вовчих шкур для тих, хто втратив дім.»": "\"Winter is coming. Bring 10 wolf pelts for those who have lost their homes.\"",
+"Очищення печери": "Cleansing the Cave",
+"«Печера в лісі гниє від слизу. Очисти її від 15 слаймів.»": "\"The Forest Cave is rotting from slime. Cleanse it of 15 slimes.\"",
+"Ікла для оберегів": "Fangs for Charms",
+"«Жерці роблять з вовчих іклів обереги для дітей. Принеси 8.»": "\"The priests make charms for children from wolf fangs. Bring 8.\"",
+"Білий звір": "The White Beast",
+"«Білі вовки нападають уже й на подорожніх. Зупини 8.»": "\"White wolves now attack even travellers. Stop 8.\"",
+"Слиз для свічок": "Slime for Candles",
+"«Зі слизу печери виходять свічки, що горять усю ніч. Принеси 12 для Храму.»": "\"Candles that burn all night are made from cave slime. Bring 12 for the Temple.\"",
+"Біле хутро для вівтаря": "White Fur for the Altar",
+"«Вівтар Даждьбога вкривають білим хутром. Принеси 5 білих вовчих шкур.»": "\"The altar of Dazhboh is covered with white fur. Bring 5 white wolf pelts.\"",
+"Король у темряві": "The King in the Dark",
+"«У глибині печери сидить Король слайм — від нього вся гниль. Здолай його.»": "\"Deep in the cave sits the King Slime — all the rot comes from him. Defeat him.\"",
+"Шлях професії": "Path of a Profession",
+"«Не бачу в тобі жодного шляху — сили розкидані навмання. Піди до Розпорядника Захара в Мерії": "\"I see no path in you — your strengths are scattered at random. Go to Steward Zakhar at the Town Hall",
+"(Центральний район): він підкаже, як виправити твої характеристики, а тоді повертайся.»": "(Central District): he'll tell you how to fix your attributes, and then come back.\"",
+"Немає активного завдання.": "There is no active task.",
+"Варта Центральної брами": "Guard of the Central Gate",
+"Довести силу": "Prove Your Strength",
+"«За брамою — Темний ліс, і новачки звідти не вертаються. Доведи, що ти не з них: здолай трьох Королів слайм у Печері в лісі.»": "\"Beyond the gate is the Dark Forest, and newcomers don't come back from there. Prove you're not one of them: defeat three King Slimes in the Forest Cave.\"",
+"Припаси для варти": "Supplies for the Guard",
+"«Варта мерзне й голодує. Принеси 40 вовчих шкур і 40 желе слизу — і брама для тебе відчиниться.»": "\"The guards are freezing and hungry. Bring 40 wolf pelts and 40 slime jellies — and the gate will open for you.\"",
+"Капітан говорить лише з тими, хто вже має професію.": "The captain talks only to those who already have a profession.",
+"Немає активної частини квесту.": "There is no active part of the quest.",
+"Частина квесту ще не виконана.": "The part of the quest is not complete yet.",
+"Збір вугілля": "Coal Collection",
+"«Зима цього року прийде рано, а біженців у Заставі вдвічі більше, ніж місця біля печей.": "\"Winter will come early this year, and there are twice as many refugees in the Outpost as there are places by the stoves.",
+"Принесіть Мерії тисячу вугілля — і Застава цього не забуде.»": "Bring the Town Hall a thousand coal — and the Outpost won't forget it.\"",
+"Завдання зараз не можна взяти.": "The task cannot be taken now.",
+"Завдання не взято.": "The task is not taken.",
+"Звільніть місце в інвентарі для нагороди.": "Free up space in the inventory for the reward.",
+"Долоні Велеса": "The Palms of Veles",
+"Дізнатися, що це за сфера: розпитати людей у Заставі чи в Храмі.": "Find out what this orb is: ask people in the Outpost or in the Temple.",
+"Спитати шинкаря Остапа — до нього заходять мандрівники й путівниці з усіх земель.": "Ask the innkeeper Ostap — travellers and guides from all lands drop in on him.",
+"Остап радить спитати Сестру Ївгу в Храмі.": "Ostap advises asking Sister Yivha in the Temple.",
+"Покласти сферу на долоні статуї Велеса у внутрішньому дворі Храму.": "Place the orb on the palms of the statue of Veles in the inner courtyard of the Temple.",
+"Статуя мовчить.": "The statue is silent.",
+"Сфери немає в інвентарі.": "The orb is not in the inventory.",
+"Фонтан сухий.": "The fountain is dry.",
+"Артеміда, адміністратор гільдії — Дубова Застава, Південний район": "Artemida, guild administrator — Oak Outpost, Southern District",
+"Нагорода: досвід (скільки — дізнаєтесь при здачі)": "Reward: experience (how much — you'll find out when you hand it in)",
+"Усі 10 завдань виконано. Нагорода за шлях — ???": "All 10 tasks are complete. Reward for the path — ???",
+"Дубова Застава, Шинок біля млина, Храм": "Oak Outpost, Tavern by the Mill, Temple",
+"Розпорядник Захар — Дубова Застава, Центральний район (Мерія)": "Steward Zakhar — Oak Outpost, Central District (Town Hall)",
+"Капітан варти — Дубова Застава, Північний район (Центральна брама)": "Captain of the guard — Oak Outpost, Northern District (Central Gate)",
+"Зрозумів, дякую.": "Understood, thanks.",
+"Зрозуміла, дякую.": "Understood, thanks.",
+"Розмову закінчено.": "The conversation is over.",
+"Заговорити знову": "Talk again",
+"тутешній": "a local",
+"тутешня": "a local",
+"Що чути в окрузі?": "What's the news around here?",
+"Що це за земля така — Гардарика?": "What kind of land is this — Gardarika?",
+"знайшов": "found",
+"знайшла": "found",
+"Мені підкинули дивну сферу. Кажуть, ти багато мандрівників бачив…": "Someone slipped me a strange orb. They say you've seen many travellers…",
+"Кажуть, Гільдія дає людям нове ремесло. Ким я можу стати?": "They say the Guild gives people a new trade. Who can I become?",
+"зайшов": "came in",
+"зайшла": "came in",
+"«Вовки на Лісовій стежці зовсім знахабніли, а в печері, кажуть, слайми плодяться, як гриби після дощу.": "\"The wolves on the Forest Path have grown really bold, and in the cave, they say, slimes breed like mushrooms after rain.",
+"Ще й Король у них завівся — бачили, як золотом виблискує. Старі кажуть, то не просто звір та слиз —": "And a King has turned up among them — people saw him glittering with gold. The old folk say it's not just beasts and slime —",
+"то холод Хелли підповзає з півночі й будить усяку погань. Ти туди без зілля не потикайся.»": "it's Hel's cold creeping in from the north and waking all sorts of vermin. Don't go there without potions.\"",
+"Дякую за пораду.": "Thanks for the advice.",
+"«Гардарика — так варяги з-за моря звали наш край: країна городів. Колись тут ходили і наші купці, і їхні.": "\"Gardarika — that's what the Varangians from across the sea called our land: the country of towns. Once our merchants travelled here, and theirs too.",
+"А тоді прийшла Хелла, володарка мертвих, і забрала північ собі. Варязькі боги лишилися без своїх земель,": "And then came Hel, the mistress of the dead, and took the north for herself. The Varangian gods were left without their lands,",
+"а Перун з Одіном, кажуть, уклали угоду: наші герої відвоюють загублене. Тому й ви тут.": "and Perun and Odin, they say, made a pact: our heroes will win back what was lost. That's why you're here.",
+"Найближча фортеця — Дубова Застава, за Південними воротами. Остання, що ще тримається.»": "The nearest fortress is Oak Outpost, beyond the Southern Gate. The last one still holding out.\"",
+"Остап довго мружиться на обгорілий клапоть, а тоді стишує голос. «Предки Минулих та Майбутніх часів… Чув я про таку книгу ще від діда.": "Ostap squints at the charred scrap for a long time, then lowers his voice. \"Ancestors of Times Past and Future… I heard of such a book from my grandfather.",
+"Кажуть, її передав людям сам Велес, і пише вона себе сама — про кожного, кого привів Перун. Хтось вирвав з неї сторінку, а сама книга,": "They say Veles himself gave it to people, and it writes itself — about everyone Perun has brought. Someone tore a page out of it, and the book itself,",
+"як подейкують, лежить десь у Центральному районі Дубової Застави. Варта пускає туди лише бувалих —": "rumour has it, lies somewhere in the Central District of Oak Outpost. The guards only let seasoned folk in there —",
+"А хто міг вирвати сторінку?": "And who could have torn out the page?",
+"Дякую, Остапе. Пошукаю.": "Thanks, Ostap. I'll look for it.",
+"Остап знизує плечима. «Хтозна. Може, якийсь біженець з півночі прихопив на розпал, а може… — він кидає погляд на вікно, де вже сутеніє, —": "Ostap shrugs. \"Who knows. Maybe some refugee from the north took it for kindling, or maybe… — he glances at the window, where it's already getting dark, —",
+"може, комусь не до вподоби, що книга пам'ятає імена тих, хто стає проти Хелли. Бережи цей клапоть.»": "maybe someone doesn't like that the book remembers the names of those who stand against Hel. Keep that scrap safe.\"",
+"Збережу.": "I'll keep it.",
+"сам": "yourself",
+"сама": "yourself",
+"ла": "",
+"бо те, що дають роки, в усіх однакове. Кожен шлях вимагає свого. Про кого розповісти?»": "because what the years give is the same for everyone. Each path demands its own. Who shall I tell you about?\"",
+"Про тих, хто тримає меч, сокиру, кинджал чи лук": "About those who wield a sword, axe, dagger or bow",
+"Про магів": "About mages",
+"Про служителів духу": "About servants of the spirit",
+"А як я підходжу під кілька шляхів?": "And what if I fit several paths?",
+"Дякую, Остапе.": "Thanks, Ostap.",
+"сам вклав": "you yourself put",
+"сама вклала": "you yourself put",
+"А про інших?": "And the others?",
+"«Магам — «Шлях чародія». Усім чотирьом школам треба одного:": "\"For mages — the \"Path of the Sorcerer\". All four schools need the same thing:",
+"«Служителям духу — «Шлях духу»:": "\"For servants of the spirit — the \"Path of the Spirit\":",
+"він покаже, чого бракує, і допоможе переписати вкладені очки.»": "he'll show you what's missing and help you rewrite the invested points.\"",
+"Сестра Ївга": "Sister Yivha",
+"Жриця в сірому вбранні підкладає дубове гілля у священний вогонь.": "A priestess in grey robes adds oak branches to the sacred fire.",
+"Мої побратими полягли. Помолися за них.": "My comrades have fallen. Pray for them.",
+"Благослови нас «Молитвою благодаті».": "Bless us with the \"Prayer of Grace\".",
+"Сестро, мені підкинули дивну сферу. Ви не знаєте, що це?": "Sister, someone slipped me a strange orb. Do you know what it is?",
+"Остап казав про Велесові долоні — ніби вони в цьому Храмі.": "Ostap spoke of the Palms of Veles — as if they were in this Temple.",
+"Розкажіть ще раз про статую у дворі.": "Tell me again about the statue in the courtyard.",
+"Що це за місце?": "What is this place?",
+"Бувай, сестро.": "Goodbye, sister.",
+"«Молитва благодаті береже тих, хто в дорозі: кожні 5 секунд повертає 2% здоров'я, а кожні 10 секунд — 3% мани.": "\"The Prayer of Grace protects those on the road: every 5 seconds it restores 2% health, and every 10 seconds — 3% mana.",
+"Іншим разом.": "Another time.",
+"«Джерело Велеса знову б'є, — Ївга усміхається. — Хто нап'ється з нього, тому мудрість поколінь сама лягає в руки:": "\"The Spring of Veles flows again, — Yivha smiles. — Whoever drinks from it, the wisdom of generations falls into their hands by itself:",
+"кожен бій навчає втричі більше. Та сила та недовга — чверть години. А як вивітриться, джерелу треба ще година, щоб набратися сили знову.»": "every battle teaches three times more. But that power doesn't last long — a quarter of an hour. And once it fades, the spring needs another hour to gather strength again.\"",
+"«У внутрішньому дворі, за вівтарем, — старий фонтан зі статуєю Велеса, що береже мудрість поколінь.": "\"In the inner courtyard, behind the altar, is an old fountain with a statue of Veles, who guards the wisdom of generations.",
+"Подивися на його долоні: там виступ, точнісінько як заглиблення на твоїй сфері. Спробуй покласти її туди.»": "Look at his palms: there's a ledge there, exactly like the hollow on your orb. Try placing it there.\"",
+"Дякую, сестро.": "Thank you, sister.",
+"вона втримати не може — вони повертаються до цього вогню. Та дорога назад виснажує: відроджені мають лише десяту частку сил": "she cannot hold — they return to this fire. But the road back is exhausting: the revived have only a tenth of their strength",
+"і зовсім без мани — відновіться зіллям або відпочиньте в Домівці. Якщо хтось із твоєї групи поліг, а інші вижили,": "and no mana at all — restore yourself with a potion or rest at Home. If someone in your party has fallen and the others survived,",
+"приходьте сюди — я помолюся за полеглих.»": "come here — I will pray for the fallen.\"",
+"Розпорядник Захар Вергун": "Steward Zakhar Verhun",
+"За широким столом, заваленим сувоями, сидить сивий чоловік у зеленому каптані. «Захар Вергун, розпорядник Мерії. Слухаю вас.»": "At a wide table piled with scrolls sits a grey-haired man in a green kaftan. \"Zakhar Verhun, steward of the Town Hall. I'm listening.\"",
+"Хочу почати навчання заново — перерозподілити свої вміння.": "I want to start my training over — redistribute my abilities.",
+"Мені підкинули дивну сферу. Ви не знаєте, що це?": "Someone slipped me a strange orb. Do you know what it is?",
+"Мені не дають квест на професію. Що не так з моїми силами?": "They won't give me the profession quest. What's wrong with my strengths?",
+"Чи потрібна Мерії допомога?": "Does the Town Hall need any help?",
+"Як там тепло для Застави?": "How is the Outpost doing for warmth?",
+"Що це за книга у вас на столі?": "What is this book on your table?",
+"Чим займається Мерія?": "What does the Town Hall do?",
+"До побачення.": "Goodbye.",
+"ви": "you",
+"Я ще подумаю.": "I'll think about it.",
+"Маг (стихію обираєш сам)": "Mage (you choose the element yourself)",
+"— бракує:": "— missing:",
+"— підходиш": "— you fit",
+"сам вкладав": "you yourself invested",
+"сама вкладала": "you yourself invested",
+". «Якщо сили розкидані не туди — я можу переписати записи,": ". \"If your strengths are scattered in the wrong places — I can rewrite the records,",
+"і ти розподілиш очки заново.»": "and you'll distribute the points again.\"",
+"Перерозподілити вміння.": "Redistribute the abilities.",
+"Дякую, зрозумів.": "Thanks, understood.",
+"Дякую, зрозуміла.": "Thanks, understood.",
+"Захар усміхається. «Печі горять, біженці не мерзнуть. Спальний район тепер для вас відкритий —": "Zakhar smiles. \"The stoves are burning, the refugees aren't freezing. The Residential District is now open to you —",
+"там управитель продає доми на околиці. Кажуть, при домі можна й кузню збудувати.»": "the manager there sells houses on the outskirts. They say you can even build a forge at a house.\"",
+"і Мерія відкриє вам Спальний район: там продають доми.»": "and the Town Hall will open the Residential District for you: houses are sold there.\"",
+"Ось вугілля.": "Here's the coal.",
+"Повернуся пізніше.": "I'll come back later.",
+"Захар кладе долоню на важку книгу в обкладинці з потемнілого дуба. «Це — «Предки Минулих та Майбутніх часів».": "Zakhar lays his palm on a heavy book bound in darkened oak. \"This is \"Ancestors of Times Past and Future\".",
+"Кажуть, її передав Мерії сам Велес. Ніхто в ній не пише: щойно хтось із Перунових дітей здолає великого ворога,": "They say Veles himself gave it to the Town Hall. Nobody writes in it: as soon as one of Perun's children defeats a great enemy,",
+"сторінки наповнюються самі — і хто бився, і хто поліг, і коли це сталося.": "the pages fill by themselves — who fought, who fell, and when it happened.",
+"Відколи ви повернули вирвану сторінку, книга знову ціла — від першого слова Прологу.»": "Since you returned the torn page, the book is whole again — from the first word of the Prologue.\"",
+"Тільки от біда: початок Прологу хтось вирвав, ще до мене.» Захар помічає обгорілий клапоть у вашій торбі й завмирає.": "The only trouble is that someone tore out the beginning of the Prologue, even before my time.\" Zakhar notices the charred scrap in your bag and freezes.",
+"«Стривайте… а що це у вас? Дайте-но гляну — схоже на наш пергамент!»": "\"Wait… what's that you have? Let me see — it looks like our parchment!\"",
+"Тільки от біда: початок Прологу хтось вирвав, ще до мене. Скільки шукали — так і не знайшли.»": "The only trouble is that someone tore out the beginning of the Prologue, even before my time. However much we searched — we never found it.\"",
+"«Про вашу групу там уже є записи. Хочете погортати?»": "\"There are already records about your party in there. Would you like to leaf through it?\"",
+"«Про вас там поки нічого — та, гадаю, це ненадовго. Хочете прочитати?»": "\"There's nothing about you in there yet — but I suppose that won't be for long. Would you like to read it?\"",
+"Віддати обірваний пергамент для порівняння.": "Hand over the torn parchment for comparison.",
+"Так, покажіть книгу.": "Yes, show me the book.",
+"«Мерія веде записи про всіх мешканців Дубової Застави — і про кожного героя, якого прислав Перун.": "\"The Town Hall keeps records of all the residents of Oak Outpost — and of every hero Perun has sent.",
+"Відколи впала північ, біженців тут більше, ніж місцевих, тож роботи вистачає. Біля входу — Дошка оголошень:": "Since the north fell, there are more refugees here than locals, so there's plenty of work. By the entrance is the Notice Board:",
+"там авантюристи шукають собі товаришів. А як хтось хоче змінити свій шлях — приходить до мене.»": "adventurers look for comrades there. And if someone wants to change their path — they come to me.\"",
+"Зрозуміло.": "I see.",
+"Скрудж, управляючий Торгової гільдії": "Scrooge, manager of the Merchants' Guild",
+"Сухорлявий чоловік у дорогому каптані не відводить очей від рахівниці. «Скрудж. Торгова гільдія.": "A wiry man in an expensive kaftan doesn't take his eyes off the abacus. \"Scrooge. Merchants' Guild.",
+"Залізо, щити, прикраси — найкраще в Заставі, і ціна відповідна. Для тих, кому я довіряю, бувають особливі доручення… і особливі ціни.": "Iron, shields, jewellery — the best in the Outpost, and the price to match. For those I trust there are special errands… and special prices.",
+"Але вас я бачу вперше.»": "But I'm seeing you for the first time.\"",
+"Чому так дорого?": "Why so expensive?",
+"Ви згадували особливе доручення?": "You mentioned a special errand?",
+"«Дорого? Це залізо кували варязькі майстри, а шляхи на північ тепер стереже нежить Хелли.": "\"Expensive? This iron was forged by Varangian masters, and the roads to the north are now guarded by Hel's undead.",
+"Кожен караван, що дійшов до Дубової Застави, — то вже диво. Не подобається ціна — шукайте дешевше. Не знайдете.»": "Every caravan that reaches Oak Outpost is already a miracle. Don't like the price — look for cheaper. You won't find it.\"",
+"Скрудж уперше підводить очі й довго дивиться на вас. «З незнайомцями про справи гільдії я не розмовляю.": "Scrooge raises his eyes for the first time and looks at you for a long while. \"I don't discuss guild business with strangers.",
+"Купуйте, продавайте — а там подивимось.»": "Buy, sell — and then we'll see.\"",
+"Як скажете.": "As you say.",
+"Управитель Спального району Тиміш Дубчак": "Tymish Dubchak, manager of the Residential District",
+"Огрядний чоловік зі зв'язкою ключів на поясі підводиться назустріч. «Тиміш Дубчак, управитель Спального району.": "A stout man with a bunch of keys on his belt gets up to meet you. \"Tymish Dubchak, manager of the Residential District.",
+"Що за дім?": "What kind of house?",
+"Бувайте.": "Goodbye.",
+"«Міцний зруб на кам'яному підмурку, піч, комора. Скриня там стоїть та сама, що й у вашій Домівці —": "\"A sturdy log house on a stone foundation, a stove, a pantry. The chest there is the same one as in your Home —",
+"не питайте, як, то Велесові справи. А на подвір'ї місця вистачить і на кузню, і на склад.»": "don't ask how, that's Veles's business. And in the yard there's room enough for a forge and a storehouse.\"",
+"Зрозумів.": "Understood.",
+"Зрозуміла.": "Understood.",
+"Коваль Кузьма, майстер Гільдії ремісників": "Smith Kuzma, master of the Craftsmen's Guild",
+"Кремезний чоловік у пропаленому фартусі відкладає молот. «Кузьма. Кажуть, мій дід Змія в плуг запрягав — а я поки підкови кую.": "A burly man in a scorched apron puts down his hammer. \"Kuzma. They say my grandfather harnessed the Serpent to a plough — and I'm still forging horseshoes.",
+"Кремезний коваль міряє вас поглядом. «Ремесло — не для новачків. Здобудь собі професію в Гільдії авантюристів, тоді й поговоримо.»": "The burly smith sizes you up. \"The craft isn't for newcomers. Get yourself a profession at the Adventurers' Guild, then we'll talk.\"",
+"Розкажи про Змія.": "Tell me about the Serpent.",
+"Що треба, щоб кувати самому?": "What do I need to forge myself?",
+"Бувай, Кузьмо.": "Goodbye, Kuzma.",
+"«Прилетів колись Змій, людей жер. Сховався народ у кузні — у Кузьми й Дем'яна. Змій лизнув залізні двері, а ковалі — хап його": "\"Once a Serpent flew here and devoured people. The folk hid in the smithy — with Kuzma and Demian. The Serpent licked the iron door, and the smiths grabbed it",
+"розпеченими кліщами за язик! Запрягли в плуг і орали, доки не здох. Так і лишились Змієві вали. Відтоді ковалів і нежить боїться.»": "by the tongue with red-hot tongs! They harnessed it to a plough and ploughed until it died. That's how the Serpent's Ramparts came to be. Since then even the undead fear smiths.\"",
+"Гарна історія.": "A good story.",
+"«Перше — дім у Спальному районі, при ньому кузня. Друге — знаряддя: горно, ковадло, молот, кліщі, діжка для гартування.": "\"First — a house in the Residential District, with a forge at it. Second — the tools: furnace, anvil, hammer, tongs, quenching barrel.",
+"Міхи — коли до заліза дійдеш, верстак шкірника, різці, тигель — під окремі речі. А як захочеш краще — залізне ковадло.": "Bellows — when you get to iron, a leatherworker's bench, chisels, a crucible — for particular items. And if you want better — an iron anvil.",
+"Усе куплене поставлю в твою кузню.»": "Everything you buy I'll put into your forge.\"",
+"Капітан Северин Залізняк": "Captain Severyn Zalizniak",
+"Живий": "Alive",
+"Жива": "Alive",
+"Капітан киває вам, як старому знайомому. «Брама для тебе відчинена. Тримай меч напоготові — у Темному лісі ночі довгі.»": "The captain nods to you like an old acquaintance. \"The gate is open for you. Keep your sword ready — the nights in the Dark Forest are long.\"",
+"Кремезний капітан у кірасі з дубовим листом на гербі загороджує дорогу. «Северин Залізняк, капітан варти Центральної брами": "A burly captain in a cuirass with an oak leaf on its crest blocks the way. \"Severyn Zalizniak, captain of the guard of the Central Gate",
+"Дубової Застави. Далі — Темний ліс, а за ним — землі, які забрала Хелла. Без мого дозволу туди не ходять.»": "of Oak Outpost. Beyond is the Dark Forest, and beyond it — the lands Hel has taken. Nobody goes there without my permission.\"",
+"Що там, за брамою?": "What's beyond the gate?",
+"Хочу пройти за браму.": "I want to go through the gate.",
+"Щодо вашого доручення…": "About your errand…",
+"Відчиніть браму — я йду в Темний ліс.": "Open the gate — I'm going into the Dark Forest.",
+"Пропустіть мене в Заставу.": "Let me into the Outpost.",
+"Бувай, капітане.": "Goodbye, captain.",
+"«Темний ліс. Болота, де топляться навіть коні, старе кладовище, вовкулаки, павуки завбільшки з корову…": "\"The Dark Forest. Swamps where even horses drown, an old cemetery, werewolves, spiders the size of a cow…",
+"Колись це був звичайний ліс, але відтоді, як Хелла захопила північ, її подих прокрався й сюди — мертві встають з могил.": "It used to be an ordinary forest, but since Hel seized the north her breath has crept in here too — the dead rise from their graves.",
+"А в самому серці лісу, кажуть, сидить його Володар, вірний слуга Хелли. Звичайним мисливцям там робити нічого.»": "And in the very heart of the forest, they say, sits its Lord, Hel's faithful servant. Ordinary hunters have no business there.\"",
+"Сміливий": "Brave",
+"Смілива": "Brave",
+"Згоден.": "Agreed.",
+"Пізніше.": "Later.",
+"готовий": "ready",
+"готова": "ready",
+"Готово — ось.": "Done — here you go."
 },
 "patterns": [
 [
@@ -2074,11 +2353,39 @@ RPG.I18N.en = {
 "шт. в клітинці. Речі тут не зникають навіть після загибелі. Ця скриня спільна для Домівки й усіх ваших домів."
 ],
 [
+"^Хочеш свою кузню\\? Зведи її при домі, а знаряддя я тобі продам і сам поставлю\\. Без горна, ковадла, молота, кліщів і діжки — не почнеш\\.»$",
+"Want your own forge? Build it at your house, and I'll sell you the tools and set them up myself. Without a furnace, anvil, hammer, tongs and barrel — you can't start.\"",
+1,
+0,
+"Хочеш свою кузню? Зведи її при домі, а знаряддя я тобі продам і сам поставлю. Без горна, ковадла, молота, кліщів і діжки — не почнеш.»"
+],
+[
+"Хочеш свою кузню\\? Зведи її при домі, а знаряддя я тобі продам і сам поставлю\\. Без горна, ковадла, молота, кліщів і діжки — не почнеш\\.»",
+"Want your own forge? Build it at your house, and I'll sell you the tools and set them up myself. Without a furnace, anvil, hammer, tongs and barrel — you can't start.\"",
+0,
+0,
+"Хочеш свою кузню? Зведи її при домі, а знаряддя я тобі продам і сам поставлю. Без горна, ковадла, молота, кліщів і діжки — не почнеш.»"
+],
+[
 " Удома лишилось вільних героїв: (.*?) — з них можна відправити ще одну експедицію \\(оберіть бойову локацію, Шахту чи Лісопилку\\)\\.",
 " Free heroes left at home: $1 — another expedition can be sent from them (choose a battle location, the Mine or the Sawmill).",
 0,
 0,
 "— з них можна відправити ще одну експедицію (оберіть бойову локацію, Шахту чи Лісопилку)."
+],
+[
+"^«Мир тобі, (.*?)\\. Я — сестра Ївга, берегиня цього храму\\. Перунів вогонь тут не згасає ні вдень, ні вночі\\. Чим можу допомогти\\?»$",
+"\"Peace be with you, $1. I am Sister Yivha, the keeper of this temple. Perun's fire here never goes out, day or night. How can I help?\"",
+1,
+0,
+". Я — сестра Ївга, берегиня цього храму. Перунів вогонь тут не згасає ні вдень, ні вночі. Чим можу допомогти?»"
+],
+[
+"«Мир тобі, (.*?)\\. Я — сестра Ївга, берегиня цього храму\\. Перунів вогонь тут не згасає ні вдень, ні вночі\\. Чим можу допомогти\\?»",
+"\"Peace be with you, $1. I am Sister Yivha, the keeper of this temple. Perun's fire here never goes out, day or night. How can I help?\"",
+0,
+0,
+". Я — сестра Ївга, берегиня цього храму. Перунів вогонь тут не згасає ні вдень, ні вночі. Чим можу допомогти?»"
 ],
 [
 "^Для експедиції потрібно щонайменше 3 героїв, що можуть піти \\(зараз (.*?)\\)\\. Напарників наймають на Дошці оголошень біля Мерії\\.$",
@@ -2130,11 +2437,39 @@ RPG.I18N.en = {
 "спершу доведіть, що на вас можна покластися: особливе завдання «"
 ],
 [
+"Остап усміхається у вуса\\. «Бачив я на своєму віку чимало таких, як ти\\. Гільдія дивиться, у що ти (.*?) вкладав(.*?) сили — ",
+"Ostap smiles into his moustache. \"I've seen plenty like you in my time. The Guild looks at what you $1 put$2 your strength into — ",
+0,
+0,
+"Остап усміхається у вуса. «Бачив я на своєму віку чимало таких, як ти. Гільдія дивиться, у що ти"
+],
+[
+"«Можна\\. Мерія перепише записи: усі очки, які (.*?) вкладали самі \\((.*?)\\), повернуться, і їх можна буде розподілити знову\\. ",
+"\"You can. The Town Hall will rewrite the records: all the points $1 invested yourself ($2) will be returned, and you can distribute them again. ",
+0,
+0,
+"), повернуться, і їх можна буде розподілити знову."
+],
+[
 "Тадеуш, торговець гільдії, продає зброю 1–2 виду, шкіряну броню \\(2 вид\\), малі й середні зілля \\(за (.*?)% вартості\\), ",
 "Tadeusz, the guild merchant, sells tier 1–2 weapons, leather armour (tier 2), small and medium potions (at $1% of the value), ",
 0,
 0,
 "Тадеуш, торговець гільдії, продає зброю 1–2 виду, шкіряну броню (2 вид), малі й середні зілля (за"
+],
+[
+"^Ви гукаєте варту, і з бійниці над брамою визирає Капітан Северин Залізняк\\. «А, це ти\\. (.*?)\\? Ну, кажи, чого треба\\.»$",
+"You call the guards, and Captain Severyn Zalizniak looks out from the loophole above the gate. \"Ah, it's you. $1? Well, tell me what you need.\"",
+1,
+0,
+"Ви гукаєте варту, і з бійниці над брамою визирає Капітан Северин Залізняк. «А, це ти."
+],
+[
+"Ви гукаєте варту, і з бійниці над брамою визирає Капітан Северин Залізняк\\. «А, це ти\\. (.*?)\\? Ну, кажи, чого треба\\.»",
+"You call the guards, and Captain Severyn Zalizniak looks out from the loophole above the gate. \"Ah, it's you. $1? Well, tell me what you need.\"",
+0,
+0,
+"Ви гукаєте варту, і з бійниці над брамою визирає Капітан Северин Залізняк. «А, це ти."
 ],
 [
 "^Першу науку коваля — книгу «(.*?)» — продає Кузьма в Гільдії ремісників \\(Торговий район\\)\\. Без неї кувати не вийде\\.$",
@@ -2165,6 +2500,13 @@ RPG.I18N.en = {
 "досвіду володіння за кожен виграний бій (−"
 ],
 [
+"«Це храм Перуна\\. Хелла забирає душі полеглих до свого царства, але тих, кого Громовержець привів сюди сам, ",
+"\"This is the temple of Perun. Hel takes the souls of the fallen to her kingdom, but those whom the Thunderer brought here himself ",
+0,
+0,
+"«Це храм Перуна. Хелла забирає душі полеглих до свого царства, але тих, кого Громовержець привів сюди сам,"
+],
+[
 "^Знехтувавши попередженням, сила, яку надавала (.*?)-та руна «(.*?)», вийшла з-під контролю та знищила «(.*?)» повністю…$",
 "Having ignored the warning, the power granted by rune No. $1 \"$2\" went out of control and destroyed \"$3\" completely…",
 1,
@@ -2177,6 +2519,27 @@ RPG.I18N.en = {
 0,
 0,
 "Знехтувавши попередженням, сила, яку надавала"
+],
+[
+"«Тоді (.*?) і обереш\\. А як не підходиш ні під що — Артеміда й квесту не дасть\\. Іди тоді до Захара в Мерію: ",
+"\"Then you'll choose $1. And if you don't fit anything — Artemida won't even give you the quest. Then go to Zakhar at the Town Hall: ",
+0,
+0,
+"і обереш. А як не підходиш ні під що — Артеміда й квесту не дасть. Іди тоді до Захара в Мерію:"
+],
+[
+"^Тиміш киває вам, як сусідові\\. «Як ведеться в «(.*?)»\\? Дах не тече\\? Кажуть, при домі можна й кузню звести\\.»$",
+"Tymish nods to you like a neighbour. \"How are things in \"$1\"? The roof isn't leaking? They say you can build a forge at the house too.\"",
+1,
+0,
+"»? Дах не тече? Кажуть, при домі можна й кузню звести.»"
+],
+[
+"Тиміш киває вам, як сусідові\\. «Як ведеться в «(.*?)»\\? Дах не тече\\? Кажуть, при домі можна й кузню звести\\.»",
+"Tymish nods to you like a neighbour. \"How are things in \"$1\"? The roof isn't leaking? They say you can build a forge at the house too.\"",
+0,
+0,
+"»? Дах не тече? Кажуть, при домі можна й кузню звести.»"
 ],
 [
 "^Торговий район: Гільдія ремісників пускає героїв, що вже мають професію; Торгова гільдія — з (.*?) рівня\\.$",
@@ -2198,6 +2561,20 @@ RPG.I18N.en = {
 0,
 0,
 "Вода холодна й солодка, як весняний дощ. Уся група відчуває, як світ стає яснішим: +"
+],
+[
+"^Мерія казала, що ви зігріли Заставу цієї зими\\. На околиці є добрий дім — (.*?) золота, і він ваш\\.»$",
+"The Town Hall said you warmed the Outpost this winter. There's a good house on the outskirts — $1 gold, and it's yours.\"",
+1,
+0,
+"Мерія казала, що ви зігріли Заставу цієї зими. На околиці є добрий дім —"
+],
+[
+"Мерія казала, що ви зігріли Заставу цієї зими\\. На околиці є добрий дім — (.*?) золота, і він ваш\\.»",
+"The Town Hall said you warmed the Outpost this winter. There's a good house on the outskirts — $1 gold, and it's yours.\"",
+0,
+0,
+"Мерія казала, що ви зігріли Заставу цієї зими. На околиці є добрий дім —"
 ],
 [
 "^Рівень професії почався з 1, а бонуси Селянина лишилися\\. Тренер Брут навчить новим навичкам\\.$",
@@ -2228,6 +2605,20 @@ RPG.I18N.en = {
 "Дошка оголошень відкривається після особливого завдання «"
 ],
 [
+"^А потім допоможеш варті з припасами\\. Впораєшся — брама відчиниться, ще й (.*?) досвіду отримаєш\\.»$",
+"And then you'll help the guards with supplies. Manage that — and the gate will open, and you'll get $1 experience too.\"",
+1,
+0,
+"А потім допоможеш варті з припасами. Впораєшся — брама відчиниться, ще й"
+],
+[
+"А потім допоможеш варті з припасами\\. Впораєшся — брама відчиниться, ще й (.*?) досвіду отримаєш\\.»",
+"And then you'll help the guards with supplies. Manage that — and the gate will open, and you'll get $1 experience too.\"",
+0,
+0,
+"А потім допоможеш варті з припасами. Впораєшся — брама відчиниться, ще й"
+],
+[
 "^перехід за спину найслабшого ворога \\(до 3 кл\\.\\): удар 100% \\+ отрута (.*?)% його макс\\. HP × (.*?) ходів$",
 "move behind the weakest enemy (up to 3 cells): 100% strike + poison $1% of its max HP × $2 turns",
 1,
@@ -2247,6 +2638,13 @@ RPG.I18N.en = {
 0,
 0,
 "клітинок інвентаря зайняті. Нові речі та ресурси, яким немає місця, пропадатимуть —"
+],
+[
+"Захар розгортає твій запис\\. «Шлях обирають не роки, а те, у що ти (.*?) сили\\. Твої вклади: (.*?)\\. ",
+"Zakhar opens your record. \"The path isn't chosen by the years, but by what $1 strength into. Your investments: $2. ",
+0,
+0,
+"Захар розгортає твій запис. «Шлях обирають не роки, а те, у що ти"
 ],
 [
 "^⭐ Белі повалено! Межа рівня для героїв з професією відтепер — (.*?) \\(Селянин лишається до (.*?)\\)\\.$",
@@ -2319,6 +2717,20 @@ RPG.I18N.en = {
 ", нові не випадають, поки не використаєте хоча б один."
 ],
 [
+"^(.*?) EXP кожному герою групи \\+ бонуси \\(група, тимчасові ефекти, руни й речі\\), (.*?) золота$",
+"$1 EXP to each party hero + bonuses (party, temporary effects, runes and items), $2 gold",
+1,
+0,
+"EXP кожному герою групи + бонуси (група, тимчасові ефекти, руни й речі),"
+],
+[
+"(.*?) EXP кожному герою групи \\+ бонуси \\(група, тимчасові ефекти, руни й речі\\), (.*?) золота",
+"$1 EXP to each party hero + bonuses (party, temporary effects, runes and items), $2 gold",
+0,
+0,
+"EXP кожному герою групи + бонуси (група, тимчасові ефекти, руни й речі),"
+],
+[
 "^Скриня: (.*?)\\/(.*?) клітинок зайнято\\. Речі в скрині не зникають, навіть якщо герой загине\\.$",
 "Chest: $1/$2 cells occupied. Items in the chest don't disappear even if the hero dies.",
 1,
@@ -2373,6 +2785,20 @@ RPG.I18N.en = {
 0,
 0,
 "Капітан віддає наказ відчинити браму. «Ти з наших. Темний ліс чекає.» Досвід —"
+],
+[
+"Остап протирає кухоль і киває вам\\. «Заходь, (.*?)! Ти ж із тих, кого Перун прислав\\? ",
+"Ostap wipes a mug and nods to you. \"Come in, $1! You're one of those Perun sent, aren't you? ",
+0,
+0,
+"Остап протирає кухоль і киває вам. «Заходь,"
+],
+[
+"\\. А вогонь, вода, вітер чи земля — то вже ти (.*?) обереш, як пройдеш випробування\\.»",
+". And fire, water, wind or earth — you'll choose that $1 once you pass the trials.\"",
+0,
+0,
+". А вогонь, вода, вітер чи земля — то вже ти"
 ],
 [
 "^За кожного нового члена групи Мерія бере внесок\\. У групі може бути до (.*?) героїв\\.$",
@@ -2436,6 +2862,20 @@ RPG.I18N.en = {
 0,
 0,
 "рівня і герої з професією — до вашого рівня ("
+],
+[
+"^з (.*?) рівня\\. Як потрапиш — спитай у Мерії\\. Там люди грамотні, записи ведуть\\.»$",
+"from level $1. When you get in — ask at the Town Hall. The people there can read and keep records.\"",
+1,
+0,
+"рівня. Як потрапиш — спитай у Мерії. Там люди грамотні, записи ведуть.»"
+],
+[
+"з (.*?) рівня\\. Як потрапиш — спитай у Мерії\\. Там люди грамотні, записи ведуть\\.»",
+"from level $1. When you get in — ask at the Town Hall. The people there can read and keep records.\"",
+0,
+0,
+"рівня. Як потрапиш — спитай у Мерії. Там люди грамотні, записи ведуть.»"
 ],
 [
 "^Щоб почати кувати, бракує: (.*?)\\. Знаряддя — у коваля Кузьми \\(Торговий район\\)\\.$",
@@ -2529,6 +2969,13 @@ RPG.I18N.en = {
 "завдань одночасно.» Виконано завдань:"
 ],
 [
+" Благодать ще з вами — близько (.*?) хв\\. Нова молитва почне відлік заново\\.",
+" The grace is still with you — about $1 min. A new prayer will start the count again.",
+0,
+0,
+"хв. Нова молитва почне відлік заново."
+],
+[
 "Сюди повертаються загиблі\\. Відроджені мають (.*?)% здоров'я та 0% мани — ",
 "The fallen return here. The revived have $1% health and 0% mana — ",
 0,
@@ -2555,6 +3002,13 @@ RPG.I18N.en = {
 0,
 0,
 "На герої може бути не більше"
+],
+[
+"«Воїнам Гільдія дає «Шлях воїна»\\. Хто куди піде — дивись, скільки (.*?): ",
+"\"For warriors the Guild has the \"Path of the Warrior\". Who goes where — look at how much $1: ",
+0,
+0,
+"«Воїнам Гільдія дає «Шлях воїна». Хто куди піде — дивись, скільки"
 ],
 [
 "^Ви в дорозі до «(.*?)»\\. Переміщення не скасувати — дочекайтеся прибуття\\.$",
@@ -2760,6 +3214,13 @@ RPG.I18N.en = {
 "досвіду володіння за кожен виграний бій"
 ],
 [
+"Захар відкладає сувій\\. (.*?) «За це — (.*?) досвіду, (.*?) срібних злитків, ",
+"Zakhar puts the scroll aside. $1 \"For this — $2 experience, $3 silver ingots, ",
+0,
+0,
+"Захар відкладає сувій."
+],
+[
 " · Молитва благодаті: ще (.*?) хв \\(\\+2% HP за 5 с, \\+3% MP за 10 с\\)",
 " · Prayer of Grace: $1 min left (+2% HP per 5 s, +3% MP per 10 s)",
 0,
@@ -2886,6 +3347,20 @@ RPG.I18N.en = {
 "Варта не пускає до Мерії новачків. Повертайтеся з"
 ],
 [
+"^Видно по очах — не (.*?)\\. Сідай ближче до вогню\\. Чого бажаєш\\?»$",
+"I can see by your eyes — you're not $1. Sit closer to the fire. What would you like?\"",
+1,
+0,
+". Сідай ближче до вогню. Чого бажаєш?»"
+],
+[
+"Видно по очах — не (.*?)\\. Сідай ближче до вогню\\. Чого бажаєш\\?»",
+"I can see by your eyes — you're not $1. Sit closer to the fire. What would you like?\"",
+0,
+0,
+". Сідай ближче до вогню. Чого бажаєш?»"
+],
+[
 "^Спершу заберіть здобич повернених експедицій \\(чекають (.*?)\\)\\.$",
 "First collect the loot of the returned expeditions (waiting: $1).",
 1,
@@ -2933,6 +3408,20 @@ RPG.I18N.en = {
 0,
 0,
 "виграно. Нагороди за нього немає — лише за боса."
+],
+[
+"^Дубль квестів обмежений (.*?) шт\\. — таких завдань у вас уже (.*?)\\.$",
+"Duplicate quests are limited to $1 — you already have $2 such tasks.",
+1,
+0,
+"шт. — таких завдань у вас уже"
+],
+[
+"Дубль квестів обмежений (.*?) шт\\. — таких завдань у вас уже (.*?)\\.",
+"Duplicate quests are limited to $1 — you already have $2 such tasks.",
+0,
+0,
+"шт. — таких завдань у вас уже"
 ],
 [
 "^Середній Gear Score вдягнених речей: (.*?) \\(речей: (.*?), сума: (.*?)\\)$",
@@ -3110,6 +3599,20 @@ RPG.I18N.en = {
 "Дім на околиці Спального району —"
 ],
 [
+"^«Переписувати нічого — (.*?) ще не вклали жодного очка\\.»$",
+"\"There's nothing to rewrite — $1 haven't invested a single point yet.\"",
+1,
+0,
+"ще не вклали жодного очка.»"
+],
+[
+"«Переписувати нічого — (.*?) ще не вклали жодного очка\\.»",
+"\"There's nothing to rewrite — $1 haven't invested a single point yet.\"",
+0,
+0,
+"ще не вклали жодного очка.»"
+],
+[
 "^Інвентар: (.*?) комірок \\(36 \\+ (.*?) від мішечків\\) · зайнято (.*?)$",
 "Inventory: $1 cells (36 + $2 from pouches) · occupied $3",
 1,
@@ -3243,6 +3746,34 @@ RPG.I18N.en = {
 "Рівень навички не може перевищувати володіння ("
 ],
 [
+"^Вода в чаші ще не набрала сили\\. Спробуйте за (.*?) хв\\.$",
+"The water in the bowl hasn't gathered strength yet. Try in $1 min.",
+1,
+0,
+"Вода в чаші ще не набрала сили. Спробуйте за"
+],
+[
+"Вода в чаші ще не набрала сили\\. Спробуйте за (.*?) хв\\.",
+"The water in the bowl hasn't gathered strength yet. Try in $1 min.",
+0,
+0,
+"Вода в чаші ще не набрала сили. Спробуйте за"
+],
+[
+"^«Ну що, вугілля\\? Мерії потрібно (.*?), а у вас поки (.*?)\\.»$",
+"\"Well then, the coal? The Town Hall needs $1, and you have $2 so far.\"",
+1,
+0,
+"«Ну що, вугілля? Мерії потрібно"
+],
+[
+"«Ну що, вугілля\\? Мерії потрібно (.*?), а у вас поки (.*?)\\.»",
+"\"Well then, the coal? The Town Hall needs $1, and you have $2 so far.\"",
+0,
+0,
+"«Ну що, вугілля? Мерії потрібно"
+],
+[
 "^(.*?) виринає з тіні за спиною «(.*?)», але той ухиляється$",
 "$1 emerges from the shadow behind \"$2\", but it dodges",
 1,
@@ -3353,6 +3884,48 @@ RPG.I18N.en = {
 0,
 0,
 "Щоб повторити данж, потрібен новий ключ. Бос:"
+],
+[
+"^Нагорода: (.*?) EXP, срібні злитки ×(.*?), Спальний район$",
+"Reward: $1 EXP, silver ingots ×$2, Residential District",
+1,
+0,
+"EXP, срібні злитки ×"
+],
+[
+"Нагорода: (.*?) EXP, срібні злитки ×(.*?), Спальний район",
+"Reward: $1 EXP, silver ingots ×$2, Residential District",
+0,
+0,
+"EXP, срібні злитки ×"
+],
+[
+"^Я (.*?) обірваний пергамент\\. Що ти про нього скажеш\\?$",
+"I $1 a torn parchment. What can you tell me about it?",
+1,
+0,
+"обірваний пергамент. Що ти про нього скажеш?"
+],
+[
+"Я (.*?) обірваний пергамент\\. Що ти про нього скажеш\\?",
+"I $1 a torn parchment. What can you tell me about it?",
+0,
+0,
+"обірваний пергамент. Що ти про нього скажеш?"
+],
+[
+"^Діє десять хвилин\\. Пожертва на Храм — (.*?) золота(.*?)\\.»$",
+"It lasts ten minutes. A donation to the Temple — $1 gold$2.\"",
+1,
+0,
+"Діє десять хвилин. Пожертва на Храм —"
+],
+[
+"Діє десять хвилин\\. Пожертва на Храм — (.*?) золота(.*?)\\.»",
+"It lasts ten minutes. A donation to the Temple — $1 gold$2.\"",
+0,
+0,
+"Діє десять хвилин. Пожертва на Храм —"
 ],
 [
 "^Імпортовано й обрано поточною грою: (.*?), рівень (.*?)\\.$",
@@ -3493,6 +4066,34 @@ RPG.I18N.en = {
 0,
 0,
 "— пропав, інвентар повний!"
+],
+[
+"^Нагорода за чемпіона «(.*?)»: \\+(.*?) золота; досвід — (.*?)$",
+"Reward for the champion \"$1\": +$2 gold; experience — $3",
+1,
+0,
+"Нагорода за чемпіона «"
+],
+[
+"Нагорода за чемпіона «(.*?)»: \\+(.*?) золота; досвід — ([^\\s·;,]+)",
+"Reward for the champion \"$1\": +$2 gold; experience — $3",
+0,
+0,
+"Нагорода за чемпіона «"
+],
+[
+"^Те, що дали роки, лишиться\\. Мито — (.*?) золота\\.»$",
+"What the years gave will remain. The fee — $1 gold.\"",
+1,
+0,
+"Те, що дали роки, лишиться. Мито —"
+],
+[
+"Те, що дали роки, лишиться\\. Мито — (.*?) золота\\.»",
+"What the years gave will remain. The fee — $1 gold.\"",
+0,
+0,
+"Те, що дали роки, лишиться. Мито —"
 ],
 [
 "^Вільних очок: (.*?)\\. Натисніть «\\+», щоб вкласти\\.$",
@@ -3894,6 +4495,20 @@ RPG.I18N.en = {
 "— викинуто фільтром"
 ],
 [
+"^Сила джерела ще з вами — близько (.*?) хв\\.$",
+"The power of the spring is still with you — about $1 min.",
+1,
+0,
+"Сила джерела ще з вами — близько"
+],
+[
+"Сила джерела ще з вами — близько (.*?) хв\\.",
+"The power of the spring is still with you — about $1 min.",
+0,
+0,
+"Сила джерела ще з вами — близько"
+],
+[
 "^(.*?) виринає з тіні за спиною «(.*?)»: (.*?) шкоди(.*?)(.*?)$",
 "$1 emerges from the shadow behind \"$2\": $3 damage$4$5",
 1,
@@ -3955,6 +4570,13 @@ RPG.I18N.en = {
 0,
 0,
 "Автозілля: в інвентарі закінчилось"
+],
+[
+"Ось що потрібно для кожного шляху:» ",
+"Here's what each path requires:\" ",
+0,
+0,
+"Ось що потрібно для кожного шляху:»"
 ],
 [
 "\\. Не влізло (.*?) шт\\. — інвентар повний\\.",
@@ -4109,6 +4731,20 @@ RPG.I18N.en = {
 0,
 0,
 "у лівій руці можна тримати лише"
+],
+[
+"^Квест доступний Селянину з (.*?) рівня\\.$",
+"The quest is available to a Peasant from level $1.",
+1,
+0,
+"Квест доступний Селянину з"
+],
+[
+"Квест доступний Селянину з (.*?) рівня\\.",
+"The quest is available to a Peasant from level $1.",
+0,
+0,
+"Квест доступний Селянину з"
 ],
 [
 "^Максимальний рівень \\((.*?)\\)\\. Досвід: (.*?)\\.$",
@@ -4410,6 +5046,20 @@ RPG.I18N.en = {
 0,
 0,
 "Особливе завдання «"
+],
+[
+"^Можна мати не більше (.*?) завдань\\.$",
+"You can have no more than $1 tasks.",
+1,
+0,
+"Можна мати не більше"
+],
+[
+"Можна мати не більше (.*?) завдань\\.",
+"You can have no more than $1 tasks.",
+0,
+0,
+"Можна мати не більше"
 ],
 [
 "^(.*?)\\. Лишилось (.*?) · боїв (.*?), перемог (.*?)$",
@@ -4751,14 +5401,7 @@ RPG.I18N.en = {
 "^(.*?) — «(.*?)» \\(−(.*?) MP\\) по «(.*?)»: (.*?) шкоди$",
 "$1 — \"$2\" (−$3 MP) on \"$4\": $5 damage",
 1,
-0,
-"MP) по «"
-],
-[
-"(.*?) — «(.*?)» \\(−(.*?) MP\\) по «(.*?)»: (.*?) шкоди",
-"$1 — \"$2\" (−$3 MP) on \"$4\": $5 damage",
-0,
-0,
+1,
 "MP) по «"
 ],
 [
@@ -4872,6 +5515,34 @@ RPG.I18N.en = {
 0,
 0,
 "% шанс заморозки на 2 ходи"
+],
+[
+"^Нічого, просто (.*?) погрітися\\.$",
+"Nothing, I just $1 to warm up.",
+1,
+0,
+"Нічого, просто"
+],
+[
+"Нічого, просто (.*?) погрітися\\.",
+"Nothing, I just $1 to warm up.",
+0,
+0,
+"Нічого, просто"
+],
+[
+"^«Ну що, (.*?) до Темного лісу\\?»$",
+"\"Well then, $1 for the Dark Forest?\"",
+1,
+0,
+"до Темного лісу?»"
+],
+[
+"«Ну що, (.*?) до Темного лісу\\?»",
+"\"Well then, $1 for the Dark Forest?\"",
+0,
+0,
+"до Темного лісу?»"
 ],
 [
 "^Досвід: \\+(.*?) EXP · Золото: \\+(.*?)$",
@@ -5019,6 +5690,20 @@ RPG.I18N.en = {
 0,
 0,
 "— у кишеню для ключів!"
+],
+[
+"^Згоден, принесу (.*?) вугілля\\.$",
+"Agreed, I'll bring $1 coal.",
+1,
+0,
+"Згоден, принесу"
+],
+[
+"Згоден, принесу (.*?) вугілля\\.",
+"Agreed, I'll bring $1 coal.",
+0,
+0,
+"Згоден, принесу"
 ],
 [
 ", «(.*?)» оглушений \\(Турісаз\\)",
@@ -5294,6 +5979,27 @@ RPG.I18N.en = {
 "Покладіть у горно"
 ],
 [
+"^Потрібно (.*?) вугілля \\(є (.*?)\\)\\.$",
+"You need $1 coal (you have $2).",
+1,
+0,
+"вугілля (є"
+],
+[
+"Потрібно (.*?) вугілля \\(є (.*?)\\)\\.",
+"You need $1 coal (you have $2).",
+0,
+0,
+"вугілля (є"
+],
+[
+" за всю групу \\((.*?) героїв\\)",
+" for the whole party ($1 heroes)",
+0,
+0,
+"за всю групу ("
+],
+[
 "Gear Score: основні (.*?), ",
 "Gear Score: primary $1, ",
 0,
@@ -5404,6 +6110,20 @@ RPG.I18N.en = {
 0,
 0,
 "шкоди × 3 ходи"
+],
+[
+"^Нагорода за чемпіона: (.*?)$",
+"Reward for the champion: $1",
+1,
+0,
+"Нагорода за чемпіона:"
+],
+[
+"Нагорода за чемпіона: ([^\\s·;,]+)",
+"Reward for the champion: $1",
+0,
+0,
+"Нагорода за чемпіона:"
 ],
 [
 "^Експедицій у дорозі: (.*?)$",
@@ -5654,28 +6374,14 @@ RPG.I18N.en = {
 "^(.*?) — «(.*?)» \\(−(.*?) MP\\): (.*?) шкоди$",
 "$1 — \"$2\" (−$3 MP): $4 damage",
 1,
-0,
-"MP):"
-],
-[
-"(.*?) — «(.*?)» \\(−(.*?) MP\\): (.*?) шкоди",
-"$1 — \"$2\" (−$3 MP): $4 damage",
-0,
-0,
+1,
 "MP):"
 ],
 [
 "^(.*?) лікує (.*?) \\(−(.*?) MP\\): \\+(.*?) HP$",
 "$1 heals $2 (−$3 MP): +$4 HP",
 1,
-0,
-"лікує"
-],
-[
-"(.*?) лікує (.*?) \\(−(.*?) MP\\): \\+(.*?) HP",
-"$1 heals $2 (−$3 MP): +$4 HP",
-0,
-0,
+1,
 "лікує"
 ],
 [
@@ -5782,6 +6488,34 @@ RPG.I18N.en = {
 0,
 0,
 "Далі на вас чекає:"
+],
+[
+"^(.*?)«(.*?)»: завершення шляху$",
+"$1\"$2\": completing the path",
+1,
+0,
+"»: завершення шляху"
+],
+[
+"(.*?)«(.*?)»: завершення шляху",
+"$1\"$2\": completing the path",
+0,
+0,
+"»: завершення шляху"
+],
+[
+"^Ось пожертва \\((.*?) зол\\.\\)$",
+"Here is the donation ($1 gold)",
+1,
+0,
+"Ось пожертва ("
+],
+[
+"Ось пожертва \\((.*?) зол\\.\\)",
+"Here is the donation ($1 gold)",
+0,
+0,
+"Ось пожертва ("
 ],
 [
 "^Забрано зі скрині: (.*?)(.*?)$",
@@ -5896,6 +6630,20 @@ RPG.I18N.en = {
 "очок атрибутів)"
 ],
 [
+"^Згоден, ось (.*?) золота$",
+"Agreed, here are $1 gold",
+1,
+0,
+"Згоден, ось"
+],
+[
+"Згоден, ось (.*?) золота",
+"Agreed, here are $1 gold",
+0,
+0,
+"Згоден, ось"
+],
+[
 "^Боїв: (.*?), перемог: (.*?)\\.$",
 "Battles: $1, victories: $2.",
 1,
@@ -5948,14 +6696,7 @@ RPG.I18N.en = {
 "^(.*?) б'є \\((.*?)\\) «(.*?)»: (.*?) шкоди$",
 "$1 strikes ($2) \"$3\": $4 damage",
 1,
-0,
-"б'є ("
-],
-[
-"(.*?) б'є \\((.*?)\\) «(.*?)»: (.*?) шкоди",
-"$1 strikes ($2) \"$3\": $4 damage",
-0,
-0,
+1,
 "б'є ("
 ],
 [
@@ -6053,14 +6794,7 @@ RPG.I18N.en = {
 "^(.*?) — «(.*?)» по (.*?): (.*?) шкоди$",
 "$1 — \"$2\" on $3: $4 damage",
 1,
-0,
-"шкоди"
-],
-[
-"(.*?) — «(.*?)» по (.*?): (.*?) шкоди",
-"$1 — \"$2\" on $3: $4 damage",
-0,
-0,
+1,
 "шкоди"
 ],
 [
@@ -6284,14 +7018,7 @@ RPG.I18N.en = {
 "^(.*?) MP нижче (.*?)% до (.*?)%$",
 "$1 MP below $2% to $3%",
 1,
-0,
-"MP нижче"
-],
-[
-"(.*?) MP нижче (.*?)% до (.*?)%",
-"$1 MP below $2% to $3%",
-0,
-0,
+1,
 "MP нижче"
 ],
 [
@@ -6419,6 +7146,20 @@ RPG.I18N.en = {
 0,
 0,
 "% здоров'я"
+],
+[
+", новий рівень (.*?)!",
+", new level $1!",
+0,
+0,
+", новий рівень"
+],
+[
+"«(.*?)\\? Перевіримо\\. (.*?) ",
+"\"$1? We'll see. $2 ",
+0,
+0,
+"? Перевіримо."
 ],
 [
 "^Ви прибули: «(.*?)»\\.$",
@@ -6594,6 +7335,20 @@ RPG.I18N.en = {
 0,
 0,
 "сюди не лягає."
+],
+[
+"^група з (.*?) героїв$",
+"a party of $1 heroes",
+1,
+0,
+"група з"
+],
+[
+"група з (.*?) героїв",
+"a party of $1 heroes",
+0,
+0,
+"група з"
 ],
 [
 "Клітинок: (.*?)\\/(.*?) · ",
@@ -6918,6 +7673,20 @@ RPG.I18N.en = {
 "Вкладається"
 ],
 [
+"^Принести: (.*?) × (.*?)$",
+"Bring: $1 × $2",
+1,
+0,
+"Принести:"
+],
+[
+"Принести: (.*?) × ([^\\s·;,]+)",
+"Bring: $1 × $2",
+0,
+0,
+"Принести:"
+],
+[
 "^Експедиція: (.*?)(.*?)$",
 "Expedition: $1$2",
 1,
@@ -6949,14 +7718,7 @@ RPG.I18N.en = {
 "^(.*?) · \\+(.*?) комірок$",
 "$1 · +$2 cells",
 1,
-0,
-"комірок"
-],
-[
-"(.*?) · \\+(.*?) комірок",
-"$1 · +$2 cells",
-0,
-0,
+1,
 "комірок"
 ],
 [
@@ -6977,14 +7739,7 @@ RPG.I18N.en = {
 "^У скриню: (.*?) ×(.*?)$",
 "To the chest: $1 ×$2",
 1,
-0,
-"У скриню:"
-],
-[
-"У скриню: (.*?) ×([^\\s·;,]+)",
-"To the chest: $1 ×$2",
-0,
-0,
+1,
 "У скриню:"
 ],
 [
@@ -7012,28 +7767,14 @@ RPG.I18N.en = {
 "^(.*?) — (.*?), рівень (.*?)$",
 "$1 — $2, level $3",
 1,
-0,
-", рівень"
-],
-[
-"(.*?) — (.*?), рівень ([^\\s·;,]+)",
-"$1 — $2, level $3",
-0,
-0,
+1,
 ", рівень"
 ],
 [
 "^«(.*?)» \\(рівень (.*?)\\)(.*?)$",
 "\"$1\" (level $2)$3",
 1,
-0,
-"» (рівень"
-],
-[
-"«(.*?)» \\(рівень (.*?)\\)([^\\s·;,]+)",
-"\"$1\" (level $2)$3",
-0,
-0,
+1,
 "» (рівень"
 ],
 [
@@ -7068,7 +7809,7 @@ RPG.I18N.en = {
 "^Ваш дім: «(.*?)»\\.$",
 "Your house: \"$1\".",
 1,
-0,
+1,
 "Ваш дім: «"
 ],
 [
@@ -7180,14 +7921,7 @@ RPG.I18N.en = {
 "^до (.*?) за раз(.*?)\\)$",
 "up to $1 at a time$2)",
 1,
-0,
-"за раз"
-],
-[
-"до (.*?) за раз(.*?)\\)",
-"up to $1 at a time$2)",
-0,
-0,
+1,
 "за раз"
 ],
 [
@@ -7264,14 +7998,7 @@ RPG.I18N.en = {
 "^(.*?) · ключів: (.*?)$",
 "$1 · keys: $2",
 1,
-0,
-"· ключів:"
-],
-[
-"(.*?) · ключів: ([^\\s·;,]+)",
-"$1 · keys: $2",
-0,
-0,
+1,
 "· ключів:"
 ],
 [
@@ -7306,7 +8033,7 @@ RPG.I18N.en = {
 "^\\+(.*?)% до криту$",
 "+$1% to crit",
 1,
-0,
+1,
 "% до криту"
 ],
 [
@@ -7331,6 +8058,20 @@ RPG.I18N.en = {
 "· постійно"
 ],
 [
+"^Виконано: (.*?)\\/(.*?)$",
+"Done: $1/$2",
+1,
+0,
+"Виконано:"
+],
+[
+"Виконано: (.*?)\\/([^\\s·;,]+)",
+"Done: $1/$2",
+0,
+0,
+"Виконано:"
+],
+[
 "^(.*?): порожньо$",
 "$1: empty",
 1,
@@ -7348,28 +8089,14 @@ RPG.I18N.en = {
 "^Група: (.*?) \\/ (.*?)$",
 "Party: $1 / $2",
 1,
-0,
-"Група:"
-],
-[
-"Група: (.*?) \\/ ([^\\s·;,]+)",
-"Party: $1 / $2",
-0,
-0,
+1,
 "Група:"
 ],
 [
 "^Рівень (.*?) · (.*?)$",
 "Level $1 · $2",
 1,
-0,
-"Рівень"
-],
-[
-"Рівень (.*?) · ([^\\s·;,]+)",
-"Level $1 · $2",
-0,
-0,
+1,
 "Рівень"
 ],
 [
@@ -7397,21 +8124,14 @@ RPG.I18N.en = {
 "^У скриню: (.*?)(.*?)$",
 "To the chest: $1$2",
 1,
-0,
-"У скриню:"
-],
-[
-"У скриню: (.*?)([^\\s·;,]+)",
-"To the chest: $1$2",
-0,
-0,
+1,
 "У скриню:"
 ],
 [
 "^У скриню: (.*?)$",
 "To the chest: $1",
 1,
-0,
+1,
 "У скриню:"
 ],
 [
@@ -7446,42 +8166,21 @@ RPG.I18N.en = {
 "^(.*?) (.*?) (.*?): (.*?) шкоди$",
 "$1 $2 $3: $4 damage",
 1,
-0,
-"шкоди"
-],
-[
-"(.*?) (.*?) (.*?): (.*?) шкоди",
-"$1 $2 $3: $4 damage",
-0,
-0,
+1,
 "шкоди"
 ],
 [
 "^(.*?): рівень (.*?)!$",
 "$1: level $2!",
 1,
-0,
-": рівень"
-],
-[
-"(.*?): рівень (.*?)!",
-"$1: level $2!",
-0,
-0,
+1,
 ": рівень"
 ],
 [
 "^(.*?): рівень (.*?)\\/(.*?)$",
 "$1: level $2/$3",
 1,
-0,
-": рівень"
-],
-[
-"(.*?): рівень (.*?)\\/([^\\s·;,]+)",
-"$1: level $2/$3",
-0,
-0,
+1,
 ": рівень"
 ],
 [
@@ -7502,14 +8201,7 @@ RPG.I18N.en = {
 "^Вийде: (.*?) · (.*?)$",
 "Result: $1 · $2",
 1,
-0,
-"Вийде:"
-],
-[
-"Вийде: (.*?) · ([^\\s·;,]+)",
-"Result: $1 · $2",
-0,
-0,
+1,
 "Вийде:"
 ],
 [
@@ -7530,42 +8222,21 @@ RPG.I18N.en = {
 "^(.*?) · рівень (.*?)$",
 "$1 · level $2",
 1,
-0,
-"· рівень"
-],
-[
-"(.*?) · рівень ([^\\s·;,]+)",
-"$1 · level $2",
-0,
-0,
+1,
 "· рівень"
 ],
 [
 "^(.*?) \\(рівень (.*?)(.*?)\\)$",
 "$1 (level $2$3)",
 1,
-0,
-"(рівень"
-],
-[
-"(.*?) \\(рівень (.*?)(.*?)\\)",
-"$1 (level $2$3)",
-0,
-0,
+1,
 "(рівень"
 ],
 [
 "^(.*?) \\(рівень (.*?)\\)$",
 "$1 (level $2)",
 1,
-0,
-"(рівень"
-],
-[
-"(.*?) \\(рівень (.*?)\\)",
-"$1 (level $2)",
-0,
-0,
+1,
 "(рівень"
 ],
 [
@@ -7583,10 +8254,31 @@ RPG.I18N.en = {
 "(руни +"
 ],
 [
+"^Вугілля: (.*?)\\/(.*?)$",
+"Coal: $1/$2",
+1,
+1,
+"Вугілля:"
+],
+[
+"^Нагорода: (.*?)$",
+"Reward: $1",
+1,
+0,
+"Нагорода:"
+],
+[
+"Нагорода: ([^\\s·;,]+)",
+"Reward: $1",
+0,
+0,
+"Нагорода:"
+],
+[
 "^Здобич: (.*?)\\.$",
 "Loot: $1.",
 1,
-0,
+1,
 "Здобич:"
 ],
 [
@@ -7600,21 +8292,14 @@ RPG.I18N.en = {
 "^(.*?), рівень (.*?)$",
 "$1, level $2",
 1,
-0,
-", рівень"
-],
-[
-"(.*?), рівень ([^\\s·;,]+)",
-"$1, level $2",
-0,
-0,
+1,
 ", рівень"
 ],
 [
 "^Вкласти: (.*?)$",
 "Insert: $1",
 1,
-0,
+1,
 "Вкласти:"
 ],
 [
@@ -7628,7 +8313,7 @@ RPG.I18N.en = {
 "^Забрати: (.*?)$",
 "Take: $1",
 1,
-0,
+1,
 "Забрати:"
 ],
 [
@@ -7642,7 +8327,7 @@ RPG.I18N.en = {
 "^(.*?) — промах$",
 "$1 — miss",
 1,
-0,
+1,
 "— промах"
 ],
 [
@@ -7677,7 +8362,7 @@ RPG.I18N.en = {
 "^\\+(.*?) досвіду$",
 "+$1 experience",
 1,
-0,
+1,
 "досвіду"
 ],
 [
@@ -7691,7 +8376,7 @@ RPG.I18N.en = {
 "^завдань: (.*?)$",
 "tasks: $1",
 1,
-0,
+1,
 "завдань:"
 ],
 [
@@ -7712,7 +8397,7 @@ RPG.I18N.en = {
 "^досвід — (.*?)$",
 "experience — $1",
 1,
-0,
+1,
 "досвід —"
 ],
 [
@@ -7726,7 +8411,7 @@ RPG.I18N.en = {
 "^Ворогів: (.*?)$",
 "Enemies: $1",
 1,
-0,
+1,
 "Ворогів:"
 ],
 [
@@ -7740,7 +8425,7 @@ RPG.I18N.en = {
 "^Чемпіон: (.*?)$",
 "Champion: $1",
 1,
-0,
+1,
 "Чемпіон:"
 ],
 [
@@ -7754,7 +8439,7 @@ RPG.I18N.en = {
 "^Бракує: (.*?)\\.$",
 "Missing: $1.",
 1,
-0,
+1,
 "Бракує:"
 ],
 [
@@ -7765,10 +8450,17 @@ RPG.I18N.en = {
 "Бракує:"
 ],
 [
+"^(.*?) Зараз: (.*?)\\.$",
+"$1 Now: $2.",
+1,
+1,
+"Зараз:"
+],
+[
 "^Здобич: (.*?)$",
 "Loot: $1",
 1,
-0,
+1,
 "Здобич:"
 ],
 [
@@ -7782,7 +8474,7 @@ RPG.I18N.en = {
 "^Обрати: (.*?)$",
 "Choose: $1",
 1,
-0,
+1,
 "Обрати:"
 ],
 [
@@ -7803,21 +8495,14 @@ RPG.I18N.en = {
 "^(.*?) год (.*?) хв$",
 "$1 h $2 min",
 1,
-0,
-"год"
-],
-[
-"(.*?) год (.*?) хв",
-"$1 h $2 min",
-0,
-0,
+1,
 "год"
 ],
 [
 "^Власна: (.*?)$",
 "Own: $1",
 1,
-0,
+1,
 "Власна:"
 ],
 [
@@ -7831,7 +8516,7 @@ RPG.I18N.en = {
 "^Знято: (.*?)\\.$",
 "Removed: $1.",
 1,
-0,
+1,
 "Знято:"
 ],
 [
@@ -7845,7 +8530,7 @@ RPG.I18N.en = {
 "^Гнізда: (.*?)$",
 "Sockets: $1",
 1,
-0,
+1,
 "Гнізда:"
 ],
 [
@@ -7873,7 +8558,7 @@ RPG.I18N.en = {
 "^(.*?) із бою\\.$",
 "$1 from the battle.",
 1,
-0,
+1,
 "із бою."
 ],
 [
@@ -7887,7 +8572,7 @@ RPG.I18N.en = {
 "^Золото: (.*?)$",
 "Gold: $1",
 1,
-0,
+1,
 "Золото:"
 ],
 [
@@ -7901,7 +8586,7 @@ RPG.I18N.en = {
 "^Книга «(.*?)»$",
 "Book \"$1\"",
 1,
-0,
+1,
 "Книга «"
 ],
 [
@@ -7943,7 +8628,7 @@ RPG.I18N.en = {
 "^\\+(.*?) золота$",
 "+$1 gold",
 1,
-0,
+1,
 "золота"
 ],
 [
@@ -7957,21 +8642,14 @@ RPG.I18N.en = {
 "^(.*?) проти: (.*?)$",
 "$1 against: $2",
 1,
-0,
-"проти:"
-],
-[
-"(.*?) проти: ([^\\s·;,]+)",
-"$1 against: $2",
-0,
-0,
+1,
 "проти:"
 ],
 [
 "^ворогів (.*?)$",
 "enemies $1",
 1,
-0,
+1,
 "ворогів"
 ],
 [
@@ -7985,7 +8663,7 @@ RPG.I18N.en = {
 "^(.*?) золота$",
 "$1 gold",
 1,
-0,
+1,
 "золота"
 ],
 [
@@ -7999,7 +8677,7 @@ RPG.I18N.en = {
 "^речей: (.*?)$",
 "items: $1",
 1,
-0,
+1,
 "речей:"
 ],
 [
@@ -8013,7 +8691,7 @@ RPG.I18N.en = {
 "^рівень (.*?)$",
 "level $1",
 1,
-0,
+1,
 "рівень"
 ],
 [
@@ -8027,7 +8705,7 @@ RPG.I18N.en = {
 "^Знято: (.*?)$",
 "Removed: $1",
 1,
-0,
+1,
 "Знято:"
 ],
 [
@@ -8041,7 +8719,7 @@ RPG.I18N.en = {
 "^(.*?) героїв$",
 "$1 heroes",
 1,
-0,
+1,
 "героїв"
 ],
 [
@@ -8059,10 +8737,17 @@ RPG.I18N.en = {
 "» втік"
 ],
 [
+"«(.*?)» втік",
+"\"$1\" fled",
+0,
+0,
+"» втік"
+],
+[
 "^Герой: (.*?)$",
 "Hero: $1",
 1,
-0,
+1,
 "Герой:"
 ],
 [
@@ -8080,6 +8765,13 @@ RPG.I18N.en = {
 "Далі:"
 ],
 [
+"Далі: (.*?)\\.",
+"Next: $1.",
+0,
+0,
+"Далі:"
+],
+[
 "^Данж «(.*?)»$",
 "Dungeon \"$1\"",
 1,
@@ -8087,10 +8779,31 @@ RPG.I18N.en = {
 "Данж «"
 ],
 [
+"Данж «(.*?)»",
+"Dungeon \"$1\"",
+0,
+0,
+"Данж «"
+],
+[
+"^Убити (.*?) (.*?)$",
+"Kill $1 $2",
+1,
+1,
+"Убити"
+],
+[
 "^Слот: (.*?)$",
 "Slot: $1",
 1,
 1,
+"Слот:"
+],
+[
+"Слот: ([^\\s·;,]+)",
+"Slot: $1",
+0,
+0,
 "Слот:"
 ],
 [
@@ -8101,10 +8814,24 @@ RPG.I18N.en = {
 "Мапа:"
 ],
 [
+"Мапа: ([^\\s·;,]+)",
+"Map: $1",
+0,
+0,
+"Мапа:"
+],
+[
 "^бос «(.*?)»$",
 "boss \"$1\"",
 1,
 1,
+"бос «"
+],
+[
+"бос «(.*?)»",
+"boss \"$1\"",
+0,
+0,
 "бос «"
 ],
 [
@@ -8122,10 +8849,24 @@ RPG.I18N.en = {
 "Усе ("
 ],
 [
+"Усе \\((.*?)\\)",
+"All ($1)",
+0,
+0,
+"Усе ("
+],
+[
 "^\\+(.*?) зол\\.$",
 "+$1 gold",
 1,
 1,
+"зол."
+],
+[
+"\\+(.*?) зол\\.",
+"+$1 gold",
+0,
+0,
 "зол."
 ],
 [
@@ -8140,6 +8881,13 @@ RPG.I18N.en = {
 "$1 gold",
 1,
 1,
+"зол."
+],
+[
+"(.*?) зол\\.",
+"$1 gold",
+0,
+0,
 "зол."
 ],
 [
@@ -8164,10 +8912,24 @@ RPG.I18N.en = {
 "Знак"
 ],
 [
+"Знак ([^\\s·;,]+)",
+"Sign $1",
+0,
+0,
+"Знак"
+],
+[
 "^Річ: (.*?)$",
 "Item: $1",
 1,
 1,
+"Річ:"
+],
+[
+"Річ: ([^\\s·;,]+)",
+"Item: $1",
+0,
+0,
 "Річ:"
 ],
 [
@@ -8178,10 +8940,24 @@ RPG.I18N.en = {
 "рів."
 ],
 [
+"рів\\. ([^\\s·;,]+)",
+"lvl $1",
+0,
+0,
+"рів."
+],
+[
 "^(.*?) ходи$",
 "$1 turns",
 1,
 1,
+"ходи"
+],
+[
+"(.*?) ходи",
+"$1 turns",
+0,
+0,
 "ходи"
 ],
 [
@@ -8192,6 +8968,13 @@ RPG.I18N.en = {
 "Тір"
 ],
 [
+"Тір ([^\\s·;,]+)",
+"Tier $1",
+0,
+0,
+"Тір"
+],
+[
 "^тір (.*?)$",
 "tier $1",
 1,
@@ -8199,10 +8982,24 @@ RPG.I18N.en = {
 "тір"
 ],
 [
+"тір ([^\\s·;,]+)",
+"tier $1",
+0,
+0,
+"тір"
+],
+[
 "^Дія (.*?)$",
 "Action $1",
 1,
 1,
+"Дія"
+],
+[
+"Дія ([^\\s·;,]+)",
+"Action $1",
+0,
+0,
 "Дія"
 ],
 [
@@ -8239,6 +9036,13 @@ RPG.I18N.en = {
 0,
 0,
 "["
+],
+[
+"^➤ (.*)$",
+"➤ $1",
+1,
+1,
+"➤"
 ]
 ],
 "fragments": [
@@ -8251,12 +9055,60 @@ RPG.I18N.en = {
 "Smelting always succeeds: ore (and for steel, dwarven steel and solar gold — lower ingots) → 1 ingot of the same rarity; how much is needed is shown by each ingot. +1 experience per ingot. "
 ],
 [
+"Остап знизує плечима. «Хтозна. Може, якийсь біженець з півночі прихопив на розпал, а може… — він кидає погляд на вікно, де вже сутеніє, — ",
+"Ostap shrugs. \"Who knows. Maybe some refugee from the north took it for kindling, or maybe… — he glances at the window, where it's already getting dark, — "
+],
+[
+"Остап довго мружиться на обгорілий клапоть, а тоді стишує голос. «Предки Минулих та Майбутніх часів… Чув я про таку книгу ще від діда. ",
+"Ostap squints at the charred scrap for a long time, then lowers his voice. \"Ancestors of Times Past and Future… I heard of such a book from my grandfather. "
+],
+[
+"Кажуть, її передав людям сам Велес, і пише вона себе сама — про кожного, кого привів Перун. Хтось вирвав з неї сторінку, а сама книга, ",
+"They say Veles himself gave it to people, and it writes itself — about everyone Perun has brought. Someone tore a page out of it, and the book itself, "
+],
+[
+"Залізо, щити, прикраси — найкраще в Заставі, і ціна відповідна. Для тих, кому я довіряю, бувають особливі доручення… і особливі ціни. ",
+"Iron, shields, jewellery — the best in the Outpost, and the price to match. For those I trust there are special errands… and special prices. "
+],
+[
+"Кремезний чоловік у пропаленому фартусі відкладає молот. «Кузьма. Кажуть, мій дід Змія в плуг запрягав — а я поки підкови кую. ",
+"A burly man in a scorched apron puts down his hammer. \"Kuzma. They say my grandfather harnessed the Serpent to a plough — and I'm still forging horseshoes. "
+],
+[
+"«Прилетів колись Змій, людей жер. Сховався народ у кузні — у Кузьми й Дем'яна. Змій лизнув залізні двері, а ковалі — хап його ",
+"\"Once a Serpent flew here and devoured people. The folk hid in the smithy — with Kuzma and Demian. The Serpent licked the iron door, and the smiths grabbed it "
+],
+[
+"вона втримати не може — вони повертаються до цього вогню. Та дорога назад виснажує: відроджені мають лише десяту частку сил ",
+"she cannot hold — they return to this fire. But the road back is exhausting: the revived have only a tenth of their strength "
+],
+[
+"Кремезний капітан у кірасі з дубовим листом на гербі загороджує дорогу. «Северин Залізняк, капітан варти Центральної брами ",
+"A burly captain in a cuirass with an oak leaf on its crest blocks the way. \"Severyn Zalizniak, captain of the guard of the Central Gate "
+],
+[
 "До вас підходить хтось у запиленому плащі з глибоким каптуром — обличчя не видно. Він ніби випадково зачіпає вас плечем ",
 "Someone in a dusty cloak with a deep hood comes up to you — the face is hidden. He seems to brush your shoulder by accident "
 ],
 [
 "хоч і молода на лице. Розповідала, що колись у Храмі Перуна під вівтарем било джерело, і стерегли його Велесові долоні. ",
 "though young in the face. She told how once a spring flowed beneath the altar in the Temple of Perun, and the palms of Veles guarded it. "
+],
+[
+"«Перше — дім у Спальному районі, при ньому кузня. Друге — знаряддя: горно, ковадло, молот, кліщі, діжка для гартування. ",
+"\"First — a house in the Residential District, with a forge at it. Second — the tools: furnace, anvil, hammer, tongs, quenching barrel. "
+],
+[
+"Колись це був звичайний ліс, але відтоді, як Хелла захопила північ, її подих прокрався й сюди — мертві встають з могил. ",
+"It used to be an ordinary forest, but since Hel seized the north her breath has crept in here too — the dead rise from their graves. "
+],
+[
+"Міхи — коли до заліза дійдеш, верстак шкірника, різці, тигель — під окремі речі. А як захочеш краще — залізне ковадло. ",
+"Bellows — when you get to iron, a leatherworker's bench, chisels, a crucible — for particular items. And if you want better — an iron anvil. "
+],
+[
+" Тільки от біда: початок Прологу хтось вирвав, ще до мене.» Захар помічає обгорілий клапоть у вашій торбі й завмирає. ",
+" The only trouble is that someone tore out the beginning of the Prologue, even before my time.\" Zakhar notices the charred scrap in your bag and freezes. "
 ],
 [
 "Вона веде вас за вівтар, у внутрішній двір Храму. Посеред двору — висохлий кам'яний фонтан, а над ним статуя Велеса, ",
@@ -8271,6 +9123,14 @@ RPG.I18N.en = {
 " Mastery 10 unlocks tier 2 weapons, 20 — tier 3. More mastery experience — for several enemies, champions, bosses, "
 ],
 [
+"«Джерело Велеса знову б'є, — Ївга усміхається. — Хто нап'ється з нього, тому мудрість поколінь сама лягає в руки: ",
+"\"The Spring of Veles flows again, — Yivha smiles. — Whoever drinks from it, the wisdom of generations falls into their hands by itself: "
+],
+[
+"і зовсім без мани — відновіться зіллям або відпочиньте в Домівці. Якщо хтось із твоєї групи поліг, а інші вижили, ",
+"and no mana at all — restore yourself with a potion or rest at Home. If someone in your party has fallen and the others survived, "
+],
+[
 " Досвід за завдання отримує кожен герой групи — повністю, ще й з бонусами (група, тимчасові ефекти, руни й речі).",
 " Every hero of the party gets the experience for a task — in full, with bonuses too (party, temporary effects, runes and items)."
 ],
@@ -8279,8 +9139,20 @@ RPG.I18N.en = {
 "Zakhar turns the orb in his fingers, holds it up to the window and shakes his head. \"There's nothing like it in our records. But you know what — "
 ],
 [
+"Кажуть, її передав Мерії сам Велес. Ніхто в ній не пише: щойно хтось із Перунових дітей здолає великого ворога, ",
+"They say Veles himself gave it to the Town Hall. Nobody writes in it: as soon as one of Perun's children defeats a great enemy, "
+],
+[
+"Огрядний чоловік зі зв'язкою ключів на поясі підводиться назустріч. «Тиміш Дубчак, управитель Спального району. ",
+"A stout man with a bunch of keys on his belt gets up to meet you. \"Tymish Dubchak, manager of the Residential District. "
+],
+[
 "Сестра Ївга обережно бере сферу, проводить пальцем по ромбовидному заглибленню й довго мовчить. «Щось знайоме… ",
 "Sister Yivha carefully takes the orb, runs a finger along the diamond-shaped hollow and stays silent for a long time. \"Something familiar… "
+],
+[
+"«Молитва благодаті береже тих, хто в дорозі: кожні 5 секунд повертає 2% здоров'я, а кожні 10 секунд — 3% мани. ",
+"\"The Prayer of Grace protects those on the road: every 5 seconds it restores 2% health, and every 10 seconds — 3% mana. "
 ],
 [
 "Перевірка — перед кожним боєм і після нього, для кожного живого героя групи. Зілля беруться лише з інвентаря. ",
@@ -8303,6 +9175,10 @@ RPG.I18N.en = {
 "and the enemies — anywhere on the field (in a cluster or scattered), but no closer than one move. The formation is set relative to "
 ],
 [
+"Захар кладе долоню на важку книгу в обкладинці з потемнілого дуба. «Це — «Предки Минулих та Майбутніх часів». ",
+"Zakhar lays his palm on a heavy book bound in darkened oak. \"This is \"Ancestors of Times Past and Future\". "
+],
+[
 "Раптом з глечика біля ніг статуї починає сочитися блакитна вода. Вона тече все швидше, дзюрчить по каменю — ",
 "Suddenly blue water begins to seep from the jug at the statue's feet. It flows faster and faster, babbling over the stone — "
 ],
@@ -8315,16 +9191,40 @@ RPG.I18N.en = {
 "By the Town Hall stands the Notice Board: adventurers are looking for companions. But nobody here trusts a stranger — "
 ],
 [
+"Відколи впала північ, біженців тут більше, ніж місцевих, тож роботи вистачає. Біля входу — Дошка оголошень: ",
+"Since the north fell, there are more refugees here than locals, so there's plenty of work. By the entrance is the Notice Board: "
+],
+[
 "Група 4 години безперервно б'ється з ворогами локації (без босів). На бої з чемпіонами погоджується сама. ",
 "For 4 hours the party fights the location's enemies non-stop (no bosses). It accepts fights with champions on its own. "
+],
+[
+"«Гардарика — так варяги з-за моря звали наш край: країна городів. Колись тут ходили і наші купці, і їхні. ",
+"\"Gardarika — that's what the Varangians from across the sea called our land: the country of towns. Once our merchants travelled here, and theirs too. "
 ],
 [
 "«Ти переріс селянське життя. Пройди десять випробувань — і на 15 рівні я скажу, ким тобі судилося стати. ",
 "\"You have outgrown peasant life. Pass ten trials — and at level 15 I'll tell you who you are destined to become. "
 ],
 [
+"А тоді прийшла Хелла, володарка мертвих, і забрала північ собі. Варязькі боги лишилися без своїх земель, ",
+"And then came Hel, the mistress of the dead, and took the north for herself. The Varangian gods were left without their lands, "
+],
+[
 "Остап відставляє кухоль і стишує голос. «Ромб, кажеш? Була тут торік одна путівниця з півдня, сива вся, ",
 "Ostap puts down his mug and lowers his voice. \"A diamond, you say? Last year there was a guide here from the south, all grey-haired, "
+],
+[
+"Скрудж уперше підводить очі й довго дивиться на вас. «З незнайомцями про справи гільдії я не розмовляю. ",
+"Scrooge raises his eyes for the first time and looks at you for a long while. \"I don't discuss guild business with strangers. "
+],
+[
+"«Вовки на Лісовій стежці зовсім знахабніли, а в печері, кажуть, слайми плодяться, як гриби після дощу. ",
+"\"The wolves on the Forest Path have grown really bold, and in the cave, they say, slimes breed like mushrooms after rain. "
+],
+[
+"«Темний ліс. Болота, де топляться навіть коні, старе кладовище, вовкулаки, павуки завбільшки з корову… ",
+"\"The Dark Forest. Swamps where even horses drown, an old cemetery, werewolves, spiders the size of a cow… "
 ],
 [
 "Тестовий персонаж (не з лору гри). Продає ресурси ремесла, які поки ніде не падають і не добуваються. ",
@@ -8339,6 +9239,26 @@ RPG.I18N.en = {
 "Zakhar puts the charred scrap to the place where the pages are missing. The parchment grows warm, the edges grow together, "
 ],
 [
+"Ще й Король у них завівся — бачили, як золотом виблискує. Старі кажуть, то не просто звір та слиз — ",
+"And a King has turned up among them — people saw him glittering with gold. The old folk say it's not just beasts and slime — "
+],
+[
+"«У внутрішньому дворі, за вівтарем, — старий фонтан зі статуєю Велеса, що береже мудрість поколінь. ",
+"\"In the inner courtyard, behind the altar, is an old fountain with a statue of Veles, who guards the wisdom of generations. "
+],
+[
+"як подейкують, лежить десь у Центральному районі Дубової Застави. Варта пускає туди лише бувалих — ",
+"rumour has it, lies somewhere in the Central District of Oak Outpost. The guards only let seasoned folk in there — "
+],
+[
+"«Міцний зруб на кам'яному підмурку, піч, комора. Скриня там стоїть та сама, що й у вашій Домівці — ",
+"\"A sturdy log house on a stone foundation, a stove, a pantry. The chest there is the same one as in your Home — "
+],
+[
+"«Мерія веде записи про всіх мешканців Дубової Застави — і про кожного героя, якого прислав Перун. ",
+"\"The Town Hall keeps records of all the residents of Oak Outpost — and of every hero Perun has sent. "
+],
+[
 "Біля Мерії стоїть Дошка оголошень: авантюристи шукають собі напарників, щоб об'єднатися в групу. ",
 "By the Town Hall stands the Notice Board: adventurers are looking for companions to form a party. "
 ],
@@ -8347,8 +9267,28 @@ RPG.I18N.en = {
 "A heavy ball of dark stone, warm to the touch. On one side there is a deep diamond-shaped hollow. "
 ],
 [
+"Сухорлявий чоловік у дорогому каптані не відводить очей від рахівниці. «Скрудж. Торгова гільдія. ",
+"A wiry man in an expensive kaftan doesn't take his eyes off the abacus. \"Scrooge. Merchants' Guild. "
+],
+[
 "Посеред двору — висохлий кам'яний фонтан. Над ним — статуя Велеса, що береже мудрість поколінь, ",
 "In the middle of the courtyard — a dried-up stone fountain. Above it — a statue of Veles, who guards the wisdom of generations, "
+],
+[
+"Захар усміхається. «Печі горять, біженці не мерзнуть. Спальний район тепер для вас відкритий — ",
+"Zakhar smiles. \"The stoves are burning, the refugees aren't freezing. The Residential District is now open to you — "
+],
+[
+" Тільки от біда: початок Прологу хтось вирвав, ще до мене. Скільки шукали — так і не знайшли.»",
+" The only trouble is that someone tore out the beginning of the Prologue, even before my time. However much we searched — we never found it.\""
+],
+[
+"«Ви довели, що на вас можна покластися. Біля Мерії в Центральному районі є Дошка оголошень — ",
+"\"You have proven that you can be relied on. By the Town Hall in the Central District there is a Notice Board — "
+],
+[
+"«Не бачу в тобі жодного шляху — сили розкидані навмання. Піди до Розпорядника Захара в Мерії ",
+"\"I see no path in you — your strengths are scattered at random. Go to Steward Zakhar at the Town Hall "
 ],
 [
 "«Володіння приходить у бою, а не за золото. За кожен виграний бій росте вміння тією зброєю, ",
@@ -8357,6 +9297,26 @@ RPG.I18N.en = {
 [
 "Ївга завмирає, і її очі ширшають. «Велесові долоні… Ну звісно! Як я могла забути. Ходімо.» ",
 "Yivha freezes, and her eyes widen. \"The palms of Veles… Of course! How could I forget. Let's go.\" "
+],
+[
+"«Дорого? Це залізо кували варязькі майстри, а шляхи на північ тепер стереже нежить Хелли. ",
+"\"Expensive? This iron was forged by Varangian masters, and the roads to the north are now guarded by Hel's undead. "
+],
+[
+"«Зима цього року прийде рано, а біженців у Заставі вдвічі більше, ніж місця біля печей. ",
+"\"Winter will come early this year, and there are twice as many refugees in the Outpost as there are places by the stoves. "
+],
+[
+"(Центральний район): він підкаже, як виправити твої характеристики, а тоді повертайся.»",
+"(Central District): he'll tell you how to fix your attributes, and then come back.\""
+],
+[
+"а Перун з Одіном, кажуть, уклали угоду: наші герої відвоюють загублене. Тому й ви тут. ",
+"and Perun and Odin, they say, made a pact: our heroes will win back what was lost. That's why you're here. "
+],
+[
+" Відколи ви повернули вирвану сторінку, книга знову ціла — від першого слова Прологу.»",
+" Since you returned the torn page, the book is whole again — from the first word of the Prologue.\""
 ],
 [
 " Здоров'я та мана відновлені, є нові вільні очки атрибутів (сторінка «Персонаж»).",
@@ -8383,16 +9343,36 @@ RPG.I18N.en = {
 "Weapons and armour of the marked rarities that drop in battle are thrown away at once "
 ],
 [
+" «Про вас там поки нічого — та, гадаю, це ненадовго. Хочете прочитати?»",
+" \"There's nothing about you in there yet — but I suppose that won't be for long. Would you like to read it?\""
+],
+[
 "Зламана: не дає нічого — годиться лише як паливо для Горна Сварога. ",
 "Broken: gives nothing — only good as fuel for Svarog's Forge. "
+],
+[
+"Жриця в сірому вбранні підкладає дубове гілля у священний вогонь. ",
+"A priestess in grey robes adds oak branches to the sacred fire. "
+],
+[
+"«Магам — «Шлях чародія». Усім чотирьом школам треба одного: ",
+"\"For mages — the \"Path of the Sorcerer\". All four schools need the same thing: "
 ],
 [
 " Зброю, якою ця професія не користується, знято в інвентар.",
 " Weapons this profession doesn't use were moved to the inventory."
 ],
 [
+". «Якщо сили розкидані не туди — я можу переписати записи, ",
+". \"If your strengths are scattered in the wrong places — I can rewrite the records, "
+],
+[
 " Попросіть Розпорядника Захара в Мерії показати книгу.",
 " Ask Steward Zakhar at the Town Hall to show you the book."
+],
+[
+" «Про вашу групу там уже є записи. Хочете погортати?»",
+" \"There are already records about your party in there. Would you like to leaf through it?\""
 ],
 [
 "кута: передній ряд (виділений) дивиться в бік поля. ",
@@ -8429,6 +9409,10 @@ RPG.I18N.en = {
 [
 "Видобуток за кожен виграний бій: ",
 "Yield for each battle won: "
+],
+[
+"«Служителям духу — «Шлях духу»: ",
+"\"For servants of the spirit — the \"Path of the Spirit\": "
 ],
 [
 " · продає лише Торгова гільдія",
@@ -8619,6 +9603,14 @@ RPG.I18N.en = {
 ", the whole party"
 ],
 [
+" — бракує: ",
+" — missing: "
+],
+[
+" — підходиш",
+" — you fit"
+],
+[
 "Стосунки: ",
 "Relationship: "
 ],
@@ -8701,6 +9693,10 @@ RPG.I18N.en = {
 [
 " · бос",
 " · boss"
+],
+[
+"Убито ",
+"Killed "
 ],
 [
 " або ",
