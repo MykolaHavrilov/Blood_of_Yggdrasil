@@ -1,7 +1,8 @@
 // ============================================================
 // data/profsets.js — КОМПЛЕКТИ БРОНІ ПРОФЕСІЙ (попередня версія)
 //
-// 12 професій × 5 частин (шолом, нагрудник, штани, наручі, чоботи), тір 3, з 25 рівня.
+// 12 професій × 5 частин (шолом, нагрудник, штани, наручі, чоботи), тір 3, з 25 рівня;
+// + секретна (Шаман потойбіччя): з 30 рівня, креслення з Володаря Темного лісу, лише коли в групі є Шаман.
 // Носить лише своя професія (classes), кує будь-хто — але лише за вивченим кресленням.
 // Креслення (type "blueprint") падає з босів Альвгейму: кожен бос — 2 професії (BLUEPRINT_DROPS).
 // «Використати» креслення в інвентарі — рецепт назавжди відкривається в кузні (save.story.blueprints).
@@ -39,7 +40,8 @@
     mage_earth: { magic: 4, mp: 20, defense: 2 },
     paladin:    { attack: 2, magic: 2, magicDefense: 3 },
     priest:     { magic: 3, mp: 25, magicDefense: 3 },
-    monk:       { attack: 3, dodge: 0.8, speed: 1 }
+    monk:       { attack: 3, dodge: 0.8, speed: 1 },
+    shaman:     { attack: 3, magic: 3, mp: 15, magicDefense: 2 }
   };
   const DECIMAL = ["crit", "dodge", "blockPhys", "blockMag", "mpRegen", "hpRegen"];
 
@@ -69,7 +71,11 @@
     priest: { weight: "cloth", name: L("Ризи Волхва Велеса", "Vestments of the Magus of Veles"), of: L("Волхва Велеса", "the Magus of Veles"), cls: L(null, "priest"), boss: "alf_boss_high_mage",
       steps: [{ pieces: 3, pct: { mp: 12 }, text: L("+12% до мани", "+12% mana") }, { pieces: 5, pct: { magicDefense: 10 }, add: { skillPct: 10 }, text: L("+10% до сили навичок і лікування, +10% до магічного захисту", "+10% skill power and healing, +10% magic defence") }] },
     monk: { weight: "medium", name: L("Одіж Білобожого послушника", "Garments of Bilobog's Novice"), of: L("Білобожого послушника", "Bilobog's Novice"), cls: L(null, "monk"), boss: "alf_boss_gardener",
-      steps: [{ pieces: 3, add: { dodge: 4 }, text: L("+4% до ухилення", "+4% dodge") }, { pieces: 5, pct: { speed: 6, hp: 8 }, text: L("+6% до швидкості, +8% до здоров'я", "+6% speed, +8% health") }] }
+      steps: [{ pieces: 3, add: { dodge: 4 }, text: L("+4% до ухилення", "+4% dodge") }, { pieces: 5, pct: { speed: 6, hp: 8 }, text: L("+6% до швидкості, +8% до здоров'я", "+6% speed, +8% health") }] },
+    // Секретна професія (quests.js → SHAMAN): з 30 рівня; креслення — з Володаря Темного лісу і лише тоді,
+    // коли в групі є Шаман потойбіччя (secret) — інакше про комплект ніхто не дізнається
+    shaman: { weight: "medium", level: 30, secret: true, name: L("Убрання Відреченого", "Garb of the Renouncer"), of: L("Відреченого", "the Renouncer"), cls: L(null, "shaman of the beyond"), boss: "forest_lord",
+      steps: [{ pieces: 3, pct: { attack: 6, magic: 6 }, text: L("+6% до атаки й сили магії", "+6% attack and magic power") }, { pieces: 5, pct: { hp: 8 }, add: { skillPct: 10 }, text: L("+10% до сили навичок, +8% до здоров'я", "+10% skill power, +8% health") }] }
   };
 
   // Матеріали рецептів (тір 3) за вагою й частиною
@@ -85,6 +91,7 @@
 
   const r1 = v => Math.round(v * 10) / 10;
   for (const [cls, set] of Object.entries(SETS)) {
+    if (!RPG.CLASSES[cls]) continue;
     const w = WEIGHT[set.weight];
     const setId = "prof_" + cls;
     RPG.ITEM_SETS[setId] = { name: set.name, steps: set.steps, profession: cls };
@@ -100,7 +107,7 @@
       const name = L(`${w.noun[slot]} ${set.of}`, `${w.noun[slot]} of ${set.of}`);
       RPG.ITEMS[id] = {
         name, icon: ["armor", w.icon + i],
-        type: "armor", slot, tier: TIER, levelReq: LEVEL, price: Math.round(w.price * m), set: setId, noShop: true,
+        type: "armor", slot, tier: TIER, levelReq: set.level || LEVEL, price: Math.round(w.price * m * (set.level ? 1.2 : 1)), set: setId, noShop: true,
         classes: [cls], profSet: true, stats,
         description: L(`Частина комплекту «${set.name}». Носить лише ${RPG.CLASSES[cls].name.toLowerCase()}.`,
           `Part of the "${set.name}" set. Only ${/^[aeiou]/.test(set.cls) ? "an" : "a"} ${set.cls} can wear it.`)
@@ -110,7 +117,7 @@
       const bp = `blueprint_${cls}_${slot}`;
       RPG.ITEMS[bp] = {
         name: L(`Креслення: ${name}`, `Blueprint: ${name}`),
-        type: "blueprint", recipe: id, stackable: true, maxStack: 99, price: 300, noShop: true,
+        type: "blueprint", recipe: id, stackable: true, maxStack: 99, price: 300, noShop: true, secretFor: set.secret ? cls : undefined,
         description: L(`Креслення ковальського рецепта. Використайте — і «${name}» назавжди з'явиться у вашій кузні (вкладка «Броня», тір 3). ` +
           `Падає з боса «${RPG.ENEMIES[set.boss]?.name || set.boss}».`,
           `A smith's recipe blueprint. Use it — and "${name}" will appear in your forge for good (the "Armour" tab, tier 3). ` +
@@ -123,8 +130,10 @@
   // ---------- Креслення ----------
   const learned = save => (save.story ||= {}, save.story.blueprints ||= {});
   function knowsRecipe(save, itemId) {
-    return !RPG.RECIPES[itemId]?.blueprint || !!save.story?.blueprints?.[itemId];
+    return !RPG.ITEMS[itemId]?.profSet || !!save.story?.blueprints?.[itemId];
   }
+  // Чи є в групі герой цієї професії (для секретних креслень)
+  const partyHas = (save, cls) => (RPG.partyMembers ? RPG.partyMembers(save) : [save]).some(ms => ms.character?.classId === cls);
   // Вивчити креслення з інвентаря
   function learnBlueprint(save, bpId) {
     const bp = RPG.ITEMS[bpId];
@@ -136,8 +145,8 @@
   }
   // Креслення з боса: id або null. Спершу — ті, яких ще немає ні в кузні, ні в інвентарі
   function rollBlueprintDrop(save, enemyId) {
-    const pool = BLUEPRINT_DROPS[enemyId];
-    if (!pool || Math.random() >= BLUEPRINT_CHANCE) return null;
+    const pool = (BLUEPRINT_DROPS[enemyId] || []).filter(id => !RPG.ITEMS[id].secretFor || partyHas(save, RPG.ITEMS[id].secretFor));
+    if (!pool.length || Math.random() >= BLUEPRINT_CHANCE) return null;
     const inBag = id => (save.inventory || []).some(x => x && x.id === id);
     const fresh = pool.filter(id => !knowsRecipe(save, RPG.ITEMS[id].recipe) && !inBag(id));
     const from = fresh.length ? fresh : pool;
@@ -149,5 +158,13 @@
     return set ? RPG.ENEMIES[set.boss]?.name || set.boss : "";
   }
 
-  Object.assign(RPG, { PROF_SETS: SETS, BLUEPRINT_DROPS, BLUEPRINT_CHANCE, knowsRecipe, learnBlueprint, rollBlueprintDrop, blueprintSource });
+  // Секретний комплект показується в кузні, лише коли в групі є його професія або вивчено хоч одне креслення
+  function blueprintVisible(save, itemId) {
+    const set = SETS[(RPG.ITEMS[itemId]?.set || "").replace(/^prof_/, "")];
+    if (!set?.secret) return true;
+    const cls = RPG.ITEMS[itemId].classes[0];
+    return partyHas(save, cls) || SLOTS.some(sl => save.story?.blueprints?.[`prof_${cls}_${sl}`]);
+  }
+
+  Object.assign(RPG, { blueprintVisible, PROF_SETS: SETS, BLUEPRINT_DROPS, BLUEPRINT_CHANCE, knowsRecipe, learnBlueprint, rollBlueprintDrop, blueprintSource });
 })(window.RPG);

@@ -386,7 +386,7 @@
         if (!curOpen.ok) dlg.append(el("p", "forge-closed-note", curOpen.reason + " Рецепти можна переглянути, але кувати — ні."));
         const list = el("div", "stack forge-list");
         // Комплекти професій (data/profsets.js): у списку — лише вивчені за кресленнями
-        const bpAll = Object.entries(RPG.RECIPES).filter(([id, rc]) => rc.blueprint && rc.tier === curTier && group.types.includes(RPG.ITEMS[id]?.type));
+        const bpAll = Object.entries(RPG.RECIPES).filter(([id, rc]) => rc.blueprint && rc.tier === curTier && group.types.includes(RPG.ITEMS[id]?.type) && RPG.blueprintVisible(save, id));
         if (bpAll.length) {
           const known = bpAll.filter(([id]) => RPG.knowsRecipe(save, id)).length;
           list.append(el("p", "forge-why", `Комплекти професій: вивчено креслень ${known} з ${bpAll.length}. ` +
