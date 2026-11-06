@@ -2663,7 +2663,10 @@ RPG.I18N.en = {
 "Ікло Гуллінбурсті": "Tusk of Gullinbursti",
 "Рідкісний трофей Тіні Гуллінбурсті: ікло, наполовину зі світла, наполовину з диму. Серце комплектів лицаря й паладина.": "A rare trophy of the Shadow of Gullinbursti: a tusk half of light, half of smoke. The heart of the knight and paladin sets.",
 "Бронза Белі": "Beli's Bronze",
-"Рідкісний трофей Белі: уламок його бронзової сокири, ще теплий від Хеллиного диму. Серце комплектів воїна, берсерка й шамана.": "A rare trophy of Beli: a shard of his bronze axe, still warm from Hel's smoke. The heart of the warrior, berserker and shaman sets."
+"Рідкісний трофей Белі: уламок його бронзової сокири, ще теплий від Хеллиного диму. Серце комплектів воїна, берсерка й шамана.": "A rare trophy of Beli: a shard of his bronze axe, still warm from Hel's smoke. The heart of the warrior, berserker and shaman sets.",
+"Розробник :": "Developer :",
+"Редактор :": "Editor :",
+"Локалізатор -": "Localizer -"
 },
 "patterns": [
 [
