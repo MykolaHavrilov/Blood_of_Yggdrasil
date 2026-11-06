@@ -213,6 +213,11 @@ header nav a[href$="index.html"]     { --ico: url("data:image/svg+xml,%3Csvg xml
 .game-title { margin: 0; font-size: clamp(2.2rem, 7vw, 4rem); }
 .game-subtitle { margin: 6px 0 0; color: var(--text-dim); }
 .title-emblem { display: none; }
+/* Версія гри й кешу — праворуч унизу головного меню */
+.game-version {
+  position: fixed; right: max(12px, env(safe-area-inset-right)); bottom: max(8px, env(safe-area-inset-bottom));
+  margin: 0; font-size: .8rem; color: var(--text-dim); opacity: .75; pointer-events: none;
+}
 
 .menu {
   display: flex;

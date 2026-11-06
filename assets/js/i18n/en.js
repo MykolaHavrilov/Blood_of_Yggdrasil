@@ -2666,7 +2666,10 @@ RPG.I18N.en = {
 "Рідкісний трофей Белі: уламок його бронзової сокири, ще теплий від Хеллиного диму. Серце комплектів воїна, берсерка й шамана.": "A rare trophy of Beli: a shard of his bronze axe, still warm from Hel's smoke. The heart of the warrior, berserker and shaman sets.",
 "Розробник :": "Developer :",
 "Редактор :": "Editor :",
-"Локалізатор -": "Localizer -"
+"Локалізатор -": "Localizer -",
+"Версія": "Version",
+"кеш": "cache",
+"Версія гри": "Game version"
 },
 "patterns": [
 [

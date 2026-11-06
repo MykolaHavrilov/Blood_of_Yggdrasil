@@ -6,6 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const menuPages = ['index', 'about'];
   if (menuPages.includes(document.body.dataset.page) && window.RPG && RPG.audio) RPG.audio.play('menu');
 
+  // ---- Версія гри й номер кешу (головне меню, праворуч унизу) -------
+  const verBox = document.getElementById('game-version');
+  if (verBox && window.RPG && RPG.VERSION) {
+    const word = t => { const s = document.createElement('span'); s.textContent = t; return s; };
+    verBox.append(word('Версія'), ` ${RPG.VERSION} · `, word('кеш'), ` v${RPG.CACHE_VERSION}`);
+  }
+
   // ---- «Продовжити гру» (тільки на головному меню) ------------------
   // Відкриває гру, яку завантажували або створювали останньою (поточний слот).
   // Якщо цей сейв видалено (або гри ще не було) — кнопка неактивна,
