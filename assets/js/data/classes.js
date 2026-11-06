@@ -119,6 +119,27 @@
       { spi: 2, agi: 2, str: 1 }, { spi: 4, agi: 4 }, { attrs: { agi: 6, spi: 4, int: 4, str: 6 }, weapons: ["staff"], offHand: MELEE_OFF })
   };
 
+  // ---------- Які атрибути дають шкоду (stats.js → attrBonuses) ----------
+  // Частка від 1: 1 = 100% = +2 Атаки (Сили магії) за 1 очко атрибута (stats.js → DMG_PER_POINT), 0,5 = +1, 0,25 = +0,5.
+  // attack — фізична Атака (звичайний удар, фізичні навички), magic — Сила магії (заклинання, магічні навички).
+  // Не вказано — як було в усіх: Атака — Сила 100% + Спритність 25%, Сила магії — Інтелект 100% + Дух 25%.
+  const DMG_ATTRS = {
+    peasant:    { attack: { str: 1, agi: 0.5 } },
+    warrior:    { attack: { str: 1, agi: 0.5 } },
+    knight:     { attack: { str: 1, vit: 0.25 } },
+    berserker:  { attack: { str: 0.75, agi: 0.75 } },
+    rogue:      { attack: { agi: 0.75, str: 0.25 } },
+    hunter:     { attack: { agi: 0.75, str: 0.25 } },
+    monk:       { attack: { agi: 0.5, int: 0.5 } },
+    paladin:    { attack: { str: 0.75, int: 0.75 }, magic: { int: 0.75, spi: 0.75 } },
+    mage_fire:  { attack: { str: 0.5 }, magic: { int: 1, spi: 0.5 } },
+    mage_water: { attack: { str: 0.5 }, magic: { int: 1, spi: 0.5 } },
+    mage_wind:  { attack: { str: 0.5 }, magic: { int: 1, spi: 0.5 } },
+    mage_earth: { attack: { str: 0.5 }, magic: { int: 1, spi: 0.5 } },
+    priest:     { attack: { str: 0.5 }, magic: { spi: 0.75, int: 0.75 } }
+  };
+  for (const [id, d] of Object.entries(DMG_ATTRS)) if (CLASSES[id]) CLASSES[id].dmgAttrs = d;
+
   function getClass(id) {
     return CLASSES[id] || CLASSES[DEFAULT_CLASS];
   }

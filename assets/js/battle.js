@@ -454,6 +454,9 @@
     return range(H.weapon.type, false);
   }
 
+  // Монстр-хілер: лікує pct макс. HP найпораненішого монстра (якщо в того менше below HP), коштує mpPct своєї мани
+  const ENEMY_HEAL = { pct: 0.10, below: 0.9, mpPct: 0.15 };
+
   // «Сила навичок, %» (речі, руна Манназ): однаково посилює фізичні навички (від Атаки),
   // магічні (від Сили магії) і лікування. Звичайний удар і простий удар посохом — без неї.
   const skillMul = H => 1 + Math.max(0, H.base?.skillPct || 0) / 100;
@@ -972,6 +975,20 @@
         if (H.hp <= 0 && multi && aliveH().length) push({ who: "info", text: `${H.name} падає без сил…` });
         answerWaitingHealers();
       };
+
+      // Хілер (data/enemies.js → role: "healer"): кожен 3-й свій хід лікує найпораненішого монстра групи (і себе)
+      if (E.enemy.role === "healer" && E.turn % 3 === 0) {
+        const cost = Math.max(1, Math.round((E.enemy.stats.mp || 0) * ENEMY_HEAL.mpPct));
+        const ally = aliveE().filter(A => A.hp < A.enemy.stats.hp * ENEMY_HEAL.below)
+          .sort((x, y) => x.hp / x.enemy.stats.hp - y.hp / y.enemy.stats.hp)[0];
+        if (ally && E.mp >= cost) {
+          E.mp -= cost;
+          const before = ally.hp;
+          ally.hp = Math.min(ally.enemy.stats.hp, ally.hp + Math.round(ally.enemy.stats.hp * ENEMY_HEAL.pct));
+          push({ who: "enemy", text: `${E.name} лікує ${ally === E ? "себе" : `«${ally.name}»`} (−${cost} MP): +${ally.hp - before} HP`, crit: false, sound: "heal" });
+          return;
+        }
+      }
 
       // Навички боса: кожен 3-й власний хід, по черзі
       const skills = E.enemy.skills || [];

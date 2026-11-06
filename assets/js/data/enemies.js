@@ -27,6 +27,17 @@
 //         Зброя визначає дальність, як у героя: лук — 3, посох у чаклуна — 2 (або природна
 //         range, якщо вона більша), решта — 1; range ворога тоді не діє (monstergear.js)
 // spawnWeight — множник шансу зустрічі (1 — звичайно, 0.1 — у 10 разів рідше)
+// role — роль у бою: tank (танк), melee (дамагер ближній), ranged (дамагер дальній, фізичний), caster (маг), healer (хілер).
+//        Хілер кожен 3-й свій хід лікує найпораненішого монстра групи (battle.js → enemyTurn, ENEMY_HEAL).
+//
+// ПЕРЕРАХУНОК ЗА РОЛЯМИ (листопад 2026, таблиця «Професії й монстри - перерахунок.xlsx»):
+//   характеристика = A × рівень^b × множник ролі (× множник боса); A і b підібрано під попередніх монстрів окремо
+//   для Гардарики (рів. 1–10) і для Темного лісу та Альвгейму. Множники ролей (hp / атака / захист / маг. захист / швидкість):
+//     танк 1,75 / 0,85 / 1,8 / 1,25 / 0,6; ближній 1; дальній 0,85 / 1 / 0,8 / 0,9 / 0,9;
+//     маг 1 / 0,55 / 0,9 / 1,5 / 0,75 (+ сила магії й мана); хілер 0,9 / 0,4 / 0,9 / 1,4 / 0,8 (мана ×1,3, магія ×0,8).
+//   Боси — ще ×{hp 3,0, атака 1,14, захист 1,26}; магія й мана боса — за кривою мага, блоки — обидва.
+//   Блок фіз. — танкам, блок маг. — магам і хілерам; ухилення — лише тим, у кого воно було.
+//   Здоров'я — ще ×1.11 (Гардарика) / ×1.10 (далі): настільки зросла шкода героїв від нових ваг атрибутів (classes.js → dmgAttrs).
 // ============================================================
 
 (function (RPG) {
@@ -52,7 +63,8 @@ const ENEMIES = {
       range: 1, move: { name: "Сказений укус", mult: 1.5, chance: 0.25 },
       sprite: 0,
       level: 1,
-      stats: { hp: 30, mp: 0, attack: 7, defense: 1, magicDefense: 0, speed: 4, crit: 3, dodge: 3 },
+      role: "melee",
+      stats: { hp: 27, mp: 0, attack: 6, defense: 1, magicDefense: 0, speed: 4, crit: 3, dodge: 3 },
       exp: 2,
       gold: [0, 2],
       loot: [
@@ -67,7 +79,8 @@ const ENEMIES = {
       range: 1, move: { name: "Сказений укус", mult: 1.5, chance: 0.25 },
       sprite: 1,
       level: 2,
-      stats: { hp: 45, mp: 0, attack: 10, defense: 2, magicDefense: 1, speed: 5, crit: 4, dodge: 4 },
+      role: "melee",
+      stats: { hp: 58, mp: 0, attack: 11, defense: 2, magicDefense: 1, speed: 5, crit: 4, dodge: 4 },
       exp: 6,
       gold: [1, 4],
       loot: [
@@ -85,7 +98,8 @@ const ENEMIES = {
       range: 1, move: { name: "Сказений укус", mult: 1.55, chance: 0.28 },
       sprite: 2,
       level: 3,
-      stats: { hp: 65, mp: 0, attack: 14, defense: 3, magicDefense: 1, speed: 6, crit: 5, dodge: 4 },
+      role: "melee",
+      stats: { hp: 90, mp: 0, attack: 16, defense: 4, magicDefense: 1, speed: 7, crit: 6, dodge: 5 },
       exp: 20,
       gold: [3, 8],
       loot: [
@@ -108,7 +122,8 @@ const ENEMIES = {
       range: 1, move: { name: "Розірвати горлянку", mult: 1.6, chance: 0.25 },
       sprite: 3,
       level: 4,
-      stats: { hp: 110, mp: 0, attack: 20, defense: 5, magicDefense: 2, speed: 8, crit: 6, dodge: 5, blockPhys: 3 },
+      role: "melee",
+      stats: { hp: 123, mp: 0, attack: 20, defense: 5, magicDefense: 2, speed: 8, crit: 7, dodge: 5 },
       exp: 40,
       gold: [5, 12],
       loot: [
@@ -131,7 +146,8 @@ const ENEMIES = {
       range: 1, move: { name: "Розірвати горлянку", mult: 1.65, chance: 0.28 },
       sprite: 4,
       level: 5,
-      stats: { hp: 150, mp: 0, attack: 26, defense: 7, magicDefense: 3, speed: 9, crit: 8, dodge: 6, blockPhys: 4 },
+      role: "melee",
+      stats: { hp: 157, mp: 0, attack: 25, defense: 7, magicDefense: 3, speed: 9, crit: 8, dodge: 6 },
       exp: 60,
       gold: [8, 18],
       loot: [
@@ -155,7 +171,8 @@ const ENEMIES = {
       range: 1, move: { name: "Розірвати горлянку", mult: 1.65, chance: 0.28 },
       sprite: 5,
       level: 6,
-      stats: { hp: 200, mp: 0, attack: 32, defense: 9, magicDefense: 4, speed: 10, crit: 10, dodge: 7, blockPhys: 5 },
+      role: "melee",
+      stats: { hp: 191, mp: 0, attack: 29, defense: 8, magicDefense: 4, speed: 10, crit: 9, dodge: 6 },
       exp: 90,
       gold: [12, 25],
       loot: [
@@ -181,7 +198,8 @@ const ENEMIES = {
       range: 2, move: { name: "Стрибок слизу", mult: 1.35, chance: 0.25 },
       sprite: 6, verb: "хлюпає",
       level: 6,
-      stats: { hp: 170, mp: 40, attack: 22, magic: 26, defense: 7, magicDefense: 10, speed: 7, crit: 4, blockMag: 4 },
+      role: "caster",
+      stats: { hp: 191, mp: 40, attack: 16, magic: 26, defense: 7, magicDefense: 5, speed: 7, crit: 6, blockMag: 4 },
       spell: { name: "Кислотний плювок", mp: 10, mult: 1.3, chance: 0.4 },
       exp: 100,
       gold: [10, 22],
@@ -201,7 +219,8 @@ const ENEMIES = {
       range: 2, move: { name: "Стрибок слизу", mult: 1.35, chance: 0.25 },
       sprite: 7, verb: "хлюпає",
       level: 7,
-      stats: { hp: 220, mp: 60, attack: 25, magic: 33, defense: 8, magicDefense: 14, speed: 8, crit: 5, blockMag: 7 },
+      role: "caster",
+      stats: { hp: 226, mp: 59, attack: 18, magic: 33, defense: 9, magicDefense: 7, speed: 8, crit: 6, blockMag: 7 },
       spell: { name: "Крижаний бризок", mp: 12, mult: 1.4, chance: 0.4 },
       exp: 140,
       gold: [14, 28],
@@ -221,7 +240,8 @@ const ENEMIES = {
       range: 2, move: { name: "Стрибок слизу", mult: 1.35, chance: 0.25 },
       sprite: 8, verb: "хлюпає",
       level: 8,
-      stats: { hp: 270, mp: 80, attack: 29, magic: 40, defense: 9, magicDefense: 16, speed: 9, crit: 7, blockMag: 9 },
+      role: "caster",
+      stats: { hp: 261, mp: 81, attack: 20, magic: 40, defense: 11, magicDefense: 8, speed: 8, crit: 7, blockMag: 10 },
       spell: { name: "Отруйна хмара", mp: 15, mult: 1.5, chance: 0.45 },
       exp: 190,
       gold: [18, 35],
@@ -244,7 +264,8 @@ const ENEMIES = {
       level: 10,
       boss: true, noChampion: true, spawnWeight: 0.1,
       // У 5–6 разів сильніший за зеленого слайма: HP ×6, атака й магія ×1,6
-      stats: { hp: 1020, mp: 300, attack: 35, magic: 42, defense: 14, magicDefense: 20, speed: 9, crit: 9, blockPhys: 6, blockMag: 12 },
+      role: "caster",
+      stats: { hp: 1001, mp: 296, attack: 28, magic: 57, defense: 18, magicDefense: 12, speed: 10, crit: 7, blockPhys: 10, blockMag: 16 },
       skills: [
         { kind: "magic", name: "Золотий потоп", mp: 40, mult: 2.2 },
         { kind: "heal",  name: "Королівське желе", mp: 50, healPct: 0.12 },
@@ -271,7 +292,8 @@ const ENEMIES = {
       range: 1, move: { name: "Укус із тіні", mult: 1.50, chance: 0.25 },
       verb: "кусає",
       level: 10,
-      stats: { hp: 823, mp: 0, attack: 113, defense: 42, magicDefense: 50, speed: 20, crit: 14, dodge: 9 },
+      role: "melee",
+      stats: { hp: 860, mp: 0, attack: 98, defense: 41, magicDefense: 46, speed: 18, crit: 12, dodge: 10 },
       exp: 300,
       gold: [23, 44],
       loot: [
@@ -302,7 +324,8 @@ const ENEMIES = {
       range: 1, move: { name: "Таранний удар", mult: 1.51, chance: 0.25 },
       verb: "б'є іклами",
       level: 11,
-      stats: { hp: 1398, mp: 0, attack: 96, defense: 78, magicDefense: 62, speed: 12, crit: 8, blockPhys: 10 },
+      role: "tank",
+      stats: { hp: 1584, mp: 0, attack: 91, defense: 79, magicDefense: 62, speed: 12, crit: 8, blockPhys: 10 },
       exp: 363,
       gold: [25, 48],
       loot: [
@@ -333,7 +356,8 @@ const ENEMIES = {
       range: 2, move: { name: "Плювок отрутою", mult: 1.52, chance: 0.25 },
       verb: "кусає",
       level: 12,
-      stats: { hp: 1029, mp: 0, attack: 112, defense: 54, magicDefense: 54, speed: 16, crit: 9, dodge: 11 },
+      role: "ranged",
+      stats: { hp: 806, mp: 0, attack: 117, defense: 37, magicDefense: 47, speed: 18, crit: 15, dodge: 12 },
       exp: 432,
       gold: [28, 53],
       loot: [
@@ -364,7 +388,8 @@ const ENEMIES = {
       range: 1, move: { name: "Висмоктати кров", mult: 1.52, chance: 0.25 },
       verb: "присмоктується",
       level: 12,
-      stats: { hp: 874, mp: 0, attack: 123, defense: 46, magicDefense: 54, speed: 21, crit: 15 },
+      role: "melee",
+      stats: { hp: 948, mp: 0, attack: 117, defense: 46, magicDefense: 52, speed: 20, crit: 13 },
       exp: 432,
       gold: [28, 53],
       loot: [
@@ -398,7 +423,8 @@ const ENEMIES = {
       range: 1, move: { name: "Мертва хватка", mult: 1.53, chance: 0.25 },
       verb: "дряпає",
       level: 13,
-      stats: { hp: 1481, mp: 0, attack: 105, defense: 84, magicDefense: 67, speed: 14, crit: 10, blockPhys: 11 },
+      role: "tank",
+      stats: { hp: 1732, mp: 0, attack: 107, defense: 87, magicDefense: 69, speed: 13, crit: 9, blockPhys: 11 },
       exp: 507,
       gold: [30, 57],
       loot: [
@@ -429,7 +455,8 @@ const ENEMIES = {
       range: 2, move: { name: "Спалах", mult: 1.54, chance: 0.25 },
       verb: "обпікає",
       level: 14,
-      stats: { hp: 923, mp: 168, attack: 73, magic: 106, defense: 46, magicDefense: 87, speed: 17, crit: 10, dodge: 12, blockMag: 11 },
+      role: "caster",
+      stats: { hp: 1030, mp: 168, attack: 75, magic: 104, defense: 45, magicDefense: 86, speed: 17, crit: 10, dodge: 12, blockMag: 11 },
       spell: { name: "Мертвецьке полум'я", mp: 17, mult: 1.4, chance: 0.4 },
       exp: 588,
       gold: [32, 62],
@@ -464,7 +491,8 @@ const ENEMIES = {
       range: 1, move: { name: "Удар іржавого меча", mult: 1.54, chance: 0.25 },
       verb: "рубає",
       level: 14,
-      stats: { hp: 1086, mp: 0, attack: 122, defense: 58, magicDefense: 58, speed: 17, crit: 10, dodge: 12 },
+      role: "melee",
+      stats: { hp: 1030, mp: 0, attack: 136, defense: 50, magicDefense: 58, speed: 23, crit: 15, dodge: 12 },
       exp: 588,
       gold: [32, 62],
       loot: [
@@ -496,7 +524,8 @@ const ENEMIES = {
       range: 2, move: { name: "Холодний дотик", mult: 1.55, chance: 0.25 },
       verb: "торкається",
       level: 15,
-      stats: { hp: 947, mp: 180, attack: 76, magic: 111, defense: 48, magicDefense: 90, speed: 19, crit: 11, dodge: 13, blockMag: 12 },
+      role: "caster",
+      stats: { hp: 1069, mp: 180, attack: 80, magic: 111, defense: 47, magicDefense: 90, speed: 18, crit: 10, dodge: 13, blockMag: 12 },
       spell: { name: "Крижаний стогін", mp: 18, mult: 1.4, chance: 0.4 },
       exp: 675,
       gold: [34, 66],
@@ -531,7 +560,8 @@ const ENEMIES = {
       range: 1, move: { name: "Трупні пазурі", mult: 1.56, chance: 0.25 },
       verb: "шматує",
       level: 16,
-      stats: { hp: 970, mp: 0, attack: 146, defense: 53, magicDefense: 62, speed: 26, crit: 18 },
+      role: "melee",
+      stats: { hp: 1106, mp: 0, attack: 155, defense: 55, magicDefense: 63, speed: 25, crit: 17 },
       exp: 768,
       gold: [37, 70],
       loot: [
@@ -562,7 +592,8 @@ const ENEMIES = {
       range: 1, move: { name: "Отруйне жало", mult: 1.56, chance: 0.25 },
       verb: "жалить",
       level: 16,
-      stats: { hp: 970, mp: 0, attack: 146, defense: 53, magicDefense: 62, speed: 26, crit: 18, dodge: 14 },
+      role: "melee",
+      stats: { hp: 1106, mp: 0, attack: 155, defense: 55, magicDefense: 63, speed: 25, crit: 17, dodge: 14 },
       exp: 768,
       gold: [37, 70],
       loot: [
@@ -593,7 +624,8 @@ const ENEMIES = {
       range: 2, move: { name: "Липка сітка", mult: 1.57, chance: 0.25 },
       verb: "кусає",
       level: 17,
-      stats: { hp: 1167, mp: 0, attack: 137, defense: 64, magicDefense: 64, speed: 19, crit: 11, dodge: 14 },
+      role: "ranged",
+      stats: { hp: 971, mp: 0, attack: 164, defense: 45, magicDefense: 59, speed: 24, crit: 19, dodge: 16 },
       exp: 867,
       gold: [39, 75],
       loot: [
@@ -625,7 +657,8 @@ const ENEMIES = {
       verb: "кусає",
       level: 18,
       boss: true, noChampion: true, spawnWeight: 0.1,
-      stats: { hp: 3101, mp: 450, attack: 136, magic: 120, defense: 73, magicDefense: 73, speed: 21, crit: 13, dodge: 15, blockPhys: 13, blockMag: 13 },
+      role: "ranged",
+      stats: { hp: 3014, mp: 458, attack: 198, magic: 133, defense: 59, magicDefense: 65, speed: 27, crit: 18, dodge: 17, blockPhys: 13, blockMag: 11 },
       skills: [
         { kind: "magic", name: "Отруйна злива", mp: 40, mult: 2.0 },
         { kind: "stun", name: "Кокон", mp: 30, mult: 1.0 },
@@ -663,7 +696,8 @@ const ENEMIES = {
       range: 1, move: { name: "Розшматувати", mult: 1.58, chance: 0.25 },
       verb: "роздирає",
       level: 18,
-      stats: { hp: 1014, mp: 0, attack: 157, defense: 56, magicDefense: 66, speed: 28, crit: 20, dodge: 15 },
+      role: "melee",
+      stats: { hp: 1178, mp: 0, attack: 173, defense: 59, magicDefense: 68, speed: 27, crit: 18, dodge: 15 },
       exp: 972,
       gold: [41, 79],
       loot: [
@@ -694,7 +728,8 @@ const ENEMIES = {
       range: 1, move: { name: "Удар ватажка", mult: 1.59, chance: 0.25 },
       verb: "б'є",
       level: 19,
-      stats: { hp: 1705, mp: 0, attack: 133, defense: 102, magicDefense: 82, speed: 17, crit: 13, dodge: 16, blockPhys: 13 },
+      role: "tank",
+      stats: { hp: 2122, mp: 0, attack: 155, defense: 109, magicDefense: 88, speed: 17, crit: 13, dodge: 8, blockPhys: 13 },
       exp: 1083,
       gold: [44, 84],
       loot: [
@@ -725,7 +760,8 @@ const ENEMIES = {
       range: 2, move: { name: "Тіньовий кіготь", mult: 1.60, chance: 0.25 },
       verb: "рве",
       level: 20,
-      stats: { hp: 1079, mp: 240, attack: 99, magic: 140, defense: 56, magicDefense: 105, speed: 22, crit: 14, dodge: 16, blockMag: 13 },
+      role: "caster",
+      stats: { hp: 1246, mp: 238, attack: 106, magic: 144, defense: 56, magicDefense: 109, speed: 22, crit: 13, dodge: 16, blockMag: 13 },
       spell: { name: "Тіньовий подих", mp: 24, mult: 1.4, chance: 0.4 },
       exp: 1200,
       gold: [46, 88],
@@ -759,7 +795,8 @@ const ENEMIES = {
       range: 2, move: { name: "Ритуальний ніж", mult: 1.60, chance: 0.25 },
       verb: "б'є ножем",
       level: 20,
-      stats: { hp: 1079, mp: 240, attack: 99, magic: 140, defense: 56, magicDefense: 105, speed: 22, crit: 14, blockMag: 13 },
+      role: "healer",
+      stats: { hp: 1122, mp: 310, attack: 77, magic: 115, defense: 56, magicDefense: 102, speed: 24, crit: 8, blockMag: 13 },
       spell: { name: "Чорне прокляття", mp: 24, mult: 1.4, chance: 0.4 },
       exp: 1200,
       gold: [46, 88],
@@ -793,7 +830,8 @@ const ENEMIES = {
       range: 3, move: { name: "Удар патерицею", mult: 1.61, chance: 0.25 },
       verb: "вдаряє патерицею",
       level: 21,
-      stats: { hp: 1122, mp: 252, attack: 109, magic: 150, defense: 58, magicDefense: 108, speed: 22, crit: 14, blockMag: 14 },
+      role: "caster",
+      stats: { hp: 1279, mp: 250, attack: 111, magic: 150, defense: 58, magicDefense: 112, speed: 23, crit: 14, blockMag: 14 },
       spell: { name: "Відьомський вогонь", mp: 25, mult: 1.4, chance: 0.4 },
       exp: 1323,
       gold: [48, 92],
@@ -825,7 +863,8 @@ const ENEMIES = {
       range: 1, move: { name: "Кам'яний кулак", mult: 1.62, chance: 0.25 },
       verb: "трощить",
       level: 22,
-      stats: { hp: 1917, mp: 0, attack: 180, defense: 111, magicDefense: 89, speed: 19, crit: 14, blockPhys: 14 },
+      role: "tank",
+      stats: { hp: 2295, mp: 0, attack: 179, defense: 119, magicDefense: 97, speed: 19, crit: 14, blockPhys: 14 },
       exp: 1452,
       gold: [51, 97],
       loot: [
@@ -856,7 +895,8 @@ const ENEMIES = {
       range: 2, move: { name: "Удар корінням", mult: 1.63, chance: 0.25 },
       verb: "хльоскає",
       level: 23,
-      stats: { hp: 1947, mp: 0, attack: 185, defense: 114, magicDefense: 91, speed: 20, crit: 16, blockPhys: 14 },
+      role: "tank",
+      stats: { hp: 2351, mp: 0, attack: 187, defense: 122, magicDefense: 99, speed: 20, crit: 15, blockPhys: 14 },
       exp: 1587,
       gold: [53, 101],
       loot: [
@@ -889,7 +929,8 @@ const ENEMIES = {
       range: 1, move: { name: "Наскок вершника", mult: 1.64, chance: 0.25 },
       verb: "рубає",
       level: 24,
-      stats: { hp: 1201, mp: 0, attack: 234, defense: 66, magicDefense: 78, speed: 35, crit: 24, dodge: 19 },
+      role: "melee",
+      stats: { hp: 1374, mp: 0, attack: 230, defense: 69, magicDefense: 82, speed: 34, crit: 23, dodge: 18 },
       exp: 1728,
       gold: [55, 106],
       loot: [
@@ -923,7 +964,8 @@ const ENEMIES = {
       verb: "б'є",
       level: 25,
       boss: true, noChampion: true, spawnWeight: 0.1,
-      stats: { hp: 3727, mp: 625, attack: 208, magic: 169, defense: 88, magicDefense: 88, speed: 26, crit: 17, blockPhys: 15, blockMag: 15 },
+      role: "melee",
+      stats: { hp: 4227, mp: 630, attack: 273, magic: 179, defense: 89, magicDefense: 89, speed: 37, crit: 21, blockPhys: 15, blockMag: 14 },
       skills: [
         { kind: "magic", name: "Темне коріння", mp: 60, mult: 2.4 },
         { kind: "heal", name: "Подих лісу", mp: 70, healPct: 0.1 },
@@ -960,7 +1002,8 @@ const ENEMIES = {
       range: 2, move: { name: "Сліпучий спалах", mult: 1.4, chance: 0.25 },
       verb: "обпікає",
       level: 25,
-      stats: { hp: 1313, mp: 295, attack: 128, magic: 175, defense: 68, magicDefense: 126, speed: 24, crit: 15, blockMag: 15, dodge: 18 },
+      role: "caster",
+      stats: { hp: 1404, mp: 296, attack: 132, magic: 176, defense: 64, magicDefense: 126, speed: 26, crit: 16, dodge: 19, blockMag: 15 },
       spell: { name: "Блудне світло", mp: 22, mult: 1.35, chance: 0.4 },
       exp: 1875,
       gold: [57, 110],
@@ -994,7 +1037,8 @@ const ENEMIES = {
       range: 2, move: { name: "Сріблястий пилок", mult: 1.45, chance: 0.25 },
       verb: "б'є крилами",
       level: 25,
-      stats: { hp: 1062, mp: 0, attack: 243, defense: 69, magicDefense: 81, speed: 36, crit: 24, dodge: 22 },
+      role: "melee",
+      stats: { hp: 1404, mp: 0, attack: 239, defense: 71, magicDefense: 84, speed: 35, crit: 24, dodge: 19 },
       exp: 1875,
       gold: [57, 110],
       loot: [
@@ -1029,7 +1073,8 @@ const ENEMIES = {
       range: 3, move: { name: "Подвійна стріла", mult: 1.5, chance: 0.25 },
       verb: "стріляє",
       level: 26,
-      stats: { hp: 1299, mp: 0, attack: 253, defense: 71, magicDefense: 84, speed: 36, crit: 25, dodge: 20 },
+      role: "ranged",
+      stats: { hp: 1219, mp: 0, attack: 249, defense: 58, magicDefense: 77, speed: 32, crit: 27, dodge: 22 },
       exp: 2028,
       gold: [60, 114],
       loot: [
@@ -1064,7 +1109,8 @@ const ENEMIES = {
       verb: "шмагає крилами",
       level: 27,
       boss: true, noChampion: true, spawnWeight: 0.1,
-      stats: { hp: 4608, mp: 669, attack: 202, magic: 178, defense: 108, magicDefense: 108, speed: 31, crit: 16, dodge: 18, blockPhys: 16, blockMag: 16 },
+      role: "caster",
+      stats: { hp: 4405, mp: 679, attack: 162, magic: 192, defense: 84, magicDefense: 140, speed: 30, crit: 15, dodge: 21, blockPhys: 16, blockMag: 14 },
       skills: [
         { kind: "magic", name: "Отруйний рій", mp: 45, mult: 2.1 },
         { kind: "stun", name: "Сріблястий кокон", mp: 35, mult: 1.0 },
@@ -1102,7 +1148,8 @@ const ENEMIES = {
       range: 2, move: { name: "Обійми глибини", mult: 1.45, chance: 0.25 },
       verb: "хапає",
       level: 26,
-      stats: { hp: 1365, mp: 307, attack: 133, magic: 182, defense: 71, magicDefense: 131, speed: 24, crit: 16, blockMag: 16 },
+      role: "healer",
+      stats: { hp: 1291, mp: 400, attack: 99, magic: 146, defense: 65, magicDefense: 120, speed: 28, crit: 10, blockMag: 15 },
       spell: { name: "Крижана хвиля", mp: 24, mult: 1.4, chance: 0.4 },
       exp: 2028,
       gold: [60, 114],
@@ -1138,7 +1185,8 @@ const ENEMIES = {
       range: 1, move: { name: "Дзеркальний удар", mult: 1.55, chance: 0.25 },
       verb: "б'є",
       level: 26,
-      stats: { hp: 1299, mp: 0, attack: 253, defense: 71, magicDefense: 84, speed: 36, crit: 25, dodge: 20 },
+      role: "melee",
+      stats: { hp: 1434, mp: 0, attack: 249, defense: 73, magicDefense: 86, speed: 36, crit: 25, dodge: 20 },
       exp: 2028,
       gold: [60, 114],
       loot: [
@@ -1171,7 +1219,8 @@ const ENEMIES = {
       range: 1, move: { name: "Кришталевий язик", mult: 1.5, chance: 0.25 },
       verb: "кусає",
       level: 27,
-      stats: { hp: 2332, mp: 0, attack: 219, defense: 135, magicDefense: 108, speed: 22, crit: 16, blockPhys: 16 },
+      role: "tank",
+      stats: { hp: 2561, mp: 0, attack: 219, defense: 134, magicDefense: 110, speed: 22, crit: 16, blockPhys: 16 },
       exp: 2187,
       gold: [62, 119],
       loot: [
@@ -1206,7 +1255,8 @@ const ENEMIES = {
       verb: "б'є смичком",
       level: 28,
       boss: true, noChampion: true, spawnWeight: 0.1,
-      stats: { hp: 4816, mp: 699, attack: 211, magic: 232, defense: 113, magicDefense: 113, speed: 31, crit: 16, dodge: 18, blockPhys: 16, blockMag: 16 },
+      role: "caster",
+      stats: { hp: 4492, mp: 704, attack: 168, magic: 198, defense: 86, magicDefense: 144, speed: 30, crit: 15, dodge: 22, blockPhys: 16, blockMag: 14 },
       skills: [
         { kind: "magic", name: "Пісня глибин", mp: 50, mult: 2.3 },
         { kind: "stun", name: "Зачарована мелодія", mp: 40, mult: 1.0 },
@@ -1246,7 +1296,8 @@ const ENEMIES = {
       range: 2, move: { name: "Колючі батоги", mult: 1.5, chance: 0.25 },
       verb: "шмагає",
       level: 27,
-      stats: { hp: 2332, mp: 0, attack: 219, defense: 135, magicDefense: 108, speed: 22, crit: 16, blockPhys: 16 },
+      role: "tank",
+      stats: { hp: 2561, mp: 0, attack: 219, defense: 134, magicDefense: 110, speed: 22, crit: 16, blockPhys: 16 },
       exp: 2187,
       gold: [62, 119],
       loot: [
@@ -1280,7 +1331,8 @@ const ENEMIES = {
       range: 3, move: { name: "Укус пелюсток", mult: 1.4, chance: 0.25 },
       verb: "плює отрутою",
       level: 27,
-      stats: { hp: 1420, mp: 319, attack: 138, magic: 190, defense: 73, magicDefense: 137, speed: 25, crit: 16, blockMag: 16 },
+      role: "caster",
+      stats: { hp: 1464, mp: 319, attack: 142, magic: 188, defense: 67, magicDefense: 132, speed: 27, crit: 16, blockMag: 16 },
       spell: { name: "Отруйний пилок", mp: 25, mult: 1.4, chance: 0.45 },
       exp: 2187,
       gold: [62, 119],
@@ -1316,7 +1368,8 @@ const ENEMIES = {
       range: 1, move: { name: "Ножиці-клинки", mult: 1.55, chance: 0.25 },
       verb: "ріже",
       level: 28,
-      stats: { hp: 1405, mp: 0, attack: 274, defense: 77, magicDefense: 91, speed: 37, crit: 25, dodge: 20 },
+      role: "melee",
+      stats: { hp: 1492, mp: 0, attack: 267, defense: 76, magicDefense: 90, speed: 37, crit: 26, dodge: 21 },
       exp: 2352,
       gold: [64, 123],
       loot: [
@@ -1350,7 +1403,8 @@ const ENEMIES = {
       verb: "косить",
       level: 29,
       boss: true, noChampion: true, spawnWeight: 0.1,
-      stats: { hp: 5787, mp: 730, attack: 221, magic: 156, defense: 142, magicDefense: 118, speed: 31, crit: 16, dodge: 18, blockPhys: 16, blockMag: 16 },
+      role: "tank",
+      stats: { hp: 8009, mp: 728, attack: 268, magic: 205, defense: 176, magicDefense: 122, speed: 25, crit: 16, dodge: 11, blockPhys: 16, blockMag: 15 },
       skills: [
         { kind: "magic", name: "Тлінні спори", mp: 50, mult: 2.2 },
         { kind: "stun", name: "Коріння тліну", mp: 40, mult: 1.1 },
@@ -1392,7 +1446,8 @@ const ENEMIES = {
       range: 3, move: { name: "Удар посохом", mult: 1.5, chance: 0.25 },
       verb: "б'є посохом",
       level: 27,
-      stats: { hp: 1420, mp: 319, attack: 138, magic: 190, defense: 73, magicDefense: 137, speed: 25, crit: 16, blockMag: 16 },
+      role: "caster",
+      stats: { hp: 1464, mp: 319, attack: 142, magic: 188, defense: 67, magicDefense: 132, speed: 27, crit: 16, blockMag: 16 },
       spell: { name: "Промінь світанку", mp: 26, mult: 1.45, chance: 0.45 },
       exp: 2187,
       gold: [62, 119],
@@ -1427,7 +1482,8 @@ const ENEMIES = {
       range: 1, move: { name: "Спис світла", mult: 1.55, chance: 0.25 },
       verb: "б'є списом",
       level: 28,
-      stats: { hp: 2426, mp: 0, attack: 228, defense: 140, magicDefense: 136, speed: 22, crit: 16, blockPhys: 16 },
+      role: "tank",
+      stats: { hp: 2611, mp: 0, attack: 227, defense: 137, magicDefense: 113, speed: 22, crit: 17, blockPhys: 16 },
       exp: 2352,
       gold: [64, 123],
       loot: [
@@ -1461,7 +1517,8 @@ const ENEMIES = {
       range: 2, move: { name: "Рунний дзьоб", mult: 1.5, chance: 0.25 },
       verb: "дзьобає",
       level: 27,
-      stats: { hp: 1216, mp: 0, attack: 263, defense: 74, magicDefense: 88, speed: 36, crit: 25, dodge: 21 },
+      role: "ranged",
+      stats: { hp: 1244, mp: 0, attack: 258, defense: 59, magicDefense: 79, speed: 33, crit: 28, dodge: 22 },
       exp: 2187,
       gold: [62, 119],
       loot: [
@@ -1495,7 +1552,8 @@ const ENEMIES = {
       verb: "б'є посохом",
       level: 29,
       boss: true, noChampion: true, spawnWeight: 0.1,
-      stats: { hp: 4529, mp: 730, attack: 221, magic: 254, defense: 118, magicDefense: 118, speed: 31, crit: 16, dodge: 18, blockPhys: 16, blockMag: 16 },
+      role: "caster",
+      stats: { hp: 4577, mp: 728, attack: 173, magic: 205, defense: 88, magicDefense: 147, speed: 31, crit: 16, dodge: 23, blockPhys: 16, blockMag: 15 },
       skills: [
         { kind: "magic", name: "Сонячне коло", mp: 55, mult: 2.5 },
         { kind: "stun", name: "Руни сліпоти", mp: 40, mult: 1.0 },
@@ -1535,7 +1593,8 @@ const ENEMIES = {
       range: 1, move: { name: "Удар іклами", mult: 1.6, chance: 0.25 },
       verb: "б'є іклами",
       level: 28,
-      stats: { hp: 2426, mp: 0, attack: 228, defense: 140, magicDefense: 113, speed: 22, crit: 16, blockPhys: 16 },
+      role: "tank",
+      stats: { hp: 2611, mp: 0, attack: 227, defense: 137, magicDefense: 113, speed: 22, crit: 17, blockPhys: 16 },
       exp: 2352,
       gold: [64, 123],
       loot: [
@@ -1571,7 +1630,8 @@ const ENEMIES = {
       range: 1, move: { name: "Удар щитом", mult: 1.5, chance: 0.25 },
       verb: "б'є",
       level: 29,
-      stats: { hp: 2524, mp: 0, attack: 197, defense: 151, magicDefense: 121, speed: 22, crit: 16, dodge: 19, blockPhys: 16 },
+      role: "tank",
+      stats: { hp: 2661, mp: 0, attack: 235, defense: 139, magicDefense: 115, speed: 23, crit: 17, dodge: 11, blockPhys: 16 },
       exp: 2523,
       gold: [67, 128],
       loot: [
@@ -1625,7 +1685,8 @@ const ENEMIES = {
       range: 1, move: { name: "Мисливський постріл", mult: 1.5, chance: 0.25 },
       verb: "б'є",
       level: 28,
-      stats: { hp: 1405, mp: 0, attack: 274, defense: 77, magicDefense: 91, speed: 37, crit: 25, dodge: 20 },
+      role: "melee",
+      stats: { hp: 1492, mp: 0, attack: 267, defense: 76, magicDefense: 90, speed: 37, crit: 26, dodge: 21 },
       exp: 2352,
       gold: [64, 123],
       loot: [
@@ -1660,7 +1721,8 @@ const ENEMIES = {
       verb: "б'є іклами",
       level: 30,
       boss: true, noChampion: true, spawnWeight: 0.1,
-      stats: { hp: 5259, mp: 763, attack: 266, magic: 173, defense: 124, magicDefense: 124, speed: 32, crit: 17, dodge: 19, blockPhys: 17, blockMag: 17 },
+      role: "melee",
+      stats: { hp: 4661, mp: 753, attack: 326, magic: 211, defense: 100, magicDefense: 100, speed: 42, crit: 25, dodge: 23, blockPhys: 17, blockMag: 15 },
       skills: [
         { kind: "magic", name: "Сонячна грива", mp: 55, mult: 2.3 },
         { kind: "stun", name: "Таран", mp: 40, mult: 1.2 },
@@ -1718,7 +1780,8 @@ const ENEMIES = {
       range: 1, move: { name: "Кам'яна палиця", mult: 1.6, chance: 0.25 },
       verb: "б'є палицею",
       level: 30,
-      stats: { hp: 3018, mp: 0, attack: 246, defense: 152, magicDefense: 122, speed: 23, crit: 16, blockPhys: 16 },
+      role: "tank",
+      stats: { hp: 2710, mp: 0, attack: 243, defense: 142, magicDefense: 118, speed: 24, crit: 18, blockPhys: 16 },
       exp: 2700,
       gold: [69, 132],
       loot: [
@@ -1771,7 +1834,8 @@ const ENEMIES = {
       range: 2, move: { name: "Удар рогами", mult: 1.5, chance: 0.25 },
       verb: "б'є рогами",
       level: 29,
-      stats: { hp: 1536, mp: 345, attack: 149, magic: 205, defense: 79, magicDefense: 148, speed: 26, crit: 16, blockMag: 16 },
+      role: "healer",
+      stats: { hp: 1368, mp: 445, attack: 111, magic: 160, defense: 70, magicDefense: 129, speed: 31, crit: 11, blockMag: 16 },
       spell: { name: "Фіолетовий вогонь", mp: 27, mult: 1.45, chance: 0.45 },
       exp: 2523,
       gold: [67, 128],
@@ -1826,7 +1890,8 @@ const ENEMIES = {
       range: 1, move: { name: "Тлінний удар", mult: 1.55, chance: 0.25 },
       verb: "б'є",
       level: 29,
-      stats: { hp: 1461, mp: 0, attack: 285, defense: 80, magicDefense: 95, speed: 38, crit: 26, dodge: 20 },
+      role: "melee",
+      stats: { hp: 1521, mp: 0, attack: 277, defense: 77, magicDefense: 92, speed: 38, crit: 27, dodge: 21 },
       exp: 2523,
       gold: [67, 128],
       loot: [
@@ -1879,7 +1944,8 @@ const ENEMIES = {
       verb: "рубає сокирою",
       level: 30,
       boss: true, noChampion: true, spawnWeight: 0.1,
-      stats: { hp: 7100, mp: 763, attack: 277, magic: 204, defense: 149, magicDefense: 143, speed: 32, crit: 17, dodge: 19, blockPhys: 17, blockMag: 17 },
+      role: "tank",
+      stats: { hp: 8156, mp: 753, attack: 277, magic: 211, defense: 179, magicDefense: 125, speed: 25, crit: 16, dodge: 12, blockPhys: 17, blockMag: 15 },
       skills: [
         { kind: "magic", name: "Дим Хелли", mp: 60, mult: 2.6 },
         { kind: "stun", name: "Удар велетня", mp: 45, mult: 1.3 },

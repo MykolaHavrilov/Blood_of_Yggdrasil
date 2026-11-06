@@ -50,12 +50,23 @@
   //   speed            — хто б'є першим + шанс додаткового швидкого удару
   //   crit, blockPhys, blockMag — шанси у відсотках
   //   hpRegen / mpRegen — скільки відновлюється кожні 10 секунд
-  function attrBonuses(a) {
+  // Атака й Сила магії залежать від професії (classes.js → dmgAttrs): частка 1 = DMG_PER_POINT за очко.
+  // Без професії (монстри, monstergear.js) — DEFAULT_DMG, як було раніше в усіх.
+  const DMG_PER_POINT = 2;
+  const DEFAULT_DMG = { attack: { str: 1, agi: 0.25 }, magic: { int: 1, spi: 0.25 } };
+  function dmgAttrs(classId) {
+    const d = classId && RPG.getClass ? RPG.getClass(classId).dmgAttrs : null;
+    return { attack: d?.attack || DEFAULT_DMG.attack, magic: d?.magic || DEFAULT_DMG.magic };
+  }
+  const dmgFrom = (a, w) => Object.entries(w).reduce((s, [k, v]) => s + (a[k] || 0) * v * DMG_PER_POINT, 0);
+
+  function attrBonuses(a, classId = null) {
+    const d = dmgAttrs(classId);
     return {
       hp:           a.vit * 10,
       mp:           a.int * 6 + a.spi * 2,
-      attack:       a.str * 2 + a.agi * 0.5,
-      magic:        a.int * 2 + a.spi * 0.5,
+      attack:       dmgFrom(a, d.attack),
+      magic:        dmgFrom(a, d.magic),
       defense:      a.vit * 1 + a.str * 0.5,
       magicDefense: a.spi * 1 + a.int * 0.3,
       speed:        a.agi * 0.5,
@@ -89,11 +100,18 @@
     mpRegen:      { base: 1, per: { spi: 0.5, int: 0.2 } }
   };
 
-  // Внесок атрибутів у характеристики: { key: [{ label, value }] } — сума дорівнює attrBonuses(a)
-  function attrContrib(a) {
-    const bonus = attrBonuses(a);
+  // ATTR_EFFECTS для професії: Атака й Сила магії — з її dmgAttrs
+  function attrEffectsFor(classId = null) {
+    const d = dmgAttrs(classId);
+    const per = w => Object.fromEntries(Object.entries(w).map(([k, v]) => [k, v * DMG_PER_POINT]));
+    return { ...ATTR_EFFECTS, attack: { per: per(d.attack) }, magic: { per: per(d.magic) } };
+  }
+
+  // Внесок атрибутів у характеристики: { key: [{ label, value }] } — сума дорівнює attrBonuses(a, classId)
+  function attrContrib(a, classId = null) {
+    const bonus = attrBonuses(a, classId);
     const out = {};
-    for (const [key, eff] of Object.entries(ATTR_EFFECTS)) {
+    for (const [key, eff] of Object.entries(attrEffectsFor(classId))) {
       const parts = [];
       if (eff.base) parts.push({ label: "Базове відновлення", value: eff.base });
       for (const [attr, k] of Object.entries(eff.per || {})) {
@@ -108,9 +126,9 @@
   }
 
   // На що впливає атрибут: [{ key, value }] — value: скільки дає зараз (при total очках у цьому атрибуті)
-  function attrEffects(attr, a) {
+  function attrEffects(attr, a, classId = null) {
     const out = [];
-    for (const [key, eff] of Object.entries(ATTR_EFFECTS)) {
+    for (const [key, eff] of Object.entries(attrEffectsFor(classId))) {
       if (eff.per && eff.per[attr]) {
         out.push({ key, value: (a[attr] || 0) * eff.per[attr] });
       } else if (eff.soft && eff.soft.includes(attr)) {
@@ -176,5 +194,5 @@
   }
 
   Object.assign(RPG, { ATTRS, POINTS_PER_LEVEL, STAT_CAP: CAP, soft, attrBonuses, levelAttrs, describeAttrs, totalAttrs, addAttrPoint,
-    ATTR_EFFECTS, attrContrib, attrEffects });
+    ATTR_EFFECTS, attrEffectsFor, attrContrib, attrEffects, DMG_PER_POINT, dmgAttrs });
 })(window.RPG);

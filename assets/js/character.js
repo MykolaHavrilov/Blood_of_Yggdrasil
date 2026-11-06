@@ -141,9 +141,9 @@ function calcStats(save, trace = null) {
 
   // Атрибути (власні + з речей)
   const attrs = RPG.totalAttrs(save);
-  addStats(stats, RPG.attrBonuses(attrs));
+  addStats(stats, RPG.attrBonuses(attrs, save.character.classId));      // Атака й Сила магії — за вагами професії
   if (trace && RPG.attrContrib) {
-    for (const [key, parts] of Object.entries(RPG.attrContrib(attrs))) {
+    for (const [key, parts] of Object.entries(RPG.attrContrib(attrs, save.character.classId))) {
       for (const pt of parts) note(key, pt.label, pt.value);
     }
   }

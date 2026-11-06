@@ -116,7 +116,7 @@
     function statSources(key, cls) {
       const out = [];
       if (cls.baseStats?.[key] || cls.growth?.[key]) out.push("професії та рівня");
-      const eff = RPG.ATTR_EFFECTS[key];
+      const eff = (RPG.attrEffectsFor ? RPG.attrEffectsFor(ms.character.classId) : RPG.ATTR_EFFECTS)[key];
       const attrs = eff ? [...Object.keys(eff.per || {}), ...(eff.soft || [])] : [];
       if (attrs.length) out.push(attrs.map(a => RPG.ATTRS[a]).join(", "));
       if (key !== "attackSpeedPct") out.push("бонусів речей");
@@ -162,7 +162,7 @@
       box.append(own);
       box.append(el("p", "stat-info-sub", "Впливає на:"));
       const eff = el("ul", "stat-parts");
-      for (const e of RPG.attrEffects(key, total)) {
+      for (const e of RPG.attrEffects(key, total, ms.character.classId)) {
         eff.append(partRow(RPG.STAT_NAMES[e.key], e.value, "", ["crit", "dodge", "blockPhys", "blockMag", "skillPct"].includes(e.key) ? "%" : ""));
       }
       box.append(eff);
