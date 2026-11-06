@@ -175,13 +175,58 @@
     return g && g.val >= 0 ? `${r.effect}: ${r.vals[g.val]}` : "не діє — лише паливо для Горна Сварога";
   }
   // Вкласти руну з інвентаря (runeId) у гніздо slot речі ref (річ в інвентарі чи вдягнена). save — сейв героя (ms)
-  function insertRune(save, ref, slot, runeId) {
+  // Ліміт рун одного знака на герої (у всіх вдягнених речах разом; руни в одній речі теж рахуються).
+  // Спроба вкласти руну понад ліміт — попередження; якщо гравець наполягає (opts.force) — річ знищується
+  // разом з усіма рунами в ній (і руна, яку вкладали, теж пропадає).
+  const RUNE_LIMIT = { mannaz: 5 };
+  const refRuneCount = (ref, key) => (ref?.runes || []).filter(id => id && RPG.ITEMS[id]?.rune === key).length;
+  // Скільки рун знака key на герої ms; extraRef — річ поза героєм (в інвентарі), яку теж треба врахувати
+  function heroRuneCount(ms, key, extraRef = null) {
+    let n = 0;
+    const eq = Object.values(ms.equipment || {});
+    for (const ref of eq) n += refRuneCount(ref, key);
+    if (extraRef && !eq.includes(extraRef)) n += refRuneCount(extraRef, key);
+    return n;
+  }
+  // Чи можна вдягнути річ ref у слот slot, не перевищивши ліміт рун: { ok, reason }
+  function runeLimitEquip(ms, ref, slot) {
+    for (const [key, limit] of Object.entries(RUNE_LIMIT)) {
+      const add = refRuneCount(ref, key);
+      if (!add) continue;
+      const n = heroRuneCount(ms, key) - refRuneCount(ms.equipment?.[slot], key) + add;
+      if (n > limit) return { ok: false, reason: `На герої може бути не більше ${limit} рун «${RUNES[key].name}» — у цій речі їх ${add}, разом вийде ${n}.` };
+    }
+    return { ok: true };
+  }
+  // Знищити річ ref героя ms: зняти з героя або прибрати з інвентаря (руни в ній пропадають)
+  function destroyRef(ms, ref) {
+    for (const [s, r] of Object.entries(ms.equipment || {})) {
+      if (r === ref) { delete ms.equipment[s]; RPG.fixHands?.(ms); RPG.clampHpMp?.(ms); return true; }
+    }
+    const i = (ms.inventory || []).indexOf(ref);
+    if (i >= 0) { ms.inventory.splice(i, 1); return true; }
+    return false;
+  }
+
+  function insertRune(save, ref, slot, runeId, opts = {}) {
     if (!save.books?.runesRead) return { ok: false, reason: "Гнізда бачить лише той, хто прочитав «Руни Небесної Кузні»." };
     if (!ref?.sockets || !Array.isArray(ref.runes) || !(slot >= 0 && slot < ref.sockets)) return { ok: false, reason: "Немає такого гнізда." };
     if (ref.runes[slot]) return { ok: false, reason: "Гніздо вже зайняте — спершу вийміть руну." };
     if (!runeFits(ref.id, runeId)) return { ok: false, reason: `${RPG.ITEMS[runeId]?.name || "Ця руна"} сюди не лягає.` };
     if (RPG.ITEMS[runeId].grade === "broken") return { ok: false, reason: "Зламана руна не діє — її можна лише переплавити в Горні Сварога." };
     if (RPG.countItem(save, runeId) < 1) return { ok: false, reason: "Такої руни немає в інвентарі." };
+    const key = RPG.ITEMS[runeId].rune, limit = RUNE_LIMIT[key];
+    if (limit && heroRuneCount(save, key, ref) + 1 > limit) {
+      const name = RPG.itemFullName(ref);
+      if (!opts.force) {
+        return { ok: false, overLimit: true, limit,
+          reason: `Якщо додати ${limit + 1}-ту руну «${RUNES[key].name}», «${name}» буде знищено. Ви впевнені?` };
+      }
+      RPG.removeItem(save, runeId, 1);
+      destroyRef(save, ref);
+      return { ok: true, destroyed: true, id: runeId, name,
+        text: `Знехтувавши попередженням, сила, яку надавала ${limit + 1}-та руна «${RUNES[key].name}», вийшла з-під контролю та знищила «${name}» повністю…` };
+    }
     RPG.removeItem(save, runeId, 1);
     ref.runes[slot] = runeId;
     return { ok: true, id: runeId };
@@ -279,6 +324,6 @@
     return e;
   }
 
-  Object.assign(RPG, { RUNES, RUNE_GRADES, RUNE_GRADE_ORDER, RUNE_KIND_NAME, runeItemId, RUNE_IDS, RUNE_FORGE, runeForgeOdds, runeForge,
+  Object.assign(RPG, { RUNE_LIMIT, heroRuneCount, runeLimitEquip, RUNES, RUNE_GRADES, RUNE_GRADE_ORDER, RUNE_KIND_NAME, runeItemId, RUNE_IDS, RUNE_FORGE, runeForgeOdds, runeForge,
     RUNE_FITS, runeFits, runeEffectText, insertRune, removeRune, crackedRunes, runeNums, runeTotals, runeAttrs, teamRuneEco });
 })(window.RPG);

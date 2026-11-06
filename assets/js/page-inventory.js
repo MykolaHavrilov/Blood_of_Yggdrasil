@@ -355,13 +355,30 @@
     function showSocketDialog(ref) {
       document.querySelector(".socket-dialog")?.remove();
       const { dlg, closeBtn } = noticeDialog("socket-dialog", () => { RPG.popover.hide(); render(); });
-      let pick = null, note = null;
+      let pick = null, note = null, warn = null;   // warn — руна понад ліміт (Манназ — 5 на героя): чекаємо підтвердження
       const draw = () => {
         dlg.innerHTML = "";
         const close = closeBtn();
         dlg.append(close, el("h3", null, `Гнізда: ${RPG.itemFullName(ref)}`));
         dlg.append(noteP("Руни зброї лягають у зброю та речі лівої руки, руни броні — у броню, універсальні — у будь-що. Вийнята з гнізда руна тріскається і стає зламаною."));
         if (note) dlg.append(el("p", "forge-result" + (note.error ? " is-error" : ""), note.text));
+        if (warn) {
+          // Шоста руна «Манназ»: попередження й вибір
+          const box = el("div", "socket-warn");
+          box.append(el("p", "forge-result is-error", warn.reason));
+          const row = el("div", "socket-warn-actions");
+          row.append(button("Так, вкласти", "wf wf-danger", async () => {
+            const r = RPG.insertRune(ms, ref, warn.slot, warn.rid, { force: true });
+            warn = null;
+            if (!r.ok) { note = { text: r.reason, error: true }; draw(); return; }
+            await RPG.saveGame(save);
+            selected = null;
+            dlg.close();
+            showNotice("Руна вийшла з-під контролю", [r.text]);
+          }), button("Ні, не вкладати", "wf wf-secondary", () => { warn = null; draw(); }));
+          box.append(row);
+          dlg.append(box);
+        }
         const slots = el("div", "socket-slots");
         ref.runes.forEach((rid, i) => {
           const row = el("div", "socket-row" + (pick === i ? " is-pick" : ""));
@@ -400,6 +417,7 @@
             const it = RPG.ITEMS[rid];
             const b = button("", "rune-pick-row", async () => {
               const r = RPG.insertRune(ms, ref, pick, rid);
+              if (r.overLimit) { warn = { reason: r.reason, slot: pick, rid }; note = null; draw(); return; }
               note = { text: r.ok ? `${RPG.ITEMS[r.id].name} лягла в гніздо.` : r.reason, error: !r.ok };
               if (r.ok) { pick = null; await RPG.saveGame(save); }
               draw();

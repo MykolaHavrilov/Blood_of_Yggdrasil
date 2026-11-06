@@ -1029,6 +1029,8 @@ function equipItem(save, what) {
   if (!check.ok) return check;
 
   const slot = equipSlotFor(save, entry.id);
+  const runeCheck = RPG.runeLimitEquip ? RPG.runeLimitEquip(save, entry, slot) : { ok: true };   // ліміт рун (Манназ — 5 на героя)
+  if (!runeCheck.ok) return runeCheck;
   save.inventory.splice(index, 1);
   const old = save.equipment[slot];
   if (old) save.inventory.splice(index, 0, RPG.normalizeRef(old));  // знята річ — у ту ж клітинку
