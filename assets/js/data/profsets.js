@@ -2,7 +2,8 @@
 // data/profsets.js — КОМПЛЕКТИ БРОНІ ПРОФЕСІЙ (попередня версія)
 //
 // 12 професій × 5 частин (шолом, нагрудник, штани, наручі, чоботи), тір 3, з 25 рівня;
-// + секретна (Шаман потойбіччя): з 30 рівня, креслення з Володаря Темного лісу, лише коли в групі є Шаман.
+// + секретна (Шаман потойбіччя): креслення з Володаря Темного лісу, лише коли в групі є Шаман.
+// Зброя професій — окремі комплекти з 2 речей (зброя + ліва рука), WEAPON_SETS нижче; креслення — з тих самих босів.
 // Носить лише своя професія (classes), кує будь-хто — але лише за вивченим кресленням.
 // Креслення (type "blueprint") падає з босів Альвгейму: кожен бос — 2 професії (BLUEPRINT_DROPS).
 // «Використати» креслення в інвентарі — рецепт назавжди відкривається в кузні (save.story.blueprints).
@@ -72,9 +73,9 @@
       steps: [{ pieces: 3, pct: { mp: 12 }, text: L("+12% до мани", "+12% mana") }, { pieces: 5, pct: { magicDefense: 10 }, add: { skillPct: 10 }, text: L("+10% до сили навичок і лікування, +10% до магічного захисту", "+10% skill power and healing, +10% magic defence") }] },
     monk: { weight: "medium", name: L("Одіж Білобожого послушника", "Garments of Bilobog's Novice"), of: L("Білобожого послушника", "Bilobog's Novice"), cls: L(null, "monk"), boss: "alf_boss_gardener",
       steps: [{ pieces: 3, add: { dodge: 4 }, text: L("+4% до ухилення", "+4% dodge") }, { pieces: 5, pct: { speed: 6, hp: 8 }, text: L("+6% до швидкості, +8% до здоров'я", "+6% speed, +8% health") }] },
-    // Секретна професія (quests.js → SHAMAN): з 30 рівня; креслення — з Володаря Темного лісу і лише тоді,
+    // Секретна професія (quests.js → SHAMAN): як і всі, з 25 рівня професії; креслення — з Володаря Темного лісу і лише тоді,
     // коли в групі є Шаман потойбіччя (secret) — інакше про комплект ніхто не дізнається
-    shaman: { weight: "medium", level: 30, secret: true, name: L("Убрання Відреченого", "Garb of the Renouncer"), of: L("Відреченого", "the Renouncer"), cls: L(null, "shaman of the beyond"), boss: "forest_lord",
+    shaman: { weight: "medium", secret: true, name: L("Убрання Відреченого", "Garb of the Renouncer"), of: L("Відреченого", "the Renouncer"), cls: L(null, "shaman of the beyond"), boss: "forest_lord",
       steps: [{ pieces: 3, pct: { attack: 6, magic: 6 }, text: L("+6% до атаки й сили магії", "+6% attack and magic power") }, { pieces: 5, pct: { hp: 8 }, add: { skillPct: 10 }, text: L("+10% до сили навичок, +8% до здоров'я", "+10% skill power, +8% health") }] }
   };
 
@@ -90,6 +91,19 @@
   const BLUEPRINT_DROPS = {};      // { бос: [id креслень] }
 
   const r1 = v => Math.round(v * 10) / 10;
+  // Креслення до рецепта речі id: blueprint_<id речі без «prof_»> (напр. blueprint_warrior_head, blueprint_w_warrior_main)
+  function addBlueprint(cls, set, id, name, tab) {
+    const bp = "blueprint_" + id.replace(/^profw_/, "w_").replace(/^prof_/, "");
+    RPG.ITEMS[bp] = {
+      name: L(`Креслення: ${name}`, `Blueprint: ${name}`),
+      type: "blueprint", recipe: id, stackable: true, maxStack: 99, price: 300, noShop: true, secretFor: set.secret ? cls : undefined,
+      description: L(`Креслення ковальського рецепта. Використайте — і «${name}» назавжди з'явиться у вашій кузні (вкладка «${tab}», тір 3). ` +
+        `Падає з боса «${RPG.ENEMIES[set.boss]?.name || set.boss}».`,
+        `A smith's recipe blueprint. Use it — and "${name}" will appear in your forge for good (the "${tab}" tab, tier 3). ` +
+        `Dropped by the boss "${RPG.I18N?.en?.phrases?.[RPG.ENEMIES[set.boss]?.name] || set.boss}".`)
+    };
+    (BLUEPRINT_DROPS[set.boss] ||= []).push(bp);
+  }
   for (const [cls, set] of Object.entries(SETS)) {
     if (!RPG.CLASSES[cls]) continue;
     const w = WEIGHT[set.weight];
@@ -114,17 +128,59 @@
       };
       const mat = MATS[set.weight];
       if (RPG.RECIPES) RPG.RECIPES[id] = { tier: TIER, mats: mat.mats(slot), tools: mat.tools, blueprint: true };   // recipes.js є лише на сторінці гри
-      const bp = `blueprint_${cls}_${slot}`;
-      RPG.ITEMS[bp] = {
-        name: L(`Креслення: ${name}`, `Blueprint: ${name}`),
-        type: "blueprint", recipe: id, stackable: true, maxStack: 99, price: 300, noShop: true, secretFor: set.secret ? cls : undefined,
-        description: L(`Креслення ковальського рецепта. Використайте — і «${name}» назавжди з'явиться у вашій кузні (вкладка «Броня», тір 3). ` +
-          `Падає з боса «${RPG.ENEMIES[set.boss]?.name || set.boss}».`,
-          `A smith's recipe blueprint. Use it — and "${name}" will appear in your forge for good (the "Armour" tab, tier 3). ` +
-          `Dropped by the boss "${RPG.I18N?.en?.phrases?.[RPG.ENEMIES[set.boss]?.name] || set.boss}".`)
-      };
-      (BLUEPRINT_DROPS[set.boss] ||= []).push(bp);
+      addBlueprint(cls, set, id, name, L("Броня", "Armour"));
     });
+  }
+
+
+  // ---------- Комплекти зброї професій: зброя + ліва рука (окремий бонус за 2 речі) ----------
+  // base — залізна річ тіру 3, від якої беруться характеристики (× WEAPON_MULT) і рецепт (× 1.5 + золотий злиток)
+  const WEAPON_MULT = 1.2;
+  const W_NOUN = L(
+    { sword: "Меч", axe: "Сокира", axe2: "Топірець", dagger: "Кинджал", bow: "Лук", staff: "Посох", shield: "Щит", quiver: "Сагайдак", orb: "Сфера", knife: "Малий кинджал" },
+    { sword: "Sword", axe: "Axe", axe2: "Hatchet", dagger: "Dagger", bow: "Bow", staff: "Staff", shield: "Shield", quiver: "Quiver", orb: "Orb", knife: "Parrying Dagger" });
+  const W_BASE = { sword: "sword_t3", axe: "axe_t3", axe2: "axe_t3", dagger: "dagger_t3", bow: "bow_t3", staff: "staff_t3",
+                   shield: "shield_t3", quiver: "quiver_t3", orb: "orb_t3", knife: "knife_t3" };
+  //   main / off — види речей; extra — додаток професії до кожної з двох речей; step — бонус за 2 речі
+  const WEAPON_SETS = {
+    warrior:    { main: "sword", off: "shield", extra: { crit: 1 },          step: { pct: { attack: 6 }, add: { crit: 2 }, text: L("+6% до атаки, +2% до шансу крит. удару", "+6% attack, +2% critical hit chance") } },
+    knight:     { main: "sword", off: "shield", extra: { hp: 40 },           step: { pct: { defense: 8 }, add: { blockPhys: 4 }, text: L("+8% до захисту, +4% до блоку фізичної шкоди", "+8% defence, +4% physical damage block") } },
+    berserker:  { main: "axe", off: "axe2", extra: { crit: 1 },              step: { pct: { attack: 8 }, add: { crit: 3 }, text: L("+8% до атаки, +3% до шансу крит. удару", "+8% attack, +3% critical hit chance") } },
+    rogue:      { main: "dagger", off: "knife", extra: { dodge: 1 },         step: { add: { crit: 4, dodge: 2 }, text: L("+4% до шансу крит. удару, +2% до ухилення", "+4% critical hit chance, +2% dodge") } },
+    hunter:     { main: "bow", off: "quiver", extra: { attack: 4 },          step: { pct: { attack: 6, speed: 5 }, text: L("+6% до атаки, +5% до швидкості", "+6% attack, +5% speed") } },
+    mage_fire:  { main: "staff", off: "orb", extra: { crit: 1 },             step: { pct: { magic: 8 }, text: L("+8% до сили магії", "+8% magic power") } },
+    mage_water: { main: "staff", off: "orb", extra: { mp: 30 },              step: { pct: { magic: 5, mpRegen: 30 }, text: L("+5% до сили магії, +30% до відновлення мани", "+5% magic power, +30% mana regeneration") } },
+    mage_wind:  { main: "staff", off: "orb", extra: { speed: 1 },            step: { pct: { magic: 6, speed: 4 }, text: L("+6% до сили магії, +4% до швидкості", "+6% magic power, +4% speed") } },
+    mage_earth: { main: "staff", off: "orb", extra: { defense: 4 },          step: { pct: { magic: 6, defense: 6 }, text: L("+6% до сили магії, +6% до захисту", "+6% magic power, +6% defence") } },
+    paladin:    { main: "sword", off: "shield", extra: { magic: 6 },         step: { pct: { attack: 5, magic: 5 }, text: L("+5% до атаки й сили магії", "+5% attack and magic power") } },
+    priest:     { main: "staff", off: "orb", extra: { magicDefense: 4 },     step: { add: { skillPct: 8 }, text: L("+8% до сили навичок і лікування", "+8% skill power and healing") } },
+    monk:       { main: "staff", off: "knife", extra: { dodge: 1 },          step: { pct: { speed: 5 }, add: { dodge: 3 }, text: L("+5% до швидкості, +3% до ухилення", "+5% speed, +3% dodge") } },
+    shaman:     { main: "sword", off: "orb", extra: { magic: 4 },            step: { pct: { magic: 6 }, add: { skillPct: 5 }, text: L("+6% до сили магії, +5% до сили навичок", "+6% magic power, +5% skill power") } }
+  };
+  for (const [cls, ws] of Object.entries(WEAPON_SETS)) {
+    const set = SETS[cls];
+    if (!set || !RPG.CLASSES[cls]) continue;
+    const setId = "profw_" + cls;
+    const setName = L(`Зброя ${set.of}`, `Arms of ${set.of}`);
+    RPG.ITEM_SETS[setId] = { name: setName, steps: [{ pieces: 2, ...ws.step }], profession: cls };
+    for (const [part, kind] of [["main", ws.main], ["off", ws.off]]) {
+      const base = RPG.ITEMS[W_BASE[kind]];
+      const stats = {};
+      for (const [k, v] of Object.entries(base.stats)) stats[k] = v < 0 ? v : DECIMAL.includes(k) ? r1(v * WEAPON_MULT) : Math.round(v * WEAPON_MULT);
+      for (const [k, v] of Object.entries(ws.extra)) stats[k] = (stats[k] || 0) + v;
+      const id = `${setId}_${part}`;
+      const name = L(`${W_NOUN[kind]} ${set.of}`, `${W_NOUN[kind]} of ${set.of}`);
+      const { name: _n, description: _d, stats: _s, ...fields } = base;
+      RPG.ITEMS[id] = {
+        ...fields, name, levelReq: LEVEL, price: Math.round(base.price * 1.4), set: setId, noShop: true,
+        classes: [cls], profSet: true, stats,
+        description: L(`Частина комплекту «${setName}». Носить лише ${RPG.CLASSES[cls].name.toLowerCase()}.`,
+          `Part of the "${setName}" set. Only ${/^[aeiou]/.test(set.cls) ? "an" : "a"} ${set.cls} can wear it.`)
+      };
+      const br = RPG.RECIPES?.[W_BASE[kind]];
+      if (br) RPG.RECIPES[id] = { tier: TIER, mats: [...br.mats.map(([m, q]) => [m, Math.ceil(q * 1.5)]), ["gold_ingot", 1]], tools: br.tools, blueprint: true };
+      addBlueprint(cls, set, id, name, L("Зброя", "Weapon"));
+    }
   }
 
   // ---------- Креслення ----------
@@ -154,16 +210,16 @@
   }
   // Звідки креслення рецепта (для підказки в кузні)
   function blueprintSource(itemId) {
-    const set = SETS[(RPG.ITEMS[itemId]?.set || "").replace(/^prof_/, "")];
+    const set = SETS[(RPG.ITEMS[itemId]?.set || "").replace(/^profw?_/, "")];
     return set ? RPG.ENEMIES[set.boss]?.name || set.boss : "";
   }
 
   // Секретний комплект показується в кузні, лише коли в групі є його професія або вивчено хоч одне креслення
   function blueprintVisible(save, itemId) {
-    const set = SETS[(RPG.ITEMS[itemId]?.set || "").replace(/^prof_/, "")];
+    const set = SETS[(RPG.ITEMS[itemId]?.set || "").replace(/^profw?_/, "")];
     if (!set?.secret) return true;
     const cls = RPG.ITEMS[itemId].classes[0];
-    return partyHas(save, cls) || SLOTS.some(sl => save.story?.blueprints?.[`prof_${cls}_${sl}`]);
+    return partyHas(save, cls) || Object.keys(save.story?.blueprints || {}).some(id => RPG.ITEMS[id]?.classes?.[0] === cls);
   }
 
   Object.assign(RPG, { blueprintVisible, PROF_SETS: SETS, BLUEPRINT_DROPS, BLUEPRINT_CHANCE, knowsRecipe, learnBlueprint, rollBlueprintDrop, blueprintSource });
