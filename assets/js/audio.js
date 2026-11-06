@@ -1243,10 +1243,11 @@ window.RPG = window.RPG || {};
   // Звук події бою (battle.js → ev.sound):
   //   "skill:<id>" — навичка, "weapon:<тип>" — звичайний удар героя,
   //   "enemy:<зброя>:<дієслово>" — удар ворога, або просто назва звуку ("miss", "dark", ...)
+  // (англійські слова — для гри англійською: дієслова ворогів перекладає i18n.js)
   const VERB_SFX = [
-    [/дряпає|рве|роздирає|шматує/, "claw"], [/кусає|ікл|присмокт|жалить/, "bite"],
-    [/хлюпає/, "squish"], [/ножем/, "dagger"], [/рубає/, "axe"], [/обпікає/, "fire"],
-    [/торкається/, "dark"], [/хльоскає/, "whip"]
+    [/дряпає|рве|роздирає|шматує|scratch|rips|tears|maul/, "claw"], [/кусає|ікл|присмокт|жалить|bite|tusk|latch|sting/, "bite"],
+    [/хлюпає|splash/, "squish"], [/ножем|knife/, "dagger"], [/рубає|slash|chop/, "axe"], [/обпікає|scorch/, "fire"],
+    [/торкається|touch/, "dark"], [/хльоскає|lash|whip/, "whip"]
   ];
   function battleSound(ev) {
     if (!ev || !ev.sound) return;

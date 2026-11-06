@@ -1201,6 +1201,7 @@ RPG.I18N.en = {
 "Поразка": "Defeat",
 "Новий рівень": "Level Up",
 "Мова": "Language",
+"Відновлення": "Regeneration",
 "Українська": "Українська",
 "Закрити": "Close",
 "Немає активної гри": "No active game",
@@ -1494,1041 +1495,6750 @@ RPG.I18N.en = {
 "Ви тут": "You are here",
 "Закрито": "Closed",
 "Вийти з Дубової Застави": "Leave Oak Outpost",
-"Зберегти": "Save"
+"Зберегти": "Save",
+"Атака зброєю": "Weapon attack",
+"Посох / удар щитом": "Staff / shield bash",
+"Атакуючі заклинання": "Attack spells",
+"Відновлюючі": "Restoration",
+"Посилення та захист": "Buffs and protection",
+"Посилення": "Buff",
+"Бойовий клич / Лють": "Battle cry / Rage",
+"Щит / Кам'яна шкіра": "Shield / Stone Skin",
+"Тінь / Ухильність": "Shadow / Evasion",
+"У бою": "In battle",
+"Влучання": "Hit",
+"Критичний удар": "Critical hit",
+"Героя поранено": "Hero wounded",
+"Промах": "Miss",
+"Кігті звіра": "Beast claws",
+"Укус": "Bite",
+"Слайм": "Slime",
+"Темна магія ворога": "Enemy dark magic",
+"Ворог переможений": "Enemy defeated",
+"Інтерфейс": "Interface",
+"Клік": "Click",
+"Монети": "Coins",
+"Вдягнути річ": "Equip an item",
+"кулаками": "with fists",
+"промах": "miss",
+"(крит)": "(crit)",
+"(нежить!)": "(undead!)",
+"(захист ворога пробито — подвійна сила)": "(enemy defence pierced — double power)",
+"ворог горить": "the enemy is burning",
+"ворог отруєний": "the enemy is poisoned",
+"п.": "pts",
+"(ворог частково заблокував)": "(the enemy partly blocked)",
+"— КРИТ!": "— CRIT!",
+"(блок)": "(block)",
+"кидається": "lunges",
+"— БОС": "— BOSS",
+"Вороги тримаються купою.": "The enemies keep together.",
+"Вороги розсипались по полю.": "The enemies are scattered across the field.",
+"застрягла": "is stuck",
+"застряг": "is stuck",
+"себе": "self",
+"Усіх ворогів": "All enemies",
+"Вороги втекли": "The enemies fled",
+"Уся група загинула…": "The whole party fell…",
+"загинула": "fell",
+"загинув": "fell",
+"Олена": "Olena",
+"Мирослава": "Myroslava",
+"Дарина": "Daryna",
+"Соломія": "Solomiia",
+"Ярина": "Yaryna",
+"Оксана": "Oksana",
+"Христина": "Khrystyna",
+"Леся": "Lesia",
+"Устина": "Ustyna",
+"Злата": "Zlata",
+"Володіння вдягненою зброєю (Тренер)": "Mastery of the equipped weapon (Trainer)",
+"Пасивні навички": "Passive skills",
+"Легендарні речі": "Legendary items",
+"Швидкість атаки (володіння зброєю)": "Attack speed (weapon mastery)",
+"Обмеження максимуму": "Maximum cap",
+"Молитву читають лише в Храмі.": "Prayers are read only in the Temple.",
+"Повертати нічого — очки ще не розподілені.": "Nothing to return — no points have been allocated yet.",
+"Помолитися можна лише в Храмі.": "You can pray only in the Temple.",
+"Такої професії немає.": "There is no such profession.",
+"Умови для цієї професії не виконані.": "The conditions for this profession are not met.",
+"Це не мішечок на пояс.": "This is not a belt pouch.",
+"Немає такого слота.": "There is no such slot.",
+"Після заміни речі не вмістяться в інвентар — спершу звільніть місце.": "After the swap the items won't fit into the inventory — free up space first.",
+"Слот порожній.": "The slot is empty.",
+"Без цього мішечка речі не вмістяться в інвентар — спершу звільніть місце.": "Without this pouch the items won't fit into the inventory — free up space first.",
+"Інвентар повний — звільніть місце (продайте речі або покладіть у скриню вдома).": "The inventory is full — free up space (sell items or put them into the chest at home).",
+"Сфера Богів уже є в цьому збереженні (в інвентарі чи в скрині Домівки).": "The Orb of the Gods is already in this save (in the inventory or in the Home chest).",
+"Інвентар повний — звільніть клітинку.": "The inventory is full — free up a cell.",
+"Сфери Богів у цьому збереженні немає.": "There is no Orb of the Gods in this save.",
+"Тут немає скрині.": "There is no chest here.",
+"Порожня клітинка.": "Empty cell.",
+"не для цього предмета": "not for this item",
+"Інвентар повний — звільніть місце.": "The inventory is full — free up space.",
+"Цей предмет не можна вдягнути.": "This item cannot be equipped.",
+"або": "or",
+"Другу сокиру можна взяти, лише коли в правій руці теж сокира.": "A second axe can be taken only when the right hand also holds an axe.",
+"Предмета немає в інвентарі.": "The item is not in the inventory.",
+"Цей предмет не можна використати.": "This item cannot be used.",
+"У данжі не можна пити зілля — лікують лише навички.": "Potions cannot be drunk in a dungeon — only skills heal.",
+"Загиблий не може пити зілля.": "The fallen cannot drink potions.",
+"Здоров'я та мана вже повні.": "Health and mana are already full.",
+"Предмета немає.": "There is no such item.",
+"Такого дому немає.": "There is no such house.",
+"Цей дім уже ваш.": "This house is already yours.",
+"Дайте дому назву.": "Give the house a name.",
+"Дім вам не належить.": "The house doesn't belong to you.",
+"Склад уже збудовано.": "The storehouse is already built.",
+"Спершу збудуйте склад.": "Build the storehouse first.",
+"Такої скрині немає.": "There is no such chest.",
+"Кузню вже збудовано.": "The forge is already built.",
+"Такого знаряддя немає.": "There is no such tool.",
+"Кузьма продає знаряддя лише тим, хто вже має професію.": "Kuzma sells tools only to those who already have a profession.",
+"Спершу збудуйте кузню при своєму домі (Спальний район).": "First build a forge at your house (Residential District).",
+"Книги немає.": "There is no book.",
+"Ця книга у вас уже є.": "You already have this book.",
+"Мерія продає цю книгу лише власникам дому в Заставі.": "The Town Hall sells this book only to house owners in the Outpost.",
+"Кузьма продає книгу лише тим, хто вже має професію.": "Kuzma sells the book only to those who already have a profession.",
+"Іфрит — у Гільдії авантюристів Дубової Застави.": "Ifrit is in the Adventurers' Guild of Oak Outpost.",
+"Іфрит цього не продає.": "Ifrit doesn't sell that.",
+"Торгова гільдія — у Дубовій Заставі, в Торговому районі.": "The Merchants' Guild is in Oak Outpost, in the Trade District.",
+"Скрудж цього не продає.": "Scrooge doesn't sell that.",
+"Варта не пускає до брами простих селян. Повертайтеся, коли матимете професію (квест «Шлях професії», з 15 рівня).": "The guards don't let simple peasants through the gate. Come back when you have a profession (the quest \"Path of a Profession\", from level 15).",
+"Спальний район відкривається після завдання Мерії «Збір вугілля» (Розпорядник Захар, Центральний район).": "The Residential District opens after the Town Hall task \"Coal Collection\" (Steward Zakhar, Central District).",
+"Закрито — відкриється згодом.": "Closed — it will open later.",
+"Тут немає торговця.": "There is no merchant here.",
+"Торговець цього не продає.": "The merchant doesn't sell that.",
+"Квестові предмети торговець не купує.": "The merchant doesn't buy quest items.",
+"Вкажіть кількість від 1.": "Enter a quantity from 1.",
+"Кувати можна, коли головний герой має професію.": "You can forge when the main hero has a profession.",
+"Спершу придбайте в коваля Кузьми книгу «Небесна кузня. Настанова» — першу науку коваля.": "First buy the book \"The Heavenly Forge. A Manual\" from the smith Kuzma — the smith's first lesson.",
+"Кувати можна лише у власному домі з кузнею.": "You can forge only in your own house with a forge.",
+"Спершу збудуйте кузню при домі.": "First build a forge at the house.",
+"майстерності": "mastery",
+"Бракує матеріалів.": "Not enough materials.",
+"Інвентар повний.": "The inventory is full.",
+"Такого рецепта немає.": "There is no such recipe.",
+"Такого злитка немає.": "There is no such ingot.",
+"Бракує руди або вугілля.": "Not enough ore or coal.",
+"Бракує руди.": "Not enough ore.",
+"Інвентар і скрині для матеріалів повні.": "The inventory and the material chests are full.",
+"Цю річ не можна розібрати.": "This item cannot be salvaged.",
+"Інвентар повний — нікуди скласти матеріали.": "The inventory is full — nowhere to put the materials.",
+"Такого данжу немає.": "There is no such dungeon.",
+"Ворота данжу — в іншій локації.": "The dungeon gates are in another location.",
+"Ви вже в данжі.": "You are already in the dungeon.",
+"Удома немає героїв, готових до бою: решта — в експедиції або полягла.": "There are no heroes at home ready to fight: the rest are on an expedition or have fallen.",
+"Усі герої групи полягли — помоліться за них у Храмі.": "All heroes of the party have fallen — pray for them in the Temple.",
+"Сюди експедицію не відправити.": "An expedition cannot be sent here.",
+"Ви в дорозі — експедицію можна відправити, коли дійдете.": "You are on the road — the expedition can be sent when you arrive.",
+"Група в данжі — спершу завершіть його.": "The party is in a dungeon — finish it first.",
+"В експедицію йдуть 3 або 6 героїв.": "3 or 6 heroes go on an expedition.",
+"Кожного героя можна вибрати лише раз.": "Each hero can be chosen only once.",
+"Такого героя в групі немає.": "There is no such hero in the party.",
+"Експедиції немає.": "There is no expedition.",
+"Група ще в експедиції.": "The party is still on the expedition.",
+"Бій": "Battle",
+"Нагорода": "Reward",
+"Сповіщення": "Notification",
+"Журнал бою": "Battle Log",
+"На початок журналу": "To the start of the log",
+"У кінець журналу": "To the end of the log",
+"Завантажити .txt": "Download .txt",
+"рубає мечем": "slashes with a sword at",
+"б'є кинджалом": "stabs with a dagger at",
+"стріляє з лука в": "shoots an arrow at",
+"Ви залишились тут.": "You stayed here.",
+"Інвентар і скриня": "Inventory and chest",
+"Тут битися заборонено — монстри сюди не заходять.": "Fighting is forbidden here — monsters don't come here.",
+"Вирушити (Мапа)": "Set off (Map)",
+"Прочитати пергамент": "Read the parchment",
+"Добудови": "Extensions",
+"Усі скрині ремесла куплено:": "All craft chests are bought:",
+"Відкрити скрині (Інвентар)": "Open the chests (Inventory)",
+"Знаряддя для неї продає коваль Кузьма в Гільдії ремісників (Торговий район).": "Tools for it are sold by the smith Kuzma in the Craftsmen's Guild (Trade District).",
+"Ще не куплено:": "Not bought yet:",
+"Кувати й купувати знаряддя можна, коли головний герой має професію.": "You can forge and buy tools when the main hero has a profession.",
+"Кувати": "Forge",
+"Книга «Небесна кузня»": "Book \"The Heavenly Forge\"",
+"Бібліотека": "Library",
+"Полиці ще порожні. Сюди ляже кожна книга, яку ви знайдете в мандрах чи купите в торговців.": "The shelves are still empty. Every book you find on your travels or buy from merchants will go here.",
+"Читати": "Read",
+"Вийти в Спальний район": "Go out to the Residential District",
+"Закрити кузню": "Close the forge",
+"Переплавка": "Smelting",
+"Розбір": "Salvage",
+"· максимум": "· maximum",
+"Спершу рідкісніші матеріали (кращі шанси)": "Rarer materials first (better chances)",
+"Матеріали беруться з інвентаря і скринь для матеріалів цього дому.": "Materials are taken from the inventory and the material chests of this house.",
+"Рецепти можна переглянути, але кувати — ні.": "Recipes can be viewed, but not forged.",
+", Небесна іскра згоріла": ", the Heavenly Spark burnt up",
+"Переплавка завжди вдається: руда (а для сталі, двергської сталі й сонячного золота — нижчі злитки) → 1 злиток тієї ж рідкості; скільки треба — біля кожного злитка. +1 досвіду за злиток.": "Smelting always succeeds: ore (and for steel, dwarven steel and solar gold — lower ingots) → 1 ingot of the same rarity; how much is needed is shown by each ingot. +1 experience per ingot.",
+"Руда й вугілля беруться і зі скринь для матеріалів; злитки, що не влізли в інвентар, лягають туди ж.": "Ore and coal are also taken from the material chests; ingots that don't fit into the inventory go there too.",
+"Розбір повертає частину матеріалів рецепта: зламана річ — 25%, звичайна — 40%, магічна — 50% + 1 магічний матеріал,": "Salvage returns part of the recipe materials: broken item — 25%, common — 40%, magic — 50% + 1 magic material,",
+"епічна — 60% + 1 епічний, легендарна — 70% + Небесна іскра. Досвід — за кожен матеріал: 1 / 3 / 8 / 25. Розбираються лише речі з інвентаря — рецепт не потрібен; вдягнені спершу зніміть, зі скринь — заберіть в інвентар.": "epic — 60% + 1 epic, legendary — 70% + a Heavenly Spark. Experience — for each material: 1 / 3 / 8 / 25. Only items from the inventory are salvaged — no recipe needed; take off equipped ones first, take ones from chests into the inventory.",
+"Небесна іскра ×1": "Heavenly Spark ×1",
+"магічний": "magic",
+"епічний": "epic",
+"Так, розібрати": "Yes, salvage",
+"Розібрати": "Salvage",
+"В інвентарі немає речей, які можна розібрати. Розбираються зброя, щити, броня й прикраси, що лежать в інвентарі (не в скринях).": "There are no items in the inventory that can be salvaged. Weapons, shields, armour and jewellery lying in the inventory (not in chests) can be salvaged.",
+"Назва дому": "House name",
+"Напр. «Дубовий двір»": "E.g. \"Oak Yard\"",
+"Згодом доми будуть і в інших містах — назва допоможе їх розрізняти.": "Later there will be houses in other cities too — the name will help tell them apart.",
+"Купівля дому": "Buying a house",
+"Як назвете свій дім? Оберіть уважно: назва дається один раз.": "What will you name your house? Choose carefully: the name is given once.",
+"Тут не б'ються. Звідси — дороги до всіх місць Темного лісу (Мапа). Щоб повернутися в Дубову Заставу, гукніть капітана варти.": "No fighting here. From here — roads to every place in the Dark Forest (Map). To return to Oak Outpost, call the captain of the guard.",
+"Мапа Темного лісу": "Dark Forest Map",
+"Ви в дорозі — дочекайтеся прибуття.": "You are on the road — wait until you arrive.",
+"Спершу пройдіть або покиньте данж.": "First complete or leave the dungeon.",
+"Тут не б'ються. Звідси — стежка до всіх місць світу (Мапа).": "No fighting here. From here — a path to every place in the world (Map).",
+"світ": "world",
+"Тут не б'ються. Крізь ворота — Південний район Дубової Застави з Гільдією авантюристів.": "No fighting here. Through the gate — the Southern District of Oak Outpost with the Adventurers' Guild.",
+"Увійти в Дубову Заставу": "Enter Oak Outpost",
+"відновіться зіллям або вирушайте відпочити в Домівку.": "restore yourself with a potion or go to rest at Home.",
+"Внутрішній двір Храму": "Inner Courtyard of the Temple",
+"Ви кладете сферу на долоні статуї. Камінь лягає в ромбовидний виступ, мов там і був…": "You place the orb on the statue's palms. The stone settles into the diamond-shaped ledge as if it had always been there…",
+"Нічого не відбувається.": "Nothing happens.",
+"Посеред двору — висохлий кам'яний фонтан. Над ним — статуя Велеса, що береже мудрість поколінь,": "In the middle of the courtyard — a dried-up stone fountain. Above it — a statue of Veles, who guards the wisdom of generations,",
+"з глечиком біля ніг. На розкритих долонях статуї — невеликий виступ у формі ромба.": "with a jug at his feet. On the statue's open palms — a small diamond-shaped ledge.",
+"Покласти сферу на долоні статуї": "Place the orb on the statue's palms",
+"Раптом з глечика біля ніг статуї починає сочитися блакитна вода. Вона тече все швидше, дзюрчить по каменю —": "Suddenly blue water begins to seep from the jug at the statue's feet. It flows faster and faster, babbling over the stone —",
+"і висохлий фонтан наповнюється сяйливою блакиттю. Джерело Велеса прокинулося!": "and the dried-up fountain fills with shining azure. The Spring of Veles has awakened!",
+"Над фонтаном височіє статуя Велеса зі сферою на долонях. З глечика біля його ніг тече блакитна вода,": "Above the fountain rises the statue of Veles with the orb on his palms. Blue water flows from the jug at his feet,",
+"і чаша фонтана повна до країв. Це чарівне джерело: хто нап'ється — тому кожен бій дає втричі більше досвіду": "and the fountain's bowl is full to the brim. This is a magic spring: whoever drinks from it gets three times more experience from every battle",
+"Випити з джерела": "Drink from the spring",
+"Джерело Велеса": "Spring of Veles",
+"«У твоїй групі немає полеглих. Хай так буде й надалі.»": "\"There are no fallen in your party. May it stay that way.\"",
+"над усією групою": "over the whole party",
+"Квест «Варта Центральної брами» взято. Прогрес — у журналі квестів на сторінці «Персонаж».": "The quest \"Guard of the Central Gate\" is taken. Progress — in the quest log on the \"Character\" page.",
+"Капітан задоволено киває. «Добре. Тепер — припаси.»": "The captain nods with satisfaction. \"Good. Now — the supplies.\"",
+"Завдання «Варта Центральної брами» виконано": "The task \"Guard of the Central Gate\" is complete",
+"«Брама зачинена.»": "\"The gate is closed.\"",
+"Брама відчиняється…": "The gate opens…",
+"Варта відчиняє хвіртку в брамі…": "The guards open the wicket in the gate…",
+"«Не розумію, про що ти.»": "\"I don't understand what you mean.\"",
+"Захар крутить сферу в пальцях, підносить до вікна й хитає головою. «У наших записах такого нема. Але знаєш що —": "Zakhar turns the orb in his fingers, holds it up to the window and shakes his head. \"There's nothing like it in our records. But you know what —",
+"спитай Остапа в шинку біля млина. До нього хто тільки не заходить: путівники, путівниці, купці з усіх земель.": "ask Ostap at the tavern by the mill. All sorts drop in on him: guides, wayfarers, merchants from every land.",
+"Хтось та й бачив подібне.»": "Someone must have seen something like it.\"",
+"Сестра Ївга обережно бере сферу, проводить пальцем по ромбовидному заглибленню й довго мовчить. «Щось знайоме…": "Sister Yivha carefully takes the orb, runs a finger along the diamond-shaped hollow and stays silent for a long time. \"Something familiar…",
+"та не пригадаю. Спитай Остапа в шинку біля млина — до нього заходять мандрівники й путівниці з далеких країв.": "but I can't remember. Ask Ostap at the tavern by the mill — travellers and guides from distant lands drop in on him.",
+"Може, хтось із них щось підкаже.»": "Maybe one of them can tell you something.\"",
+"мандрівнику": "traveller",
+"мандрівнице": "traveller",
+"Остап відставляє кухоль і стишує голос. «Ромб, кажеш? Була тут торік одна путівниця з півдня, сива вся,": "Ostap puts down his mug and lowers his voice. \"A diamond, you say? Last year there was a guide here from the south, all grey-haired,",
+"хоч і молода на лице. Розповідала, що колись у Храмі Перуна під вівтарем било джерело, і стерегли його Велесові долоні.": "though young in the face. She told how once a spring flowed beneath the altar in the Temple of Perun, and the palms of Veles guarded it.",
+"А потім вода пішла, і про те забули. Сходи до сестри Ївги — вона в Храмі найдовше, мо' пригадає.»": "And then the water went away, and people forgot about it. Go to Sister Yivha — she's been in the Temple the longest, maybe she'll remember.\"",
+"«Про що ти, дитино?»": "\"What are you talking about, child?\"",
+"Ївга завмирає, і її очі ширшають. «Велесові долоні… Ну звісно! Як я могла забути. Ходімо.»": "Yivha freezes, and her eyes widen. \"The palms of Veles… Of course! How could I forget. Let's go.\"",
+"Вона веде вас за вівтар, у внутрішній двір Храму. Посеред двору — висохлий кам'яний фонтан, а над ним статуя Велеса,": "She leads you behind the altar, into the inner courtyard of the Temple. In the middle of the courtyard — a dried-up stone fountain, and above it a statue of Veles,",
+"що береже мудрість поколінь, з глечиком біля ніг. Ви придивляєтеся: на його розкритих долонях — невеликий виступ у формі ромба.": "who guards the wisdom of generations, with a jug at his feet. You look closer: on his open palms — a small diamond-shaped ledge.",
+"Завдання «Збір вугілля» взято. Прогрес — у журналі квестів на сторінці «Персонаж».": "The task \"Coal Collection\" is taken. Progress — in the quest log on the \"Character\" page.",
+"«У вас нічого такого немає.»": "\"You have nothing like that.\"",
+"Захар прикладає обгорілий клапоть до місця, де бракує сторінок. Пергамент тепліє, краї зростаються,": "Zakhar puts the charred scrap to the place where the pages are missing. The parchment grows warm, the edges grow together,",
+"і по них пробігає золоте сяйво. Коли світло згасає, сторінка вже вшита назад — ніби ніколи й не була вирвана.": "and a golden glow runs across them. When the light fades, the page is already sewn back — as if it had never been torn out.",
+"тобі, друже": "you, friend",
+"тобі, подруго": "you, friend",
+"Захар обережно розгортає перед вами книгу. Від пергаменту пахне димом і старим дубом.": "Zakhar carefully opens the book before you. The parchment smells of smoke and old oak.",
+"Розподілити очки знову можна на сторінці «Персонаж».": "You can allocate the points again on the \"Character\" page.",
+"Купити": "Buy",
+"Не вистачає золота": "Not enough gold",
+"Продати (з інвентаря)": "Sell (from the inventory)",
+"Інвентар порожній. Вдягнені речі спершу зніміть.": "The inventory is empty. Take off equipped items first.",
+"Гільдія ремісників": "Craftsmen's Guild",
+"Торгова гільдія": "Merchants' Guild",
+"Горно Сварога": "Svarog's Forge",
+"До Горна Сварога": "To Svarog's Forge",
+"Закрити горно": "Close the forge",
+"Вийняти все": "Take out all",
+"В інвентарі немає рун.": "There are no runes in the inventory.",
+"Ваші руни — натисніть, щоб покласти в горно:": "Your runes — press to put into the forge:",
+"Перша наука коваля вже ваша. Перечитувати можна тут і в бібліотеці свого дому.": "The smith's first lesson is already yours. You can reread it here and in the library of your house.",
+"Перша наука коваля від Сварога, Брокка й Ейтрі. Без неї не викувати й не розібрати жодної речі.": "The smith's first lesson from Svarog, Brokkr and Eitri. Without it you can't forge or salvage a single item.",
+"✓ ваша": "✓ yours",
+"Погортати": "Leaf through",
+"Знаряддя для кузні": "Forge tools",
+"Спершу збудуйте кузню при своєму домі в Спальному районі — Кузьма поставить знаряддя туди.": "First build a forge at your house in the Residential District — Kuzma will put the tools there.",
+"· обов'язкове": "· required",
+"Дошка оголошень": "Notice Board",
+"Розпорядник Захар": "Steward Zakhar",
+"Книга ваша — читати її можна в бібліотеці свого дому.": "The book is yours — you can read it in the library of your house.",
+"Довідник Мерії про богів Ірію, Асгарду й сили темряви. Ляже на полицю бібліотеки у вашому домі.": "The Town Hall guide to the gods of Iriy, Asgard and the powers of darkness. It will go on the library shelf in your house.",
+"Мерія продає цей довідник лише власникам дому в Заставі (Спальний район).": "The Town Hall sells this guide only to house owners in the Outpost (Residential District).",
+"Біля Мерії стоїть Дошка оголошень: авантюристи шукають собі напарників. Та чужинцеві тут ніхто не довіряє —": "By the Town Hall stands the Notice Board: adventurers are looking for companions. But nobody here trusts a stranger —",
+"Біля Мерії стоїть Дошка оголошень: авантюристи шукають собі напарників, щоб об'єднатися в групу.": "By the Town Hall stands the Notice Board: adventurers are looking for companions to form a party.",
+"· головна героїня": "· main heroine",
+"· головний герой": "· main hero",
+"Відпустити": "Dismiss",
+"Його": "His",
+"Її": "Her",
+"Група вже повна.": "The party is already full.",
+"Коли пройдете «Шлях професії», на дошці з'являться й герої з професією — до вашого рівня.": "When you complete \"Path of a Profession\", heroes with a profession up to your level will appear on the board too.",
+"Селянка": "Peasant",
+"Налаштувати спорядження — в Інвентарі, атрибути": "Set up equipment in the Inventory, attributes",
+"і навички — на сторінці «Персонаж».": "and skills — on the \"Character\" page.",
+"Не вистачає золота на жодне з оголошень.": "Not enough gold for any of the notices.",
+"Усіх, хто шукав групу, вже найнято.": "Everyone who was looking for a party has already been hired.",
+"Адміністратор Артеміда": "Administrator Artemida",
+"Торговець Тадеуш": "Merchant Tadeusz",
+"Тренер Брут": "Trainer Brut",
+"Іфрит (тест)": "Ifrit (test)",
+"Артеміда, адміністратор гільдії": "Artemida, guild administrator",
+"Тадеуш, торговець гільдії": "Tadeusz, guild merchant",
+"Брут, тренер гільдії": "Brut, guild trainer",
+"Іфрит — тестовий торговець ресурсами": "Ifrit — test resource merchant",
+"Тестовий персонаж (не з лору гри). Продає ресурси ремесла, які поки ніде не падають і не добуваються.": "A test character (not from the game's lore). Sells craft resources that don't drop or get mined anywhere yet.",
+"Досвід за завдання отримує кожен герой групи — повністю, ще й з бонусами (група, тимчасові ефекти, руни й речі).": "Every hero of the party gets the experience for a task — in full, with bonuses too (party, temporary effects, runes and items).",
+"Здати все": "Hand in all",
+"Немає виконаних завдань.": "No completed tasks.",
+"кожному": "each",
+"EXP (з бонусами).": "EXP (with bonuses).",
+"Нагороди за чемпіонів": "Rewards for champions",
+"кожному герою": "to each hero",
+"Отримати": "Claim",
+"Ваші завдання": "Your tasks",
+"Немає взятих завдань.": "No tasks taken.",
+"Здати": "Hand in",
+"Відмовитись": "Decline",
+"Нові завдання": "New tasks",
+"Взяти": "Take",
+"досвідчений авантюрист": "an experienced adventurer",
+"досвідчена авантюристка": "an experienced adventurer",
+"Взяти завдання": "Take the task",
+"Нагорода:": "Reward:",
+"Здати частину": "Hand in the part",
+"Завершити завдання": "Complete the task",
+"Нагороди немає.": "No reward.",
+"До Центрального району (Мерія)": "To the Central District (Town Hall)",
+"Відкрито доступ: Дошка оголошень": "Access opened: Notice Board",
+"Дошка оголошень біля Мерії (Центральний район) тепер відкрита — можна наймати героїв у групу.": "The Notice Board by the Town Hall (Central District) is now open — you can hire heroes into the party.",
+"— к": "— q",
+"К": "Q",
+"— професія": "— profession",
+"Ваша професія": "Your profession",
+"«Ти переріс селянське життя. Пройди десять випробувань — і на 15 рівні я скажу, ким тобі судилося стати.": "\"You have outgrown peasant life. Pass ten trials — and at level 15 I'll tell you who you are destined to become.",
+"Яким шляхом ти підеш, залежить від того, що ти в собі розвивав.»": "Which path you take depends on what you have developed in yourself.\"",
+"«Перед тобою кілька шляхів. Обери, яким підеш, — назад дороги не буде.»": "\"Several paths lie before you. Choose which one you'll take — there'll be no way back.\"",
+"Професії:": "Professions:",
+"в": "t",
+"В": "T",
+"Взяти квест": "Take the quest",
+"Усі десять випробувань пройдено. «Ти довів, на що здатен. Час дізнатися, ким ти станеш.»": "All ten trials are passed. \"You've proven what you're capable of. Time to find out who you'll become.\"",
+"Нагорода за шлях: ???": "Reward for the path: ???",
+"«Перед тобою кілька шляхів — обери свій. Маг сам вирішує, якій стихії служити.»": "\"Several paths lie before you — choose yours. A mage decides for himself which element to serve.\"",
+"Вибір не можна буде змінити.": "The choice cannot be changed.",
+"EXP (15 рівень) і": "EXP (level 15) and",
+"н": "r",
+"Н": "R",
+"Зброю, якою ця професія не користується, знято в інвентар.": "Weapons this profession doesn't use were moved to the inventory.",
+"Завершити шлях і отримати професію": "Complete the path and get the profession",
+"Нагорода: досвід — скільки, дізнаєтесь при здачі.": "Reward: experience — you'll find out how much when you hand it in.",
+"Здати завдання": "Hand in the task",
+"з": "t",
+"З": "T",
+"Усі десять випробувань пройдено — поверніться до Артеміди по нагороду за шлях.": "All ten trials are passed — return to Artemida for the reward for the path.",
+"«Володіння приходить у бою, а не за золото. За кожен виграний бій росте вміння тією зброєю,": "\"Mastery comes in battle, not for gold. With every battle won, the skill with the weapon in your right hand grows.",
+"що в правій руці. Хочеш швидше — потренуйся зі мною.»": "Want it faster — train with me.\"",
+"(з 10 рівня персонажа — 20).": "(from character level 10 — 20).",
+"Володіння 10 відкриває зброю 2 виду, 20 — 3 виду. Більше досвіду володіння — за кількох ворогів, чемпіонів, босів,": "Mastery 10 unlocks tier 2 weapons, 20 — tier 3. More mastery experience — for several enemies, champions, bosses,",
+"сильніших ворогів і з Джерелом Велеса; за ворогів, слабших на 10+ рівнів, — нічого.": "stronger enemies and with the Spring of Veles; for enemies 10+ levels weaker — nothing.",
+"Триває": "In progress",
+"Тренування з Брутом": "Training with Brut",
+"— не для вашої професії": "— not for your profession",
+"(межа)": "(cap)",
+"· найвищий рівень": "· highest level",
+"· у руках": "· in hand",
+"Навички, заклинання та пасивні вміння": "Skills, spells and passive abilities",
+"Вдягніть зброю, щоб тренер показав навички для неї.": "Equip a weapon so the trainer can show the skills for it.",
+"Баф": "Buff",
+"Лікування": "Healing",
+"Пасивне": "Passive",
+"Заклинання": "Spell",
+"Навичка": "Skill",
+"Максимум": "Maximum",
+"Покращити": "Improve",
+"Вивчити": "Learn",
+"Бонус діє постійно.": "The bonus is permanent.",
+"Додайте навичку в чергу дій у бою.": "Add the skill to the battle action queue.",
+"Пасивне вміння — до половини рівня персонажа": "Passive ability — up to half the character's level",
+"Рівень навички не може перевищувати рівень володіння зброєю": "A skill's level cannot exceed the weapon mastery level",
+"Дерева": "Trees",
+"Скелі": "Rocks",
+"Стіни": "Walls",
+"лікують лише навички. Досвід і здобич — тільки за перемогу над босом.": "only skills heal. Experience and loot — only for victory over the boss.",
+"Відчинити ворота (−1 ключ)": "Open the gates (−1 key)",
+"Ворота відчинено. Бій 1 з 3 — зілля й відновлення тут не діють.": "The gates are open. Battle 1 of 3 — potions and regeneration don't work here.",
+"Увага — чемпіон!": "Beware — a champion!",
+"Утричі сильніший за звичайного: здоров'я, мана, атака, магія й захист ×3.": "Three times stronger than an ordinary one: health, mana, attack, magic and defence ×3.",
+"За перемогу — трофей рідкісної якості й нагорода ×5 в Артеміди, адміністратора гільдії.": "For victory — a trophy of rare quality and a ×5 reward from Artemida, the guild administrator.",
+"Прийняти виклик": "Accept the challenge",
+"· чемпіон": "· champion",
+"· бос": "· boss",
+"Дерево — не пройти й не видно ціль": "Tree — impassable and blocks the view of the target",
+"Скеля — не пройти й не видно ціль": "Rock — impassable and blocks the view of the target",
+"Стіна — не пройти й не видно ціль": "Wall — impassable and blocks the view of the target",
+"Кущ — не стати, але ціль видно (лук, заклинання)": "Bush — can't stand here, but the target is visible (bow, spells)",
+"Каміння — не стати, але ціль видно (лук, заклинання)": "Stones — can't stand here, but the target is visible (bow, spells)",
+"↓ у бік поля ↓": "↓ towards the field ↓",
+"у бік поля →": "towards the field →",
+"Усі герої групи полягли — розставляти нікого.": "All heroes of the party have fallen — there's no one to place.",
+"Герої, яких ще не розставлено": "Heroes not placed yet",
+"Розставити автоматично": "Place automatically",
+"До бою!": "To battle!",
+"Готово": "Done",
+"Розстановку збережено.": "Formation saved.",
+"Розстановка героїв": "Hero Formation",
+"Ваша зона — 3×3 клітинки. У кожному бою група з'являється в іншому куті поля,": "Your zone is 3×3 cells. In each battle the party appears in a different corner of the field,",
+"а вороги — будь-де на полі (купою або врозкид), але не ближче ніж на хід руху. Розстановка задається відносно": "and the enemies — anywhere on the field (in a cluster or scattered), but no closer than one move. The formation is set relative to",
+"кута: передній ряд (виділений) дивиться в бік поля.": "the corner: the front row (highlighted) faces the field.",
+"Перетягніть героя на клітинку або натисніть на героя, а потім на клітинку.": "Drag a hero onto a cell, or press a hero and then a cell.",
+"Дальність: ближній бій — 1 клітинка, посох (заклинання) — 2, лук — 3. Схема збережеться для наступних боїв і локацій.": "Range: melee — 1 cell, staff (spells) — 2, bow — 3. The layout will be kept for the next battles and locations.",
+"Усі герої на полі. Перетягніть сюди, щоб прибрати з клітинки.": "All heroes are on the field. Drag here to remove from a cell.",
+"Тепер натисніть клітинку своєї зони.": "Now press a cell in your zone.",
+"Натисніть клітинку своєї зони або іншого героя, щоб помінятися місцями.": "Press a cell in your zone or another hero to swap places.",
+"Усі на місцях — можна в бій.": "Everyone is in place — ready for battle.",
+"Удар": "Strike",
+"Іскра (4 MP)": "Spark (4 MP)",
+"Іскра (лише з посохом)": "Spark (staff only)",
+"(заклинання — 2)": "(spells — 2)",
+"Зброя: немає (бій кулаками)": "Weapon: none (fighting with fists)",
+"Експедиція повернулась — заберіть здобич.": "An expedition has returned — collect the loot.",
+"Відчиніть ворота ключем (панель вище).": "Open the gates with a key (panel above).",
+"Зілля й відновлення в данжі не діють — лікують лише навички.": "Potions and regeneration don't work in the dungeon — only skills heal.",
+"За цей бій нагороди немає — досвід і здобич дає лише бос.": "There is no reward for this battle — only the boss gives experience and loot.",
+"Це БОС! Кожен третій свій хід він застосовує особливу навичку. Перемога — нагорода за весь данж.": "This is a BOSS! Every third turn it uses a special skill. Victory — the reward for the whole dungeon.",
+"Усі герої групи полягли.": "All heroes of the party have fallen.",
+"Данж: бос!": "Dungeon: boss!",
+"Обережно: серед них є значно сильніші!": "Careful: some of them are much stronger!",
+"Серед них рідкісний ЧЕМПІОН: утричі сильніший! За перемогу — трофей і нагорода ×5 у Гільдії авантюристів.": "Among them is a rare CHAMPION: three times stronger! For victory — a trophy and a ×5 reward in the Adventurers' Guild.",
+"Це БОС! Кожен третій свій хід він застосовує особливу навичку.": "This is a BOSS! Every third turn it uses a special skill.",
+"Натисніть «Почати бій» або пошукайте іншого суперника.": "Press \"Start battle\" or look for another opponent.",
+"Чемпіон!": "Champion!",
+"Готові до бою": "Ready for battle",
+"зілля здоров'я": "health potions",
+"зілля мани": "mana potions",
+"Уся група, що лишилась удома, — в експедиції або полягла. Дочекайтеся повернення експедиції.": "The whole party that stayed at home is on an expedition or has fallen. Wait for the expedition to return.",
+"Спершу відчиніть ворота данжу ключем.": "First open the dungeon gates with a key.",
+"Автозілля перед боєм:": "Auto-potions before battle:",
+"Завдання:": "Tasks:",
+"Трофей чемпіона: цього разу нічого": "Champion's trophy: nothing this time",
+"— межа": "— cap",
+"Уся група відродилася": "The whole party was revived",
+"Ви відродилися": "You were revived",
+"Група загинула": "The party fell",
+"Загибель": "Death",
+"Зілля й відновлення тут не діють — HP переходить у наступний бій як є (лікують лише навички).": "Potions and regeneration don't work here — HP carries over into the next battle as it is (only skills heal).",
+"Здоров'я та мана відновлені, є нові вільні очки атрибутів (сторінка «Персонаж»).": "Health and mana are restored, there are new free attribute points (\"Character\" page).",
+"Попросіть Розпорядника Захара в Мерії показати книгу.": "Ask Steward Zakhar at the Town Hall to show you the book.",
+"Перемога!": "Victory!",
+"Вороги втекли — данж провалено": "The enemies fled — the dungeon is failed",
+"Ворог утік — данж провалено": "The enemy fled — the dungeon is failed",
+"Ворота зачинилися. Нагороди немає, ключ використано.": "The gates have closed. No reward, the key is used up.",
+"Ворог утік": "The enemy fled",
+"Володіння:": "Mastery:",
+"Прокинутися в Храмі": "Wake up in the Temple",
+"Серед них рідкісний ЧЕМПІОН!": "Among them is a rare CHAMPION!",
+"Інвентар заповнено!": "The inventory is full!",
+"доповнюються лише неповні стопки.": "only incomplete stacks get topped up.",
+"Продайте зайве торговцю або покладіть у скриню в Домівці.": "Sell the extras to a merchant or put them into the chest at Home.",
+"Бій ще показується. Результат уже збережено. Вийти?": "The battle is still being shown. The result is already saved. Leave?",
+"Ви в данжі. Якщо підете з локації — данж буде втрачено разом із ключем. Піти?": "You are in a dungeon. If you leave the location, the dungeon will be lost together with the key. Leave?",
+"Натисніть, щоб відкрити журнал бою": "Press to open the battle log",
+"Не вдалося зберегти:": "Could not save:",
+"Покинути данж? Ключ уже використано, прогрес буде втрачено.": "Leave the dungeon? The key is already used, the progress will be lost.",
+"Ви покинули данж.": "You left the dungeon.",
+"звичайна річ": "common item",
+"звичайні речі": "common items",
+"звичайних речей": "common items",
+"магічна річ": "magic item",
+"магічні речі": "magic items",
+"магічних речей": "magic items",
+"епічна річ": "epic item",
+"епічні речі": "epic items",
+"епічних речей": "epic items",
+"Остап": "Ostap",
+"Марко": "Marko",
+"Богдан": "Bohdan",
+"Тарас": "Taras",
+"Ярема": "Yarema",
+"Данило": "Danylo",
+"Іван": "Ivan",
+"Северин": "Severyn",
+"Орест": "Orest",
+"Захар": "Zakhar",
+"Цього оголошення вже немає.": "This notice is gone.",
+"Такої локації немає.": "There is no such location.",
+"Центральна брама зачинена — спершу поговоріть з капітаном варти (Дубова Застава, Північний район).": "The Central Gate is closed — first talk to the captain of the guard (Oak Outpost, Northern District).",
+"Шлях в Альвгейм відкриється після першої перемоги над Володарем Темного лісу (корінь Іггдрасиля в Серці Темного лісу).": "The way to Alfheim opens after the first victory over the Lord of the Dark Forest (the root of Yggdrasil in the Heart of the Dark Forest).",
+"З мечем": "With a sword",
+"Із сокирою": "With an axe",
+"З кинджалом": "With a dagger",
+"З луком": "With a bow",
+"З посохом": "With a staff",
+"З вільною правою рукою": "With a free right hand",
+"З цією зброєю": "With this weapon",
+"Важка куля з темного каменю, тепла на дотик. На одному боці — глибоке заглиблення у формі ромба.": "A heavy ball of dark stone, warm to the touch. On one side there is a deep diamond-shaped hollow.",
+"Її підкинув незнайомець у запиленому плащі й зник у натовпі.": "A stranger in a dusty cloak slipped it to you and vanished in the crowd.",
+"Магічний": "Magic",
+"Магічне": "Magic",
+"Магічні": "Magic",
+"Епічний": "Epic",
+"Епічне": "Epic",
+"Епічні": "Epic",
+"Легендарний": "Legendary",
+"Легендарне": "Legendary",
+"Легендарні": "Legendary",
+"лише у зброю": "weapons only",
+"лише в броню": "armour only",
+"у зброю, броню чи прикрасу": "a weapon, armour or jewellery",
+"скандинавський знак Футарка — дар Асгарду": "Norse Futhark sign — a gift of Asgard",
+"слов'янський знак — дар Ірію": "Slavic sign — a gift of Iriy",
+"Зламана: не дає нічого — годиться лише як паливо для Горна Сварога.": "Broken: gives nothing — only good as fuel for Svarog's Forge.",
+"Горно Сварога відкривається тим, хто знайшов книгу «Руни Небесної Кузні».": "Svarog's Forge opens to those who have found the book \"Runes of the Heavenly Forge\".",
+"У горно кладуть лише руни.": "Only runes go into the forge.",
+"Інвентар повний — нікуди покласти нову руну.": "The inventory is full — nowhere to put the new rune.",
+"не діє — лише паливо для Горна Сварога": "has no effect — only fuel for Svarog's Forge",
+"Гнізда бачить лише той, хто прочитав «Руни Небесної Кузні».": "Only those who have read \"Runes of the Heavenly Forge\" see the sockets.",
+"Немає такого гнізда.": "There is no such socket.",
+"Гніздо вже зайняте — спершу вийміть руну.": "The socket is already occupied — take the rune out first.",
+"Ця руна": "This rune",
+"Зламана руна не діє — її можна лише переплавити в Горні Сварога.": "A broken rune has no effect — it can only be smelted in Svarog's Forge.",
+"Такої руни немає в інвентарі.": "There is no such rune in the inventory.",
+"Гніздо порожнє.": "The socket is empty.",
+"Інвентар повний — нікуди покласти руну.": "The inventory is full — nowhere to put the rune.",
+"вороги значно слабші": "enemies are much weaker",
+"чемпіон": "champion",
+"бос": "boss",
+"тренування": "training",
+"сильніший ворог": "stronger enemy",
+"руни й речі": "runes and items",
+"Невідома зброя.": "Unknown weapon.",
+"Досягнуто найвищого рівня володіння.": "The highest mastery level has been reached.",
+"Такої навички немає.": "There is no such skill.",
+"Навичка вже на максимумі.": "The skill is already at the maximum.",
+"Пасивну навичку можна підняти до половини рівня персонажа.": "A passive skill can be raised up to half the character's level.",
+"сили магії": "magic power",
+"атаки": "attack",
+"по колу між ворогами поруч": "in a circle between nearby enemies",
+"по черзі між ціллю й ворогами біля неї": "in turn between the target and the enemies next to it",
+"(собі й союзникам поруч)": "(self and nearby allies)",
+"(усій групі)": "(the whole party)",
+"(найпоранішому)": "(the most wounded)",
+"п.п.": "pts",
+", собі й союзникам поруч": ", self and nearby allies",
+", на союзника під ударами 2+ ворогів або на себе": ", on an ally under attack by 2+ enemies or on self",
+", уся група": ", the whole party",
+"Шлях закритий: Центральна брама Дубової Застави зачинена — поговоріть з капітаном варти.": "The way is closed: the Central Gate of Oak Outpost is closed — talk to the captain of the guard.",
+"Шлях у цей світ ще закритий.": "The way into this world is still closed."
 },
 "patterns": [
 [
-"^Автозілля ввімкнено \\(Налаштування\\): після кожного бою герої п'ють зілля з інвентаря за тими ж правилами(.*?)(.*?)\\. Зілля спільні з тими, хто лишився вдома\\.$",
-"Auto-potions are on (Settings): after each battle the heroes drink potions from the inventory by the same rules$1$2. Potions are shared with those who stayed at home.",
-true
+"^Покладіть у горно (.*?) будь-яких рун, зламані теж\\. Сварог переплавить їх в одну нову — від звичайної до епічної\\. Якщо всі шість одного виду, нова руна буде того ж виду\\. Данина — (.*?) золота \\(у вас (.*?)\\)\\.$",
+"Put $1 runes of any kind into the forge, broken ones too. Svarog will smelt them into one new rune — from common to epic. If all six are of the same kind, the new rune will be of that kind. Tribute — $2 gold (you have $3).",
+1,
+0,
+"будь-яких рун, зламані теж. Сварог переплавить їх в одну нову — від звичайної до епічної. Якщо всі шість одного виду, нова руна буде того ж виду. Данина —"
 ],
 [
-"^Автозілля ввімкнено \\(Налаштування\\): після кожного бою герої п'ють зілля з інвентаря за тими ж правилами(.*?)(.*?)\\. Зілля спільні з тими, хто лишився вдома\\.",
+"Покладіть у горно (.*?) будь-яких рун, зламані теж\\. Сварог переплавить їх в одну нову — від звичайної до епічної\\. Якщо всі шість одного виду, нова руна буде того ж виду\\. Данина — (.*?) золота \\(у вас (.*?)\\)\\.",
+"Put $1 runes of any kind into the forge, broken ones too. Svarog will smelt them into one new rune — from common to epic. If all six are of the same kind, the new rune will be of that kind. Tribute — $2 gold (you have $3).",
+0,
+0,
+"будь-яких рун, зламані теж. Сварог переплавить їх в одну нову — від звичайної до епічної. Якщо всі шість одного виду, нова руна буде того ж виду. Данина —"
+],
+[
+"^Автозілля ввімкнено \\(Налаштування\\): після кожного бою герої п'ють зілля з інвентаря за тими ж правилами(.*?)(.*?)\\. Зілля спільні з тими, хто лишився вдома\\.$",
 "Auto-potions are on (Settings): after each battle the heroes drink potions from the inventory by the same rules$1$2. Potions are shared with those who stayed at home.",
-false
+1,
+0,
+"Автозілля ввімкнено (Налаштування): після кожного бою герої п'ють зілля з інвентаря за тими ж правилами"
+],
+[
+"Автозілля ввімкнено \\(Налаштування\\): після кожного бою герої п'ють зілля з інвентаря за тими ж правилами(.*?)(.*?)\\. Зілля спільні з тими, хто лишився вдома\\.",
+"Auto-potions are on (Settings): after each battle the heroes drink potions from the inventory by the same rules$1$2. Potions are shared with those who stayed at home.",
+0,
+0,
+"Автозілля ввімкнено (Налаштування): після кожного бою герої п'ють зілля з інвентаря за тими ж правилами"
 ],
 [
 "^Матеріали — до (.*?) шт\\., зілля — до (.*?) шт\\. в клітинці\\. Речі тут не зникають навіть після загибелі\\. Ця скриня спільна для Домівки й усіх ваших домів\\.$",
 "Materials — up to $1 pcs, potions — up to $2 pcs per cell. Items here are not lost even after death. This chest is shared between Home and all your houses.",
-true
+1,
+0,
+"шт. в клітинці. Речі тут не зникають навіть після загибелі. Ця скриня спільна для Домівки й усіх ваших домів."
 ],
 [
-"^Матеріали — до (.*?) шт\\., зілля — до (.*?) шт\\. в клітинці\\. Речі тут не зникають навіть після загибелі\\. Ця скриня спільна для Домівки й усіх ваших домів\\.",
+"Матеріали — до (.*?) шт\\., зілля — до (.*?) шт\\. в клітинці\\. Речі тут не зникають навіть після загибелі\\. Ця скриня спільна для Домівки й усіх ваших домів\\.",
 "Materials — up to $1 pcs, potions — up to $2 pcs per cell. Items here are not lost even after death. This chest is shared between Home and all your houses.",
-false
+0,
+0,
+"шт. в клітинці. Речі тут не зникають навіть після загибелі. Ця скриня спільна для Домівки й усіх ваших домів."
 ],
 [
 " Удома лишилось вільних героїв: (.*?) — з них можна відправити ще одну експедицію \\(оберіть бойову локацію, Шахту чи Лісопилку\\)\\.",
 " Free heroes left at home: $1 — another expedition can be sent from them (choose a battle location, the Mine or the Sawmill).",
-false
+0,
+0,
+"— з них можна відправити ще одну експедицію (оберіть бойову локацію, Шахту чи Лісопилку)."
 ],
 [
 "^Для експедиції потрібно щонайменше 3 героїв, що можуть піти \\(зараз (.*?)\\)\\. Напарників наймають на Дошці оголошень біля Мерії\\.$",
 "An expedition needs at least 3 heroes who can go (now $1). Companions are hired at the Notice Board near the Town Hall.",
-true
+1,
+0,
+"Для експедиції потрібно щонайменше 3 героїв, що можуть піти (зараз"
 ],
 [
-"^Для експедиції потрібно щонайменше 3 героїв, що можуть піти \\(зараз (.*?)\\)\\. Напарників наймають на Дошці оголошень біля Мерії\\.",
+"Для експедиції потрібно щонайменше 3 героїв, що можуть піти \\(зараз (.*?)\\)\\. Напарників наймають на Дошці оголошень біля Мерії\\.",
 "An expedition needs at least 3 heroes who can go (now $1). Companions are hired at the Notice Board near the Town Hall.",
-false
+0,
+0,
+"Для експедиції потрібно щонайменше 3 героїв, що можуть піти (зараз"
+],
+[
+"^📜 Серед трофеїв Володаря — книга Сварога «(.*?)»! Вона чекатиме в бібліотеці вашого дому \\(Спальний район Дубової Застави\\)\\.$",
+"📜 Among the Lord's trophies — Svarog's book \"$1\"! It will wait in the library of your house (Residential District of Oak Outpost).",
+1,
+0,
+"»! Вона чекатиме в бібліотеці вашого дому (Спальний район Дубової Застави)."
+],
+[
+"📜 Серед трофеїв Володаря — книга Сварога «(.*?)»! Вона чекатиме в бібліотеці вашого дому \\(Спальний район Дубової Застави\\)\\.",
+"📜 Among the Lord's trophies — Svarog's book \"$1\"! It will wait in the library of your house (Residential District of Oak Outpost).",
+0,
+0,
+"»! Вона чекатиме в бібліотеці вашого дому (Спальний район Дубової Застави)."
 ],
 [
 "^Селянин росте лише до (.*?) рівня\\. Героям з професією межа відкривається до (.*?) після першої перемоги над Белі \\(Альвгейм\\)\\.$",
 "A peasant grows only up to level $1. For heroes with a profession the cap opens up to $2 after the first victory over Beli (Alfheim).",
-true
+1,
+0,
+"рівня. Героям з професією межа відкривається до"
 ],
 [
-"^Селянин росте лише до (.*?) рівня\\. Героям з професією межа відкривається до (.*?) після першої перемоги над Белі \\(Альвгейм\\)\\.",
+"Селянин росте лише до (.*?) рівня\\. Героям з професією межа відкривається до (.*?) після першої перемоги над Белі \\(Альвгейм\\)\\.",
 "A peasant grows only up to level $1. For heroes with a profession the cap opens up to $2 after the first victory over Beli (Alfheim).",
-false
+0,
+0,
+"рівня. Героям з професією межа відкривається до"
+],
+[
+"спершу доведіть, що на вас можна покластися: особливе завдання «(.*?)» в Артеміди, адміністратора Гільдії авантюристів ",
+"first prove that you can be relied on: the special task \"$1\" from Artemida, administrator of the Adventurers' Guild ",
+0,
+0,
+"спершу доведіть, що на вас можна покластися: особливе завдання «"
+],
+[
+"Тадеуш, торговець гільдії, продає зброю 1–2 виду, шкіряну броню \\(2 вид\\), малі й середні зілля \\(за (.*?)% вартості\\), ",
+"Tadeusz, the guild merchant, sells tier 1–2 weapons, leather armour (tier 2), small and medium potions (at $1% of the value), ",
+0,
+0,
+"Тадеуш, торговець гільдії, продає зброю 1–2 виду, шкіряну броню (2 вид), малі й середні зілля (за"
+],
+[
+"^Першу науку коваля — книгу «(.*?)» — продає Кузьма в Гільдії ремісників \\(Торговий район\\)\\. Без неї кувати не вийде\\.$",
+"The smith's first lesson — the book \"$1\" — is sold by Kuzma in the Craftsmen's Guild (Trade District). Without it you can't forge.",
+1,
+0,
+"» — продає Кузьма в Гільдії ремісників (Торговий район). Без неї кувати не вийде."
+],
+[
+"Першу науку коваля — книгу «(.*?)» — продає Кузьма в Гільдії ремісників \\(Торговий район\\)\\. Без неї кувати не вийде\\.",
+"The smith's first lesson — the book \"$1\" — is sold by Kuzma in the Craftsmen's Guild (Trade District). Without it you can't forge.",
+0,
+0,
+"» — продає Кузьма в Гільдії ремісників (Торговий район). Без неї кувати не вийде."
+],
+[
+"^Брут ганяє вас до сьомого поту\\. (.*?) хв уся група отримує \\+(.*?) досвіду володіння за кожен виграний бій \\(−(.*?) золота\\)\\.$",
+"Brut drills you until you're drenched in sweat. For $1 min the whole party gets +$2 mastery experience for each battle won (−$3 gold).",
+1,
+0,
+"досвіду володіння за кожен виграний бій (−"
+],
+[
+"Брут ганяє вас до сьомого поту\\. (.*?) хв уся група отримує \\+(.*?) досвіду володіння за кожен виграний бій \\(−(.*?) золота\\)\\.",
+"Brut drills you until you're drenched in sweat. For $1 min the whole party gets +$2 mastery experience for each battle won (−$3 gold).",
+0,
+0,
+"досвіду володіння за кожен виграний бій (−"
+],
+[
+"^Знехтувавши попередженням, сила, яку надавала (.*?)-та руна «(.*?)», вийшла з-під контролю та знищила «(.*?)» повністю…$",
+"Having ignored the warning, the power granted by rune No. $1 \"$2\" went out of control and destroyed \"$3\" completely…",
+1,
+0,
+"Знехтувавши попередженням, сила, яку надавала"
+],
+[
+"Знехтувавши попередженням, сила, яку надавала (.*?)-та руна «(.*?)», вийшла з-під контролю та знищила «(.*?)» повністю…",
+"Having ignored the warning, the power granted by rune No. $1 \"$2\" went out of control and destroyed \"$3\" completely…",
+0,
+0,
+"Знехтувавши попередженням, сила, яку надавала"
+],
+[
+"^Торговий район: Гільдія ремісників пускає героїв, що вже мають професію; Торгова гільдія — з (.*?) рівня\\.$",
+"Trade District: the Craftsmen's Guild admits heroes who already have a profession; the Merchants' Guild — from level $1.",
+1,
+0,
+"Торговий район: Гільдія ремісників пускає героїв, що вже мають професію; Торгова гільдія — з"
+],
+[
+"Торговий район: Гільдія ремісників пускає героїв, що вже мають професію; Торгова гільдія — з (.*?) рівня\\.",
+"Trade District: the Craftsmen's Guild admits heroes who already have a profession; the Merchants' Guild — from level $1.",
+0,
+0,
+"Торговий район: Гільдія ремісників пускає героїв, що вже мають професію; Торгова гільдія — з"
+],
+[
+"Вода холодна й солодка, як весняний дощ\\. Уся група відчуває, як світ стає яснішим: \\+(.*?)% досвіду ",
+"The water is cold and sweet, like spring rain. The whole party feels the world grow clearer: +$1% experience ",
+0,
+0,
+"Вода холодна й солодка, як весняний дощ. Уся група відчуває, як світ стає яснішим: +"
+],
+[
+"^Рівень професії почався з 1, а бонуси Селянина лишилися\\. Тренер Брут навчить новим навичкам\\.$",
+"The profession level started from 1, and the Peasant bonuses remained. Trainer Brut will teach new skills.",
+1,
+0,
+"Рівень професії почався з 1, а бонуси Селянина лишилися. Тренер Брут навчить новим навичкам."
+],
+[
+"Рівень професії почався з 1, а бонуси Селянина лишилися\\. Тренер Брут навчить новим навичкам\\.",
+"The profession level started from 1, and the Peasant bonuses remained. Trainer Brut will teach new skills.",
+0,
+0,
+"Рівень професії почався з 1, а бонуси Селянина лишилися. Тренер Брут навчить новим навичкам."
+],
+[
+"^Дошка оголошень відкривається після особливого завдання «(.*?)» \\(Артеміда, Гільдія авантюристів\\)\\.$",
+"The Notice Board opens after the special task \"$1\" (Artemida, Adventurers' Guild).",
+1,
+0,
+"Дошка оголошень відкривається після особливого завдання «"
+],
+[
+"Дошка оголошень відкривається після особливого завдання «(.*?)» \\(Артеміда, Гільдія авантюристів\\)\\.",
+"The Notice Board opens after the special task \"$1\" (Artemida, Adventurers' Guild).",
+0,
+0,
+"Дошка оголошень відкривається після особливого завдання «"
+],
+[
+"^перехід за спину найслабшого ворога \\(до 3 кл\\.\\): удар 100% \\+ отрута (.*?)% його макс\\. HP × (.*?) ходів$",
+"move behind the weakest enemy (up to 3 cells): 100% strike + poison $1% of its max HP × $2 turns",
+1,
+0,
+"перехід за спину найслабшого ворога (до 3 кл.): удар 100% + отрута"
+],
+[
+"перехід за спину найслабшого ворога \\(до 3 кл\\.\\): удар 100% \\+ отрута (.*?)% його макс\\. HP × (.*?) ходів",
+"move behind the weakest enemy (up to 3 cells): 100% strike + poison $1% of its max HP × $2 turns",
+0,
+0,
+"перехід за спину найслабшого ворога (до 3 кл.): удар 100% + отрута"
+],
+[
+"Усі (.*?) клітинок інвентаря зайняті\\. Нові речі та ресурси, яким немає місця, пропадатимуть — ",
+"All $1 inventory cells are occupied. New items and resources with no room will be lost — ",
+0,
+0,
+"клітинок інвентаря зайняті. Нові речі та ресурси, яким немає місця, пропадатимуть —"
+],
+[
+"^⭐ Белі повалено! Межа рівня для героїв з професією відтепер — (.*?) \\(Селянин лишається до (.*?)\\)\\.$",
+"⭐ Beli is overthrown! From now on the level cap for heroes with a profession is $1 (the Peasant stays at $2).",
+1,
+0,
+"⭐ Белі повалено! Межа рівня для героїв з професією відтепер —"
+],
+[
+"⭐ Белі повалено! Межа рівня для героїв з професією відтепер — (.*?) \\(Селянин лишається до (.*?)\\)\\.",
+"⭐ Beli is overthrown! From now on the level cap for heroes with a profession is $1 (the Peasant stays at $2).",
+0,
+0,
+"⭐ Белі повалено! Межа рівня для героїв з професією відтепер —"
 ],
 [
 "^Межа відкриється до (.*?) рівня після першої перемоги над Белі — фінальним босом Альвгейму\\.$",
 "The cap opens up to level $1 after the first victory over Beli — the final boss of Alfheim.",
-true
+1,
+0,
+"рівня після першої перемоги над Белі — фінальним босом Альвгейму."
 ],
 [
-"^Межа відкриється до (.*?) рівня після першої перемоги над Белі — фінальним босом Альвгейму\\.",
+"Межа відкриється до (.*?) рівня після першої перемоги над Белі — фінальним босом Альвгейму\\.",
 "The cap opens up to level $1 after the first victory over Beli — the final boss of Alfheim.",
-false
+0,
+0,
+"рівня після першої перемоги над Белі — фінальним босом Альвгейму."
+],
+[
+"^Сестра Ївга читає Молитву благодаті(.*?)\\. Пожертва: (.*?) золота\\. Благодать діятиме 10 хвилин\\.$",
+"Sister Yivha reads the Prayer of Grace$1. Donation: $2 gold. The grace will last 10 minutes.",
+1,
+0,
+"золота. Благодать діятиме 10 хвилин."
+],
+[
+"Сестра Ївга читає Молитву благодаті(.*?)\\. Пожертва: (.*?) золота\\. Благодать діятиме 10 хвилин\\.",
+"Sister Yivha reads the Prayer of Grace$1. Donation: $2 gold. The grace will last 10 minutes.",
+0,
+0,
+"золота. Благодать діятиме 10 хвилин."
 ],
 [
 "^Інвентар повний — у мішку експедиції лишилось (.*?)\\. Звільніть місце й заберіть решту\\.$",
 "Inventory full — $1 left in the expedition bag. Free up space and collect the rest.",
-true
+1,
+0,
+"Інвентар повний — у мішку експедиції лишилось"
 ],
 [
-"^Інвентар повний — у мішку експедиції лишилось (.*?)\\. Звільніть місце й заберіть решту\\.",
+"Інвентар повний — у мішку експедиції лишилось (.*?)\\. Звільніть місце й заберіть решту\\.",
 "Inventory full — $1 left in the expedition bag. Free up space and collect the rest.",
-false
+0,
+0,
+"Інвентар повний — у мішку експедиції лишилось"
+],
+[
+"^Кишеня для ключів: (.*?) — уже (.*?)\\/(.*?), нові не випадають, поки не використаєте хоча б один\\.$",
+"Key pocket: $1 — already $2/$3, new ones won't drop until you use at least one.",
+1,
+0,
+", нові не випадають, поки не використаєте хоча б один."
+],
+[
+"Кишеня для ключів: (.*?) — уже (.*?)\\/(.*?), нові не випадають, поки не використаєте хоча б один\\.",
+"Key pocket: $1 — already $2/$3, new ones won't drop until you use at least one.",
+0,
+0,
+", нові не випадають, поки не використаєте хоча б один."
+],
+[
+"^Скриня: (.*?)\\/(.*?) клітинок зайнято\\. Речі в скрині не зникають, навіть якщо герой загине\\.$",
+"Chest: $1/$2 cells occupied. Items in the chest don't disappear even if the hero dies.",
+1,
+0,
+"клітинок зайнято. Речі в скрині не зникають, навіть якщо герой загине."
+],
+[
+"Скриня: (.*?)\\/(.*?) клітинок зайнято\\. Речі в скрині не зникають, навіть якщо герой загине\\.",
+"Chest: $1/$2 cells occupied. Items in the chest don't disappear even if the hero dies.",
+0,
+0,
+"клітинок зайнято. Речі в скрині не зникають, навіть якщо герой загине."
+],
+[
+"^Склад — місце для скринь ремесла: матеріалів, зілля й речей\\. Добудова — (.*?) золота\\.$",
+"Storehouse — a place for craft chests: materials, potions and items. Extension — $1 gold.",
+1,
+0,
+"Склад — місце для скринь ремесла: матеріалів, зілля й речей. Добудова —"
+],
+[
+"Склад — місце для скринь ремесла: матеріалів, зілля й речей\\. Добудова — (.*?) золота\\.",
+"Storehouse — a place for craft chests: materials, potions and items. Extension — $1 gold.",
+0,
+0,
+"Склад — місце для скринь ремесла: матеріалів, зілля й речей. Добудова —"
+],
+[
+"^Шість рун у вогонь — одна нова з попелу\\. Данина за кожне розпалювання — (.*?) золота\\.$",
+"Six runes into the fire — one new from the ashes. The tribute for each kindling — $1 gold.",
+1,
+0,
+"Шість рун у вогонь — одна нова з попелу. Данина за кожне розпалювання —"
+],
+[
+"Шість рун у вогонь — одна нова з попелу\\. Данина за кожне розпалювання — (.*?) золота\\.",
+"Six runes into the fire — one new from the ashes. The tribute for each kindling — $1 gold.",
+0,
+0,
+"Шість рун у вогонь — одна нова з попелу. Данина за кожне розпалювання —"
+],
+[
+"^Капітан віддає наказ відчинити браму\\. «Ти з наших\\. Темний ліс чекає\\.» Досвід — (.*?)$",
+"The captain orders the gate opened. \"You're one of us. The Dark Forest awaits.\" Experience — $1",
+1,
+0,
+"Капітан віддає наказ відчинити браму. «Ти з наших. Темний ліс чекає.» Досвід —"
+],
+[
+"Капітан віддає наказ відчинити браму\\. «Ти з наших\\. Темний ліс чекає\\.» Досвід — ([^\\s·;,]+)",
+"The captain orders the gate opened. \"You're one of us. The Dark Forest awaits.\" Experience — $1",
+0,
+0,
+"Капітан віддає наказ відчинити браму. «Ти з наших. Темний ліс чекає.» Досвід —"
+],
+[
+"^За кожного нового члена групи Мерія бере внесок\\. У групі може бути до (.*?) героїв\\.$",
+"For each new party member the Town Hall takes a fee. A party can have up to $1 heroes.",
+1,
+0,
+"За кожного нового члена групи Мерія бере внесок. У групі може бути до"
+],
+[
+"За кожного нового члена групи Мерія бере внесок\\. У групі може бути до (.*?) героїв\\.",
+"For each new party member the Town Hall takes a fee. A party can have up to $1 heroes.",
+0,
+0,
+"За кожного нового члена групи Мерія бере внесок. У групі може бути до"
+],
+[
+" Навички Селянина \\((.*?)\\) забуто — їх треба вчити знову; володіння зброєю лишилось\\.",
+" Peasant skills ($1) are forgotten — they have to be learned again; weapon mastery remained.",
+0,
+0,
+") забуто — їх треба вчити знову; володіння зброєю лишилось."
+],
+[
+"\\(\\+(.*?)% до досвіду групи\\) протягом (.*?) хвилин\\. Потім вода годину набирає силу знову\\.",
+"(+$1% party experience) for $2 minutes. Then the water gathers strength again for an hour.",
+0,
+0,
+"хвилин. Потім вода годину набирає силу знову."
+],
+[
+"Захар Вергун переписує записи\\. (.*?): повернуто (.*?) очок атрибутів, мито — (.*?) золота\\. ",
+"Zakhar Verhun rewrites the records. $1: $2 attribute points returned, fee — $3 gold. ",
+0,
+0,
+"Захар Вергун переписує записи."
+],
+[
+"^\\+(.*?) досвіду володіння за кожен виграний бій для всієї групи на (.*?) хв \\(−(.*?) золота\\)\\.$",
+"+$1 mastery experience for each battle won for the whole party for $2 min (−$3 gold).",
+1,
+0,
+"досвіду володіння за кожен виграний бій для всієї групи на"
+],
+[
+"\\+(.*?) досвіду володіння за кожен виграний бій для всієї групи на (.*?) хв \\(−(.*?) золота\\)\\.",
+"+$1 mastery experience for each battle won for the whole party for $2 min (−$3 gold).",
+0,
+0,
+"досвіду володіння за кожен виграний бій для всієї групи на"
+],
+[
+"^Тут шукають групу Селяни 1–(.*?) рівня і герої з професією — до вашого рівня \\((.*?)\\)\\.$",
+"Peasants of level 1–$1 and heroes with a profession up to your level ($2) are looking for a party here.",
+1,
+0,
+"рівня і герої з професією — до вашого рівня ("
+],
+[
+"Тут шукають групу Селяни 1–(.*?) рівня і герої з професією — до вашого рівня \\((.*?)\\)\\.",
+"Peasants of level 1–$1 and heroes with a profession up to your level ($2) are looking for a party here.",
+0,
+0,
+"рівня і герої з професією — до вашого рівня ("
+],
+[
+"^Щоб почати кувати, бракує: (.*?)\\. Знаряддя — у коваля Кузьми \\(Торговий район\\)\\.$",
+"To start forging you are missing: $1. Tools — from the smith Kuzma (Trade District).",
+1,
+0,
+". Знаряддя — у коваля Кузьми (Торговий район)."
+],
+[
+"Щоб почати кувати, бракує: (.*?)\\. Знаряддя — у коваля Кузьми \\(Торговий район\\)\\.",
+"To start forging you are missing: $1. Tools — from the smith Kuzma (Trade District).",
+0,
+0,
+". Знаряддя — у коваля Кузьми (Торговий район)."
+],
+[
+"^Відпустити (.*?)\\? (.*?) речі перейдуть у спільний інвентар, внесок не повертається\\.$",
+"Dismiss $1? $2 items will go to the shared inventory, the fee is not returned.",
+1,
+0,
+"речі перейдуть у спільний інвентар, внесок не повертається."
+],
+[
+"Відпустити (.*?)\\? (.*?) речі перейдуть у спільний інвентар, внесок не повертається\\.",
+"Dismiss $1? $2 items will go to the shared inventory, the fee is not returned.",
+0,
+0,
+"речі перейдуть у спільний інвентар, внесок не повертається."
+],
+[
+" Герой з професією — дорожче: \\+(.*?) за професію і \\+(.*?) за кожен рівень понад (.*?)-й\\.",
+" A hero with a profession costs more: +$1 for the profession and +$2 for each level above $3.",
+0,
+0,
+"Герой з професією — дорожче: +"
+],
+[
+"^а купує за (.*?)%\\. Великі та чарівні зілля тут не купиш — лише здобути в бою\\.$",
+"and buys at $1%. Large and magic potions can't be bought here — only won in battle.",
+1,
+0,
+"%. Великі та чарівні зілля тут не купиш — лише здобути в бою."
+],
+[
+"а купує за (.*?)%\\. Великі та чарівні зілля тут не купиш — лише здобути в бою\\.",
+"and buys at $1%. Large and magic potions can't be bought here — only won in battle.",
+0,
+0,
+"%. Великі та чарівні зілля тут не купиш — лише здобути в бою."
+],
+[
+"^Куплено книгу «(.*?)»\\. −(.*?) золота\\. Вона вже на полиці бібліотеки вашого дому\\.$",
+"Bought the book \"$1\". −$2 gold. It is already on the library shelf of your house.",
+1,
+0,
+"золота. Вона вже на полиці бібліотеки вашого дому."
+],
+[
+"Куплено книгу «(.*?)»\\. −(.*?) золота\\. Вона вже на полиці бібліотеки вашого дому\\.",
+"Bought the book \"$1\". −$2 gold. It is already on the library shelf of your house.",
+0,
+0,
+"золота. Вона вже на полиці бібліотеки вашого дому."
+],
+[
+"^Гільдія авантюристів заплатить (.*?) EXP(.*?) \\(\\+ бонуси\\) і (.*?) золота \\(нагорода ×5\\)$",
+"The Adventurers' Guild will pay $1 EXP$2 (+ bonuses) and $3 gold (×5 reward)",
+1,
+0,
+"Гільдія авантюристів заплатить"
+],
+[
+"Гільдія авантюристів заплатить (.*?) EXP(.*?) \\(\\+ бонуси\\) і (.*?) золота \\(нагорода ×5\\)",
+"The Adventurers' Guild will pay $1 EXP$2 (+ bonuses) and $3 gold (×5 reward)",
+0,
+0,
+"Гільдія авантюристів заплатить"
+],
+[
+"^«Роботи вистачає — беріть до (.*?) завдань одночасно\\.» Виконано завдань: (.*?)\\.$",
+"\"There's plenty of work — take up to $1 tasks at once.\" Tasks completed: $2.",
+1,
+0,
+"завдань одночасно.» Виконано завдань:"
+],
+[
+"«Роботи вистачає — беріть до (.*?) завдань одночасно\\.» Виконано завдань: (.*?)\\.",
+"\"There's plenty of work — take up to $1 tasks at once.\" Tasks completed: $2.",
+0,
+0,
+"завдань одночасно.» Виконано завдань:"
+],
+[
+"Сюди повертаються загиблі\\. Відроджені мають (.*?)% здоров'я та 0% мани — ",
+"The fallen return here. The revived have $1% health and 0% mana — ",
+0,
+0,
+"Сюди повертаються загиблі. Відроджені мають"
+],
+[
+"(.*?) у кишені для ключів: (.*?)\\. Одна спроба — один ключ \\(зникає при вході\\)\\. ",
+"$1 in the key pocket: $2. One attempt — one key (it disappears on entry). ",
+0,
+0,
+". Одна спроба — один ключ (зникає при вході)."
+],
+[
+"^На герої може бути не більше (.*?) рун «(.*?)» — у цій речі їх (.*?), разом вийде (.*?)\\.$",
+"A hero can have no more than $1 \"$2\" runes — this item has $3, together that makes $4.",
+1,
+0,
+"На герої може бути не більше"
+],
+[
+"На герої може бути не більше (.*?) рун «(.*?)» — у цій речі їх (.*?), разом вийде (.*?)\\.",
+"A hero can have no more than $1 \"$2\" runes — this item has $3, together that makes $4.",
+0,
+0,
+"На герої може бути не більше"
 ],
 [
 "^Ви в дорозі до «(.*?)»\\. Переміщення не скасувати — дочекайтеся прибуття\\.$",
 "You are on the way to \"$1\". The move cannot be cancelled — wait until you arrive.",
-true
+1,
+0,
+"». Переміщення не скасувати — дочекайтеся прибуття."
 ],
 [
-"^Ви в дорозі до «(.*?)»\\. Переміщення не скасувати — дочекайтеся прибуття\\.",
+"Ви в дорозі до «(.*?)»\\. Переміщення не скасувати — дочекайтеся прибуття\\.",
 "You are on the way to \"$1\". The move cannot be cancelled — wait until you arrive.",
-false
+0,
+0,
+"». Переміщення не скасувати — дочекайтеся прибуття."
+],
+[
+"Внесок у Мерію за наступного \\((.*?)-го\\) героя групи: Селянин — (.*?) золота\\. ",
+"Town Hall fee for the next ($1th) party hero: Peasant — $2 gold. ",
+0,
+0,
+"Внесок у Мерію за наступного ("
+],
+[
+"Поки у вас немає професії, групу тут шукають лише Селяни 1–(.*?) рівня\\. ",
+"While you have no profession, only Peasants of level 1–$1 are looking for a party here. ",
+0,
+0,
+"Поки у вас немає професії, групу тут шукають лише Селяни 1–"
+],
+[
+"^Потрібен (.*?)\\. Його можна знайти під час «(.*?)» \\(шанс (.*?)% з кожного ворога\\)\\.$",
+"Requires $1. It can be found during \"$2\" ($3% chance from each enemy).",
+1,
+0,
+". Його можна знайти під час «"
+],
+[
+"Потрібен (.*?)\\. Його можна знайти під час «(.*?)» \\(шанс (.*?)% з кожного ворога\\)\\.",
+"Requires $1. It can be found during \"$2\" ($3% chance from each enemy).",
+0,
+0,
+". Його можна знайти під час «"
 ],
 [
 "^Удома лишилось (.*?) вільних героїв — для ще однієї експедиції треба (.*?)\\.$",
 "$1 free heroes left at home — another expedition needs $2.",
-true
+1,
+0,
+"вільних героїв — для ще однієї експедиції треба"
 ],
 [
-"^Удома лишилось (.*?) вільних героїв — для ще однієї експедиції треба (.*?)\\.",
+"Удома лишилось (.*?) вільних героїв — для ще однієї експедиції треба (.*?)\\.",
 "$1 free heroes left at home — another expedition needs $2.",
-false
+0,
+0,
+"вільних героїв — для ще однієї експедиції треба"
+],
+[
+"Кузня — тут куватимете й розбиратимете речі\\. Добудова — (.*?) золота\\. ",
+"Forge — here you will forge and salvage items. Extension — $1 gold. ",
+0,
+0,
+"Кузня — тут куватимете й розбиратимете речі. Добудова —"
+],
+[
+"^Кузню збудовано! −(.*?) золота\\. Тепер купіть знаряддя в коваля Кузьми\\.$",
+"The forge is built! −$1 gold. Now buy tools from the smith Kuzma.",
+1,
+0,
+"золота. Тепер купіть знаряддя в коваля Кузьми."
+],
+[
+"Кузню збудовано! −(.*?) золота\\. Тепер купіть знаряддя в коваля Кузьми\\.",
+"The forge is built! −$1 gold. Now buy tools from the smith Kuzma.",
+0,
+0,
+"золота. Тепер купіть знаряддя в коваля Кузьми."
+],
+[
+"^Група напилася з чарівного джерела: \\+(.*?)% досвіду за бої на (.*?) хвилин\\.$",
+"The party drank from the magic spring: +$1% experience from battles for $2 minutes.",
+1,
+0,
+"Група напилася з чарівного джерела: +"
+],
+[
+"Група напилася з чарівного джерела: \\+(.*?)% досвіду за бої на (.*?) хвилин\\.",
+"The party drank from the magic spring: +$1% experience from battles for $2 minutes.",
+0,
+0,
+"Група напилася з чарівного джерела: +"
 ],
 [
 " — найближча повернеться за (.*?)\\. Переходити між локаціями не можна\\.",
 " — the nearest returns in $1. You cannot move between locations.",
-false
+0,
+0,
+". Переходити між локаціями не можна."
 ],
 [
 "^Загибель забирає не більше (.*?)% смужки рівня і може знизити рівень\\.$",
 "Death takes no more than $1% of the level bar and can lower the level.",
-true
+1,
+0,
+"% смужки рівня і може знизити рівень."
 ],
 [
-"^Загибель забирає не більше (.*?)% смужки рівня і може знизити рівень\\.",
+"Загибель забирає не більше (.*?)% смужки рівня і може знизити рівень\\.",
 "Death takes no more than $1% of the level bar and can lower the level.",
-false
+0,
+0,
+"% смужки рівня і може знизити рівень."
+],
+[
+"До (.*?) символів\\. Назву дають лише раз — змінити її потім не можна\\. ",
+"Up to $1 characters. The name is given only once — it cannot be changed later. ",
+0,
+0,
+"символів. Назву дають лише раз — змінити її потім не можна."
+],
+[
+"^Торгова гільдія Скруджа приймає лише поважних гостей — з (.*?) рівня\\.$",
+"Scrooge's Merchants' Guild receives only distinguished guests — from level $1.",
+1,
+0,
+"Торгова гільдія Скруджа приймає лише поважних гостей — з"
+],
+[
+"Торгова гільдія Скруджа приймає лише поважних гостей — з (.*?) рівня\\.",
+"Scrooge's Merchants' Guild receives only distinguished guests — from level $1.",
+0,
+0,
+"Торгова гільдія Скруджа приймає лише поважних гостей — з"
+],
+[
+"^Склад збудовано! −(.*?) золота\\. Тепер можна купувати скрині ремесла\\.$",
+"The storehouse is built! −$1 gold. Now you can buy craft chests.",
+1,
+0,
+"золота. Тепер можна купувати скрині ремесла."
+],
+[
+"Склад збудовано! −(.*?) золота\\. Тепер можна купувати скрині ремесла\\.",
+"The storehouse is built! −$1 gold. Now you can buy craft chests.",
+0,
+0,
+"золота. Тепер можна купувати скрині ремесла."
+],
+[
+"Скрудж продає речі 3 виду \\(з (.*?) рівня, для зброї — володіння 20\\) ",
+"Scrooge sells tier 3 items (from level $1, for weapons — mastery 20) ",
+0,
+0,
+"рівня, для зброї — володіння 20)"
+],
+[
+"«Ви вже (.*?)\\. Час дослідити світ далі — але спершу допоможіть нам\\. ",
+"\"You are already $1. Time to explore the world further — but first help us. ",
+0,
+0,
+". Час дослідити світ далі — але спершу допоможіть нам."
+],
+[
+"^Відчинити ворота\\? (.*?) зникне, навіть якщо данж не вдасться пройти\\.$",
+"Open the gates? $1 will disappear even if the dungeon is not completed.",
+1,
+0,
+"зникне, навіть якщо данж не вдасться пройти."
+],
+[
+"Відчинити ворота\\? (.*?) зникне, навіть якщо данж не вдасться пройти\\.",
+"Open the gates? $1 will disappear even if the dungeon is not completed.",
+0,
+0,
+"зникне, навіть якщо данж не вдасться пройти."
+],
+[
+"^Вода в чаші ще не набрала сили — пити знову можна буде за (.*?) хв\\.$",
+"The water in the bowl hasn't gathered strength yet — you can drink again in $1 min.",
+1,
+0,
+"Вода в чаші ще не набрала сили — пити знову можна буде за"
+],
+[
+"Вода в чаші ще не набрала сили — пити знову можна буде за (.*?) хв\\.",
+"The water in the bowl hasn't gathered strength yet — you can drink again in $1 min.",
+0,
+0,
+"Вода в чаші ще не набрала сили — пити знову можна буде за"
+],
+[
+"^Тренування з Брутом: \\+(.*?) досвіду володіння за кожен виграний бій$",
+"Training with Brut: +$1 mastery experience for each battle won",
+1,
+0,
+"досвіду володіння за кожен виграний бій"
+],
+[
+"Тренування з Брутом: \\+(.*?) досвіду володіння за кожен виграний бій",
+"Training with Brut: +$1 mastery experience for each battle won",
+0,
+0,
+"досвіду володіння за кожен виграний бій"
 ],
 [
 " · Молитва благодаті: ще (.*?) хв \\(\\+2% HP за 5 с, \\+3% MP за 10 с\\)",
 " · Prayer of Grace: $1 min left (+2% HP per 5 s, +3% MP per 10 s)",
-false
+0,
+0,
+"хв (+2% HP за 5 с, +3% MP за 10 с)"
+],
+[
+"^Подій у журналі: (.*?) з (.*?)\\. Найстаріші — вгорі, найновіші — внизу\\.$",
+"Events in the log: $1 of $2. Oldest at the top, newest at the bottom.",
+1,
+0,
+". Найстаріші — вгорі, найновіші — внизу."
+],
+[
+"Подій у журналі: (.*?) з (.*?)\\. Найстаріші — вгорі, найновіші — внизу\\.",
+"Events in the log: $1 of $2. Oldest at the top, newest at the bottom.",
+0,
+0,
+". Найстаріші — вгорі, найновіші — внизу."
+],
+[
+"Вози з вугіллям рушають до складів Мерії\\. Срібні злитки ×(.*?)\\. ",
+"The carts of coal set off for the Town Hall storehouses. Silver ingots ×$1. ",
+0,
+0,
+"Вози з вугіллям рушають до складів Мерії. Срібні злитки ×"
+],
+[
+"^«Велес бачить… — шепоче Захар\\. — Книга знову ціла\\. Дякую (.*?)»\\.$",
+"\"Veles sees… — Zakhar whispers. — The book is whole again. Thank $1.\"",
+1,
+0,
+"«Велес бачить… — шепоче Захар. — Книга знову ціла. Дякую"
+],
+[
+"«Велес бачить… — шепоче Захар\\. — Книга знову ціла\\. Дякую (.*?)»\\.",
+"\"Veles sees… — Zakhar whispers. — The book is whole again. Thank $1.\"",
+0,
+0,
+"«Велес бачить… — шепоче Захар. — Книга знову ціла. Дякую"
+],
+[
+"^Куплено книгу «(.*?)»\\. −(.*?) золота\\. Кузьма радить почати з Прологу\\.$",
+"Bought the book \"$1\". −$2 gold. Kuzma advises starting with the Prologue.",
+1,
+0,
+"золота. Кузьма радить почати з Прологу."
+],
+[
+"Куплено книгу «(.*?)»\\. −(.*?) золота\\. Кузьма радить почати з Прологу\\.",
+"Bought the book \"$1\". −$2 gold. Kuzma advises starting with the Prologue.",
+0,
+0,
+"золота. Кузьма радить почати з Прологу."
+],
+[
+"^Завдання з (.*?) частин, кожна відкривається після попередньої\\.»$",
+"The task has $1 parts, each opens after the previous one.\"",
+1,
+0,
+"частин, кожна відкривається після попередньої.»"
+],
+[
+"Завдання з (.*?) частин, кожна відкривається після попередньої\\.»",
+"The task has $1 parts, each opens after the previous one.\"",
+0,
+0,
+"частин, кожна відкривається після попередньої.»"
+],
+[
+"^(.*?)квест «(.*?)» — зміна професії — Артеміда дає Селянину з (.*?) рівня\\.$",
+"$1quest \"$2\" — profession change — Artemida gives it to a Peasant from level $3.",
+1,
+0,
+"» — зміна професії — Артеміда дає Селянину з"
+],
+[
+"(.*?)квест «(.*?)» — зміна професії — Артеміда дає Селянину з (.*?) рівня\\.",
+"$1quest \"$2\" — profession change — Artemida gives it to a Peasant from level $3.",
+0,
+0,
+"» — зміна професії — Артеміда дає Селянину з"
 ],
 [
 " · Тренування з Брутом: \\+(.*?) досвіду володіння за бій, ще (.*?) хв",
 " · Training with Brut: +$1 mastery experience per battle, $2 min left",
-false
+0,
+0,
+"досвіду володіння за бій, ще"
 ],
 [
 "^Дозволити Чарівне зілля \\(лише коли звичайних зілль (.*?) немає\\)$",
 "Allow the Magic Potion (only when there are no ordinary $1 potions)",
-true
+1,
+0,
+"Дозволити Чарівне зілля (лише коли звичайних зілль"
 ],
 [
-"^Дозволити Чарівне зілля \\(лише коли звичайних зілль (.*?) немає\\)",
+"Дозволити Чарівне зілля \\(лише коли звичайних зілль (.*?) немає\\)",
 "Allow the Magic Potion (only when there are no ordinary $1 potions)",
-false
+0,
+0,
+"Дозволити Чарівне зілля (лише коли звичайних зілль"
+],
+[
+"Відпочинок: додатково \\+(.*?)% здоров'я та мани кожні 10 секунд ",
+"Rest: an extra +$1% health and mana every 10 seconds ",
+0,
+0,
+"% здоров'я та мани кожні 10 секунд"
+],
+[
+"^Варта не пускає до Мерії новачків\\. Повертайтеся з (.*?) рівня\\.$",
+"The guards don't let newcomers into the Town Hall. Come back at level $1.",
+1,
+0,
+"Варта не пускає до Мерії новачків. Повертайтеся з"
+],
+[
+"Варта не пускає до Мерії новачків\\. Повертайтеся з (.*?) рівня\\.",
+"The guards don't let newcomers into the Town Hall. Come back at level $1.",
+0,
+0,
+"Варта не пускає до Мерії новачків. Повертайтеся з"
+],
+[
+"^Спершу заберіть здобич повернених експедицій \\(чекають (.*?)\\)\\.$",
+"First collect the loot of the returned expeditions (waiting: $1).",
+1,
+0,
+"Спершу заберіть здобич повернених експедицій (чекають"
+],
+[
+"Спершу заберіть здобич повернених експедицій \\(чекають (.*?)\\)\\.",
+"First collect the loot of the returned expeditions (waiting: $1).",
+0,
+0,
+"Спершу заберіть здобич повернених експедицій (чекають"
+],
+[
+"^Особливе завдання «(.*?)» Артеміда доручає героям від (.*?) рівня\\.$",
+"Artemida entrusts the special task \"$1\" to heroes from level $2.",
+1,
+0,
+"» Артеміда доручає героям від"
+],
+[
+"Особливе завдання «(.*?)» Артеміда доручає героям від (.*?) рівня\\.",
+"Artemida entrusts the special task \"$1\" to heroes from level $2.",
+0,
+0,
+"» Артеміда доручає героям від"
+],
+[
+"3\\) бос «(.*?)»\\. Зілля й відновлення HP\\/MP у данжі не діють — ",
+"3) boss \"$1\". Potions and HP/MP regeneration don't work in the dungeon — ",
+0,
+0,
+"». Зілля й відновлення HP/MP у данжі не діють —"
+],
+[
+"^Бій (.*?) з (.*?) виграно\\. Нагороди за нього немає — лише за боса\\.$",
+"Battle $1 of $2 won. There is no reward for it — only for the boss.",
+1,
+0,
+"виграно. Нагороди за нього немає — лише за боса."
+],
+[
+"Бій (.*?) з (.*?) виграно\\. Нагороди за нього немає — лише за боса\\.",
+"Battle $1 of $2 won. There is no reward for it — only for the boss.",
+0,
+0,
+"виграно. Нагороди за нього немає — лише за боса."
 ],
 [
 "^Середній Gear Score вдягнених речей: (.*?) \\(речей: (.*?), сума: (.*?)\\)$",
 "Average Gear Score of equipped items: $1 (items: $2, total: $3)",
-true
+1,
+0,
+"Середній Gear Score вдягнених речей:"
 ],
 [
-"^Середній Gear Score вдягнених речей: (.*?) \\(речей: (.*?), сума: (.*?)\\)",
+"Середній Gear Score вдягнених речей: (.*?) \\(речей: (.*?), сума: (.*?)\\)",
 "Average Gear Score of equipped items: $1 (items: $2, total: $3)",
-false
+0,
+0,
+"Середній Gear Score вдягнених речей:"
 ],
 [
 "^Скриня стоїть тут: (.*?) — звідси її можна лише переглянути\\.$",
 "The chest stands here: $1 — from here it can only be viewed.",
-true
+1,
+0,
+"— звідси її можна лише переглянути."
 ],
 [
-"^Скриня стоїть тут: (.*?) — звідси її можна лише переглянути\\.",
+"Скриня стоїть тут: (.*?) — звідси її можна лише переглянути\\.",
 "The chest stands here: $1 — from here it can only be viewed.",
-false
+0,
+0,
+"— звідси її можна лише переглянути."
 ],
 [
 "^Розкладено по скринях ремесла: (.*?) шт\\. матеріалів і зілля\\.$",
 "Sorted into the craft chests: $1 pcs of materials and potions.",
-true
+1,
+0,
+"Розкладено по скринях ремесла:"
 ],
 [
-"^Розкладено по скринях ремесла: (.*?) шт\\. матеріалів і зілля\\.",
+"Розкладено по скринях ремесла: (.*?) шт\\. матеріалів і зілля\\.",
 "Sorted into the craft chests: $1 pcs of materials and potions.",
-false
+0,
+0,
+"Розкладено по скринях ремесла:"
+],
+[
+"^понад звичайне відновлення\\. Зараз: \\+(.*?) HP і \\+(.*?) MP за 10 с\\.$",
+"on top of normal regeneration. Now: +$1 HP and +$2 MP per 10 s.",
+1,
+0,
+"понад звичайне відновлення. Зараз: +"
+],
+[
+"понад звичайне відновлення\\. Зараз: \\+(.*?) HP і \\+(.*?) MP за 10 с\\.",
+"on top of normal regeneration. Now: +$1 HP and +$2 MP per 10 s.",
+0,
+0,
+"понад звичайне відновлення. Зараз: +"
+],
+[
+"^Сестра Ївга довго молиться над полеглими\\. Відроджено: (.*?)\\.$",
+"Sister Yivha prays long over the fallen. Revived: $1.",
+1,
+0,
+"Сестра Ївга довго молиться над полеглими. Відроджено:"
+],
+[
+"Сестра Ївга довго молиться над полеглими\\. Відроджено: (.*?)\\.",
+"Sister Yivha prays long over the fallen. Revived: $1.",
+0,
+0,
+"Сестра Ївга довго молиться над полеглими. Відроджено:"
+],
+[
+"^Ключ можна знайти під час «(.*?)» — шанс (.*?)% з кожного ворога\\.$",
+"The key can be found during \"$1\" — $2% chance from each enemy.",
+1,
+0,
+"Ключ можна знайти під час «"
+],
+[
+"Ключ можна знайти під час «(.*?)» — шанс (.*?)% з кожного ворога\\.",
+"The key can be found during \"$1\" — $2% chance from each enemy.",
+0,
+0,
+"Ключ можна знайти під час «"
 ],
 [
 "^Досвід володіння: (.*?) з (.*?) до рівня (.*?)\\. Росте за виграні бої\\.$",
 "Mastery experience: $1 of $2 to level $3. Grows with battles won.",
-true
+1,
+0,
+". Росте за виграні бої."
 ],
 [
-"^Досвід володіння: (.*?) з (.*?) до рівня (.*?)\\. Росте за виграні бої\\.",
+"Досвід володіння: (.*?) з (.*?) до рівня (.*?)\\. Росте за виграні бої\\.",
 "Mastery experience: $1 of $2 to level $3. Grows with battles won.",
-false
+0,
+0,
+". Росте за виграні бої."
+],
+[
+"^Бій починається: (.*?) проти (.*?)\\. До найближчого ворога — (.*?) кл\\.(.*?)$",
+"The battle begins: $1 against $2. Nearest enemy — $3 cells away.$4",
+1,
+0,
+". До найближчого ворога —"
+],
+[
+"Бій починається: (.*?) проти (.*?)\\. До найближчого ворога — (.*?) кл\\.([^\\s·;,]+)",
+"The battle begins: $1 against $2. Nearest enemy — $3 cells away.$4",
+0,
+0,
+". До найближчого ворога —"
+],
+[
+"^Якщо додати (.*?)-ту руну «(.*?)», «(.*?)» буде знищено\\. Ви впевнені\\?$",
+"If you add rune No. $1 \"$2\", \"$3\" will be destroyed. Are you sure?",
+1,
+0,
+"» буде знищено. Ви впевнені?"
+],
+[
+"Якщо додати (.*?)-ту руну «(.*?)», «(.*?)» буде знищено\\. Ви впевнені\\?",
+"If you add rune No. $1 \"$2\", \"$3\" will be destroyed. Are you sure?",
+0,
+0,
+"» буде знищено. Ви впевнені?"
 ],
 [
 "^«(.*?)» — предмет адміністратора, його не можна викинути\\.$",
 "\"$1\" is an administrator item, it cannot be thrown away.",
-true
+1,
+0,
+"» — предмет адміністратора, його не можна викинути."
 ],
 [
-"^«(.*?)» — предмет адміністратора, його не можна викинути\\.",
+"«(.*?)» — предмет адміністратора, його не можна викинути\\.",
 "\"$1\" is an administrator item, it cannot be thrown away.",
-false
+0,
+0,
+"» — предмет адміністратора, його не можна викинути."
+],
+[
+"\\(з (.*?) рівня\\)\\. А поки зазирніть до Розпорядника Захара\\.",
+"(from level $1). Meanwhile, drop in on Steward Zakhar.",
+0,
+0,
+"рівня). А поки зазирніть до Розпорядника Захара."
+],
+[
+"^«(.*?)» — предмет адміністратора, його не можна продати\\.$",
+"\"$1\" is an administrator item, it cannot be sold.",
+1,
+0,
+"» — предмет адміністратора, його не можна продати."
+],
+[
+"«(.*?)» — предмет адміністратора, його не можна продати\\.",
+"\"$1\" is an administrator item, it cannot be sold.",
+0,
+0,
+"» — предмет адміністратора, його не можна продати."
+],
+[
+"^Дім на околиці Спального району — (.*?) золота\\. У вас: (.*?)\\.$",
+"A house on the outskirts of the Residential District — $1 gold. You have: $2.",
+1,
+0,
+"Дім на околиці Спального району —"
+],
+[
+"Дім на околиці Спального району — (.*?) золота\\. У вас: (.*?)\\.",
+"A house on the outskirts of the Residential District — $1 gold. You have: $2.",
+0,
+0,
+"Дім на околиці Спального району —"
 ],
 [
 "^Інвентар: (.*?) комірок \\(36 \\+ (.*?) від мішечків\\) · зайнято (.*?)$",
 "Inventory: $1 cells (36 + $2 from pouches) · occupied $3",
-true
+1,
+0,
+"від мішечків) · зайнято"
+],
+[
+"Інвентар: (.*?) комірок \\(36 \\+ (.*?) від мішечків\\) · зайнято ([^\\s·;,]+)",
+"Inventory: $1 cells (36 + $2 from pouches) · occupied $3",
+0,
+0,
+"від мішечків) · зайнято"
 ],
 [
 "^Видалити збереження «(.*?)»\\? Цю дію не можна скасувати\\.$",
 "Delete the save \"$1\"? This cannot be undone.",
-true
+1,
+0,
+"»? Цю дію не можна скасувати."
 ],
 [
-"^Видалити збереження «(.*?)»\\? Цю дію не можна скасувати\\.",
+"Видалити збереження «(.*?)»\\? Цю дію не можна скасувати\\.",
 "Delete the save \"$1\"? This cannot be undone.",
-false
+0,
+0,
+"»? Цю дію не можна скасувати."
+],
+[
+"^Рідкісний трофей боса: (.*?) — пропав, інвентар повний!$",
+"Rare boss trophy: $1 — lost, the inventory is full!",
+1,
+0,
+"— пропав, інвентар повний!"
+],
+[
+"Рідкісний трофей боса: (.*?) — пропав, інвентар повний!",
+"Rare boss trophy: $1 — lost, the inventory is full!",
+0,
+0,
+"— пропав, інвентар повний!"
+],
+[
+"^\\+(.*?) EXP кожному, хто вижив \\(усього (.*?), бонус групи \\+(.*?)%(.*?)\\)$",
+"+$1 EXP to everyone who survived (total $2, party bonus +$3%$4)",
+1,
+0,
+"EXP кожному, хто вижив (усього"
+],
+[
+"\\+(.*?) EXP кожному, хто вижив \\(усього (.*?), бонус групи \\+(.*?)%(.*?)\\)",
+"+$1 EXP to everyone who survived (total $2, party bonus +$3%$4)",
+0,
+0,
+"EXP кожному, хто вижив (усього"
+],
+[
+"^(.*?) в експедиції — звільнити можна, коли повернеться\\.$",
+"$1 is on an expedition — they can be dismissed when they return.",
+1,
+0,
+"в експедиції — звільнити можна, коли повернеться."
+],
+[
+"(.*?) в експедиції — звільнити можна, коли повернеться\\.",
+"$1 is on an expedition — they can be dismissed when they return.",
+0,
+0,
+"в експедиції — звільнити можна, коли повернеться."
+],
+[
+"^Ресурси тіру (.*?) — у світі (.*?), а шлях туди ще закритий\\.$",
+"Tier $1 resources are in the world $2, and the way there is still closed.",
+1,
+0,
+", а шлях туди ще закритий."
+],
+[
+"Ресурси тіру (.*?) — у світі (.*?), а шлях туди ще закритий\\.",
+"Tier $1 resources are in the world $2, and the way there is still closed.",
+0,
+0,
+", а шлях туди ще закритий."
+],
+[
+"^Додати Небесну іскру \\(до \\+10% до легендарної; є (.*?)\\)$",
+"Add a Heavenly Spark (up to +10% for legendary; you have $1)",
+1,
+0,
+"Додати Небесну іскру (до +10% до легендарної; є"
+],
+[
+"Додати Небесну іскру \\(до \\+10% до легендарної; є (.*?)\\)",
+"Add a Heavenly Spark (up to +10% for legendary; you have $1)",
+0,
+0,
+"Додати Небесну іскру (до +10% до легендарної; є"
+],
+[
+"^З попелу народилася нова руна: (.*?)! −(.*?) золота данини\\.$",
+"A new rune was born from the ashes: $1! −$2 gold of tribute.",
+1,
+0,
+"З попелу народилася нова руна:"
+],
+[
+"З попелу народилася нова руна: (.*?)! −(.*?) золота данини\\.",
+"A new rune was born from the ashes: $1! −$2 gold of tribute.",
+0,
+0,
+"З попелу народилася нова руна:"
+],
+[
+"(.*?) приєднується до групи! Внесок у Мерію: (.*?) золота\\. ",
+"$1 joins the party! Town Hall fee: $2 gold. ",
+0,
+0,
+"приєднується до групи! Внесок у Мерію:"
+],
+[
+"^Рівень навички не може перевищувати володіння \\((.*?)\\)\\.$",
+"A skill's level cannot exceed the mastery ($1).",
+1,
+0,
+"Рівень навички не може перевищувати володіння ("
+],
+[
+"Рівень навички не може перевищувати володіння \\((.*?)\\)\\.",
+"A skill's level cannot exceed the mastery ($1).",
+0,
+0,
+"Рівень навички не може перевищувати володіння ("
+],
+[
+"^(.*?) виринає з тіні за спиною «(.*?)», але той ухиляється$",
+"$1 emerges from the shadow behind \"$2\", but it dodges",
+1,
+0,
+"виринає з тіні за спиною «"
+],
+[
+"(.*?) виринає з тіні за спиною «(.*?)», але той ухиляється",
+"$1 emerges from the shadow behind \"$2\", but it dodges",
+0,
+0,
+"виринає з тіні за спиною «"
+],
+[
+"^«(.*?)» можна покласти лише в спільну скриню Домівки\\.$",
+"\"$1\" can only be put into the shared Home chest.",
+1,
+0,
+"» можна покласти лише в спільну скриню Домівки."
+],
+[
+"«(.*?)» можна покласти лише в спільну скриню Домівки\\.",
+"\"$1\" can only be put into the shared Home chest.",
+0,
+0,
+"» можна покласти лише в спільну скриню Домівки."
+],
+[
+"^Куплено: (.*?)\\. Кузьма поставив у кузню «(.*?)»\\. −(.*?) золота\\.$",
+"Bought: $1. Kuzma put it into the forge \"$2\". −$3 gold.",
+1,
+0,
+". Кузьма поставив у кузню «"
+],
+[
+"Куплено: (.*?)\\. Кузьма поставив у кузню «(.*?)»\\. −(.*?) золота\\.",
+"Bought: $1. Kuzma put it into the forge \"$2\". −$3 gold.",
+0,
+0,
+". Кузьма поставив у кузню «"
 ],
 [
 "^Експедиція вирушила: (.*?)\\. Повернеться за 4 години\\.$",
 "The expedition has set off: $1. It will return in 4 hours.",
-true
+1,
+0,
+". Повернеться за 4 години."
 ],
 [
-"^Експедиція вирушила: (.*?)\\. Повернеться за 4 години\\.",
+"Експедиція вирушила: (.*?)\\. Повернеться за 4 години\\.",
 "The expedition has set off: $1. It will return in 4 hours.",
-false
+0,
+0,
+". Повернеться за 4 години."
+],
+[
+"^(.*?) в експедиції — речі змінити, коли повернеться\\.$",
+"$1 is on an expedition — change items when they return.",
+1,
+0,
+"в експедиції — речі змінити, коли повернеться."
+],
+[
+"(.*?) в експедиції — речі змінити, коли повернеться\\.",
+"$1 is on an expedition — change items when they return.",
+0,
+0,
+"в експедиції — речі змінити, коли повернеться."
+],
+[
+"^Розібрано: (.*?)\\. Отримано: (.*?)\\. \\+(.*?) досвіду майстерності$",
+"Salvaged: $1. Received: $2. +$3 mastery experience",
+1,
+0,
+"досвіду майстерності"
+],
+[
+"Розібрано: (.*?)\\. Отримано: (.*?)\\. \\+(.*?) досвіду майстерності",
+"Salvaged: $1. Received: $2. +$3 mastery experience",
+0,
+0,
+"досвіду майстерності"
+],
+[
+"^за (.*?)× від їхньої вартості, а купує будь-що за (.*?)%\\.$",
+"at $1× their value, and buys anything at $2%.",
+1,
+0,
+"× від їхньої вартості, а купує будь-що за"
+],
+[
+"за (.*?)× від їхньої вартості, а купує будь-що за (.*?)%\\.",
+"at $1× their value, and buys anything at $2%.",
+0,
+0,
+"× від їхньої вартості, а купує будь-що за"
+],
+[
+"^Щоб повторити данж, потрібен новий ключ\\. Бос: (.*?)\\.$",
+"To repeat the dungeon you need a new key. Boss: $1.",
+1,
+0,
+"Щоб повторити данж, потрібен новий ключ. Бос:"
+],
+[
+"Щоб повторити данж, потрібен новий ключ\\. Бос: (.*?)\\.",
+"To repeat the dungeon you need a new key. Boss: $1.",
+0,
+0,
+"Щоб повторити данж, потрібен новий ключ. Бос:"
 ],
 [
 "^Імпортовано й обрано поточною грою: (.*?), рівень (.*?)\\.$",
 "Imported and set as the current game: $1, level $2.",
-true
+1,
+0,
+"Імпортовано й обрано поточною грою:"
 ],
 [
-"^Імпортовано й обрано поточною грою: (.*?), рівень (.*?)\\.",
+"Імпортовано й обрано поточною грою: (.*?), рівень (.*?)\\.",
 "Imported and set as the current game: $1, level $2.",
-false
+0,
+0,
+"Імпортовано й обрано поточною грою:"
+],
+[
+"^Професія «(.*?)» не може користуватися цією зброєю\\.$",
+"The profession \"$1\" cannot use this weapon.",
+1,
+0,
+"» не може користуватися цією зброєю."
+],
+[
+"Професія «(.*?)» не може користуватися цією зброєю\\.",
+"The profession \"$1\" cannot use this weapon.",
+0,
+0,
+"» не може користуватися цією зброєю."
+],
+[
+"^один випадковий ворог \\((.*?)\\) з GS як у вашої групи$",
+"one random enemy ($1) with a GS like your party's",
+1,
+0,
+"один випадковий ворог ("
+],
+[
+"один випадковий ворог \\((.*?)\\) з GS як у вашої групи",
+"one random enemy ($1) with a GS like your party's",
+0,
+0,
+"один випадковий ворог ("
+],
+[
+"^Журнал бою — останні (.*?) подій \\(найстаріші вгорі\\)$",
+"Battle log — last $1 events (oldest at the top)",
+1,
+0,
+"подій (найстаріші вгорі)"
+],
+[
+"Журнал бою — останні (.*?) подій \\(найстаріші вгорі\\)",
+"Battle log — last $1 events (oldest at the top)",
+0,
+0,
+"подій (найстаріші вгорі)"
 ],
 [
 "^Вільних очок немає\\. За кожен новий рівень — (.*?)\\.$",
 "No free points. Each new level gives $1.",
-true
+1,
+0,
+"Вільних очок немає. За кожен новий рівень —"
 ],
 [
-"^Вільних очок немає\\. За кожен новий рівень — (.*?)\\.",
+"Вільних очок немає\\. За кожен новий рівень — (.*?)\\.",
 "No free points. Each new level gives $1.",
-false
+0,
+0,
+"Вільних очок немає. За кожен новий рівень —"
 ],
 [
 "^(.*?)\\. (.*?)\\. Діє на цьому пристрої для всіх збережень\\.$",
 "$1. $2. Applies on this device to all saves.",
-true
+1,
+0,
+". Діє на цьому пристрої для всіх збережень."
 ],
 [
-"^(.*?)\\. (.*?)\\. Діє на цьому пристрої для всіх збережень\\.",
+"(.*?)\\. (.*?)\\. Діє на цьому пристрої для всіх збережень\\.",
 "$1. $2. Applies on this device to all saves.",
-false
+0,
+0,
+". Діє на цьому пристрої для всіх збережень."
+],
+[
+"^Професія «(.*?)» у лівій руці може тримати лише (.*?)\\.$",
+"The profession \"$1\" can hold only $2 in the left hand.",
+1,
+0,
+"» у лівій руці може тримати лише"
+],
+[
+"Професія «(.*?)» у лівій руці може тримати лише (.*?)\\.",
+"The profession \"$1\" can hold only $2 in the left hand.",
+0,
+0,
+"» у лівій руці може тримати лише"
+],
+[
+"^(.*?) поліг — спершу помоліться за нього в Храмі\\.$",
+"$1 has fallen — first pray for them in the Temple.",
+1,
+0,
+"поліг — спершу помоліться за нього в Храмі."
+],
+[
+"(.*?) поліг — спершу помоліться за нього в Храмі\\.",
+"$1 has fallen — first pray for them in the Temple.",
+0,
+0,
+"поліг — спершу помоліться за нього в Храмі."
+],
+[
+"^(.*?): експедиція — з (.*?) рівня кожного героя \\((.*?) — (.*?)\\)\\.$",
+"$1: expedition — from level $2 for each hero ($3 — $4).",
+1,
+0,
+"рівня кожного героя ("
+],
+[
+"(.*?): експедиція — з (.*?) рівня кожного героя \\((.*?) — (.*?)\\)\\.",
+"$1: expedition — from level $2 for each hero ($3 — $4).",
+0,
+0,
+"рівня кожного героя ("
+],
+[
+"^Трофей чемпіона: (.*?) — пропав, інвентар повний!$",
+"Champion's trophy: $1 — lost, the inventory is full!",
+1,
+0,
+"— пропав, інвентар повний!"
+],
+[
+"Трофей чемпіона: (.*?) — пропав, інвентар повний!",
+"Champion's trophy: $1 — lost, the inventory is full!",
+0,
+0,
+"— пропав, інвентар повний!"
 ],
 [
 "^Вільних очок: (.*?)\\. Натисніть «\\+», щоб вкласти\\.$",
 "Free points: $1. Press \"+\" to invest.",
-true
+1,
+0,
+". Натисніть «+», щоб вкласти."
 ],
 [
-"^Вільних очок: (.*?)\\. Натисніть «\\+», щоб вкласти\\.",
+"Вільних очок: (.*?)\\. Натисніть «\\+», щоб вкласти\\.",
 "Free points: $1. Press \"+\" to invest.",
-false
+0,
+0,
+". Натисніть «+», щоб вкласти."
 ],
 [
 "\\. У скрині лишилось (.*?) шт\\. — інвентар повний\\.",
 ". $1 pcs left in the chest — the inventory is full.",
-false
+0,
+0,
+"шт. — інвентар повний."
+],
+[
+", прокляття: захист −(.*?)% на 3 ходи \\(Чорнобог\\)",
+", curse: defence −$1% for 3 turns (Chornobog)",
+0,
+0,
+"% на 3 ходи (Чорнобог)"
+],
+[
+"^Скриня повна \\((.*?) клітинок\\) — звільніть місце\\.$",
+"The chest is full ($1 cells) — free up space.",
+1,
+0,
+"клітинок) — звільніть місце."
+],
+[
+"Скриня повна \\((.*?) клітинок\\) — звільніть місце\\.",
+"The chest is full ($1 cells) — free up space.",
+0,
+0,
+"клітинок) — звільніть місце."
 ],
 [
 "^Потрібно (.*?) героїв, що можуть піти \\(зараз (.*?)\\)\\.$",
 "Requires $1 heroes who can go (now $2).",
-true
+1,
+0,
+"героїв, що можуть піти (зараз"
 ],
 [
-"^Потрібно (.*?) героїв, що можуть піти \\(зараз (.*?)\\)\\.",
+"Потрібно (.*?) героїв, що можуть піти \\(зараз (.*?)\\)\\.",
 "Requires $1 heroes who can go (now $2).",
-false
+0,
+0,
+"героїв, що можуть піти (зараз"
+],
+[
+"^(.*?) — (.*?) річ\\. Натисніть ще раз, щоб розібрати\\.$",
+"$1 — $2 item. Press again to salvage.",
+1,
+0,
+"річ. Натисніть ще раз, щоб розібрати."
+],
+[
+"(.*?) — (.*?) річ\\. Натисніть ще раз, щоб розібрати\\.",
+"$1 — $2 item. Press again to salvage.",
+0,
+0,
+"річ. Натисніть ще раз, щоб розібрати."
+],
+[
+"^Куплене Кузьма поставить у кузню дому «(.*?)»\\.$",
+"Kuzma will put what you buy into the forge of the house \"$1\".",
+1,
+0,
+"Куплене Кузьма поставить у кузню дому «"
+],
+[
+"Куплене Кузьма поставить у кузню дому «(.*?)»\\.",
+"Kuzma will put what you buy into the forge of the house \"$1\".",
+0,
+0,
+"Куплене Кузьма поставить у кузню дому «"
+],
+[
+"^та сама шкода ворогам у радіусі (.*?) від цілі$",
+"the same damage to enemies within $1 of the target",
+1,
+0,
+"та сама шкода ворогам у радіусі"
+],
+[
+"та сама шкода ворогам у радіусі (.*?) від цілі",
+"the same damage to enemies within $1 of the target",
+0,
+0,
+"та сама шкода ворогам у радіусі"
 ],
 [
 "^Не більше зілль (.*?) за раз для одного героя$",
-"No more than $1 $2 potions at a time per hero",
-true
+"Max $1 potions at a time per hero",
+1,
+0,
+"за раз для одного героя"
 ],
 [
-"^Не більше зілль (.*?) за раз для одного героя",
-"No more than $1 $2 potions at a time per hero",
-false
+"Не більше зілль (.*?) за раз для одного героя",
+"Max $1 potions at a time per hero",
+0,
+0,
+"за раз для одного героя"
+],
+[
+"^Переплавлено: (.*?) ×(.*?)\\. \\+(.*?) досвіду майстерності$",
+"Smelted: $1 ×$2. +$3 mastery experience",
+1,
+0,
+"досвіду майстерності"
+],
+[
+"Переплавлено: (.*?) ×(.*?)\\. \\+(.*?) досвіду майстерності",
+"Smelted: $1 ×$2. +$3 mastery experience",
+0,
+0,
+"досвіду майстерності"
+],
+[
+"^Після цього вода набиратиме силу ще (.*?) хв\\.$",
+"After that the water will gather strength for another $1 min.",
+1,
+0,
+"Після цього вода набиратиме силу ще"
+],
+[
+"Після цього вода набиратиме силу ще (.*?) хв\\.",
+"After that the water will gather strength for another $1 min.",
+0,
+0,
+"Після цього вода набиратиме силу ще"
+],
+[
+"^Завдання виконано! Нагорода: (.*?); досвід — (.*?)$",
+"Task complete! Reward: $1; experience — $2",
+1,
+0,
+"Завдання виконано! Нагорода:"
+],
+[
+"Завдання виконано! Нагорода: (.*?); досвід — ([^\\s·;,]+)",
+"Task complete! Reward: $1; experience — $2",
+0,
+0,
+"Завдання виконано! Нагорода:"
+],
+[
+"^Взято особливе завдання «(.*?)»\\. Частина 1: (.*?)\\.$",
+"The special task \"$1\" is taken. Part 1: $2.",
+1,
+0,
+"Взято особливе завдання «"
+],
+[
+"Взято особливе завдання «(.*?)»\\. Частина 1: (.*?)\\.",
+"The special task \"$1\" is taken. Part 1: $2.",
+0,
+0,
+"Взято особливе завдання «"
+],
+[
+"^Ворогів: (.*?), у вашій групі живих героїв: (.*?)\\.$",
+"Enemies: $1, living heroes in your party: $2.",
+1,
+0,
+", у вашій групі живих героїв:"
+],
+[
+"Ворогів: (.*?), у вашій групі живих героїв: (.*?)\\.",
+"Enemies: $1, living heroes in your party: $2.",
+0,
+0,
+", у вашій групі живих героїв:"
+],
+[
+"^«(.*?)» пропускає хід — крига починає танути$",
+"\"$1\" skips a turn — the ice starts to melt",
+1,
+0,
+"» пропускає хід — крига починає танути"
+],
+[
+"«(.*?)» пропускає хід — крига починає танути",
+"\"$1\" skips a turn — the ice starts to melt",
+0,
+0,
+"» пропускає хід — крига починає танути"
+],
+[
+"^Майстерність коваля: (.*?) \\((.*?)\\) · шанс успіху (.*?)$",
+"Smith's mastery: $1 ($2) · success chance $3",
+1,
+0,
+"Майстерність коваля:"
+],
+[
+"Майстерність коваля: (.*?) \\((.*?)\\) · шанс успіху ([^\\s·;,]+)",
+"Smith's mastery: $1 ($2) · success chance $3",
+0,
+0,
+"Майстерність коваля:"
+],
+[
+"^Наймати можна з (.*?) рівня головного героя\\.$",
+"You can hire from main hero level $1.",
+1,
+0,
+"рівня головного героя."
+],
+[
+"Наймати можна з (.*?) рівня головного героя\\.",
+"You can hire from main hero level $1.",
+0,
+0,
+"рівня головного героя."
+],
+[
+"^Максимум (.*?)\\. Далі — з 10 рівня персонажа\\.$",
+"Maximum $1. More — from character level 10.",
+1,
+0,
+". Далі — з 10 рівня персонажа."
+],
+[
+"Максимум (.*?)\\. Далі — з 10 рівня персонажа\\.",
+"Maximum $1. More — from character level 10.",
+0,
+0,
+". Далі — з 10 рівня персонажа."
 ],
 [
 "^Відтоді цей данж пройдено ще (.*?) раз\\(ів\\)\\.$",
 "Since then this dungeon has been cleared $1 more time(s).",
-true
+1,
+0,
+"Відтоді цей данж пройдено ще"
 ],
 [
-"^Відтоді цей данж пройдено ще (.*?) раз\\(ів\\)\\.",
+"Відтоді цей данж пройдено ще (.*?) раз\\(ів\\)\\.",
 "Since then this dungeon has been cleared $1 more time(s).",
-false
+0,
+0,
+"Відтоді цей данж пройдено ще"
 ],
 [
 "^Полягли: (.*?) — помоліться за них у Храмі\\.$",
 "Fallen: $1 — pray for them in the Temple.",
-true
+1,
+0,
+"— помоліться за них у Храмі."
 ],
 [
-"^Полягли: (.*?) — помоліться за них у Храмі\\.",
+"Полягли: (.*?) — помоліться за них у Храмі\\.",
 "Fallen: $1 — pray for them in the Temple.",
-false
+0,
+0,
+"— помоліться за них у Храмі."
+],
+[
+"^Інвентар майже повний: влізе лише (.*?) шт\\.$",
+"The inventory is almost full: only $1 pcs will fit.",
+1,
+0,
+"Інвентар майже повний: влізе лише"
+],
+[
+"Інвентар майже повний: влізе лише (.*?) шт\\.",
+"The inventory is almost full: only $1 pcs will fit.",
+0,
+0,
+"Інвентар майже повний: влізе лише"
+],
+[
+"Сила джерела ще з вами — близько (.*?) хв\\. ",
+"The power of the spring is still with you — about $1 min. ",
+0,
+0,
+"Сила джерела ще з вами — близько"
+],
+[
+"^Спорядження: (.*?) свого рівня \\(зі зброєю\\)\\.$",
+"Equipment: $1 of their level (with a weapon).",
+1,
+0,
+"свого рівня (зі зброєю)."
+],
+[
+"Спорядження: (.*?) свого рівня \\(зі зброєю\\)\\.",
+"Equipment: $1 of their level (with a weapon).",
+0,
+0,
+"свого рівня (зі зброєю)."
+],
+[
+"^Ворота зачинені\\. Попереду чекає бос: (.*?)\\.$",
+"The gates are closed. A boss awaits ahead: $1.",
+1,
+0,
+"Ворота зачинені. Попереду чекає бос:"
+],
+[
+"Ворота зачинені\\. Попереду чекає бос: (.*?)\\.",
+"The gates are closed. A boss awaits ahead: $1.",
+0,
+0,
+"Ворота зачинені. Попереду чекає бос:"
+],
+[
+"^Данина горну — (.*?) золота, а у вас менше\\.$",
+"The tribute to the forge is $1 gold, and you have less.",
+1,
+0,
+"золота, а у вас менше."
+],
+[
+"Данина горну — (.*?) золота, а у вас менше\\.",
+"The tribute to the forge is $1 gold, and you have less.",
+0,
+0,
+"золота, а у вас менше."
 ],
 [
 "^Не вмістилось в інвентар і пропало: (.*?)\\.$",
 "Did not fit into the inventory and was lost: $1.",
-true
+1,
+0,
+"Не вмістилось в інвентар і пропало:"
 ],
 [
-"^Не вмістилось в інвентар і пропало: (.*?)\\.",
+"Не вмістилось в інвентар і пропало: (.*?)\\.",
 "Did not fit into the inventory and was lost: $1.",
-false
+0,
+0,
+"Не вмістилось в інвентар і пропало:"
 ],
 [
 " · Джерело Велеса: \\+(.*?)% досвіду, ще (.*?) хв",
 " · Spring of Veles: +$1% experience, $2 min left",
-false
+0,
+0,
+"· Джерело Велеса: +"
+],
+[
+"^(.*?) просувається вперед \\(до ворога (.*?) кл\\.\\)$",
+"$1 moves forward ($2 cells to the enemy)",
+1,
+0,
+"просувається вперед (до ворога"
+],
+[
+"(.*?) просувається вперед \\(до ворога (.*?) кл\\.\\)",
+"$1 moves forward ($2 cells to the enemy)",
+0,
+0,
+"просувається вперед (до ворога"
+],
+[
+"^Викувано: (.*?) \\((.*?)\\)\\. \\+(.*?) досвіду майстерності$",
+"Forged: $1 ($2). +$3 mastery experience",
+1,
+0,
+"досвіду майстерності"
+],
+[
+"Викувано: (.*?) \\((.*?)\\)\\. \\+(.*?) досвіду майстерності",
+"Forged: $1 ($2). +$3 mastery experience",
+0,
+0,
+"досвіду майстерності"
+],
+[
+"Оголошення змінюються раз на (.*?) годин\\. ",
+"The notices change once every $1 hours. ",
+0,
+0,
+"Оголошення змінюються раз на"
+],
+[
+"^Трофей чемпіона: (.*?) — викинуто фільтром$",
+"Champion's trophy: $1 — thrown away by the filter",
+1,
+0,
+"— викинуто фільтром"
+],
+[
+"Трофей чемпіона: (.*?) — викинуто фільтром",
+"Champion's trophy: $1 — thrown away by the filter",
+0,
+0,
+"— викинуто фільтром"
+],
+[
+"^(.*?) виринає з тіні за спиною «(.*?)»: (.*?) шкоди(.*?)(.*?)$",
+"$1 emerges from the shadow behind \"$2\": $3 damage$4$5",
+1,
+0,
+"виринає з тіні за спиною «"
+],
+[
+"(.*?) виринає з тіні за спиною «(.*?)»: (.*?) шкоди(.*?)([^\\s·;,]+)",
+"$1 emerges from the shadow behind \"$2\": $3 damage$4$5",
+0,
+0,
+"виринає з тіні за спиною «"
+],
+[
+"^Бій у данжі «(.*?)» — з (.*?) рівня персонажа\\.$",
+"Battle in the dungeon \"$1\" — from character level $2.",
+1,
+0,
+"рівня персонажа."
+],
+[
+"Бій у данжі «(.*?)» — з (.*?) рівня персонажа\\.",
+"Battle in the dungeon \"$1\" — from character level $2.",
+0,
+0,
+"рівня персонажа."
+],
+[
+"^(.*?) покидає групу\\. (.*?) речі — в інвентарі\\.$",
+"$1 leaves the party. $2 items are in the inventory.",
+1,
+0,
+"речі — в інвентарі."
+],
+[
+"(.*?) покидає групу\\. (.*?) речі — в інвентарі\\.",
+"$1 leaves the party. $2 items are in the inventory.",
+0,
+0,
+"речі — в інвентарі."
+],
+[
+"(.*?)агорода за шлях: (.*?)нова професія — (.*?)! (.*?) ",
+"$1eward for the path: $2new profession — $3! $4 ",
+0,
+0,
+"агорода за шлях:"
+],
+[
+"^Автозілля: в інвентарі закінчилось (.*?)\\.$",
+"Auto-potions: the inventory has run out of $1.",
+1,
+0,
+"Автозілля: в інвентарі закінчилось"
+],
+[
+"Автозілля: в інвентарі закінчилось (.*?)\\.",
+"Auto-potions: the inventory has run out of $1.",
+0,
+0,
+"Автозілля: в інвентарі закінчилось"
 ],
 [
 "\\. Не влізло (.*?) шт\\. — інвентар повний\\.",
 ". $1 pcs did not fit — the inventory is full.",
-false
+0,
+0,
+"шт. — інвентар повний."
+],
+[
+"^Раунд (.*?) · до найближчого ворога (.*?) кл\\.$",
+"Round $1 · $2 cells to the nearest enemy",
+1,
+0,
+"· до найближчого ворога"
+],
+[
+"Раунд (.*?) · до найближчого ворога (.*?) кл\\.",
+"Round $1 · $2 cells to the nearest enemy",
+0,
+0,
+"· до найближчого ворога"
+],
+[
+"^три вороги \\((.*?)\\) з GS як у вашої групи$",
+"three enemies ($1) with a GS like your party's",
+1,
+0,
+") з GS як у вашої групи"
+],
+[
+"три вороги \\((.*?)\\) з GS як у вашої групи",
+"three enemies ($1) with a GS like your party's",
+0,
+0,
+") з GS як у вашої групи"
+],
+[
+"^Усі знаряддя вже стоять у кузні «(.*?)»\\.$",
+"All tools are already in the forge \"$1\".",
+1,
+0,
+"Усі знаряддя вже стоять у кузні «"
+],
+[
+"Усі знаряддя вже стоять у кузні «(.*?)»\\.",
+"All tools are already in the forge \"$1\".",
+0,
+0,
+"Усі знаряддя вже стоять у кузні «"
+],
+[
+"^Нагорода за шлях: (.*?)нова професія — (.*?)\\.$",
+"Reward for the path: $1new profession — $2.",
+1,
+0,
+"Нагорода за шлях:"
+],
+[
+"Нагорода за шлях: (.*?)нова професія — (.*?)\\.",
+"Reward for the path: $1new profession — $2.",
+0,
+0,
+"Нагорода за шлях:"
+],
+[
+"^Цю навичку вивчає лише професія «(.*?)»\\.$",
+"Only the profession \"$1\" learns this skill.",
+1,
+0,
+"Цю навичку вивчає лише професія «"
+],
+[
+"Цю навичку вивчає лише професія «(.*?)»\\.",
+"Only the profession \"$1\" learns this skill.",
+0,
+0,
+"Цю навичку вивчає лише професія «"
 ],
 [
 "^(.*?): \\+(.*?) комірок\\. Натисніть, щоб зняти\\.$",
 "$1: +$2 cells. Press to remove.",
-true
+1,
+0,
+"комірок. Натисніть, щоб зняти."
 ],
 [
-"^(.*?): \\+(.*?) комірок\\. Натисніть, щоб зняти\\.",
+"(.*?): \\+(.*?) комірок\\. Натисніть, щоб зняти\\.",
 "$1: +$2 cells. Press to remove.",
-false
+0,
+0,
+"комірок. Натисніть, щоб зняти."
+],
+[
+"^(.*?) кидає «Іскру» \\(−(.*?) MP\\) в «(.*?)»: (.*?) шкоди(.*?)$",
+"$1 casts \"Spark\" (−$2 MP) at \"$3\": $4 damage$5",
+1,
+0,
+"кидає «Іскру» (−"
+],
+[
+"(.*?) кидає «Іскру» \\(−(.*?) MP\\) в «(.*?)»: (.*?) шкоди([^\\s·;,]+)",
+"$1 casts \"Spark\" (−$2 MP) at \"$3\": $4 damage$5",
+0,
+0,
+"кидає «Іскру» (−"
+],
+[
+"^Спальний район відкрито\\. Досвід — (.*?)(.*?)$",
+"The Residential District is open. Experience — $1$2",
+1,
+0,
+"Спальний район відкрито. Досвід —"
+],
+[
+"Спальний район відкрито\\. Досвід — (.*?)([^\\s·;,]+)",
+"The Residential District is open. Experience — $1$2",
+0,
+0,
+"Спальний район відкрито. Досвід —"
+],
+[
+"(.*?)авдання виконано! Нагорода: (.*?) EXP\\.(.*?) ",
+"$1ask complete! Reward: $2 EXP.$3 ",
+0,
+0,
+"авдання виконано! Нагорода:"
+],
+[
+"^У групі вже (.*?) героїв — це максимум\\.$",
+"The party already has $1 heroes — that's the maximum.",
+1,
+0,
+"героїв — це максимум."
+],
+[
+"У групі вже (.*?) героїв — це максимум\\.",
+"The party already has $1 heroes — that's the maximum.",
+0,
+0,
+"героїв — це максимум."
+],
+[
+"^(.*?) у лівій руці можна тримати лише (.*?)\\.$",
+"$1 can hold only $2 in the left hand.",
+1,
+0,
+"у лівій руці можна тримати лише"
+],
+[
+"(.*?) у лівій руці можна тримати лише (.*?)\\.",
+"$1 can hold only $2 in the left hand.",
+0,
+0,
+"у лівій руці можна тримати лише"
 ],
 [
 "^Максимальний рівень \\((.*?)\\)\\. Досвід: (.*?)\\.$",
 "Maximum level ($1). Experience: $2.",
-true
+1,
+0,
+"Максимальний рівень ("
 ],
 [
-"^Максимальний рівень \\((.*?)\\)\\. Досвід: (.*?)\\.",
+"Максимальний рівень \\((.*?)\\)\\. Досвід: (.*?)\\.",
 "Maximum level ($1). Experience: $2.",
-false
+0,
+0,
+"Максимальний рівень ("
+],
+[
+"^(.*?) — «(.*?)» \\(−(.*?) MP\\) по (.*?): (.*?) магічної шкоди$",
+"$1 — \"$2\" (−$3 MP) on $4: $5 magic damage",
+1,
+0,
+"магічної шкоди"
+],
+[
+"(.*?) — «(.*?)» \\(−(.*?) MP\\) по (.*?): (.*?) магічної шкоди",
+"$1 — \"$2\" (−$3 MP) on $4: $5 magic damage",
+0,
+0,
+"магічної шкоди"
+],
+[
+"^Торгова гільдія приймає з (.*?) рівня\\.$",
+"The Merchants' Guild accepts from level $1.",
+1,
+0,
+"Торгова гільдія приймає з"
+],
+[
+"Торгова гільдія приймає з (.*?) рівня\\.",
+"The Merchants' Guild accepts from level $1.",
+0,
+0,
+"Торгова гільдія приймає з"
+],
+[
+"^(.*?)Шлях професії: завдання (.*?) з (.*?) здано$",
+"$1Path of a Profession: task $2 of $3 handed in",
+1,
+0,
+"Шлях професії: завдання"
+],
+[
+"(.*?)Шлях професії: завдання (.*?) з (.*?) здано",
+"$1Path of a Profession: task $2 of $3 handed in",
+0,
+0,
+"Шлях професії: завдання"
+],
+[
+"^Бій у данжі — з (.*?) рівня персонажа\\.$",
+"Battle in the dungeon — from character level $1.",
+1,
+0,
+"рівня персонажа."
+],
+[
+"Бій у данжі — з (.*?) рівня персонажа\\.",
+"Battle in the dungeon — from character level $1.",
+0,
+0,
+"рівня персонажа."
+],
+[
+"^(.*?) в Храмі з (.*?)% здоров'я і без мани\\.$",
+"$1 in the Temple with $2% health and no mana.",
+1,
+0,
+"% здоров'я і без мани."
+],
+[
+"(.*?) в Храмі з (.*?)% здоров'я і без мани\\.",
+"$1 in the Temple with $2% health and no mana.",
+0,
+0,
+"% здоров'я і без мани."
+],
+[
+"^📜 У книзі «(.*?)» з'явився новий запис$",
+"📜 A new entry appeared in the book \"$1\"",
+1,
+0,
+"» з'явився новий запис"
+],
+[
+"📜 У книзі «(.*?)» з'явився новий запис",
+"📜 A new entry appeared in the book \"$1\"",
+0,
+0,
+"» з'явився новий запис"
+],
+[
+"^Внесок у Мерію: (.*?) золота \\(у вас (.*?)\\)\\.$",
+"Town Hall fee: $1 gold (you have $2).",
+1,
+0,
+"Внесок у Мерію:"
+],
+[
+"Внесок у Мерію: (.*?) золота \\(у вас (.*?)\\)\\.",
+"Town Hall fee: $1 gold (you have $2).",
+0,
+0,
+"Внесок у Мерію:"
 ],
 [
 "\\. Не влізло (.*?) шт\\. — скриня повна\\.",
 ". $1 pcs did not fit — the chest is full.",
-false
+0,
+0,
+"шт. — скриня повна."
+],
+[
+", шипи б'ють у відповідь: (.*?) \\(Чур\\)",
+", thorns strike back: $1 (Chur)",
+0,
+0,
+", шипи б'ють у відповідь:"
+],
+[
+"^«(.*?)» скутий кригою й пропускає хід$",
+"\"$1\" is bound by ice and skips a turn",
+1,
+0,
+"» скутий кригою й пропускає хід"
+],
+[
+"«(.*?)» скутий кригою й пропускає хід",
+"\"$1\" is bound by ice and skips a turn",
+0,
+0,
+"» скутий кригою й пропускає хід"
+],
+[
+"^×(.*?) по ворогу зі зниженим захистом$",
+"×$1 against an enemy with lowered defence",
+1,
+0,
+"по ворогу зі зниженим захистом"
+],
+[
+"×(.*?) по ворогу зі зниженим захистом",
+"×$1 against an enemy with lowered defence",
+0,
+0,
+"по ворогу зі зниженим захистом"
 ],
 [
 "^Фільтр здобичі викинув речей: (.*?)\\.$",
 "Items thrown away by the loot filter: $1.",
-true
+1,
+0,
+"Фільтр здобичі викинув речей:"
 ],
 [
-"^Фільтр здобичі викинув речей: (.*?)\\.",
+"Фільтр здобичі викинув речей: (.*?)\\.",
 "Items thrown away by the loot filter: $1.",
-false
+0,
+0,
+"Фільтр здобичі викинув речей:"
 ],
 [
 "^Відновлення за 10 с: \\+(.*?) HP, \\+(.*?) MP$",
 "Regeneration per 10 s: +$1 HP, +$2 MP",
-true
+1,
+0,
+"Відновлення за 10 с: +"
 ],
 [
-"^Відновлення за 10 с: \\+(.*?) HP, \\+(.*?) MP",
+"Відновлення за 10 с: \\+(.*?) HP, \\+(.*?) MP",
 "Regeneration per 10 s: +$1 HP, +$2 MP",
-false
+0,
+0,
+"Відновлення за 10 с: +"
 ],
 [
 "^(.*?): за кожен рівень автоматично (.*?)\\.$",
 "$1: each level automatically gives $2.",
-true
+1,
+0,
+": за кожен рівень автоматично"
 ],
 [
-"^(.*?): за кожен рівень автоматично (.*?)\\.",
+"(.*?): за кожен рівень автоматично (.*?)\\.",
 "$1: each level automatically gives $2.",
-false
+0,
+0,
+": за кожен рівень автоматично"
+],
+[
+"^Не вистачає золота \\(потрібно (.*?)\\)\\.$",
+"Not enough gold (you need $1).",
+1,
+0,
+"Не вистачає золота (потрібно"
+],
+[
+"Не вистачає золота \\(потрібно (.*?)\\)\\.",
+"Not enough gold (you need $1).",
+0,
+0,
+"Не вистачає золота (потрібно"
+],
+[
+"^Гільдія: переможено чемпіона «(.*?)»$",
+"Guild: champion \"$1\" defeated",
+1,
+0,
+"Гільдія: переможено чемпіона «"
+],
+[
+"Гільдія: переможено чемпіона «(.*?)»",
+"Guild: champion \"$1\" defeated",
+0,
+0,
+"Гільдія: переможено чемпіона «"
+],
+[
+"^Тренування вже триває — ще (.*?) хв\\.$",
+"Training is already underway — $1 more min.",
+1,
+0,
+"Тренування вже триває — ще"
+],
+[
+"Тренування вже триває — ще (.*?) хв\\.",
+"Training is already underway — $1 more min.",
+0,
+0,
+"Тренування вже триває — ще"
 ],
 [
 ", а ще за кожен виграний бій: ([^\\s·;,]+)",
 ", and also for each battle won: $1",
-false
+0,
+0,
+", а ще за кожен виграний бій:"
+],
+[
+"^(.*?) б'є двома сокирами «(.*?)»: (.*?) шкоди(.*?)$",
+"$1 strikes \"$2\" with two axes: $3 damage$4",
+1,
+0,
+"б'є двома сокирами «"
+],
+[
+"(.*?) б'є двома сокирами «(.*?)»: (.*?) шкоди([^\\s·;,]+)",
+"$1 strikes \"$2\" with two axes: $3 damage$4",
+0,
+0,
+"б'є двома сокирами «"
+],
+[
+"^(.*?) готує «(.*?)» і чекає удару ворога$",
+"$1 prepares \"$2\" and waits for the enemy's blow",
+1,
+0,
+"» і чекає удару ворога"
+],
+[
+"(.*?) готує «(.*?)» і чекає удару ворога",
+"$1 prepares \"$2\" and waits for the enemy's blow",
+0,
+0,
+"» і чекає удару ворога"
+],
+[
+"^(.*?) №(.*?) стоїть на складі\\. −(.*?) золота\\.$",
+"$1 No. $2 stands in the storehouse. −$3 gold.",
+1,
+0,
+"стоїть на складі. −"
+],
+[
+"(.*?) №(.*?) стоїть на складі\\. −(.*?) золота\\.",
+"$1 No. $2 stands in the storehouse. −$3 gold.",
+0,
+0,
+"стоїть на складі. −"
+],
+[
+"^Особливе завдання «(.*?)» виконано!(.*?)$",
+"The special task \"$1\" is complete!$2",
+1,
+0,
+"Особливе завдання «"
+],
+[
+"Особливе завдання «(.*?)» виконано!([^\\s·;,]+)",
+"The special task \"$1\" is complete!$2",
+0,
+0,
+"Особливе завдання «"
 ],
 [
 "^(.*?)\\. Лишилось (.*?) · боїв (.*?), перемог (.*?)$",
 "$1. $2 left · battles $3, victories $4",
-true
+1,
+0,
+". Лишилось"
+],
+[
+"(.*?)\\. Лишилось (.*?) · боїв (.*?), перемог ([^\\s·;,]+)",
+"$1. $2 left · battles $3, victories $4",
+0,
+0,
+". Лишилось"
+],
+[
+"^(.*?) чекає — шлях уперед зайнятий$",
+"$1 waits — the way forward is blocked",
+1,
+0,
+"чекає — шлях уперед зайнятий"
+],
+[
+"(.*?) чекає — шлях уперед зайнятий",
+"$1 waits — the way forward is blocked",
+0,
+0,
+"чекає — шлях уперед зайнятий"
+],
+[
+"^(.*?) наближається \\(до героя (.*?) кл\\.\\)$",
+"$1 approaches ($2 cells to the hero)",
+1,
+0,
+"наближається (до героя"
+],
+[
+"(.*?) наближається \\(до героя (.*?) кл\\.\\)",
+"$1 approaches ($2 cells to the hero)",
+0,
+0,
+"наближається (до героя"
+],
+[
+"^Потрібно (.*?) золота на пожертву\\.$",
+"You need $1 gold for the donation.",
+1,
+0,
+"золота на пожертву."
+],
+[
+"Потрібно (.*?) золота на пожертву\\.",
+"You need $1 gold for the donation.",
+0,
+0,
+"золота на пожертву."
+],
+[
+" · (.*?) EXP(.*?) \\+ бонуси, (.*?) золота \\(×(.*?)\\)",
+" · $1 EXP$2 + bonuses, $3 gold (×$4)",
+0,
+0,
+"+ бонуси,"
+],
+[
+"^(.*?)зято квест «(.*?)»\\. (.*?) Завдання 1: (.*?)\\.$",
+"$1ook the quest \"$2\". $3 Task 1: $4.",
+1,
+0,
+"Завдання 1:"
+],
+[
+"(.*?)зято квест «(.*?)»\\. (.*?) Завдання 1: (.*?)\\.",
+"$1ook the quest \"$2\". $3 Task 1: $4.",
+0,
+0,
+"Завдання 1:"
+],
+[
+" · діє ще (.*?) хв для всієї групи",
+" · lasts $1 more min for the whole party",
+0,
+0,
+"хв для всієї групи"
 ],
 [
 "^(.*?)(.*?)\\. Скриня ремесла цього дому\\.$",
 "$1$2. Craft chest of this house.",
-true
+1,
+0,
+". Скриня ремесла цього дому."
 ],
 [
-"^(.*?)(.*?)\\. Скриня ремесла цього дому\\.",
+"(.*?)(.*?)\\. Скриня ремесла цього дому\\.",
 "$1$2. Craft chest of this house.",
-false
+0,
+0,
+". Скриня ремесла цього дому."
+],
+[
+", «(.*?)» скутий кригою на (.*?) ходи!",
+", \"$1\" is bound by ice for $2 turns!",
+0,
+0,
+"» скутий кригою на"
+],
+[
+"^«(.*?)» оглушений і пропускає хід$",
+"\"$1\" is stunned and skips a turn",
+1,
+0,
+"» оглушений і пропускає хід"
+],
+[
+"«(.*?)» оглушений і пропускає хід",
+"\"$1\" is stunned and skips a turn",
+0,
+0,
+"» оглушений і пропускає хід"
+],
+[
+", (.*?) (.*?) у слизу й пропустить хід",
+", $1 $2 in the slime and will skip a turn",
+0,
+0,
+"у слизу й пропустить хід"
+],
+[
+"^Вкажіть кількість від 1 до (.*?)\\.$",
+"Enter a quantity from 1 to $1.",
+1,
+0,
+"Вкажіть кількість від 1 до"
+],
+[
+"Вкажіть кількість від 1 до (.*?)\\.",
+"Enter a quantity from 1 to $1.",
+0,
+0,
+"Вкажіть кількість від 1 до"
+],
+[
+"^Повна комірка \\((.*?) шт\\.\\) · (.*?) зол\\.$",
+"Full cell ($1 pcs) · $2 gold",
+1,
+0,
+"Повна комірка ("
+],
+[
+"Повна комірка \\((.*?) шт\\.\\) · (.*?) зол\\.",
+"Full cell ($1 pcs) · $2 gold",
+0,
+0,
+"Повна комірка ("
+],
+[
+"^Відмовитися від завдання «(.*?)»\\?$",
+"Decline the task \"$1\"?",
+1,
+0,
+"Відмовитися від завдання «"
+],
+[
+"Відмовитися від завдання «(.*?)»\\?",
+"Decline the task \"$1\"?",
+0,
+0,
+"Відмовитися від завдання «"
+],
+[
+"^(.*?) полягає \\(відродіть у Храмі\\)$",
+"$1 falls (revive in the Temple)",
+1,
+0,
+"полягає (відродіть у Храмі)"
+],
+[
+"(.*?) полягає \\(відродіть у Храмі\\)",
+"$1 falls (revive in the Temple)",
+0,
+0,
+"полягає (відродіть у Храмі)"
 ],
 [
 "^Усього в професії: (.*?) \\/ (.*?) EXP\\.$",
 "Total in profession: $1 / $2 EXP.",
-true
+1,
+0,
+"Усього в професії:"
 ],
 [
-"^Усього в професії: (.*?) \\/ (.*?) EXP\\.",
+"Усього в професії: (.*?) \\/ (.*?) EXP\\.",
 "Total in profession: $1 / $2 EXP.",
-false
+0,
+0,
+"Усього в професії:"
 ],
 [
 "^Весь здобутий досвід: (.*?) EXP\\.$",
 "All experience earned: $1 EXP.",
-true
+1,
+0,
+"Весь здобутий досвід:"
 ],
 [
-"^Весь здобутий досвід: (.*?) EXP\\.",
+"Весь здобутий досвід: (.*?) EXP\\.",
 "All experience earned: $1 EXP.",
-false
+0,
+0,
+"Весь здобутий досвід:"
 ],
 [
 "^Ціна: (.*?) зол\\. · продаж: (.*?) зол\\.$",
 "Price: $1 gold · sells for: $2 gold",
-true
+1,
+0,
+"зол. · продаж:"
 ],
 [
-"^Ціна: (.*?) зол\\. · продаж: (.*?) зол\\.",
+"Ціна: (.*?) зол\\. · продаж: (.*?) зол\\.",
 "Price: $1 gold · sells for: $2 gold",
-false
+0,
+0,
+"зол. · продаж:"
+],
+[
+"^(.*?) б'є «(.*?)», але той ухиляється$",
+"$1 strikes \"$2\", but it dodges",
+1,
+0,
+"», але той ухиляється"
+],
+[
+"(.*?) б'є «(.*?)», але той ухиляється",
+"$1 strikes \"$2\", but it dodges",
+0,
+0,
+"», але той ухиляється"
+],
+[
+"^(.*?) — «(.*?)» \\(−(.*?) MP\\): відновлює (.*?) HP$",
+"$1 — \"$2\" (−$3 MP): restores $4 HP",
+1,
+0,
+"MP): відновлює"
+],
+[
+"(.*?) — «(.*?)» \\(−(.*?) MP\\): відновлює (.*?) HP",
+"$1 — \"$2\" (−$3 MP): restores $4 HP",
+0,
+0,
+"MP): відновлює"
+],
+[
+"^Скриня: (.*?)\\/(.*?) клітинок зайнято\\.$",
+"Chest: $1/$2 cells occupied.",
+1,
+0,
+"клітинок зайнято."
+],
+[
+"Скриня: (.*?)\\/(.*?) клітинок зайнято\\.",
+"Chest: $1/$2 cells occupied.",
+0,
+0,
+"клітинок зайнято."
+],
+[
+"^Дім «(.*?)» тепер ваш! −(.*?) золота\\.$",
+"The house \"$1\" is yours now! −$2 gold.",
+1,
+0,
+"» тепер ваш! −"
+],
+[
+"Дім «(.*?)» тепер ваш! −(.*?) золота\\.",
+"The house \"$1\" is yours now! −$2 gold.",
+0,
+0,
+"» тепер ваш! −"
+],
+[
+"^«Шукаю групу\\. (.*?), (.*?), (.*?) рівень\\.»$",
+"\"Looking for a party. $1, $2, level $3.\"",
+1,
+0,
+"«Шукаю групу."
+],
+[
+"«Шукаю групу\\. (.*?), (.*?), (.*?) рівень\\.»",
+"\"Looking for a party. $1, $2, level $3.\"",
+0,
+0,
+"«Шукаю групу."
+],
+[
+" — новий рівень володіння (.*?)!",
+" — new mastery level $1!",
+0,
+0,
+"— новий рівень володіння"
+],
+[
+"^ще 3 випадковим союзникам: (.*?)$",
+"3 more random allies: $1",
+1,
+0,
+"ще 3 випадковим союзникам:"
+],
+[
+"ще 3 випадковим союзникам: ([^\\s·;,]+)",
+"3 more random allies: $1",
+0,
+0,
+"ще 3 випадковим союзникам:"
 ],
 [
 "^Цей рівень: (.*?) \\/ (.*?) EXP \\(ще (.*?)\\)\\.$",
 "This level: $1 / $2 EXP ($3 to go).",
-true
+1,
+0,
+"Цей рівень:"
 ],
 [
-"^Цей рівень: (.*?) \\/ (.*?) EXP \\(ще (.*?)\\)\\.",
+"Цей рівень: (.*?) \\/ (.*?) EXP \\(ще (.*?)\\)\\.",
 "This level: $1 / $2 EXP ($3 to go).",
-false
+0,
+0,
+"Цей рівень:"
+],
+[
+", підпал (.*?) × 3 ходи \\(Кеназ\\)",
+", burn $1 × 3 turns (Kenaz)",
+0,
+0,
+"× 3 ходи (Кеназ)"
+],
+[
+"^(.*?) — «(.*?)» \\(−(.*?) MP\\) по «(.*?)»: (.*?) шкоди$",
+"$1 — \"$2\" (−$3 MP) on \"$4\": $5 damage",
+1,
+0,
+"MP) по «"
+],
+[
+"(.*?) — «(.*?)» \\(−(.*?) MP\\) по «(.*?)»: (.*?) шкоди",
+"$1 — \"$2\" (−$3 MP) on \"$4\": $5 damage",
+0,
+0,
+"MP) по «"
+],
+[
+"^(.*?) чекає, поки розтане крига$",
+"$1 waits for the ice to melt",
+1,
+0,
+"чекає, поки розтане крига"
+],
+[
+"(.*?) чекає, поки розтане крига",
+"$1 waits for the ice to melt",
+0,
+0,
+"чекає, поки розтане крига"
+],
+[
+"^Отрута \\/ вогонь: (.*?) шкоди «(.*?)»$",
+"Poison / fire: $1 damage to \"$2\"",
+1,
+0,
+"Отрута / вогонь:"
+],
+[
+"Отрута \\/ вогонь: (.*?) шкоди «(.*?)»",
+"Poison / fire: $1 damage to \"$2\"",
+0,
+0,
+"Отрута / вогонь:"
+],
+[
+"^(.*?) переможено за (.*?) раунд\\(ів\\)\\.$",
+"$1 defeated in $2 round(s).",
+1,
+0,
+"переможено за"
+],
+[
+"(.*?) переможено за (.*?) раунд\\(ів\\)\\.",
+"$1 defeated in $2 round(s).",
+0,
+0,
+"переможено за"
+],
+[
+"^Збудувати склад за (.*?) золота$",
+"Build a storehouse for $1 gold",
+1,
+0,
+"Збудувати склад за"
+],
+[
+"Збудувати склад за (.*?) золота",
+"Build a storehouse for $1 gold",
+0,
+0,
+"Збудувати склад за"
+],
+[
+"^Збудувати кузню за (.*?) золота$",
+"Build a forge for $1 gold",
+1,
+0,
+"Збудувати кузню за"
+],
+[
+"Збудувати кузню за (.*?) золота",
+"Build a forge for $1 gold",
+0,
+0,
+"Збудувати кузню за"
+],
+[
+"^Не вмістилось в інвентар: (.*?)$",
+"Did not fit into the inventory: $1",
+1,
+0,
+"Не вмістилось в інвентар:"
+],
+[
+"Не вмістилось в інвентар: ([^\\s·;,]+)",
+"Did not fit into the inventory: $1",
+0,
+0,
+"Не вмістилось в інвентар:"
+],
+[
+"^(.*?): вхід з (.*?) рівня персонажа\\.$",
+"$1: entry from character level $2.",
+1,
+0,
+"рівня персонажа."
+],
+[
+"(.*?): вхід з (.*?) рівня персонажа\\.",
+"$1: entry from character level $2.",
+0,
+0,
+"рівня персонажа."
+],
+[
+"^(.*?)% шанс заморозки на 2 ходи$",
+"$1% chance to freeze for 2 turns",
+1,
+0,
+"% шанс заморозки на 2 ходи"
+],
+[
+"(.*?)% шанс заморозки на 2 ходи",
+"$1% chance to freeze for 2 turns",
+0,
+0,
+"% шанс заморозки на 2 ходи"
 ],
 [
 "^Досвід: \\+(.*?) EXP · Золото: \\+(.*?)$",
 "Experience: +$1 EXP · Gold: +$2",
-true
+1,
+0,
+"EXP · Золото: +"
+],
+[
+"Досвід: \\+(.*?) EXP · Золото: \\+([^\\s·;,]+)",
+"Experience: +$1 EXP · Gold: +$2",
+0,
+0,
+"EXP · Золото: +"
 ],
 [
 "^Пояс: мішечки \\(\\+(.*?) комірок\\)$",
 "Belt: pouches (+$1 cells)",
-true
+1,
+0,
+"Пояс: мішечки (+"
 ],
 [
-"^Пояс: мішечки \\(\\+(.*?) комірок\\)",
+"Пояс: мішечки \\(\\+(.*?) комірок\\)",
 "Belt: pouches (+$1 cells)",
-false
+0,
+0,
+"Пояс: мішечки (+"
 ],
 [
 "^(.*?) тріснула — в інвентарі (.*?)\\.$",
 "$1 cracked — $2 in the inventory.",
-true
+1,
+0,
+"тріснула — в інвентарі"
 ],
 [
-"^(.*?) тріснула — в інвентарі (.*?)\\.",
+"(.*?) тріснула — в інвентарі (.*?)\\.",
 "$1 cracked — $2 in the inventory.",
-false
+0,
+0,
+"тріснула — в інвентарі"
 ],
 [
 "(.*?): нижче (.*?)% — пити до (.*?)% \\((.*?), ",
 "$1: below $2% — drink up to $3% ($4, ",
-false
+0,
+0,
+"% — пити до"
+],
+[
+"^(.*?) (.*?) у слизу й пропускає хід$",
+"$1 $2 in the slime and skips a turn",
+1,
+0,
+"у слизу й пропускає хід"
+],
+[
+"(.*?) (.*?) у слизу й пропускає хід",
+"$1 $2 in the slime and skips a turn",
+0,
+0,
+"у слизу й пропускає хід"
+],
+[
+"^(.*?) — натисніть, щоб вийняти$",
+"$1 — press to take out",
+1,
+0,
+"— натисніть, щоб вийняти"
+],
+[
+"(.*?) — натисніть, щоб вийняти",
+"$1 — press to take out",
+0,
+0,
+"— натисніть, щоб вийняти"
+],
+[
+"^За одну покупку — до (.*?) шт\\.$",
+"Up to $1 pcs per purchase.",
+1,
+0,
+"За одну покупку — до"
+],
+[
+"За одну покупку — до (.*?) шт\\.",
+"Up to $1 pcs per purchase.",
+0,
+0,
+"За одну покупку — до"
+],
+[
+"^Частину виконано!(.*?) Далі: (.*?)\\.$",
+"Part complete!$1 Next: $2.",
+1,
+0,
+"Частину виконано!"
+],
+[
+"Частину виконано!(.*?) Далі: (.*?)\\.",
+"Part complete!$1 Next: $2.",
+0,
+0,
+"Частину виконано!"
+],
+[
+" · для всієї групи на (.*?) хв",
+" · for the whole party for $1 min",
+0,
+0,
+"· для всієї групи на"
+],
+[
+"3 бої поспіль: 1\\) (.*?); 2\\) (.*?); ",
+"3 battles in a row: 1) $1; 2) $2; ",
+0,
+0,
+"3 бої поспіль: 1)"
+],
+[
+"^(.*?) \\(недоступна — буде удар\\)$",
+"$1 (unavailable — will strike)",
+1,
+0,
+"(недоступна — буде удар)"
+],
+[
+"(.*?) \\(недоступна — буде удар\\)",
+"$1 (unavailable — will strike)",
+0,
+0,
+"(недоступна — буде удар)"
+],
+[
+"^(.*?) ×(.*?) — у кишеню для ключів!$",
+"$1 ×$2 — into the key pocket!",
+1,
+0,
+"— у кишеню для ключів!"
+],
+[
+"(.*?) ×(.*?) — у кишеню для ключів!",
+"$1 ×$2 — into the key pocket!",
+0,
+0,
+"— у кишеню для ключів!"
+],
+[
+", «(.*?)» оглушений \\(Турісаз\\)",
+", \"$1\" is stunned (Thurisaz)",
+0,
+0,
+"» оглушений (Турісаз)"
+],
+[
+", «(.*?)» скутий кригою \\(Іса\\)",
+", \"$1\" is bound by ice (Isa)",
+0,
+0,
+"» скутий кригою (Іса)"
+],
+[
+"^(.*?) б'є кулаками «(.*?)»: (.*?) шкоди$",
+"$1 punches \"$2\": $3 damage",
+1,
+0,
+"б'є кулаками «"
+],
+[
+"(.*?) б'є кулаками «(.*?)»: (.*?) шкоди",
+"$1 punches \"$2\": $3 damage",
+0,
+0,
+"б'є кулаками «"
+],
+[
+" \\((.*?) блокує частину удару\\)",
+" ($1 blocks part of the blow)",
+0,
+0,
+"блокує частину удару)"
+],
+[
+"^(.*?) уже в іншій експедиції\\.$",
+"$1 is already on another expedition.",
+1,
+0,
+"уже в іншій експедиції."
+],
+[
+"(.*?) уже в іншій експедиції\\.",
+"$1 is already on another expedition.",
+0,
+0,
+"уже в іншій експедиції."
+],
+[
+"^На ваше золото — до (.*?) шт\\.$",
+"With your gold — up to $1 pcs.",
+1,
+0,
+"На ваше золото — до"
+],
+[
+"На ваше золото — до (.*?) шт\\.",
+"With your gold — up to $1 pcs.",
+0,
+0,
+"На ваше золото — до"
+],
+[
+"Нові оголошення — о (.*?):00 ",
+"New notices — at $1:00 ",
+0,
+0,
+"Нові оголошення — о"
+],
+[
+"^Рідкісний трофей боса: (.*?)!$",
+"Rare boss trophy: $1!",
+1,
+0,
+"Рідкісний трофей боса:"
+],
+[
+"Рідкісний трофей боса: (.*?)!",
+"Rare boss trophy: $1!",
+0,
+0,
+"Рідкісний трофей боса:"
+],
+[
+"^Данж: бій (.*?) з (.*?) — перемога$",
+"Dungeon: battle $1 of $2 — victory",
+1,
+0,
+"— перемога"
+],
+[
+"Данж: бій (.*?) з (.*?) — перемога",
+"Dungeon: battle $1 of $2 — victory",
+0,
+0,
+"— перемога"
+],
+[
+"^атака ворога −(.*?)% на (.*?) ходи$",
+"enemy attack −$1% for $2 turns",
+1,
+0,
+"атака ворога −"
+],
+[
+"атака ворога −(.*?)% на (.*?) ходи",
+"enemy attack −$1% for $2 turns",
+0,
+0,
+"атака ворога −"
 ],
 [
 "^другорядні (.*?), допоміжні (.*?)$",
 "secondary $1, auxiliary $2",
-true
+1,
+0,
+", допоміжні"
+],
+[
+"другорядні (.*?), допоміжні ([^\\s·;,]+)",
+"secondary $1, auxiliary $2",
+0,
+0,
+", допоміжні"
 ],
 [
 "^Слот (.*?): виберіть мішечок$",
 "Slot $1: choose a pouch",
-true
+1,
+0,
+": виберіть мішечок"
 ],
 [
-"^Слот (.*?): виберіть мішечок",
+"Слот (.*?): виберіть мішечок",
 "Slot $1: choose a pouch",
-false
+0,
+0,
+": виберіть мішечок"
 ],
 [
 "^На поясі: (.*?) \\(\\+(.*?) комірок\\)\\.$",
 "On the belt: $1 (+$2 cells).",
-true
+1,
+0,
+"На поясі:"
 ],
 [
-"^На поясі: (.*?) \\(\\+(.*?) комірок\\)\\.",
+"На поясі: (.*?) \\(\\+(.*?) комірок\\)\\.",
 "On the belt: $1 (+$2 cells).",
-false
+0,
+0,
+"На поясі:"
 ],
 [
 "^Імпортовано: (.*?), рівень (.*?)\\.$",
 "Imported: $1, level $2.",
-true
+1,
+0,
+"Імпортовано:"
 ],
 [
-"^Імпортовано: (.*?), рівень (.*?)\\.",
+"Імпортовано: (.*?), рівень (.*?)\\.",
 "Imported: $1, level $2.",
-false
+0,
+0,
+"Імпортовано:"
+],
+[
+"^«Щось я не второпаю, (.*?)\\.»$",
+"\"I don't quite follow, $1.\"",
+1,
+0,
+"«Щось я не второпаю,"
+],
+[
+"«Щось я не второпаю, (.*?)\\.»",
+"\"I don't quite follow, $1.\"",
+0,
+0,
+"«Щось я не второпаю,"
+],
+[
+"(.*?) продає за (.*?)% вартості, ",
+"$1 sells at $2% of the value, ",
+0,
+0,
+"% вартості,"
+],
+[
+"^Продати все \\((.*?)\\) · \\+(.*?) зол\\.$",
+"Sell all ($1) · +$2 gold",
+1,
+0,
+"Продати все ("
+],
+[
+"Продати все \\((.*?)\\) · \\+(.*?) зол\\.",
+"Sell all ($1) · +$2 gold",
+0,
+0,
+"Продати все ("
+],
+[
+"^Розпалити горно · (.*?) зол\\.$",
+"Kindle the forge · $1 gold",
+1,
+0,
+"Розпалити горно ·"
+],
+[
+"Розпалити горно · (.*?) зол\\.",
+"Kindle the forge · $1 gold",
+0,
+0,
+"Розпалити горно ·"
+],
+[
+"^Внесок: (.*?) \\+ (.*?) за професію$",
+"Fee: $1 + $2 for the profession",
+1,
+0,
+"за професію"
+],
+[
+"Внесок: (.*?) \\+ (.*?) за професію",
+"Fee: $1 + $2 for the profession",
+0,
+0,
+"за професію"
+],
+[
+"^«(.*?)»: рівень (.*?) \\(−(.*?) золота\\)\\.$",
+"\"$1\": level $2 (−$3 gold).",
+1,
+0,
+"»: рівень"
+],
+[
+"«(.*?)»: рівень (.*?) \\(−(.*?) золота\\)\\.",
+"\"$1\": level $2 (−$3 gold).",
+0,
+0,
+"»: рівень"
+],
+[
+"^(.*?)штраф досвіду −(.*?)% \\((.*?) EXP\\)$",
+"$1experience penalty −$2% ($3 EXP)",
+1,
+0,
+"штраф досвіду −"
+],
+[
+"(.*?)штраф досвіду −(.*?)% \\((.*?) EXP\\)",
+"$1experience penalty −$2% ($3 EXP)",
+0,
+0,
+"штраф досвіду −"
+],
+[
+"^Покладіть у горно (.*?) рун\\.$",
+"Put $1 runes into the forge.",
+1,
+0,
+"Покладіть у горно"
+],
+[
+"Покладіть у горно (.*?) рун\\.",
+"Put $1 runes into the forge.",
+0,
+0,
+"Покладіть у горно"
 ],
 [
 "Gear Score: основні (.*?), ",
 "Gear Score: primary $1, ",
-false
+0,
+0,
+"Gear Score: основні"
 ],
 [
 "^Клітинок: (.*?)\\/(.*?) · Золото: (.*?)$",
 "Cells: $1/$2 · Gold: $3",
-true
+1,
+0,
+"· Золото:"
+],
+[
+"Клітинок: (.*?)\\/(.*?) · Золото: ([^\\s·;,]+)",
+"Cells: $1/$2 · Gold: $3",
+0,
+0,
+"· Золото:"
 ],
 [
 " Знято з лівої руки: (.*?)\\.",
 " Removed from the left hand: $1.",
-false
+0,
+0,
+"Знято з лівої руки:"
 ],
 [
 "^Гніздо (.*?): виберіть руну$",
 "Socket $1: choose a rune",
-true
+1,
+0,
+": виберіть руну"
 ],
 [
-"^Гніздо (.*?): виберіть руну",
+"Гніздо (.*?): виберіть руну",
 "Socket $1: choose a rune",
-false
+0,
+0,
+": виберіть руну"
+],
+[
+"Ще (.*?) — і горно готове\\. ",
+"$1 more — and the forge is ready. ",
+0,
+0,
+"— і горно готове."
+],
+[
+"^нагород за чемпіонів: (.*?)$",
+"rewards for champions: $1",
+1,
+0,
+"нагород за чемпіонів:"
+],
+[
+"нагород за чемпіонів: ([^\\s·;,]+)",
+"rewards for champions: $1",
+0,
+0,
+"нагород за чемпіонів:"
+],
+[
+"^(.*?)Шлях професії пройдено$",
+"$1Path of a Profession complete",
+1,
+0,
+"Шлях професії пройдено"
+],
+[
+"(.*?)Шлях професії пройдено",
+"$1Path of a Profession complete",
+0,
+0,
+"Шлях професії пройдено"
+],
+[
+"^Межа володіння зараз: (.*?)$",
+"Mastery cap now: $1",
+1,
+0,
+"Межа володіння зараз:"
+],
+[
+"Межа володіння зараз: ([^\\s·;,]+)",
+"Mastery cap now: $1",
+0,
+0,
+"Межа володіння зараз:"
+],
+[
+" · потрібно володіння ([^\\s·;,]+)",
+" · mastery $1 required",
+0,
+0,
+"· потрібно володіння"
+],
+[
+"^отрута (.*?) шкоди × 3 ходи$",
+"poison $1 damage × 3 turns",
+1,
+0,
+"шкоди × 3 ходи"
+],
+[
+"отрута (.*?) шкоди × 3 ходи",
+"poison $1 damage × 3 turns",
+0,
+0,
+"шкоди × 3 ходи"
 ],
 [
 "^Експедицій у дорозі: (.*?)$",
 "Expeditions away: $1",
-true
+1,
+0,
+"Експедицій у дорозі:"
+],
+[
+"Експедицій у дорозі: ([^\\s·;,]+)",
+"Expeditions away: $1",
+0,
+0,
+"Експедицій у дорозі:"
 ],
 [
 "^Експедиція в дорозі: (.*?)$",
 "Expedition away: $1",
-true
+1,
+0,
+"Експедиція в дорозі:"
+],
+[
+"Експедиція в дорозі: ([^\\s·;,]+)",
+"Expedition away: $1",
+0,
+0,
+"Експедиція в дорозі:"
 ],
 [
 "^Забрано зі скрині: (.*?) ×(.*?)$",
 "Taken from the chest: $1 ×$2",
-true
+1,
+0,
+"Забрано зі скрині:"
+],
+[
+"Забрано зі скрині: (.*?) ×([^\\s·;,]+)",
+"Taken from the chest: $1 ×$2",
+0,
+0,
+"Забрано зі скрині:"
+],
+[
+"^(.*?) — «(.*?)» \\(−(.*?) MP\\): (.*?), (.*?) ходи(.*?)$",
+"$1 — \"$2\" (−$3 MP): $4, $5 turns$6",
+1,
+1,
+"MP):"
+],
+[
+"^Потрібно: (.*?) (.*?) \\(зараз (.*?)\\)\\.$",
+"Requires: $1 $2 (now $3).",
+1,
+0,
+"Потрібно:"
+],
+[
+"Потрібно: (.*?) (.*?) \\(зараз (.*?)\\)\\.",
+"Requires: $1 $2 (now $3).",
+0,
+0,
+"Потрібно:"
+],
+[
+"^Для цього потрібно: (.*?)\\.$",
+"This requires: $1.",
+1,
+0,
+"Для цього потрібно:"
+],
+[
+"Для цього потрібно: (.*?)\\.",
+"This requires: $1.",
+0,
+0,
+"Для цього потрібно:"
+],
+[
+"^Купити дім за (.*?) золота$",
+"Buy a house for $1 gold",
+1,
+0,
+"Купити дім за"
+],
+[
+"Купити дім за (.*?) золота",
+"Buy a house for $1 gold",
+0,
+0,
+"Купити дім за"
+],
+[
+"^Куплено: (.*?)(.*?) за (.*?) золота\\.$",
+"Bought: $1$2 for $3 gold.",
+1,
+0,
+"Куплено:"
+],
+[
+"Куплено: (.*?)(.*?) за (.*?) золота\\.",
+"Bought: $1$2 for $3 gold.",
+0,
+0,
+"Куплено:"
+],
+[
+"^Продано: (.*?)(.*?) за (.*?) золота\\.$",
+"Sold: $1$2 for $3 gold.",
+1,
+0,
+"Продано:"
+],
+[
+"Продано: (.*?)(.*?) за (.*?) золота\\.",
+"Sold: $1$2 for $3 gold.",
+0,
+0,
+"Продано:"
+],
+[
+" \\+ (.*?) за (.*?) рів\\. понад (.*?)-й",
+" + $1 for $2 lvl above $3",
+0,
+0,
+"рів. понад"
+],
+[
+"^а купує будь-що за (.*?)%\\.$",
+"and buys anything at $1%.",
+1,
+0,
+"а купує будь-що за"
+],
+[
+"а купує будь-що за (.*?)%\\.",
+"and buys anything at $1%.",
+0,
+0,
+"а купує будь-що за"
+],
+[
+"^Нагорода: (.*?); досвід — (.*?)$",
+"Reward: $1; experience — $2",
+1,
+0,
+"; досвід —"
+],
+[
+"Нагорода: (.*?); досвід — ([^\\s·;,]+)",
+"Reward: $1; experience — $2",
+0,
+0,
+"; досвід —"
+],
+[
+"^Переможено чемпіона: (.*?)$",
+"Champion defeated: $1",
+1,
+0,
+"Переможено чемпіона:"
+],
+[
+"Переможено чемпіона: ([^\\s·;,]+)",
+"Champion defeated: $1",
+0,
+0,
+"Переможено чемпіона:"
+],
+[
+"^Особливе завдання: «(.*?)»$",
+"Special task: \"$1\"",
+1,
+0,
+"Особливе завдання: «"
+],
+[
+"Особливе завдання: «(.*?)»",
+"Special task: \"$1\"",
+0,
+0,
+"Особливе завдання: «"
+],
+[
+"^«(.*?)»: частину (.*?) з (.*?) здано$",
+"\"$1\": part $2 of $3 handed in",
+1,
+0,
+"»: частину"
+],
+[
+"«(.*?)»: частину (.*?) з (.*?) здано",
+"\"$1\": part $2 of $3 handed in",
+0,
+0,
+"»: частину"
+],
+[
+"^Ще не розставлено: (.*?)\\. (.*?)$",
+"Not placed yet: $1. $2",
+1,
+0,
+"Ще не розставлено:"
+],
+[
+"Ще не розставлено: (.*?)\\. ([^\\s·;,]+)",
+"Not placed yet: $1. $2",
+0,
+0,
+"Ще не розставлено:"
+],
+[
+" \\(рівень (.*?) — найвищий\\)",
+" (level $1 — highest)",
+0,
+0,
+"— найвищий)"
 ],
 [
 "^Набрано (.*?)% до (.*?) рівня\\.$",
 "$1% gained towards level $2.",
-true
+1,
+0,
+"Набрано"
 ],
 [
-"^Набрано (.*?)% до (.*?) рівня\\.",
+"Набрано (.*?)% до (.*?) рівня\\.",
 "$1% gained towards level $2.",
-false
+0,
+0,
+"Набрано"
 ],
 [
 ", рідкість і рівень ([^\\s·;,]+)",
 ", rarity and level $1",
-false
+0,
+0,
+", рідкість і рівень"
 ],
 [
 ", до (.*?) шт\\. в клітинці",
 ", up to $1 pcs per cell",
-false
+0,
+0,
+"шт. в клітинці"
+],
+[
+"^(.*?) — «(.*?)» \\(−(.*?) MP\\): (.*?) шкоди$",
+"$1 — \"$2\" (−$3 MP): $4 damage",
+1,
+0,
+"MP):"
+],
+[
+"(.*?) — «(.*?)» \\(−(.*?) MP\\): (.*?) шкоди",
+"$1 — \"$2\" (−$3 MP): $4 damage",
+0,
+0,
+"MP):"
+],
+[
+"^(.*?) лікує (.*?) \\(−(.*?) MP\\): \\+(.*?) HP$",
+"$1 heals $2 (−$3 MP): +$4 HP",
+1,
+0,
+"лікує"
+],
+[
+"(.*?) лікує (.*?) \\(−(.*?) MP\\): \\+(.*?) HP",
+"$1 heals $2 (−$3 MP): +$4 HP",
+0,
+0,
+"лікує"
+],
+[
+"^Лише для професій: (.*?)\\.$",
+"Only for professions: $1.",
+1,
+0,
+"Лише для професій:"
+],
+[
+"Лише для професій: (.*?)\\.",
+"Only for professions: $1.",
+0,
+0,
+"Лише для професій:"
+],
+[
+"^(.*?) уже стоїть у кузні\\.$",
+"$1 is already in the forge.",
+1,
+0,
+"уже стоїть у кузні."
+],
+[
+"(.*?) уже стоїть у кузні\\.",
+"$1 is already in the forge.",
+0,
+0,
+"уже стоїть у кузні."
+],
+[
+"^Потрібен рівень «(.*?)» (.*?)\\.$",
+"Requires the \"$1\" level of $2.",
+1,
+0,
+"Потрібен рівень «"
+],
+[
+"Потрібен рівень «(.*?)» (.*?)\\.",
+"Requires the \"$1\" level of $2.",
+0,
+0,
+"Потрібен рівень «"
+],
+[
+"^Завдання «(.*?)» виконано$",
+"Task \"$1\" complete",
+1,
+0,
+"Завдання «"
+],
+[
+"Завдання «(.*?)» виконано",
+"Task \"$1\" complete",
+0,
+0,
+"Завдання «"
+],
+[
+"^Зброя: (.*?) · дальність (.*?)(.*?)$",
+"Weapon: $1 · range $2$3",
+1,
+0,
+"· дальність"
+],
+[
+"Зброя: (.*?) · дальність (.*?)([^\\s·;,]+)",
+"Weapon: $1 · range $2$3",
+0,
+0,
+"· дальність"
+],
+[
+", рівень знижено до (.*?)([^\\s·;,]+)",
+", level lowered to $1$2",
+0,
+0,
+", рівень знижено до"
+],
+[
+"^Переможено ворогів: (.*?)$",
+"Enemies defeated: $1",
+1,
+0,
+"Переможено ворогів:"
+],
+[
+"Переможено ворогів: ([^\\s·;,]+)",
+"Enemies defeated: $1",
+0,
+0,
+"Переможено ворогів:"
+],
+[
+"^Далі на вас чекає: (.*?)\\.$",
+"Next awaits you: $1.",
+1,
+0,
+"Далі на вас чекає:"
+],
+[
+"Далі на вас чекає: (.*?)\\.",
+"Next awaits you: $1.",
+0,
+0,
+"Далі на вас чекає:"
 ],
 [
 "^Забрано зі скрині: (.*?)(.*?)$",
 "Taken from the chest: $1$2",
-true
+1,
+0,
+"Забрано зі скрині:"
+],
+[
+"Забрано зі скрині: (.*?)([^\\s·;,]+)",
+"Taken from the chest: $1$2",
+0,
+0,
+"Забрано зі скрині:"
+],
+[
+" \\((.*?) частково блокує\\)",
+" ($1 partly blocks)",
+0,
+0,
+"частково блокує)"
+],
+[
+"^(.*?) (.*?), але (.*?) ухиляється!$",
+"$1 $2, but $3 dodges!",
+1,
+0,
+"ухиляється!"
+],
+[
+"(.*?) (.*?), але (.*?) ухиляється!",
+"$1 $2, but $3 dodges!",
+0,
+0,
+"ухиляється!"
+],
+[
+"^(.*?)дія «(.*?)» закінчилась\\.$",
+"$1effect \"$2\" has ended.",
+1,
+0,
+"» закінчилась."
+],
+[
+"(.*?)дія «(.*?)» закінчилась\\.",
+"$1effect \"$2\" has ended.",
+0,
+0,
+"» закінчилась."
+],
+[
+"^Нагорода: досвід — (.*?)$",
+"Reward: experience — $1",
+1,
+0,
+"Нагорода: досвід —"
+],
+[
+"Нагорода: досвід — ([^\\s·;,]+)",
+"Reward: experience — $1",
+0,
+0,
+"Нагорода: досвід —"
+],
+[
+"^Здано (.*?)\\. Нагорода: (.*?)\\.(.*?)$",
+"Handed in: $1. Reward: $2.$3",
+1,
+0,
+". Нагорода:"
+],
+[
+"Здано (.*?)\\. Нагорода: (.*?)\\.([^\\s·;,]+)",
+"Handed in: $1. Reward: $2.$3",
+0,
+0,
+". Нагорода:"
+],
+[
+"^Тренуватися \\((.*?) зол\\.\\)$",
+"Train ($1 gold)",
+1,
+0,
+"Тренуватися ("
+],
+[
+"Тренуватися \\((.*?) зол\\.\\)",
+"Train ($1 gold)",
+0,
+0,
+"Тренуватися ("
+],
+[
+" · потрібна зброя: ([^\\s·;,]+)",
+" · weapon required: $1",
+0,
+0,
+"· потрібна зброя:"
+],
+[
+", Джерело Велеса \\+(.*?)%",
+", Spring of Veles +$1%",
+0,
+0,
+", Джерело Велеса +"
+],
+[
+" \\(−(.*?) очок атрибутів\\)",
+" (−$1 attribute points)",
+0,
+0,
+"очок атрибутів)"
 ],
 [
 "^Боїв: (.*?), перемог: (.*?)\\.$",
 "Battles: $1, victories: $2.",
-true
+1,
+0,
+", перемог:"
 ],
 [
-"^Боїв: (.*?), перемог: (.*?)\\.",
+"Боїв: (.*?), перемог: (.*?)\\.",
 "Battles: $1, victories: $2.",
-false
+0,
+0,
+", перемог:"
 ],
 [
 "^Замінити «(.*?)» на «(.*?)»\\?$",
 "Replace \"$1\" with \"$2\"?",
-true
+1,
+0,
+"Замінити «"
 ],
 [
-"^Замінити «(.*?)» на «(.*?)»\\?",
+"Замінити «(.*?)» на «(.*?)»\\?",
 "Replace \"$1\" with \"$2\"?",
-false
+0,
+0,
+"Замінити «"
 ],
 [
 " — лише в данжі «(.*?)»",
 " — only in the dungeon \"$1\"",
-false
+0,
+0,
+"— лише в данжі «"
 ],
 [
 " — HP нижче (.*?)% до (.*?)%",
 " — HP below $1% to $2%",
-false
+0,
+0,
+"— HP нижче"
+],
+[
+", захист ворога −(.*?)%",
+", enemy defence −$1%",
+0,
+0,
+", захист ворога −"
+],
+[
+"^(.*?) б'є \\((.*?)\\) «(.*?)»: (.*?) шкоди$",
+"$1 strikes ($2) \"$3\": $4 damage",
+1,
+0,
+"б'є ("
+],
+[
+"(.*?) б'є \\((.*?)\\) «(.*?)»: (.*?) шкоди",
+"$1 strikes ($2) \"$3\": $4 damage",
+0,
+0,
+"б'є ("
+],
+[
+" \\+ (.*?) вогнем \\(Крада\\)",
+" + $1 fire (Krada)",
+0,
+0,
+"вогнем (Крада)"
+],
+[
+", отрута (.*?) × (.*?) ходів",
+", poison $1 × $2 turns",
+0,
+0,
+", отрута"
+],
+[
+"^(.*?): уже максимум \\((.*?)\\)\\.$",
+"$1: already at the maximum ($2).",
+1,
+0,
+": уже максимум ("
+],
+[
+"(.*?): уже максимум \\((.*?)\\)\\.",
+"$1: already at the maximum ($2).",
+0,
+0,
+": уже максимум ("
+],
+[
+"^Тір (.*?) — з рівня «(.*?)» (.*?)$",
+"Tier $1 — from the \"$2\" level $3",
+1,
+0,
+"— з рівня «"
+],
+[
+"Тір (.*?) — з рівня «(.*?)» ([^\\s·;,]+)",
+"Tier $1 — from the \"$2\" level $3",
+0,
+0,
+"— з рівня «"
+],
+[
+"^за бої на (.*?) хвилин\\.$",
+"from battles for $1 minutes.",
+1,
+0,
+"за бої на"
+],
+[
+"за бої на (.*?) хвилин\\.",
+"from battles for $1 minutes.",
+0,
+0,
+"за бої на"
 ],
 [
 "^Гнізда для рун: (.*?)\\/(.*?)$",
 "Rune sockets: $1/$2",
-true
+1,
+0,
+"Гнізда для рун:"
+],
+[
+"Гнізда для рун: (.*?)\\/([^\\s·;,]+)",
+"Rune sockets: $1/$2",
+0,
+0,
+"Гнізда для рун:"
 ],
 [
 "^Бонус від речей: (.*?)$",
 "Bonus from items: $1",
-true
+1,
+0,
+"Бонус від речей:"
+],
+[
+"Бонус від речей: ([^\\s·;,]+)",
+"Bonus from items: $1",
+0,
+0,
+"Бонус від речей:"
+],
+[
+", атака ворога −(.*?)%",
+", enemy attack −$1%",
+0,
+0,
+", атака ворога −"
+],
+[
+"^(.*?) — «(.*?)» по (.*?): (.*?) шкоди$",
+"$1 — \"$2\" on $3: $4 damage",
+1,
+0,
+"шкоди"
+],
+[
+"(.*?) — «(.*?)» по (.*?): (.*?) шкоди",
+"$1 — \"$2\" on $3: $4 damage",
+0,
+0,
+"шкоди"
+],
+[
+"^Потрібно (.*?) золота\\.$",
+"You need $1 gold.",
+1,
+0,
+"Потрібно"
+],
+[
+"Потрібно (.*?) золота\\.",
+"You need $1 gold.",
+0,
+0,
+"Потрібно"
+],
+[
+"^Потрібен (.*?) рівень\\.$",
+"Requires level $1.",
+1,
+0,
+"Потрібен"
+],
+[
+"Потрібен (.*?) рівень\\.",
+"Requires level $1.",
+0,
+0,
+"Потрібен"
+],
+[
+"^Бракує знарядь: (.*?)\\.$",
+"Missing tools: $1.",
+1,
+0,
+"Бракує знарядь:"
+],
+[
+"Бракує знарядь: (.*?)\\.",
+"Missing tools: $1.",
+0,
+0,
+"Бракує знарядь:"
+],
+[
+"^Швидкий доступ · (.*?)$",
+"Quick Access · $1",
+1,
+0,
+"Швидкий доступ ·"
+],
+[
+"Швидкий доступ · ([^\\s·;,]+)",
+"Quick Access · $1",
+0,
+0,
+"Швидкий доступ ·"
+],
+[
+"^Купити за (.*?) золота$",
+"Buy for $1 gold",
+1,
+0,
+"Купити за"
+],
+[
+"Купити за (.*?) золота",
+"Buy for $1 gold",
+0,
+0,
+"Купити за"
+],
+[
+"^Продати (.*?) · \\+(.*?) зол\\.$",
+"Sell $1 · +$2 gold",
+1,
+0,
+"Продати"
+],
+[
+"Продати (.*?) · \\+(.*?) зол\\.",
+"Sell $1 · +$2 gold",
+0,
+0,
+"Продати"
+],
+[
+" \\(вільних очок: (.*?)\\)",
+" (free points: $1)",
+0,
+0,
+"(вільних очок:"
+],
+[
+"\\(через (.*?) год (.*?) хв\\)\\.",
+"(in $1 h $2 min).",
+0,
+0,
+"(через"
+],
+[
+"^Завдання «(.*?)» здано$",
+"Task \"$1\" handed in",
+1,
+0,
+"Завдання «"
+],
+[
+"Завдання «(.*?)» здано",
+"Task \"$1\" handed in",
+0,
+0,
+"Завдання «"
+],
+[
+"^Взято завдання: (.*?)\\.$",
+"Task taken: $1.",
+1,
+0,
+"Взято завдання:"
+],
+[
+"Взято завдання: (.*?)\\.",
+"Task taken: $1.",
+0,
+0,
+"Взято завдання:"
+],
+[
+"^Трофей чемпіона: (.*?)$",
+"Champion's trophy: $1",
+1,
+0,
+"Трофей чемпіона:"
+],
+[
+"Трофей чемпіона: ([^\\s·;,]+)",
+"Champion's trophy: $1",
+0,
+0,
+"Трофей чемпіона:"
+],
+[
+"^Данж «(.*?)» пройдено!$",
+"Dungeon \"$1\" completed!",
+1,
+0,
+"» пройдено!"
+],
+[
+"Данж «(.*?)» пройдено!",
+"Dungeon \"$1\" completed!",
+0,
+0,
+"» пройдено!"
+],
+[
+"^Далі — бій (.*?) з (.*?): (.*?)\\.$",
+"Next — battle $1 of $2: $3.",
+1,
+0,
+"Далі — бій"
+],
+[
+"Далі — бій (.*?) з (.*?): (.*?)\\.",
+"Next — battle $1 of $2: $3.",
+0,
+0,
+"Далі — бій"
+],
+[
+"^Гру збережено \\((.*?)\\)\\.$",
+"Game saved ($1).",
+1,
+0,
+"Гру збережено ("
+],
+[
+"Гру збережено \\((.*?)\\)\\.",
+"Game saved ($1).",
+0,
+0,
+"Гру збережено ("
 ],
 [
 " Потрібне для: (.*?)\\.",
 " Needed for: $1.",
-false
+0,
+0,
+"Потрібне для:"
 ],
 [
 "^В дорозі до «(.*?)»: (.*?)$",
 "On the way to \"$1\": $2",
-true
+1,
+0,
+"В дорозі до «"
+],
+[
+"В дорозі до «(.*?)»: ([^\\s·;,]+)",
+"On the way to \"$1\": $2",
+0,
+0,
+"В дорозі до «"
 ],
 [
 "^(.*?) лягла в гніздо\\.$",
 "$1 settled into the socket.",
-true
+1,
+0,
+"лягла в гніздо."
 ],
 [
-"^(.*?) лягла в гніздо\\.",
+"(.*?) лягла в гніздо\\.",
 "$1 settled into the socket.",
-false
+0,
+0,
+"лягла в гніздо."
 ],
 [
 "^(.*?) MP нижче (.*?)% до (.*?)%$",
 "$1 MP below $2% to $3%",
-true
+1,
+0,
+"MP нижче"
 ],
 [
-"^(.*?) MP нижче (.*?)% до (.*?)%",
+"(.*?) MP нижче (.*?)% до (.*?)%",
 "$1 MP below $2% to $3%",
-false
+0,
+0,
+"MP нижче"
+],
+[
+", вампіризм \\+(.*?) HP",
+", lifesteal +$1 HP",
+0,
+0,
+", вампіризм +"
+],
+[
+"^Майстерність (.*?) — (.*?)$",
+"Mastery $1 — $2",
+1,
+0,
+"Майстерність"
+],
+[
+"Майстерність (.*?) — ([^\\s·;,]+)",
+"Mastery $1 — $2",
+0,
+0,
+"Майстерність"
+],
+[
+" · відкрито тір ([^\\s·;,]+)",
+" · tier $1 unlocked",
+0,
+0,
+"· відкрито тір"
+],
+[
+"\\. Майстерність (.*?)!",
+". Mastery $1!",
+0,
+0,
+". Майстерність"
+],
+[
+"^Продати · \\+(.*?) зол\\.$",
+"Sell · +$1 gold",
+1,
+0,
+"Продати · +"
+],
+[
+"Продати · \\+(.*?) зол\\.",
+"Sell · +$1 gold",
+0,
+0,
+"Продати · +"
+],
+[
+" Новий рівень: (.*?)!",
+" New level: $1!",
+0,
+0,
+"Новий рівень:"
+],
+[
+"^(.*?): новий рівень (.*?)!$",
+"$1: new level $2!",
+1,
+0,
+": новий рівень"
+],
+[
+"(.*?): новий рівень (.*?)!",
+"$1: new level $2!",
+0,
+0,
+": новий рівень"
+],
+[
+", Сфера Богів \\+(.*?)%",
+", Orb of the Gods +$1%",
+0,
+0,
+", Сфера Богів +"
+],
+[
+"^Фільтр викинув: (.*?)$",
+"The filter threw away: $1",
+1,
+0,
+"Фільтр викинув:"
+],
+[
+"Фільтр викинув: ([^\\s·;,]+)",
+"The filter threw away: $1",
+0,
+0,
+"Фільтр викинув:"
+],
+[
+" — «(.*?)» завершено!",
+" — \"$1\" complete!",
+0,
+0,
+"» завершено!"
+],
+[
+"^захист ворога −(.*?)%$",
+"enemy defence −$1%",
+1,
+0,
+"захист ворога −"
+],
+[
+"захист ворога −(.*?)%",
+"enemy defence −$1%",
+0,
+0,
+"захист ворога −"
+],
+[
+"^лікує (.*?)% здоров'я(.*?)$",
+"heals $1% health$2",
+1,
+0,
+"% здоров'я"
+],
+[
+"лікує (.*?)% здоров'я([^\\s·;,]+)",
+"heals $1% health$2",
+0,
+0,
+"% здоров'я"
 ],
 [
 "^Ви прибули: «(.*?)»\\.$",
 "You have arrived: \"$1\".",
-true
+1,
+0,
+"Ви прибули: «"
 ],
 [
-"^Ви прибули: «(.*?)»\\.",
+"Ви прибули: «(.*?)»\\.",
 "You have arrived: \"$1\".",
-false
+0,
+0,
+"Ви прибули: «"
 ],
 [
 "^Випито зілля: (.*?)\\.$",
 "Potions drunk: $1.",
-true
+1,
+0,
+"Випито зілля:"
 ],
 [
-"^Випито зілля: (.*?)\\.",
+"Випито зілля: (.*?)\\.",
 "Potions drunk: $1.",
-false
+0,
+0,
+"Випито зілля:"
 ],
 [
 "^Боїв (.*?), перемог (.*?)$",
 "Battles $1, victories $2",
-true
+1,
+0,
+", перемог"
+],
+[
+"Боїв (.*?), перемог ([^\\s·;,]+)",
+"Battles $1, victories $2",
+0,
+0,
+", перемог"
+],
+[
+"^«(.*?)» переможений\\.$",
+"\"$1\" is defeated.",
+1,
+0,
+"» переможений."
+],
+[
+"«(.*?)» переможений\\.",
+"\"$1\" is defeated.",
+0,
+0,
+"» переможений."
+],
+[
+"^(.*?) падає без сил…$",
+"$1 falls exhausted…",
+1,
+0,
+"падає без сил…"
+],
+[
+"(.*?) падає без сил…",
+"$1 falls exhausted…",
+0,
+0,
+"падає без сил…"
+],
+[
+"^Увійти в дім «(.*?)»$",
+"Enter the house \"$1\"",
+1,
+0,
+"Увійти в дім «"
+],
+[
+"Увійти в дім «(.*?)»",
+"Enter the house \"$1\"",
+0,
+0,
+"Увійти в дім «"
+],
+[
+"^Купити (.*?) · (.*?) зол\\.$",
+"Buy $1 · $2 gold",
+1,
+0,
+"Купити"
+],
+[
+"Купити (.*?) · (.*?) зол\\.",
+"Buy $1 · $2 gold",
+0,
+0,
+"Купити"
+],
+[
+"^Ваша група: (.*?) \\/ (.*?)$",
+"Your party: $1 / $2",
+1,
+0,
+"Ваша група:"
+],
+[
+"Ваша група: (.*?) \\/ ([^\\s·;,]+)",
+"Your party: $1 / $2",
+0,
+0,
+"Ваша група:"
+],
+[
+"^Далі — (.*?) золота\\.$",
+"Then — $1 gold.",
+1,
+0,
+"золота."
+],
+[
+"Далі — (.*?) золота\\.",
+"Then — $1 gold.",
+0,
+0,
+"золота."
+],
+[
+"^Найняти \\((.*?) зол\\.\\)$",
+"Hire ($1 gold)",
+1,
+0,
+"Найняти ("
+],
+[
+"Найняти \\((.*?) зол\\.\\)",
+"Hire ($1 gold)",
+0,
+0,
+"Найняти ("
+],
+[
+"^Нагорода: (.*?) EXP\\.(.*?)$",
+"Reward: $1 EXP.$2",
+1,
+0,
+"Нагорода:"
+],
+[
+"Нагорода: (.*?) EXP\\.([^\\s·;,]+)",
+"Reward: $1 EXP.$2",
+0,
+0,
+"Нагорода:"
+],
+[
+"^(.*?)руни \\+(.*?) EXP \\(\\+(.*?)%\\)$",
+"$1runes +$2 EXP (+$3%)",
+1,
+1,
+"EXP (+"
+],
+[
+"^(.*?) сюди не лягає\\.$",
+"$1 doesn't fit here.",
+1,
+0,
+"сюди не лягає."
+],
+[
+"(.*?) сюди не лягає\\.",
+"$1 doesn't fit here.",
+0,
+0,
+"сюди не лягає."
 ],
 [
 "Клітинок: (.*?)\\/(.*?) · ",
 "Cells: $1/$2 · ",
-false
+0,
+0,
+"Клітинок:"
 ],
 [
 "^Кількість \\(є (.*?)\\)$",
 "Quantity (have $1)",
-true
+1,
+0,
+"Кількість (є"
 ],
 [
-"^Кількість \\(є (.*?)\\)",
+"Кількість \\(є (.*?)\\)",
 "Quantity (have $1)",
-false
+0,
+0,
+"Кількість (є"
 ],
 [
 "^Час у дорозі: (.*?)$",
 "Travel time: $1",
-true
+1,
+0,
+"Час у дорозі:"
+],
+[
+"Час у дорозі: ([^\\s·;,]+)",
+"Travel time: $1",
+0,
+0,
+"Час у дорозі:"
 ],
 [
 "^потрібен (.*?) рів\\.$",
 "requires lvl $1",
-true
+1,
+0,
+"потрібен"
 ],
 [
-"^потрібен (.*?) рів\\.",
+"потрібен (.*?) рів\\.",
 "requires lvl $1",
-false
+0,
+0,
+"потрібен"
 ],
 [
 "^Відправити \\((.*?)\\/(.*?)\\)$",
 "Send ($1/$2)",
-true
+1,
+0,
+"Відправити ("
 ],
 [
-"^Відправити \\((.*?)\\/(.*?)\\)",
+"Відправити \\((.*?)\\/(.*?)\\)",
 "Send ($1/$2)",
-false
+0,
+0,
+"Відправити ("
 ],
 [
 "^(.*?) · збережено: (.*?)(.*?)$",
 "$1 · saved: $2$3",
-true
+1,
+0,
+"· збережено:"
+],
+[
+"(.*?) · збережено: (.*?)([^\\s·;,]+)",
+"$1 · saved: $2$3",
+0,
+0,
+"· збережено:"
+],
+[
+"^Купити · (.*?) зол\\.$",
+"Buy · $1 gold",
+1,
+0,
+"Купити ·"
+],
+[
+"Купити · (.*?) зол\\.",
+"Buy · $1 gold",
+0,
+0,
+"Купити ·"
+],
+[
+"^Майстерність (.*?)!$",
+"Mastery $1!",
+1,
+0,
+"Майстерність"
+],
+[
+"Майстерність (.*?)!",
+"Mastery $1!",
+0,
+0,
+"Майстерність"
+],
+[
+"^Завдання (.*?) з (.*?): (.*?)$",
+"Task $1 of $2: $3",
+1,
+0,
+"Завдання"
+],
+[
+"Завдання (.*?) з (.*?): ([^\\s·;,]+)",
+"Task $1 of $2: $3",
+0,
+0,
+"Завдання"
+],
+[
+"^Почати бій (.*?) з (.*?)$",
+"Start battle $1 of $2",
+1,
+0,
+"Почати бій"
+],
+[
+"Почати бій (.*?) з ([^\\s·;,]+)",
+"Start battle $1 of $2",
+0,
+0,
+"Почати бій"
+],
+[
+"^Уже пропало: (.*?)\\.$",
+"Already lost: $1.",
+1,
+0,
+"Уже пропало:"
+],
+[
+"Уже пропало: (.*?)\\.",
+"Already lost: $1.",
+0,
+0,
+"Уже пропало:"
 ],
 [
 "^(.*?) — запечатано$",
 "$1 — sealed",
-true
+1,
+0,
+"— запечатано"
 ],
 [
-"^(.*?) — запечатано",
+"(.*?) — запечатано",
 "$1 — sealed",
-false
+0,
+0,
+"— запечатано"
 ],
 [
 " · у строю (.*?)\\/(.*?)\\.",
 " · standing $1/$2.",
-false
+0,
+0,
+"· у строю"
 ],
 [
 ", штраф −(.*?) EXP",
 ", penalty −$1 EXP",
-false
+0,
+0,
+", штраф −"
 ],
 [
 " \\(вдягнено (.*?)\\/(.*?)\\)",
 " (equipped $1/$2)",
-false
+0,
+0,
+"(вдягнено"
 ],
 [
 "^Додати очко: (.*?)$",
 "Add a point: $1",
-true
+1,
+0,
+"Додати очко:"
+],
+[
+"Додати очко: ([^\\s·;,]+)",
+"Add a point: $1",
+0,
+0,
+"Додати очко:"
 ],
 [
 "^Спорядження: (.*?)$",
 "Equipment: $1",
-true
+1,
+0,
+"Спорядження:"
+],
+[
+"Спорядження: ([^\\s·;,]+)",
+"Equipment: $1",
+0,
+0,
+"Спорядження:"
+],
+[
+"^Тір (.*?) відкрито$",
+"Tier $1 unlocked",
+1,
+0,
+"відкрито"
+],
+[
+"Тір (.*?) відкрито",
+"Tier $1 unlocked",
+0,
+0,
+"відкрито"
+],
+[
+"^Вугілля ×(.*?): є (.*?)$",
+"Coal ×$1: have $2",
+1,
+0,
+"Вугілля ×"
+],
+[
+"Вугілля ×(.*?): є ([^\\s·;,]+)",
+"Coal ×$1: have $2",
+0,
+0,
+"Вугілля ×"
+],
+[
+"^Ваше золото: (.*?)$",
+"Your gold: $1",
+1,
+0,
+"Ваше золото:"
+],
+[
+"Ваше золото: ([^\\s·;,]+)",
+"Your gold: $1",
+0,
+0,
+"Ваше золото:"
+],
+[
+" · нагорода: ([^\\s·;,]+)",
+" · reward: $1",
+0,
+0,
+"· нагорода:"
+],
+[
+"^Частина (.*?) з (.*?): (.*?)$",
+"Part $1 of $2: $3",
+1,
+0,
+"Частина"
+],
+[
+"Частина (.*?) з (.*?): ([^\\s·;,]+)",
+"Part $1 of $2: $3",
+0,
+0,
+"Частина"
+],
+[
+" · (.*?) \\(дальн\\. (.*?)\\)",
+" · $1 (range $2)",
+0,
+0,
+"(дальн."
+],
+[
+" · дальність ([^\\s·;,]+)",
+" · range $1",
+0,
+0,
+"· дальність"
+],
+[
+"^Данж: бій (.*?) з (.*?)$",
+"Dungeon: battle $1 of $2",
+1,
+0,
+"Данж: бій"
+],
+[
+"Данж: бій (.*?) з ([^\\s·;,]+)",
+"Dungeon: battle $1 of $2",
+0,
+0,
+"Данж: бій"
+],
+[
+" \\(рівень (.*?), (.*?)\\/(.*?)(.*?)\\)",
+" (level $1, $2/$3$4)",
+0,
+0,
+"(рівень"
+],
+[
+"^Вкладається (.*?)\\.$",
+"Inserted into $1.",
+1,
+0,
+"Вкладається"
+],
+[
+"Вкладається (.*?)\\.",
+"Inserted into $1.",
+0,
+0,
+"Вкладається"
 ],
 [
 "^Експедиція: (.*?)(.*?)$",
 "Expedition: $1$2",
-true
+1,
+0,
+"Експедиція:"
+],
+[
+"Експедиція: (.*?)([^\\s·;,]+)",
+"Expedition: $1$2",
+0,
+0,
+"Експедиція:"
 ],
 [
 ", чемпіонів ([^\\s·;,]+)",
 ", champions $1",
-false
+0,
+0,
+", чемпіонів"
 ],
 [
 ", рівень (.*?) → ([^\\s·;,]+)",
 ", level $1 → $2",
-false
+0,
+0,
+", рівень"
 ],
 [
 "^(.*?) · \\+(.*?) комірок$",
 "$1 · +$2 cells",
-true
+1,
+0,
+"комірок"
 ],
 [
-"^(.*?) · \\+(.*?) комірок",
+"(.*?) · \\+(.*?) комірок",
 "$1 · +$2 cells",
-false
+0,
+0,
+"комірок"
 ],
 [
 "^Викинути «(.*?)»(.*?)\\?$",
 "Throw away \"$1\"$2?",
-true
+1,
+0,
+"Викинути «"
 ],
 [
-"^Викинути «(.*?)»(.*?)\\?",
+"Викинути «(.*?)»(.*?)\\?",
 "Throw away \"$1\"$2?",
-false
+0,
+0,
+"Викинути «"
 ],
 [
 "^У скриню: (.*?) ×(.*?)$",
 "To the chest: $1 ×$2",
-true
+1,
+0,
+"У скриню:"
+],
+[
+"У скриню: (.*?) ×([^\\s·;,]+)",
+"To the chest: $1 ×$2",
+0,
+0,
+"У скриню:"
 ],
 [
 " · від (.*?) рів\\.",
 " · from lvl $1",
-false
+0,
+0,
+"· від"
 ],
 [
 "^Експедиція: (.*?)$",
 "Expedition: $1",
-true
+1,
+0,
+"Експедиція:"
+],
+[
+"Експедиція: ([^\\s·;,]+)",
+"Expedition: $1",
+0,
+0,
+"Експедиція:"
 ],
 [
 "^(.*?) — (.*?), рівень (.*?)$",
 "$1 — $2, level $3",
-true
+1,
+0,
+", рівень"
+],
+[
+"(.*?) — (.*?), рівень ([^\\s·;,]+)",
+"$1 — $2, level $3",
+0,
+0,
+", рівень"
+],
+[
+"^«(.*?)» \\(рівень (.*?)\\)(.*?)$",
+"\"$1\" (level $2)$3",
+1,
+0,
+"» (рівень"
+],
+[
+"«(.*?)» \\(рівень (.*?)\\)([^\\s·;,]+)",
+"\"$1\" (level $2)$3",
+0,
+0,
+"» (рівень"
+],
+[
+"^(.*?) клітинок · (.*?)(.*?)$",
+"$1 cells · $2$3",
+1,
+0,
+"клітинок ·"
+],
+[
+"(.*?) клітинок · (.*?)([^\\s·;,]+)",
+"$1 cells · $2$3",
+0,
+0,
+"клітинок ·"
+],
+[
+"^\\+1 (.*?) матеріал$",
+"+1 $1 material",
+1,
+0,
+"матеріал"
+],
+[
+"\\+1 (.*?) матеріал",
+"+1 $1 material",
+0,
+0,
+"матеріал"
+],
+[
+"^Ваш дім: «(.*?)»\\.$",
+"Your house: \"$1\".",
+1,
+0,
+"Ваш дім: «"
+],
+[
+"Ваш дім: «(.*?)»\\.",
+"Your house: \"$1\".",
+0,
+0,
+"Ваш дім: «"
+],
+[
+"^Здати все \\((.*?)\\)$",
+"Hand in all ($1)",
+1,
+0,
+"Здати все ("
+],
+[
+"Здати все \\((.*?)\\)",
+"Hand in all ($1)",
+0,
+0,
+"Здати все ("
+],
+[
+"^Дія (.*?) у черзі$",
+"Action $1 in the queue",
+1,
+0,
+"у черзі"
+],
+[
+"Дія (.*?) у черзі",
+"Action $1 in the queue",
+0,
+0,
+"у черзі"
+],
+[
+", втрачено: ([^\\s·;,]+)",
+", lost: $1",
+0,
+0,
+", втрачено:"
+],
+[
+"^\\+(.*?)% по нежиті$",
+"+$1% against the undead",
+1,
+0,
+"% по нежиті"
+],
+[
+"\\+(.*?)% по нежиті",
+"+$1% against the undead",
+0,
+0,
+"% по нежиті"
 ],
 [
 "; максимум ([^\\s·;,]+)",
 "; maximum $1",
-false
+0,
+0,
+"; максимум"
 ],
 [
 "^(.*?) \\(максимум\\)$",
 "$1 (maximum)",
-true
+1,
+0,
+"(максимум)"
 ],
 [
-"^(.*?) \\(максимум\\)",
+"(.*?) \\(максимум\\)",
 "$1 (maximum)",
-false
+0,
+0,
+"(максимум)"
 ],
 [
 "^Вдягнено: (.*?)\\.(.*?)$",
 "Equipped: $1.$2",
-true
+1,
+0,
+"Вдягнено:"
+],
+[
+"Вдягнено: (.*?)\\.([^\\s·;,]+)",
+"Equipped: $1.$2",
+0,
+0,
+"Вдягнено:"
 ],
 [
 "^Вирушити · (.*?)$",
 "Set off · $1",
-true
+1,
+0,
+"Вирушити ·"
+],
+[
+"Вирушити · ([^\\s·;,]+)",
+"Set off · $1",
+0,
+0,
+"Вирушити ·"
 ],
 [
 "^до (.*?) за раз(.*?)\\)$",
 "up to $1 at a time$2)",
-true
+1,
+0,
+"за раз"
 ],
 [
-"^до (.*?) за раз(.*?)\\)",
+"до (.*?) за раз(.*?)\\)",
 "up to $1 at a time$2)",
-false
+0,
+0,
+"за раз"
+],
+[
+"^Професія «(.*?)»$",
+"Profession \"$1\"",
+1,
+0,
+"Професія «"
+],
+[
+"Професія «(.*?)»",
+"Profession \"$1\"",
+0,
+0,
+"Професія «"
+],
+[
+"^Автозілля: (.*?)(.*?)(.*?)$",
+"Auto-potions: $1$2$3",
+1,
+0,
+"Автозілля:"
+],
+[
+"Автозілля: (.*?)(.*?)([^\\s·;,]+)",
+"Auto-potions: $1$2$3",
+0,
+0,
+"Автозілля:"
+],
+[
+" · досвід (.*?)\\/([^\\s·;,]+)",
+" · experience $1/$2",
+0,
+0,
+"· досвід"
+],
+[
+"^Кількість: (.*?)$",
+"Quantity: $1",
+1,
+0,
+"Кількість:"
+],
+[
+"Кількість: ([^\\s·;,]+)",
+"Quantity: $1",
+0,
+0,
+"Кількість:"
+],
+[
+"^будь-яка з (.*?)$",
+"any of $1",
+1,
+0,
+"будь-яка з"
+],
+[
+"будь-яка з ([^\\s·;,]+)",
+"any of $1",
+0,
+0,
+"будь-яка з"
+],
+[
+" Нагорода: (.*?)([^\\s·;,]+)",
+" Reward: $1$2",
+0,
+0,
+"Нагорода:"
+],
+[
+"^(.*?) · ключів: (.*?)$",
+"$1 · keys: $2",
+1,
+0,
+"· ключів:"
+],
+[
+"(.*?) · ключів: ([^\\s·;,]+)",
+"$1 · keys: $2",
+0,
+0,
+"· ключів:"
+],
+[
+"^Попереду: (.*?)\\.(.*?)$",
+"Ahead: $1.$2",
+1,
+0,
+"Попереду:"
+],
+[
+"Попереду: (.*?)\\.([^\\s·;,]+)",
+"Ahead: $1.$2",
+0,
+0,
+"Попереду:"
+],
+[
+"^Потрібно (.*?) (.*?)\\.$",
+"Requires $1 $2.",
+1,
+0,
+"Потрібно"
+],
+[
+"Потрібно (.*?) (.*?)\\.",
+"Requires $1 $2.",
+0,
+0,
+"Потрібно"
+],
+[
+"^\\+(.*?)% до криту$",
+"+$1% to crit",
+1,
+0,
+"% до криту"
+],
+[
+"\\+(.*?)% до криту",
+"+$1% to crit",
+0,
+0,
+"% до криту"
+],
+[
+"^(.*?) · постійно(.*?)$",
+"$1 · permanent$2",
+1,
+0,
+"· постійно"
+],
+[
+"(.*?) · постійно([^\\s·;,]+)",
+"$1 · permanent$2",
+0,
+0,
+"· постійно"
 ],
 [
 "^(.*?): порожньо$",
 "$1: empty",
-true
+1,
+0,
+": порожньо"
 ],
 [
-"^(.*?): порожньо",
+"(.*?): порожньо",
 "$1: empty",
-false
+0,
+0,
+": порожньо"
 ],
 [
 "^Група: (.*?) \\/ (.*?)$",
 "Party: $1 / $2",
-true
+1,
+0,
+"Група:"
+],
+[
+"Група: (.*?) \\/ ([^\\s·;,]+)",
+"Party: $1 / $2",
+0,
+0,
+"Група:"
 ],
 [
 "^Рівень (.*?) · (.*?)$",
 "Level $1 · $2",
-true
+1,
+0,
+"Рівень"
+],
+[
+"Рівень (.*?) · ([^\\s·;,]+)",
+"Level $1 · $2",
+0,
+0,
+"Рівень"
 ],
 [
 "^(.*?): (.*?) речі — (.*?)$",
 "$1: $2 items — $3",
-true,
-1
+1,
+1,
+"речі —"
 ],
 [
 "^Викинуто: (.*?)$",
 "Thrown away: $1",
-true
+1,
+0,
+"Викинуто:"
+],
+[
+"Викинуто: ([^\\s·;,]+)",
+"Thrown away: $1",
+0,
+0,
+"Викинуто:"
 ],
 [
 "^У скриню: (.*?)(.*?)$",
 "To the chest: $1$2",
-true
+1,
+0,
+"У скриню:"
+],
+[
+"У скриню: (.*?)([^\\s·;,]+)",
+"To the chest: $1$2",
+0,
+0,
+"У скриню:"
 ],
 [
 "^У скриню: (.*?)$",
 "To the chest: $1",
-true
+1,
+0,
+"У скриню:"
+],
+[
+"У скриню: ([^\\s·;,]+)",
+"To the chest: $1",
+0,
+0,
+"У скриню:"
 ],
 [
 "^(.*?) — (.*?), рів\\. (.*?)$",
 "$1 — $2, lvl $3",
-true,
-1
+1,
+1,
+", рів."
 ],
 [
 "^(.*?): вимкнено$",
 "$1: off",
-true
+1,
+0,
+": вимкнено"
 ],
 [
-"^(.*?): вимкнено",
+"(.*?): вимкнено",
 "$1: off",
-false
+0,
+0,
+": вимкнено"
+],
+[
+"^(.*?) (.*?) (.*?): (.*?) шкоди$",
+"$1 $2 $3: $4 damage",
+1,
+0,
+"шкоди"
+],
+[
+"(.*?) (.*?) (.*?): (.*?) шкоди",
+"$1 $2 $3: $4 damage",
+0,
+0,
+"шкоди"
+],
+[
+"^(.*?): рівень (.*?)!$",
+"$1: level $2!",
+1,
+0,
+": рівень"
+],
+[
+"(.*?): рівень (.*?)!",
+"$1: level $2!",
+0,
+0,
+": рівень"
+],
+[
+"^(.*?): рівень (.*?)\\/(.*?)$",
+"$1: level $2/$3",
+1,
+0,
+": рівень"
+],
+[
+"(.*?): рівень (.*?)\\/([^\\s·;,]+)",
+"$1: level $2/$3",
+0,
+0,
+": рівень"
+],
+[
+"^знаряддя: (.*?)$",
+"tools: $1",
+1,
+0,
+"знаряддя:"
+],
+[
+"знаряддя: ([^\\s·;,]+)",
+"tools: $1",
+0,
+0,
+"знаряддя:"
+],
+[
+"^Вийде: (.*?) · (.*?)$",
+"Result: $1 · $2",
+1,
+0,
+"Вийде:"
+],
+[
+"Вийде: (.*?) · ([^\\s·;,]+)",
+"Result: $1 · $2",
+0,
+0,
+"Вийде:"
+],
+[
+" · на 20: ([^\\s·;,]+)",
+" · at 20: $1",
+0,
+0,
+"· на 20:"
+],
+[
+" · школа: ([^\\s·;,]+)",
+" · school: $1",
+0,
+0,
+"· школа:"
+],
+[
+"^(.*?) · рівень (.*?)$",
+"$1 · level $2",
+1,
+0,
+"· рівень"
+],
+[
+"(.*?) · рівень ([^\\s·;,]+)",
+"$1 · level $2",
+0,
+0,
+"· рівень"
+],
+[
+"^(.*?) \\(рівень (.*?)(.*?)\\)$",
+"$1 (level $2$3)",
+1,
+0,
+"(рівень"
+],
+[
+"(.*?) \\(рівень (.*?)(.*?)\\)",
+"$1 (level $2$3)",
+0,
+0,
+"(рівень"
+],
+[
+"^(.*?) \\(рівень (.*?)\\)$",
+"$1 (level $2)",
+1,
+0,
+"(рівень"
+],
+[
+"(.*?) \\(рівень (.*?)\\)",
+"$1 (level $2)",
+0,
+0,
+"(рівень"
+],
+[
+"^Бій (.*?) з (.*?): (.*?)\\.$",
+"Battle $1 of $2: $3.",
+1,
+1,
+"Бій"
+],
+[
+" \\(руни \\+(.*?)%\\)",
+" (runes +$1%)",
+0,
+0,
+"(руни +"
 ],
 [
 "^Здобич: (.*?)\\.$",
 "Loot: $1.",
-true
+1,
+0,
+"Здобич:"
 ],
 [
-"^Здобич: (.*?)\\.",
+"Здобич: (.*?)\\.",
 "Loot: $1.",
-false
+0,
+0,
+"Здобич:"
 ],
 [
 "^(.*?), рівень (.*?)$",
 "$1, level $2",
-true
+1,
+0,
+", рівень"
+],
+[
+"(.*?), рівень ([^\\s·;,]+)",
+"$1, level $2",
+0,
+0,
+", рівень"
 ],
 [
 "^Вкласти: (.*?)$",
 "Insert: $1",
-true
+1,
+0,
+"Вкласти:"
+],
+[
+"Вкласти: ([^\\s·;,]+)",
+"Insert: $1",
+0,
+0,
+"Вкласти:"
 ],
 [
 "^Забрати: (.*?)$",
 "Take: $1",
-true
+1,
+0,
+"Забрати:"
+],
+[
+"Забрати: ([^\\s·;,]+)",
+"Take: $1",
+0,
+0,
+"Забрати:"
+],
+[
+"^(.*?) — промах$",
+"$1 — miss",
+1,
+0,
+"— промах"
+],
+[
+"(.*?) — промах",
+"$1 — miss",
+0,
+0,
+"— промах"
+],
+[
+" \\+(.*?) вогнем",
+" +$1 fire",
+0,
+0,
+"вогнем"
+],
+[
+", до (.*?) шт\\.",
+", up to $1 pcs",
+0,
+0,
+", до"
+],
+[
+" · успіх ([^\\s·;,]+)",
+" · success $1",
+0,
+0,
+"· успіх"
+],
+[
+"^\\+(.*?) досвіду$",
+"+$1 experience",
+1,
+0,
+"досвіду"
+],
+[
+"\\+(.*?) досвіду",
+"+$1 experience",
+0,
+0,
+"досвіду"
+],
+[
+"^завдань: (.*?)$",
+"tasks: $1",
+1,
+0,
+"завдань:"
+],
+[
+"завдань: ([^\\s·;,]+)",
+"tasks: $1",
+0,
+0,
+"завдань:"
+],
+[
+" Досвід(.*?): ",
+" Experience$1: ",
+0,
+0,
+"Досвід"
+],
+[
+"^досвід — (.*?)$",
+"experience — $1",
+1,
+0,
+"досвід —"
+],
+[
+"досвід — ([^\\s·;,]+)",
+"experience — $1",
+0,
+0,
+"досвід —"
+],
+[
+"^Ворогів: (.*?)$",
+"Enemies: $1",
+1,
+0,
+"Ворогів:"
+],
+[
+"Ворогів: ([^\\s·;,]+)",
+"Enemies: $1",
+0,
+0,
+"Ворогів:"
+],
+[
+"^Чемпіон: (.*?)$",
+"Champion: $1",
+1,
+0,
+"Чемпіон:"
+],
+[
+"Чемпіон: ([^\\s·;,]+)",
+"Champion: $1",
+0,
+0,
+"Чемпіон:"
+],
+[
+"^Бракує: (.*?)\\.$",
+"Missing: $1.",
+1,
+0,
+"Бракує:"
+],
+[
+"Бракує: (.*?)\\.",
+"Missing: $1.",
+0,
+0,
+"Бракує:"
 ],
 [
 "^Здобич: (.*?)$",
 "Loot: $1",
-true
+1,
+0,
+"Здобич:"
+],
+[
+"Здобич: ([^\\s·;,]+)",
+"Loot: $1",
+0,
+0,
+"Здобич:"
 ],
 [
 "^Обрати: (.*?)$",
 "Choose: $1",
-true
+1,
+0,
+"Обрати:"
+],
+[
+"Обрати: ([^\\s·;,]+)",
+"Choose: $1",
+0,
+0,
+"Обрати:"
 ],
 [
 "^(.*?) · рів\\. (.*?)(.*?)$",
 "$1 · lvl $2$3",
-true,
-1
+1,
+1,
+"· рів."
 ],
 [
 "^(.*?) год (.*?) хв$",
 "$1 h $2 min",
-true
+1,
+0,
+"год"
 ],
 [
-"^(.*?) год (.*?) хв",
+"(.*?) год (.*?) хв",
 "$1 h $2 min",
-false
+0,
+0,
+"год"
 ],
 [
 "^Власна: (.*?)$",
 "Own: $1",
-true
+1,
+0,
+"Власна:"
+],
+[
+"Власна: ([^\\s·;,]+)",
+"Own: $1",
+0,
+0,
+"Власна:"
 ],
 [
 "^Знято: (.*?)\\.$",
 "Removed: $1.",
-true
+1,
+0,
+"Знято:"
 ],
 [
-"^Знято: (.*?)\\.",
+"Знято: (.*?)\\.",
 "Removed: $1.",
-false
+0,
+0,
+"Знято:"
 ],
 [
 "^Гнізда: (.*?)$",
 "Sockets: $1",
-true
+1,
+0,
+"Гнізда:"
+],
+[
+"Гнізда: ([^\\s·;,]+)",
+"Sockets: $1",
+0,
+0,
+"Гнізда:"
 ],
 [
 "^(.*?) \\(рів\\. (.*?)\\)$",
 "$1 (lvl $2)",
-true,
-1
+1,
+1,
+"(рів."
 ],
 [
 "^Світ (.*?) · (.*?)$",
 "World $1 · $2",
-true,
-1
+1,
+1,
+"Світ"
+],
+[
+"^(.*?) із бою\\.$",
+"$1 from the battle.",
+1,
+0,
+"із бою."
+],
+[
+"(.*?) із бою\\.",
+"$1 from the battle.",
+0,
+0,
+"із бою."
+],
+[
+"^Золото: (.*?)$",
+"Gold: $1",
+1,
+0,
+"Золото:"
+],
+[
+"Золото: ([^\\s·;,]+)",
+"Gold: $1",
+0,
+0,
+"Золото:"
+],
+[
+"^Книга «(.*?)»$",
+"Book \"$1\"",
+1,
+0,
+"Книга «"
+],
+[
+"Книга «(.*?)»",
+"Book \"$1\"",
+0,
+0,
+"Книга «"
+],
+[
+"^(.*?) \\((.*?) рів\\.\\)$",
+"$1 ($2 lvl)",
+1,
+1,
+"рів.)"
+],
+[
+"^(.*?)вест: «(.*?)»$",
+"$1uest: \"$2\"",
+1,
+1,
+"вест: «"
+],
+[
+"^(.*?) \\((.*?) зол\\.\\)$",
+"$1 ($2 gold)",
+1,
+1,
+"зол.)"
+],
+[
+"^(.*?) · рів\\. (.*?)(.*?)(.*?)(.*?)(.*?)$",
+"$1 · lvl $2$3$4$5$6",
+1,
+1,
+"· рів."
+],
+[
+"^\\+(.*?) золота$",
+"+$1 gold",
+1,
+0,
+"золота"
+],
+[
+"\\+(.*?) золота",
+"+$1 gold",
+0,
+0,
+"золота"
+],
+[
+"^(.*?) проти: (.*?)$",
+"$1 against: $2",
+1,
+0,
+"проти:"
+],
+[
+"(.*?) проти: ([^\\s·;,]+)",
+"$1 against: $2",
+0,
+0,
+"проти:"
+],
+[
+"^ворогів (.*?)$",
+"enemies $1",
+1,
+0,
+"ворогів"
+],
+[
+"ворогів ([^\\s·;,]+)",
+"enemies $1",
+0,
+0,
+"ворогів"
 ],
 [
 "^(.*?) золота$",
 "$1 gold",
-true
+1,
+0,
+"золота"
 ],
 [
-"^(.*?) золота",
+"(.*?) золота",
 "$1 gold",
-false
+0,
+0,
+"золота"
 ],
 [
 "^речей: (.*?)$",
 "items: $1",
-true
+1,
+0,
+"речей:"
+],
+[
+"речей: ([^\\s·;,]+)",
+"items: $1",
+0,
+0,
+"речей:"
 ],
 [
 "^рівень (.*?)$",
 "level $1",
-true
+1,
+0,
+"рівень"
+],
+[
+"рівень ([^\\s·;,]+)",
+"level $1",
+0,
+0,
+"рівень"
 ],
 [
 "^Знято: (.*?)$",
 "Removed: $1",
-true
+1,
+0,
+"Знято:"
+],
+[
+"Знято: ([^\\s·;,]+)",
+"Removed: $1",
+0,
+0,
+"Знято:"
 ],
 [
 "^(.*?) героїв$",
 "$1 heroes",
-true
+1,
+0,
+"героїв"
 ],
 [
-"^(.*?) героїв",
+"(.*?) героїв",
 "$1 heroes",
-false
+0,
+0,
+"героїв"
+],
+[
+"^«(.*?)» втік$",
+"\"$1\" fled",
+1,
+1,
+"» втік"
+],
+[
+"^Герой: (.*?)$",
+"Hero: $1",
+1,
+0,
+"Герой:"
+],
+[
+"Герой: ([^\\s·;,]+)",
+"Hero: $1",
+0,
+0,
+"Герой:"
+],
+[
+"^Далі: (.*?)\\.$",
+"Next: $1.",
+1,
+1,
+"Далі:"
+],
+[
+"^Данж «(.*?)»$",
+"Dungeon \"$1\"",
+1,
+1,
+"Данж «"
 ],
 [
 "^Слот: (.*?)$",
 "Slot: $1",
-true,
-1
+1,
+1,
+"Слот:"
 ],
 [
 "^Мапа: (.*?)$",
 "Map: $1",
-true,
-1
+1,
+1,
+"Мапа:"
+],
+[
+"^бос «(.*?)»$",
+"boss \"$1\"",
+1,
+1,
+"бос «"
+],
+[
+"^(.*?) ×(.*?): є (.*?)$",
+"$1 ×$2: have $3",
+1,
+1,
+": є"
+],
+[
+"^Усе \\((.*?)\\)$",
+"All ($1)",
+1,
+1,
+"Усе ("
+],
+[
+"^\\+(.*?) зол\\.$",
+"+$1 gold",
+1,
+1,
+"зол."
+],
+[
+" \\+ ще ([^\\s·;,]+)",
+" + $1 more",
+0,
+0,
+"+ ще"
 ],
 [
 "^(.*?) зол\\.$",
 "$1 gold",
-true,
-1
+1,
+1,
+"зол."
 ],
 [
 "^(.*?) \\(з (.*?)\\)$",
 "$1 (of $2)",
-true,
-1
+1,
+1,
+"(з"
 ],
 [
 "^(.*?) — з (.*?)$",
 "$1 — from $2",
-true,
-1
+1,
+1,
+"— з"
 ],
 [
 "^Знак (.*?)$",
 "Sign $1",
-true,
-1
+1,
+1,
+"Знак"
+],
+[
+"^Річ: (.*?)$",
+"Item: $1",
+1,
+1,
+"Річ:"
+],
+[
+"^рів\\. (.*?)$",
+"lvl $1",
+1,
+1,
+"рів."
+],
+[
+"^(.*?) ходи$",
+"$1 turns",
+1,
+1,
+"ходи"
+],
+[
+"^Тір (.*?)$",
+"Tier $1",
+1,
+1,
+"Тір"
+],
+[
+"^тір (.*?)$",
+"tier $1",
+1,
+1,
+"тір"
+],
+[
+"^Дія (.*?)$",
+"Action $1",
+1,
+1,
+"Дія"
 ],
 [
 "^(.*?) шт$",
 "$1 pcs",
-true,
-1
+1,
+1,
+"шт"
 ],
 [
 "^(.*?) хв$",
 "$1 min",
-true,
-1
+1,
+1,
+"хв"
+],
+[
+"^(\\d+)\\. (.*?)$",
+"$1. $2",
+1,
+1,
+". "
+],
+[
+"^\\[(.*?)\\]$",
+"[$1]",
+1,
+1,
+"["
+],
+[
+"\\[([^\\]]*[А-Яа-яІіЇїЄєҐґ][^\\]]*)\\]",
+"[$1]",
+0,
+0,
+"["
 ]
 ],
 "fragments": [
@@ -2537,24 +8247,184 @@ true,
 "While an expedition is away you cannot move between locations — only \"Character\", \"Inventory\", \"Map\", \"Settings\" and \"Main Menu\" are available. Its heroes don't change items and cannot be dismissed. "
 ],
 [
+"Переплавка завжди вдається: руда (а для сталі, двергської сталі й сонячного золота — нижчі злитки) → 1 злиток тієї ж рідкості; скільки треба — біля кожного злитка. +1 досвіду за злиток. ",
+"Smelting always succeeds: ore (and for steel, dwarven steel and solar gold — lower ingots) → 1 ingot of the same rarity; how much is needed is shown by each ingot. +1 experience per ingot. "
+],
+[
 "До вас підходить хтось у запиленому плащі з глибоким каптуром — обличчя не видно. Він ніби випадково зачіпає вас плечем ",
 "Someone in a dusty cloak with a deep hood comes up to you — the face is hidden. He seems to brush your shoulder by accident "
+],
+[
+"хоч і молода на лице. Розповідала, що колись у Храмі Перуна під вівтарем било джерело, і стерегли його Велесові долоні. ",
+"though young in the face. She told how once a spring flowed beneath the altar in the Temple of Perun, and the palms of Veles guarded it. "
+],
+[
+"Вона веде вас за вівтар, у внутрішній двір Храму. Посеред двору — висохлий кам'яний фонтан, а над ним статуя Велеса, ",
+"She leads you behind the altar, into the inner courtyard of the Temple. In the middle of the courtyard — a dried-up stone fountain, and above it a statue of Veles, "
+],
+[
+"Розбір повертає частину матеріалів рецепта: зламана річ — 25%, звичайна — 40%, магічна — 50% + 1 магічний матеріал, ",
+"Salvage returns part of the recipe materials: broken item — 25%, common — 40%, magic — 50% + 1 magic material, "
+],
+[
+" Володіння 10 відкриває зброю 2 виду, 20 — 3 виду. Більше досвіду володіння — за кількох ворогів, чемпіонів, босів, ",
+" Mastery 10 unlocks tier 2 weapons, 20 — tier 3. More mastery experience — for several enemies, champions, bosses, "
+],
+[
+" Досвід за завдання отримує кожен герой групи — повністю, ще й з бонусами (група, тимчасові ефекти, руни й речі).",
+" Every hero of the party gets the experience for a task — in full, with bonuses too (party, temporary effects, runes and items)."
+],
+[
+"Захар крутить сферу в пальцях, підносить до вікна й хитає головою. «У наших записах такого нема. Але знаєш що — ",
+"Zakhar turns the orb in his fingers, holds it up to the window and shakes his head. \"There's nothing like it in our records. But you know what — "
+],
+[
+"Сестра Ївга обережно бере сферу, проводить пальцем по ромбовидному заглибленню й довго мовчить. «Щось знайоме… ",
+"Sister Yivha carefully takes the orb, runs a finger along the diamond-shaped hollow and stays silent for a long time. \"Something familiar… "
 ],
 [
 "Перевірка — перед кожним боєм і після нього, для кожного живого героя групи. Зілля беруться лише з інвентаря. ",
 "The check happens before and after each battle, for each living hero of the party. Potions are taken only from the inventory. "
 ],
 [
+"спитай Остапа в шинку біля млина. До нього хто тільки не заходить: путівники, путівниці, купці з усіх земель. ",
+"ask Ostap at the tavern by the mill. All sorts drop in on him: guides, wayfarers, merchants from every land. "
+],
+[
+"та не пригадаю. Спитай Остапа в шинку біля млина — до нього заходять мандрівники й путівниці з далеких країв. ",
+"but I can't remember. Ask Ostap at the tavern by the mill — travellers and guides from distant lands drop in on him. "
+],
+[
+"і по них пробігає золоте сяйво. Коли світло згасає, сторінка вже вшита назад — ніби ніколи й не була вирвана. ",
+"and a golden glow runs across them. When the light fades, the page is already sewn back — as if it had never been torn out. "
+],
+[
+"а вороги — будь-де на полі (купою або врозкид), але не ближче ніж на хід руху. Розстановка задається відносно ",
+"and the enemies — anywhere on the field (in a cluster or scattered), but no closer than one move. The formation is set relative to "
+],
+[
+"Раптом з глечика біля ніг статуї починає сочитися блакитна вода. Вона тече все швидше, дзюрчить по каменю — ",
+"Suddenly blue water begins to seep from the jug at the statue's feet. It flows faster and faster, babbling over the stone — "
+],
+[
+"і чаша фонтана повна до країв. Це чарівне джерело: хто нап'ється — тому кожен бій дає втричі більше досвіду ",
+"and the fountain's bowl is full to the brim. This is a magic spring: whoever drinks from it gets three times more experience from every battle "
+],
+[
+"Біля Мерії стоїть Дошка оголошень: авантюристи шукають собі напарників. Та чужинцеві тут ніхто не довіряє — ",
+"By the Town Hall stands the Notice Board: adventurers are looking for companions. But nobody here trusts a stranger — "
+],
+[
 "Група 4 години безперервно б'ється з ворогами локації (без босів). На бої з чемпіонами погоджується сама. ",
 "For 4 hours the party fights the location's enemies non-stop (no bosses). It accepts fights with champions on its own. "
+],
+[
+"«Ти переріс селянське життя. Пройди десять випробувань — і на 15 рівні я скажу, ким тобі судилося стати. ",
+"\"You have outgrown peasant life. Pass ten trials — and at level 15 I'll tell you who you are destined to become. "
+],
+[
+"Остап відставляє кухоль і стишує голос. «Ромб, кажеш? Була тут торік одна путівниця з півдня, сива вся, ",
+"Ostap puts down his mug and lowers his voice. \"A diamond, you say? Last year there was a guide here from the south, all grey-haired, "
+],
+[
+"Тестовий персонаж (не з лору гри). Продає ресурси ремесла, які поки ніде не падають і не добуваються. ",
+"A test character (not from the game's lore). Sells craft resources that don't drop or get mined anywhere yet. "
+],
+[
+"Над фонтаном височіє статуя Велеса зі сферою на долонях. З глечика біля його ніг тече блакитна вода, ",
+"Above the fountain rises the statue of Veles with the orb on his palms. Blue water flows from the jug at his feet, "
+],
+[
+"Захар прикладає обгорілий клапоть до місця, де бракує сторінок. Пергамент тепліє, краї зростаються, ",
+"Zakhar puts the charred scrap to the place where the pages are missing. The parchment grows warm, the edges grow together, "
+],
+[
+"Біля Мерії стоїть Дошка оголошень: авантюристи шукають собі напарників, щоб об'єднатися в групу. ",
+"By the Town Hall stands the Notice Board: adventurers are looking for companions to form a party. "
+],
+[
+"Важка куля з темного каменю, тепла на дотик. На одному боці — глибоке заглиблення у формі ромба. ",
+"A heavy ball of dark stone, warm to the touch. On one side there is a deep diamond-shaped hollow. "
+],
+[
+"Посеред двору — висохлий кам'яний фонтан. Над ним — статуя Велеса, що береже мудрість поколінь, ",
+"In the middle of the courtyard — a dried-up stone fountain. Above it — a statue of Veles, who guards the wisdom of generations, "
+],
+[
+"«Володіння приходить у бою, а не за золото. За кожен виграний бій росте вміння тією зброєю, ",
+"\"Mastery comes in battle, not for gold. With every battle won, the skill with the weapon in your right hand grows. "
+],
+[
+"Ївга завмирає, і її очі ширшають. «Велесові долоні… Ну звісно! Як я могла забути. Ходімо.» ",
+"Yivha freezes, and her eyes widen. \"The palms of Veles… Of course! How could I forget. Let's go.\" "
+],
+[
+" Здоров'я та мана відновлені, є нові вільні очки атрибутів (сторінка «Персонаж»).",
+" Health and mana are restored, there are new free attribute points (\"Character\" page)."
+],
+[
+"«Перед тобою кілька шляхів — обери свій. Маг сам вирішує, якій стихії служити.» ",
+"\"Several paths lie before you — choose yours. A mage decides for himself which element to serve.\" "
+],
+[
+"Ваша зона — 3×3 клітинки. У кожному бою група з'являється в іншому куті поля, ",
+"Your zone is 3×3 cells. In each battle the party appears in a different corner of the field, "
+],
+[
+"Перетягніть героя на клітинку або натисніть на героя, а потім на клітинку. ",
+"Drag a hero onto a cell, or press a hero and then a cell. "
+],
+[
+"Утричі сильніший за звичайного: здоров'я, мана, атака, магія й захист ×3. ",
+"Three times stronger than an ordinary one: health, mana, attack, magic and defence ×3. "
 ],
 [
 "Позначені рідкості зброї та броні, що випадуть у бою, одразу викидаються ",
 "Weapons and armour of the marked rarities that drop in battle are thrown away at once "
 ],
 [
+"Зламана: не дає нічого — годиться лише як паливо для Горна Сварога. ",
+"Broken: gives nothing — only good as fuel for Svarog's Forge. "
+],
+[
+" Зброю, якою ця професія не користується, знято в інвентар.",
+" Weapons this profession doesn't use were moved to the inventory."
+],
+[
+" Попросіть Розпорядника Захара в Мерії показати книгу.",
+" Ask Steward Zakhar at the Town Hall to show you the book."
+],
+[
+"кута: передній ряд (виділений) дивиться в бік поля. ",
+"the corner: the front row (highlighted) faces the field. "
+],
+[
+", на союзника під ударами 2+ ворогів або на себе",
+", on an ally under attack by 2+ enemies or on self"
+],
+[
+" Рецепти можна переглянути, але кувати — ні.",
+" Recipes can be viewed, but not forged."
+],
+[
+" (захист ворога пробито — подвійна сила)",
+" (enemy defence pierced — double power)"
+],
+[
+" Обережно: серед них є значно сильніші!",
+" Careful: some of them are much stronger!"
+],
+[
 "Вороги — з усього світу (без босів): ",
 "Enemies — from all over the world (no bosses): "
+],
+[
+" і навички — на сторінці «Персонаж».",
+" and skills — on the \"Character\" page."
+],
+[
+" Додайте навичку в чергу дій у бою.",
+" Add the skill to the battle action queue."
 ],
 [
 "Видобуток за кожен виграний бій: ",
@@ -2569,6 +8439,26 @@ true,
 "Send an expedition · 4 h"
 ],
 [
+" (з 10 рівня персонажа — 20).",
+" (from character level 10 — 20)."
+],
+[
+" Серед них рідкісний ЧЕМПІОН!",
+" Among them is a rare CHAMPION!"
+],
+[
+" (ворог частково заблокував)",
+" (the enemy partly blocked)"
+],
+[
+" Вороги розсипались по полю.",
+" The enemies are scattered across the field."
+],
+[
+"Усі скрині ремесла куплено: ",
+"All craft chests are bought: "
+],
+[
 "Помилка читання збережень: ",
 "Error reading saves: "
 ],
@@ -2577,8 +8467,28 @@ true,
 "Could not create the game: "
 ],
 [
+" Вороги тримаються купою.",
+" The enemies keep together."
+],
+[
+" (собі й союзникам поруч)",
+" (self and nearby allies)"
+],
+[
 " (не для вашої професії)",
 " (not for your profession)"
+],
+[
+" — не для вашої професії",
+" — not for your profession"
+],
+[
+", собі й союзникам поруч",
+", self and nearby allies"
+],
+[
+", Небесна іскра згоріла",
+", the Heavenly Spark burnt up"
 ],
 [
 " · клік — обрати героя",
@@ -2589,16 +8499,56 @@ true,
 "Expedition · wood"
 ],
 [
+"Не вдалося зберегти: ",
+"Could not save: "
+],
+[
 " (з бонусом Домівки)",
 " (with the Home bonus)"
+],
+[
+" Бонус діє постійно.",
+" The bonus is permanent."
+],
+[
+" Ви залишились тут.",
+" You stayed here."
+],
+[
+" EXP (15 рівень) і ",
+" EXP (level 15) and "
 ],
 [
 "✔ Готово — здати: ",
 "✔ Done — hand in: "
 ],
 [
+" · головна героїня",
+" · main heroine"
+],
+[
+" EXP (з бонусами).",
+" EXP (with bonuses)."
+],
+[
+" · найвищий рівень",
+" · highest level"
+],
+[
 "Експедиція · руда",
 "Expedition · ore"
+],
+[
+" над усією групою",
+" over the whole party"
+],
+[
+" · головний герой",
+" · main hero"
+],
+[
+" (заклинання — 2)",
+" (spells — 2)"
 ],
 [
 "— Кінець глави —",
@@ -2607,6 +8557,10 @@ true,
 [
 " · не продається",
 " · not for sale"
+],
+[
+" (найпоранішому)",
+" (the most wounded)"
 ],
 [
 "Якщо вдягнути: ",
@@ -2621,8 +8575,20 @@ true,
 " · current game"
 ],
 [
+" · обов'язкове",
+" · required"
+],
+[
+" кожному герою",
+" to each hero"
+],
+[
 " — детальніше",
 " — details"
+],
+[
+" (усій групі)",
+" (the whole party)"
 ],
 [
 ", з Чарівним",
@@ -2635,6 +8601,22 @@ true,
 [
 " · дворучна",
 " · two-handed"
+],
+[
+" · максимум",
+" · maximum"
+],
+[
+" — професія",
+" — profession"
+],
+[
+"Володіння: ",
+"Mastery: "
+],
+[
+", уся група",
+", the whole party"
 ],
 [
 "Стосунки: ",
@@ -2653,6 +8635,30 @@ true,
 " (in hand)"
 ],
 [
+" (нежить!)",
+" (undead!)"
+],
+[
+"Нагорода: ",
+"Reward: "
+],
+[
+"Професії: ",
+"Professions: "
+],
+[
+" · у руках",
+" · in hand"
+],
+[
+" · чемпіон",
+" · champion"
+],
+[
+"Завдання: ",
+"Tasks: "
+],
+[
 "Навички: ",
 "Skills: "
 ],
@@ -2661,8 +8667,56 @@ true,
 "Enemies: "
 ],
 [
+" — КРИТ!",
+" — CRIT!"
+],
+[
+" кожному",
+" each"
+],
+[
 "Здати: ",
 "Hand in: "
+],
+[
+" (крит)",
+" (crit)"
+],
+[
+" (блок)",
+" (block)"
+],
+[
+" (межа)",
+" (cap)"
+],
+[
+" — межа",
+" — cap"
+],
+[
+" — БОС",
+" — BOSS"
+],
+[
+" · бос",
+" · boss"
+],
+[
+" або ",
+" or "
+],
+[
+" п.п.",
+" pts"
+],
+[
+" — к",
+" — q"
+],
+[
+" п.",
+" pts"
 ]
 ],
 "paths": {

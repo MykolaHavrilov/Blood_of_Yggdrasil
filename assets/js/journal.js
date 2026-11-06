@@ -176,7 +176,7 @@ window.RPG = window.RPG || {};
       }
       out.push("");
     });
-    return out.join("\r\n");
+    return out.map(l => RPG.t(l)).join("\r\n");   // RPG.t — переклад, якщо гра не українською (i18n.js)
   }
 
   function journalDownload(save) {
