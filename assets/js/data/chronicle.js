@@ -35,6 +35,8 @@
     ];
   };
   const INTRO = intro("m");
+  // Готові абзаци для обох статей — їх перекладає i18n.js (мова гри)
+  const INTROS = { m: INTRO, f: intro("f") };
 
   // ---------- Пролог ----------
   const PROLOGUE = {
@@ -81,7 +83,9 @@
       "Ейнхерії, найкращі бійці Одіна, опинилися в її полоні. Асгард лишився з богами, але без війська…",
       "Тоді Одін Всебатько, сивий і одноокий, зійшов з Асгарду й постукав у"
     ],
-    torn: "…далі сторінку вирвано. На звороті ледь видно вицвілий напис: «Предки Мин… та Майбут… часів»."
+    torn: "…далі сторінку вирвано. На звороті ледь видно вицвілий напис: «Предки Мин… та Майбут… часів».",
+    // слова, на яких обривається пергамент (у 4-му абзаці Прологу): книга без сторінки продовжує після них
+    cut: "постукав у "
   };
 
   // Стан пергаменту: save.story.parchment = undefined (не знайдено) | "have" (прочитано, у торбі) | "given" (віддано Захару).
@@ -94,7 +98,8 @@
   // Абзаци Прологу для книги: { torn, paras }
   function prologueFor(save) {
     if (bookRestored(save)) return { torn: false, paras: PROLOGUE.paras };
-    const cut = PROLOGUE.paras[3].replace(/^.*?постукав у /, "…");     // книга продовжує там, де обривається пергамент
+    const P3 = PROLOGUE.paras[3], at = P3.indexOf(PARCHMENT.cut);
+    const cut = at >= 0 ? "…" + P3.slice(at + PARCHMENT.cut.length) : P3;     // книга продовжує там, де обривається пергамент
     return { torn: true, paras: [cut, ...PROLOGUE.paras.slice(4)] };
   }
 
@@ -152,7 +157,8 @@
   // ---------- Розповіді про битви з босами ----------
   // fn(h) → рядок; h = { names, blow, fallen, survivors, rounds, many, g1(m, f), gb(m, f) }
   //   g1 — слово за статтю єдиного героя, gb — за статтю того, хто завдав останнього удару
-  const list = arr => arr.length < 2 ? arr.join("") : arr.slice(0, -1).join(", ") + " і " + arr.at(-1);
+  // Тексти записів (TALES, WORDS) читаються через RPG.CHRONICLE під час показу — i18n.js підміняє їх для іншої мови
+  const list = arr => arr.length < 2 ? arr.join("") : arr.slice(0, -1).join(", ") + " " + RPG.CHRONICLE.WORDS.and + " " + arr.at(-1);
   const BOSS_TALES = {
     cave_secret: h =>
       `Три зали, повні слизу, лишилися позаду, коли ${h.many ? `${list(h.names)} ступили` : `${h.names[0]} ${h.g1("ступив", "ступила")}`} до трону з каменю й нечистот. ` +
@@ -245,44 +251,43 @@
     return { first: true, chapterDone, chapter };
   }
 
+  // Слова записів про босів (перекладаються разом з TALES)
+  const WORDS = {
+    and: "і", locale: "uk-UA", boss: "бос", quote: s => `«${s}»`,
+    legacy: "Ця перемога сталася раніше, ніж книга встигла її записати, і сторінка заповнилася пізніше — самим відлунням битви. " +
+      "Імен героїв вона не втримала, але печать зламана, і Дерево це пам'ятає.",
+    defeated: (names, boss) => `${names} здолали боса «${boss}».`,
+    fell: (n, f) => n > 1 ? "Полягли" : f ? "Полягла" : "Поліг",
+    fallenLine: (word, names) => `${word} в бою: ${names}. Перунів вогонь повернув полеглих до Храму — та пролита кров лишилася на цих сторінках.`,
+    noFallen: "Ніхто з групи не впав у цьому бою — рідкісна милість Громовержця.",
+    winners: names => `Вийшли переможцями: ${names}.`,
+    roster: x => `${x.name} — ${x.cls}, ${x.level} рів.${x.fallen ? (x.g === "f" ? " ✝ полягла" : " ✝ поліг") : ""}`
+  };
+
   const fmtDate = iso => {
-    const d = new Date(iso);
-    return d.toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" }) +
-      ", " + d.toLocaleTimeString("uk-UA", { hour: "2-digit", minute: "2-digit" });
+    const d = new Date(iso), loc = RPG.CHRONICLE.WORDS.locale;
+    return d.toLocaleDateString(loc, { day: "numeric", month: "long", year: "numeric" }) +
+      ", " + d.toLocaleTimeString(loc, { hour: "2-digit", minute: "2-digit" });
   };
 
   // Текст запису про боса для сторінки книги
   function bossEntry(dungeonId, e) {
-    const d = RPG.DUNGEONS[dungeonId];
-    if (e.legacy || !e.heroes?.length) {
-      return {
-        title: `«${d?.name || dungeonId}» — ${RPG.ENEMIES[d?.boss]?.name || "бос"}`,
-        date: fmtDate(e.at), roster: [],
-        lines: ["Ця перемога сталася раніше, ніж книга встигла її записати, і сторінка заповнилася пізніше — самим відлунням битви. " +
-          "Імен героїв вона не втримала, але печать зламана, і Дерево це пам'ятає."],
-        wins: e.wins || 1
-      };
-    }
+    const d = RPG.DUNGEONS[dungeonId], W = RPG.CHRONICLE.WORDS, TALES = RPG.CHRONICLE.TALES;
+    const title = `${W.quote(d?.name || dungeonId)} — ${RPG.ENEMIES[d?.boss]?.name || W.boss}`;
+    if (e.legacy || !e.heroes?.length) return { title, date: fmtDate(e.at), roster: [], lines: [W.legacy], wins: e.wins || 1 };
     const fallen = e.heroes.filter(h => h.fallen).map(h => h.name);
     const survivors = e.heroes.filter(h => !h.fallen).map(h => h.name);
     const gOf = x => x?.g === "f";
     const blower = e.heroes.find(x => x.name === e.blow);
     const h = { names: e.heroes.map(x => x.name), blow: e.blow, fallen, survivors, rounds: e.rounds, many: e.heroes.length > 1,
       g1: (m, f) => gOf(e.heroes[0]) ? f : m, gb: (m, f) => gOf(blower) ? f : m };
-    const tale = (BOSS_TALES[dungeonId] || (() => `${list(h.names)} здолали боса «${RPG.ENEMIES[d.boss]?.name}».`))(h);
+    const tale = (TALES[dungeonId] || (() => W.defeated(list(h.names), RPG.ENEMIES[d.boss]?.name)))(h, list);
     const lines = [tale];
     const fallenOne = e.heroes.filter(x => x.fallen);
-    const fellWord = fallenOne.length > 1 ? "Полягли" : gOf(fallenOne[0]) ? "Полягла" : "Поліг";
-    if (fallen.length) lines.push(`${fellWord} в бою: ${list(fallen)}. Перунів вогонь повернув полеглих до Храму — та пролита кров лишилася на цих сторінках.`);
-    else lines.push("Ніхто з групи не впав у цьому бою — рідкісна милість Громовержця.");
-    lines.push(`Вийшли переможцями: ${list(survivors)}.`);
-    return {
-      title: `«${d?.name || dungeonId}» — ${RPG.ENEMIES[d?.boss]?.name || "бос"}`,
-      date: fmtDate(e.at),
-      roster: e.heroes.map(x => `${x.name} — ${x.cls}, ${x.level} рів.${x.fallen ? (x.g === "f" ? " ✝ полягла" : " ✝ поліг") : ""}`),
-      lines,
-      wins: e.wins || 1
-    };
+    if (fallen.length) lines.push(W.fallenLine(W.fell(fallenOne.length, gOf(fallenOne[0])), list(fallen)));
+    else lines.push(W.noFallen);
+    lines.push(W.winners(list(survivors)));
+    return { title, date: fmtDate(e.at), roster: e.heroes.map(W.roster), lines, wins: e.wins || 1 };
   }
 
   // Зміст книги: [{ key, title, open }]
@@ -295,7 +300,8 @@
   }
 
   Object.assign(RPG, {
-    CHRONICLE: { TITLE, INTRO, intro, PROLOGUE, PARCHMENT, CHAPTERS, SEALED },
+    CHRONICLE: { TITLE, INTRO, INTROS, intro: g => RPG.CHRONICLE.INTROS[g === "f" ? "f" : "m"], PROLOGUE, PARCHMENT, CHAPTERS, SEALED,
+      TALES: BOSS_TALES, WORDS },
     parchmentState, bookRestored, prologueFor,
     chronicleRecord: recordBossVictory, chronicleEntry: entryOf, chronicleBossEntry: bossEntry,
     chronicleContents: contents, chronicleChapterOf: chapterOfDungeon

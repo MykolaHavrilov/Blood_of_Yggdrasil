@@ -1200,6 +1200,291 @@ RPG.I18N.en = {
 "Джингл": "Jingle",
 "Поразка": "Defeat",
 "Новий рівень": "Level Up",
+"Ти народився на Окраїні — у краю чорноземів і столітніх дубів, де біля кожної хати ще тліє Перунове вогнище. Орав землю, пас коней, слухав, як старі на призьбі шепочуть про загублену північ.": "You were born in the Borderland — a land of black soil and century-old oaks, where Perun's hearth still smoulders by every hut. You ploughed the land, herded horses and listened to the old folk on the porch whispering about the lost north.",
+"А тоді настала ніч, коли небо над твоєю Домівкою розкололося навпіл. Блискавка вдарила в старий дуб біля порога — і крізь грім ти почув Голос: «Встань. Світове Дерево стікає кров'ю. Хелла гризе його коріння, а боги Асгарду лишилися без землі й без війська. Я, Перун, кличу тебе — іди на північ і поверни їм загублене».": "And then came the night when the sky above your Home split in two. Lightning struck the old oak by the threshold — and through the thunder you heard a Voice: \"Rise. The World Tree is bleeding. Hel gnaws at its roots, and the gods of Asgard are left without land and without an army. I, Perun, call you — go north and return to them what was lost.\"",
+"Ти прокинувся з присмаком попелу на губах і дерев'яним мечем у руці. На ранок ти вже був у дорозі.": "You woke with the taste of ash on your lips and a wooden sword in your hand. By morning you were already on the road.",
+"Ти народилася на Окраїні — у краю чорноземів і столітніх дубів, де біля кожної хати ще тліє Перунове вогнище. Жала жито, пасла коней, слухала, як старі на призьбі шепочуть про загублену північ.": "You were born in the Borderland — a land of black soil and century-old oaks, where Perun's hearth still smoulders by every hut. You reaped rye, herded horses and listened to the old folk on the porch whispering about the lost north.",
+"А тоді настала ніч, коли небо над твоєю Домівкою розкололося навпіл. Блискавка вдарила в старий дуб біля порога — і крізь грім ти почула Голос: «Встань. Світове Дерево стікає кров'ю. Хелла гризе його коріння, а боги Асгарду лишилися без землі й без війська. Я, Перун, кличу тебе — іди на північ і поверни їм загублене».": "And then came the night when the sky above your Home split in two. Lightning struck the old oak by the threshold — and through the thunder you heard a Voice: \"Rise. The World Tree is bleeding. Hel gnaws at its roots, and the gods of Asgard are left without land and without an army. I, Perun, call you — go north and return to them what was lost.\"",
+"Ти прокинулася з присмаком попелу на губах і дерев'яним мечем у руці. На ранок ти вже була у дорозі.": "You woke with the taste of ash on your lips and a wooden sword in your hand. By morning you were already on the road.",
+"Пролог. Кров Іггдрасиля": "Prologue. The Blood of Yggdrasil",
+"Кажуть мудрі: усі світи тримаються на одному Дереві. Варяги звуть його Іггдрасилем, а наші предки — Світовим Дубом. У його кроні — Ірій і Асгард, оселі богів. Біля стовбура — Явь, земля людей. А в корінні, у вічній імлі, — Нав і Хельгейм, царства мертвих. Поки Дерево живе, кожен світ стоїть на своєму місці.": "The wise say: all the worlds rest on a single Tree. The Varangians call it Yggdrasil, and our ancestors — the World Oak. In its crown are Iriy and Asgard, the dwellings of the gods. By its trunk is Yav, the land of people. And in its roots, in eternal mist, are Nav and Helheim, the kingdoms of the dead. While the Tree lives, every world stands in its place.",
+"Хелла, донька Локі, володарка мертвих, віками правила тими, хто помер не в бою. Та їй стало замало її темряви. Вона прокралася до коріння й отруїла його своїм холодом — і з ран Дерева потекла кров. Там, куди падали ті краплі, мертві вставали з могил, ліси чорніли, а звірі ставали чудовиськами.": "Hel, daughter of Loki, mistress of the dead, ruled for ages over those who did not die in battle. But her darkness was no longer enough for her. She crept to the roots and poisoned them with her cold — and blood flowed from the Tree's wounds. Wherever those drops fell, the dead rose from their graves, forests turned black and beasts became monsters.",
+"Одна за одною впали північні землі Асгарду. Хелла захопила їх, а з ними — і душі полеглих воїнів. Ейнхерії, найкращі бійці Одіна, опинилися в її полоні. Асгард лишився з богами, але без війська: кожен варяг, що гинув у боротьбі з Хеллою, ставав її слугою.": "One by one the northern lands of Asgard fell. Hel seized them, and with them the souls of fallen warriors. The einherjar, Odin's finest fighters, found themselves her captives. Asgard was left with its gods but without an army: every Varangian who died fighting Hel became her servant.",
+"Тоді Одін Всебатько, сивий і одноокий, зійшов з Асгарду й постукав у Ворота Ірію. Він прийшов не як володар, а як прохач. Сварог, Велес і Мокоша зібралися на раду, а слово взяв Перун Громовержець.": "Then Odin the All-Father, grey and one-eyed, came down from Asgard and knocked on the Gates of Iriy. He came not as a ruler, but as a supplicant. Svarog, Veles and Mokosh gathered in council, and Perun the Thunderer took the word.",
+"«Твої воїни належать Хеллі, щойно впадуть, — мовив Перун. — А мої — ні. Душі тих, кого я покличу блискавкою, повертаються до мого вогню, і жодна володарка мертвих не втримає їх. Я дам тобі героїв. Не богів, не велетів — простих людей Окраїни: орачів, мисливців, ковалів. Вони підуть на північ і повернуть твої землі».": "\"Your warriors belong to Hel as soon as they fall,\" said Perun. \"But mine do not. The souls of those I call with lightning return to my fire, and no mistress of the dead can hold them. I will give you heroes. Not gods, not giants — simple people of the Borderland: ploughmen, hunters, smiths. They will go north and win back your lands.\"",
+"Одін схилив голову. Ціною угоди стала клятва: коли Дерево зцілиться, Асгард і Ірій стоятимуть пліч-о-пліч, а шлях між ними — Гардарика, країна городів, — назавжди лишиться вільним.": "Odin bowed his head. The price of the pact was an oath: when the Tree is healed, Asgard and Iriy will stand shoulder to shoulder, and the road between them — Gardarika, the country of towns — will remain free forever.",
+"Тієї ж ночі над Окраїною загуркотіли громи. Перун обирав. Одні прокидалися в полі, інші — біля печі, а хтось — посеред весілля чи похорону. Усіх їх єднало одне: блискавка, що вдарила поруч, і Голос, що кликав на північ. Так з'явилися ті, кого в Дубовій Заставі звуть «Перуновими дітьми».": "That same night thunder rolled over the Borderland. Perun was choosing. Some woke in the field, others by the stove, and some in the middle of a wedding or a funeral. All of them were united by one thing: the lightning that struck nearby, and the Voice that called them north. That is how those whom Oak Outpost calls \"Perun's children\" came to be.",
+"Дубова Застава — остання фортеця, що тримається на межі. За її Центральною брамою починається Темний ліс, а за ним — землі, де вже панує Хелла. Сюди сходяться біженці з півночі, сюди йдуть і герої, щоб записати своє ім'я в Мерії й вирушити туди, звідки інші не повертаються.": "Oak Outpost is the last fortress holding the border. Beyond its Central Gate begins the Dark Forest, and beyond that — the lands where Hel already reigns. Refugees from the north gather here, and heroes come here too, to write their names in the Town Hall and set off to where others do not return from.",
+"А ця книга — «Предки Минулих та Майбутніх часів» — пам'ятає їх усіх. Кажуть, її передав Мерії сам Велес, владар пам'яті й мудрості. Ніхто не пише в ній чорнилом: щойно герой здолає великого ворога, сторінки наповнюються самі. Так нащадки знатимуть, хто проливав кров, щоб зупинити кров Іггдрасиля.": "And this book — \"Ancestors of Times Past and Future\" — remembers them all. They say Veles himself, lord of memory and wisdom, gave it to the Town Hall. No one writes in it with ink: as soon as a hero defeats a great enemy, the pages fill by themselves. So that descendants will know who shed blood to stop the blood of Yggdrasil.",
+"Обірваний пергамент": "A Torn Parchment",
+"Під лавою в Домівці лежить пожовклий клапоть пергаменту з обгорілим краєм. Схоже, його вирвали зі старої книги.": "Under the bench at Home lies a yellowed scrap of parchment with a charred edge. It looks as if it was torn out of an old book.",
+"Одна за одною впали північні землі Асгарду. Хелла захопила їх, а з ними — і душі полеглих воїнів. Ейнхерії, найкращі бійці Одіна, опинилися в її полоні. Асгард лишився з богами, але без війська…": "One by one the northern lands of Asgard fell. Hel seized them, and with them the souls of fallen warriors. The einherjar, Odin's finest fighters, found themselves her captives. Asgard was left with its gods but without an army…",
+"Тоді Одін Всебатько, сивий і одноокий, зійшов з Асгарду й постукав у": "Then Odin the All-Father, grey and one-eyed, came down from Asgard and knocked on",
+"…далі сторінку вирвано. На звороті ледь видно вицвілий напис: «Предки Мин… та Майбут… часів».": "…the rest of the page is torn out. On the back a faded inscription can barely be seen: \"Ancestors of Times Pa… and Fut…\".",
+"постукав у": "knocked on",
+"Глава I. Перша кров": "Chapter I. First Blood",
+"Околиці Дубової Застави": "The Outskirts of Oak Outpost",
+"Перші кроки Перунових дітей на шляху до Застави. Холод Хелли ще слабкий тут, але вже будить погань у печерах.": "The first steps of Perun's children on the road to the Outpost. Hel's cold is still weak here, but it already wakes vermin in the caves.",
+"Печать глибин зламано": "The seal of the depths is broken",
+"Король слайм упав, і разом з ним стих гнилий подих, що здіймався з глибин печери. Селяни біля млина вперше за багато тижнів спали спокійно. Та герої знали: це був лише відгомін. Справжній холод чекав за Центральною брамою Дубової Застави, у Темному лісі. Глава перша закрита — і кров, пролита в ній, стала першою даниною за зцілення Дерева.": "The King Slime fell, and with him died down the rotten breath that rose from the depths of the cave. For the first time in many weeks the peasants by the mill slept peacefully. But the heroes knew: it was only an echo. The real cold waited beyond the Central Gate of Oak Outpost, in the Dark Forest. Chapter one is closed — and the blood shed in it became the first tribute for the healing of the Tree.",
+"Глава II. Темний ліс": "Chapter II. The Dark Forest",
+"За Центральною брамою": "Beyond the Central Gate",
+"Колись звичайний ліс, тепер — перша земля, отруєна кров'ю Іггдрасиля. Тут мертві встають з могил, а в серці лісу сидить вірний слуга Хелли.": "Once an ordinary forest, now the first land poisoned by the blood of Yggdrasil. Here the dead rise from their graves, and in the heart of the forest sits Hel's faithful servant.",
+"Перша печать Темного лісу зламана": "The first seal of the Dark Forest is broken",
+"Друга печать зламана — Темний ліс звільнено": "The second seal is broken — the Dark Forest is freed",
+"Коли Володар Темного лісу впав зі свого трону з коріння, мертве дерево в Серці лісу застогнало — і з його кори виступила не чорна, а червона, жива смола. Іггдрасиль відчув перший подих полегшення. Туман над болотами почав розходитися, а з кладовища більше ніхто не вставав. Далеко на півночі Хелла вперше відчула втрату — і вперше повернула голову до Гардарики. Глава друга закрита. Але дорога на північ лише починається.": "When the Lord of the Dark Forest fell from his throne of roots, the dead tree in the Heart of the Forest groaned — and from its bark oozed not black but red, living resin. Yggdrasil felt its first breath of relief. The mist over the swamps began to lift, and no one rose from the cemetery any more. Far in the north Hel felt a loss for the first time — and for the first time turned her head towards Gardarika. Chapter two is closed. But the road north is only beginning.",
+"Глава III. Світло Альвгейму": "Chapter III. The Light of Alfheim",
+"За коренем Іггдрасиля": "Beyond the Root of Yggdrasil",
+"Корінь Світового Дерева в Серці Темного лісу вивів Перунових дітей у Альвгейм — світ світлих альвів, який боги колись подарували Фрейрові. Срібні гаї й дзеркальне озеро ще сяють, та з Поля Белі вже повзе тлін Хелли, а здичавілі альви стріляють у кожного чужинця.": "The root of the World Tree in the Heart of the Dark Forest led Perun's children into Alfheim — the world of the light alfs, which the gods once gave to Freyr. The silver groves and the mirror lake still shine, but Hel's blight is already creeping from the Field of Beli, and feral alfs shoot at every stranger.",
+"Перша печать Альвгейму зламана": "The first seal of Alfheim is broken",
+"Друга печать Альвгейму зламана": "The second seal of Alfheim is broken",
+"Третя печать Альвгейму зламана": "The third seal of Alfheim is broken",
+"Четверта печать Альвгейму зламана": "The fourth seal of Alfheim is broken",
+"П'ята печать зламана — чертог Фрейра очищено": "The fifth seal is broken — the hall of Freyr is cleansed",
+"Шоста печать зламана — Альвгейм звільнено": "The sixth seal is broken — Alfheim is freed",
+"Белі вдруге ліг у свій курган — і вже не підвівся. Фіолетове небо над полем розійшлося, і на кістки й оленячі роги скель упав чистий світанок. Альви, що роками ховалися у вежах, вийшли назустріч героям, опустивши луки до землі. Фрейр не повернувся до свого чертогу, та його вепр більше не блукає тінню, а Іггдрасиль відчув, як затягується ще одна рана. Кажуть, тієї ночі Перун дав своїм дітям нову силу: ті, хто вже обрав свій шлях, відтепер ростуть далі, ніж будь-хто до них. А за туманом над морем чекає Ванагейм — край ванів, що пам'ятають давню війну з асами. Глава третя закрита.": "Beli lay down in his barrow a second time — and never rose again. The violet sky over the field parted, and a clear dawn fell on the bones and the rocks like stag antlers. The alfs, who had hidden in the towers for years, came out to meet the heroes, lowering their bows to the ground. Freyr did not return to his hall, but his boar no longer wanders as a shadow, and Yggdrasil felt another wound closing. They say that night Perun gave his children new strength: those who have already chosen their path grow further from now on than anyone before them. And beyond the mist over the sea awaits Vanaheim — the land of the Vanir, who remember the ancient war with the Aesir. Chapter three is closed.",
+"Глава IV": "Chapter IV",
+"Глава V": "Chapter V",
+"Глава VI": "Chapter VI",
+"Книга Сварога · перша": "Book of Svarog · first",
+"«Більше не кую сам. Учу — тих, хто не зрадить свого коріння»": "\"I no longer forge myself. I teach — those who will not betray their roots\"",
+"Сварог · Брокк · Ейтрі": "Svarog · Brokkr · Eitri",
+"Сварог більше не дає зброї. Він дає знання.": "Svarog no longer gives weapons. He gives knowledge.",
+"Пролог. Зброя, що зрадила": "Prologue. The Weapons That Betrayed",
+"Коли Перун уперше покликав своїх посланців на північ, Сварог сам розпалив Небесну кузню. Він кував для них мечі, що не тупились об кістки нежиті, і кольчуги, яких не брав холод Хелли. Кращого заліза не бачив жоден зі світів Дерева.": "When Perun first called his envoys to the north, Svarog himself kindled the Heavenly Forge. He forged for them swords that did not dull against the bones of the undead, and mail that Hel's cold could not pierce. None of the worlds of the Tree had ever seen better iron.",
+"Та Хелла не ламає мечі — вона ламає серця. Шепотом у довгі ночі вона вмовила декотрих посланців, що їхні боги їх покинули. Ті відреклися від свого коріння, знехтували Перуном і Сварогом і віддали свої життя володарці мертвих.": "But Hel does not break swords — she breaks hearts. With whispers in the long nights she persuaded some of the envoys that their gods had abandoned them. They renounced their roots, scorned Perun and Svarog, and gave their lives to the mistress of the dead.",
+"Відтоді вони — її вічні раби. Темні душі блукають у її війську й досі тримають у руках зброю з Небесної кузні. Хто зустріне такого ворога, впізнає його по клинку: на ньому ще жевріють Сварогові знаки, тільки тепер вони світять мертвим світлом.": "Since then they have been her eternal slaves. Dark souls wander in her army and still hold weapons from the Heavenly Forge in their hands. Whoever meets such an enemy will recognise him by his blade: Svarog's signs still glimmer on it, only now they shine with a dead light.",
+"І забрали вони не лише зброю. У кожному такому клинку тліє жарина Небесного горна — шматочок Сварогового вогню. Поки жарини в руках зрадників, Небесна кузня не розгориться знову.": "And it was not only the weapons they took. In every such blade smoulders an ember of the Heavenly Furnace — a piece of Svarog's fire. While the embers are in the traitors' hands, the Heavenly Forge will not blaze again.",
+"Сварог загасив горно. «Я більше не кую, — сказав він. — Моє залізо пішло служити тій, проти кого я його кував». Ні прохання Ірію, ні гнів Перуна не могли його зрушити.": "Svarog put out the furnace. \"I forge no more,\" he said. \"My iron has gone to serve the one I forged it against.\" Neither the pleas of Iriy nor Perun's anger could move him.",
+"Тоді Перун прийшов до кузні без грому, сам-один. «Ти не можеш врятувати тих, хто зрадив, — мовив він. — Але можеш навчити тих, хто встоїть. Хай кують власними руками: зброя, викувана своїм потом, не зрадить свого коваля».": "Then Perun came to the forge without thunder, all alone. \"You cannot save those who betrayed,\" he said. \"But you can teach those who will stand firm. Let them forge with their own hands: a weapon forged with one's own sweat will not betray its smith.\"",
+"Сварог погодився — та не сам. Він покликав братів-карликів Брокка і Ейтрі, що колись викували Тору Мйольнір. Утрьох вони записали все, що знали про вогонь, метал і терпіння. Так з'явилася ця книга — «Небесна кузня. Настанова».": "Svarog agreed — but not alone. He called the dwarf brothers Brokkr and Eitri, who once forged Mjölnir for Thor. The three of them wrote down everything they knew about fire, metal and patience. That is how this book came to be — \"The Heavenly Forge. A Manual\".",
+"Сварог більше не дає зброї. Він дає знання. А що з ним зробиш — вирішувати тобі й твоєму молоту.": "Svarog no longer gives weapons. He gives knowledge. And what you do with it is up to you and your hammer.",
+"✦ Далі — Глава перша ✦": "✦ Next — Chapter One ✦",
+"Глава I. Як народжується зброя": "Chapter I. How a Weapon Is Born",
+"«Залізо пам'ятає три речі: вогонь, що його родив, руку, що його била, і воду, що його загартувала. Зрадь одне — і клинок трісне в першому бою». Так писав Ейтрі на першій сторінці.": "\"Iron remembers three things: the fire that bore it, the hand that struck it, and the water that tempered it. Betray one — and the blade will crack in its first battle.\" So wrote Eitri on the first page.",
+"Шлях речі від руди до руки": "The Path of an Item from Ore to Hand",
+"Зібрати матеріали: з ворогів, зі скринь, у торговців.": "Gather materials: from enemies, from chests, from merchants.",
+"Розпалити горно: руду переплавити в злитки (2 руди — 1 злиток; для заліза ще й вугілля та міхи).": "Kindle the furnace: smelt ore into ingots (2 ore — 1 ingot; iron also needs coal and bellows).",
+"Кувати: від майстерності коваля залежить, чи вдасться річ.": "Forge: whether the item succeeds depends on the smith's mastery.",
+"Загартувати — і річ отримує свою рідкість, від зламаної до легендарної.": "Temper — and the item receives its rarity, from broken to legendary.",
+"Хто кує": "Who Forges",
+"Коваль Кузьма з Гільдії ремісників сам за молот уже не береться: він продає знаряддя і цю книгу. Кувати доведеться власними руками — у кузні при своєму домі. Майстерність росте з кожною викуваною, переплавленою чи розібраною річчю.": "The smith Kuzma of the Craftsmen's Guild no longer takes up the hammer himself: he sells tools and this book. You will have to forge with your own hands — in the forge at your house. Mastery grows with every item forged, smelted or salvaged.",
+"Якість матеріалів": "Quality of Materials",
+"Кожен матеріал буває чотирьох якостей — це окремі стопки з рамкою свого кольору. Що рідкісніші матеріали в горні, то частіше звичайна річ стає магічною, епічною чи навіть легендарною. На початку шляху різниця мала, у руках майстра — відчутна.": "Every material comes in four qualities — these are separate stacks with a frame of their own colour. The rarer the materials in the furnace, the more often a common item becomes magic, epic or even legendary. At the start of the path the difference is small; in a master's hands it is noticeable.",
+"Якість": "Quality",
+"Що дає": "What it gives",
+"Звичайні": "Common",
+"Звичайні шанси.": "Ordinary chances.",
+"Магічні (синя рамка)": "Magic (blue frame)",
+"Частина звичайних речей стає магічною.": "Some common items become magic.",
+"Епічні (фіолетова рамка)": "Epic (purple frame)",
+"Ще частіше — магічні й епічні речі.": "Magic and epic items even more often.",
+"Легендарні (помаранчева рамка)": "Legendary (orange frame)",
+"Найкращий зсув, з'являється шанс на легендарну.": "The best shift; a chance of a legendary appears.",
+"До +10% до легендарної. Згоряє в горні.": "Up to +10% to legendary. Burns up in the furnace.",
+"Щоб горно брало спершу рідкісніші стопки, у кузні є позначка «Спершу рідкісніші матеріали». Інакше витрачаються звичайні.": "To make the furnace take the rarer stacks first, the forge has a \"Rarer materials first\" checkbox. Otherwise common ones are used up.",
+"Що можна кувати": "What Can Be Forged",
+"Коваль кує будь-яку зброю, броню й прикраси — незалежно від своєї професії. Професія вирішує лише, що герой зможе вдягнути. Кувати — для себе, для групи чи на продаж — можна все.": "A smith forges any weapons, armour and jewellery — regardless of their profession. The profession only decides what the hero can wear. You can forge anything — for yourself, for the party or for sale.",
+"Ремесло ділиться на три види: Зброя (усе, що тримають у правій і лівій руці), Броня і Ювелір (кільця, амулети, сережки). У кожного виду — свій рівень майстерності, що росте від кування й розбору речей саме цього виду. Він і відкриває вищі тіри: у дужках — потрібний рівень виду.": "The craft is divided into three kinds: Weapons (everything held in the right and left hand), Armour and Jeweller (rings, amulets, earrings). Each kind has its own mastery level, which grows from forging and salvaging items of that very kind. It also unlocks the higher tiers: in brackets — the required level of the kind.",
+"Глава II. Власне горно": "Chapter II. Your Own Furnace",
+"«Хто хоче кувати сам — хай спершу збудує кузню, а вже потім чекає дива», — Брокк.": "\"Whoever wants to forge alone — let him first build a forge, and only then wait for miracles,\" — Brokkr.",
+"Першу науку продає коваль Кузьма в Гільдії ремісників — ось ця книга. А горно ставлять у власній кузні при домі в Спальному районі (про дім — у наступному розділі). Знаряддя Кузьма приносить і ставить у кузню сам.": "The first lesson is sold by the smith Kuzma in the Craftsmen's Guild — this very book. And the furnace is set up in your own forge at your house in the Residential District (about the house — in the next section). Kuzma brings the tools and sets them up in the forge himself.",
+"Знаряддя кузні": "Forge Tools",
+"Кращі знаряддя додають до успіху, та понад 95% не дозволить Сварог.": "Better tools add to success, but Svarog won't allow more than 95%.",
+"Майстерність коваля 1–30": "Smith's Mastery 1–30",
+"Загальна майстерність коваля росте від усього: викуваних речей (зламана — половину досвіду), переплавки руди й розбору (Глава III). Від неї залежать лише шанс успіху — з 10% на 1 рівні до 95% на 30-му — і рідкість речей. Тірів вона не відкриває. Невдача — річ виходить зламаною, а матеріали згоряють.": "The smith's overall mastery grows from everything: forged items (a broken one gives half the experience), smelting ore and salvaging (Chapter III). Only the chance of success depends on it — from 10% at level 1 to 95% at level 30 — and the rarity of items. It does not unlock tiers. On failure the item comes out broken, and the materials burn up.",
+"Майстерність видів": "Mastery of the Kinds",
+"Зброя, Броня й Ювелір мають кожен свій рівень. Він росте від кування й розбору речей свого виду і відкриває їхні тіри. Найвищий рівень виду — той, на якому відкривається його найвищий тір; з'являться нові тіри — зросте й межа.": "Weapons, Armour and Jeweller each have their own level. It grows from forging and salvaging items of its kind and unlocks their tiers. The highest level of a kind is the one at which its highest tier unlocks; when new tiers appear, the cap will grow too.",
+"Що виходить з горна": "What Comes Out of the Furnace",
+"Частки рідкостей зі звичайних матеріалів, без Небесної іскри:": "Shares of rarities from common materials, without a Heavenly Spark:",
+"Рідкісніші матеріали й Небесна іскра зсувають частки до кращих рідкостей.": "Rarer materials and the Heavenly Spark shift the shares towards better rarities.",
+"Власний дім і кузня": "Your Own House and Forge",
+"«Горно не ставлять у чужій хаті», — Ейтрі.": "\"A furnace is not set up in someone else's hut,\" — Eitri.",
+"Першу кузню можна збудувати лише при власному домі, а дім у Дубовій Заставі ще треба заслужити.": "The first forge can be built only at your own house, and a house in Oak Outpost still has to be earned.",
+"Завдання «Збір вугілля». У Мерії розпорядник Захар просить принести 1000 вугілля, щоб Застава пережила наступну зиму. Нагорода — досвід і срібні злитки.": "The task \"Coal Collection\". At the Town Hall, Steward Zakhar asks you to bring 1000 coal so the Outpost can survive the next winter. The reward — experience and silver ingots.",
+"Спальний район відкрито. Вдячна Застава пускає героя до тихих вулиць, де живуть ремісники й купці.": "The Residential District is open. The grateful Outpost lets the hero into the quiet streets where craftsmen and merchants live.",
+"Будинок на околиці. Управитель Спального району продає дім. Назву дому дають один раз — при купівлі.": "A house on the outskirts. The manager of the Residential District sells a house. The house is named once — at purchase.",
+"Кузня і склад. До дому добудовують кузню для знарядь з Глави II і склад для «меблів» — скринь ремесла.": "Forge and storehouse. A forge for the tools from Chapter II and a storehouse for \"furniture\" — the craft chests — are added to the house.",
+"Склад і скрині ремесла": "Storehouse and Craft Chests",
+"У кожному домі є скриня з Домівки: одна спільна скриня на 50 місць єднає Домівку й усі куплені доми. Скрині складу купують окремо для кожного дому, а кнопка «Розкласти все» сама розносить матеріали й зілля по них.": "Every house has the chest from Home: one shared chest of 50 places links Home and all the houses you buy. The storehouse chests are bought separately for each house, and the \"Sort everything\" button distributes materials and potions among them by itself.",
+"Кузня бере матеріали для кування й переплавки не лише з торби, а й зі скринь для матеріалів свого дому, а злитки, що не влізли в торбу, кладе туди ж. Лише річ для розбору має лежати в торбі.": "The forge takes materials for forging and smelting not only from the bag but also from the material chests of its house, and puts ingots that didn't fit into the bag there too. Only an item for salvaging must lie in the bag.",
+"Небесної кузні в цих землях немає. Власна кузня — єдине місце, де Перунові діти кують і розбирають речі, доки не знайдуть шлях до горна Сварога.": "There is no Heavenly Forge in these lands. Your own forge is the only place where Perun's children forge and salvage items until they find the way to Svarog's furnace.",
+"Глава III. Розбір речей": "Chapter III. Salvaging Items",
+"«Метал не вмирає. Він лише чекає на кращу руку», — Ейтрі.": "\"Metal does not die. It only waits for a better hand,\" — Eitri.",
+"Розібрати річ можна у власній кузні вже з 1 рівня майстерності — будь-яку зброю, щит, броню чи прикрасу, навіть ту, якої не викуєш сам. Річ має лежати в торбі: зі скринь не розбирають. Частина матеріалів повертається звичайної якості, а коваль вчиться на кожній розібраній речі. Вдягнені речі спершу треба зняти.": "You can salvage an item in your own forge from mastery level 1 — any weapon, shield, armour or jewellery, even one you can't forge yourself. The item must lie in the bag: nothing is salvaged from chests. Part of the materials is returned in common quality, and the smith learns from every salvaged item. Equipped items must be taken off first.",
+"Досвід за розбір": "Experience for Salvaging",
+"Досвід майстерності — за кожен повернутий матеріал, за його якістю: звичайний — 1, магічний — 3, епічний — 8, Небесна іскра — 25.": "Mastery experience — for each returned material, by its quality: common — 1, magic — 3, epic — 8, Heavenly Spark — 25.",
+"Приклад: магічний кам'яний меч (6 кременю, 2 дубової деревини, 2 ремені) повертає 3 кременю, 1 деревину, 1 ремінь і 1 магічний матеріал — 5 × 1 + 1 × 3 = 8 досвіду.": "Example: a magic stone sword (6 flint, 2 oak wood, 2 straps) returns 3 flint, 1 wood, 1 strap and 1 magic material — 5 × 1 + 1 × 3 = 8 experience.",
+"Жарини Небесного горна": "Embers of the Heavenly Furnace",
+"Небесної кузні немає ні в Гардариці, ні в Темному лісі — горно Сварога стоїть в інших землях світу. Щоб його розпалити, треба повернути жарини, які винесли зрадники: вони тліють у зброї темних душ і в землях, звільнених від Хелли.": "There is no Heavenly Forge in Gardarika or in the Dark Forest — Svarog's furnace stands in other lands of the world. To kindle it, the embers carried off by the traitors must be returned: they smoulder in the weapons of the dark souls and in the lands freed from Hel.",
+"Решту сторінок Сварог допише, коли перша жарина повернеться в горно.": "Svarog will write the rest of the pages when the first ember returns to the furnace.",
+"✦ Кінець першої книги ✦": "✦ End of the first book ✦",
+"Книга-довідник": "Reference book",
+"«Одне Дерево — два небесні двори. Пам'ятай імена тих, хто тримає світ, і тих, хто його гризе»": "\"One Tree — two heavenly courts. Remember the names of those who hold up the world, and of those who gnaw at it\"",
+"Ірій · Асгард · Нав і Хельгейм": "Iriy · Asgard · Nav and Helheim",
+"Знай своїх богів — і знай своїх ворогів.": "Know your gods — and know your enemies.",
+"Як влаштований світ богів": "How the World of the Gods Is Arranged",
+"Над Явʼю стоять два небесні двори: слов'янські боги живуть в Ірії, скандинавські — в Асгарді. Обидва світи тримаються на одному Світовому Дереві: варяги звуть його Іггдрасилем, предки — Світовим Дубом. У його кроні — оселі богів, біля стовбура — земля людей, у корінні — Нав і Хельгейм, царства мертвих.": "Above Yav stand two heavenly courts: the Slavic gods live in Iriy, the Norse — in Asgard. Both worlds rest on one World Tree: the Varangians call it Yggdrasil, the ancestors — the World Oak. In its crown are the dwellings of the gods, by its trunk — the land of people, in its roots — Nav and Helheim, the kingdoms of the dead.",
+"Хелла отруїла коріння Дерева й захопила північні землі Асгарду разом із душами полеглих воїнів. Тоді Одін зійшов до Ірію як прохач, і рада богів вирішила допомогти. Перун послав на північ героїв Окраїни, а Всебатько на знак угоди віддав Ірію знаки Футарка — руни Асгарду.": "Hel poisoned the roots of the Tree and seized the northern lands of Asgard together with the souls of fallen warriors. Then Odin came down to Iriy as a supplicant, and the council of the gods decided to help. Perun sent heroes of the Borderland north, and the All-Father, as a sign of the pact, gave Iriy the signs of the Futhark — the runes of Asgard.",
+"Боги в кожному пантеоні записані від головних до другорядних: біля кожного — його сфера і стосунки з іншими богами. Перекази передано так, як їх пам'ятають старі на призьбі; там, де пам'ять уривається, писар доповнив її сам.": "The gods of each pantheon are recorded from the chief to the lesser ones: by each — their sphere and their relations with the other gods. The tales are passed on as the old folk on the porch remember them; where memory breaks off, the scribe filled it in himself.",
+"Ірій — головні боги": "Iriy — the Chief Gods",
+"Головне слово в Ірії має Перун, але важливі рішення боги ухвалюють на раді. Саме така рада вирішила допомогти Асгарду.": "Perun has the main word in Iriy, but the gods make important decisions in council. It was such a council that decided to help Asgard.",
+"Прабатько всього живого, той, хто посадив Світовий Дуб. Відповідає за родове коло, долю й пам'ять предків. Його знак — руна Рід, сила предків, що стоїть за спиною.": "Forefather of all living things, the one who planted the World Oak. He is responsible for the circle of kin, fate and the memory of the ancestors. His sign is the rune Rid, the strength of the ancestors standing behind you.",
+"Старший над усіма, у справи молодших богів не втручається. Від нього походять Сварог і все його покоління. Отруєне Дерево — рана його творіння.": "Elder over all, he does not meddle in the affairs of the younger gods. From him come Svarog and all his generation. The poisoned Tree is a wound to his creation.",
+"Сварог": "Svarog",
+"Бог неба й небесного вогню, божественний коваль. Викував перший плуг і перший меч, дав людям закони, а потім — знаки, що вдихають силу в залізо.": "God of the sky and heavenly fire, the divine smith. He forged the first plough and the first sword, gave people laws, and then — signs that breathe strength into iron.",
+"Батько Даждьбога й Семаргла (Сварожичів). Ще править радою Ірію, але війну віддав Перунові. Колись кував для Перунових посланців у Небесній кузні; коли частина з них зрадила й віддала його зброю Хеллі, загасив горно. Відтоді не кує сам, а вчить: разом із карликами Брокком і Ейтрі, що викували Торові Мйольнір, записав «Небесну кузню. Настанову» та «Руни Небесної Кузні».": "Father of Dazhboh and Semarhl (the Svarozhychi). He still rules the council of Iriy, but gave the war to Perun. Once he forged for Perun's envoys in the Heavenly Forge; when some of them betrayed him and gave his weapons to Hel, he put out the furnace. Since then he does not forge himself, but teaches: together with the dwarves Brokkr and Eitri, who forged Mjölnir for Thor, he wrote \"The Heavenly Forge. A Manual\" and \"Runes of the Heavenly Forge\".",
+"Перун Громовержець": "Perun the Thunderer",
+"Бог грому, блискавки й війни, захисник дружини та правди. Його дерево — дуб, його вогонь не гасне. Його знак — блискавка, руна Перун.": "God of thunder, lightning and war, protector of the warband and of truth. His tree is the oak, his fire never goes out. His sign is lightning, the rune Perun.",
+"Вічний суперник Велеса (небо проти землі), але в цій війні їх єднає спільний ворог. Чоловік Мокоші. Уклав угоду з Одіном і кличе героїв блискавкою: душі посланих ним повертаються до його вогню, і жодна володарка мертвих не втримає їх. Це він умовив Сварога вчити тих, хто встоїть.": "Eternal rival of Veles (sky against earth), but in this war they are united by a common enemy. Husband of Mokosh. He made the pact with Odin and calls heroes with lightning: the souls of those he sends return to his fire, and no mistress of the dead can hold them. It was he who persuaded Svarog to teach those who will stand firm.",
+"Бог мудрості, пам'яті й чарів, покровитель худоби, багатства й співців. Вартує межу між живими та Навʼю — тому його руна береже від нежиті та слуг Хелли.": "God of wisdom, memory and magic, patron of cattle, wealth and singers. He guards the border between the living and Nav — that is why his rune protects against the undead and the servants of Hel.",
+"Суперник Перуна, але без нього світ не стоїть: Перун береже крону Дерева, Велес — коріння. Хелла полізла саме в його царину, тож ця війна для нього особиста.": "Perun's rival, but the world cannot stand without him: Perun guards the crown of the Tree, Veles — its roots. Hel crawled into his very domain, so this war is personal for him.",
+"Мокоша": "Mokosh",
+"Богиня землі, долі й жіночого ремесла. Пряде нитки людських доль.": "Goddess of the earth, fate and women's crafts. She spins the threads of human fates.",
+"Дружина Перуна. Один із трьох голосів ради разом зі Сварогом і Велесом; була на раді, коли Одін просив допомоги.": "Wife of Perun. One of the three voices of the council together with Svarog and Veles; she was at the council when Odin asked for help.",
+"Ірій — другорядні боги": "Iriy — the Lesser Gods",
+"Бог сонця, світла й достатку, пращур людей («Даждьбожі онуки»). Його руна — сонце, що дарує.": "God of the sun, light and plenty, forefather of people (\"Dazhboh's grandchildren\"). His rune is the sun that gives.",
+"Син Сварога, брат Семаргла. Сонце й меч — вірний союзник Перуна.": "Son of Svarog, brother of Semarhl. Sun and sword — Perun's faithful ally.",
+"Стрибог": "Stryboh",
+"Бог вітрів і бурі, дід усіх вітрів. Руна Вітер — його подих.": "God of winds and storms, grandfather of all winds. The rune Viter is his breath.",
+"Служить Перунові — несе його хмари й грім.": "He serves Perun — carries his clouds and thunder.",
+"Хорс": "Khors",
+"Бог сонячного кола, ходу сонця й часу доби.": "God of the solar circle, the course of the sun and the time of day.",
+"Веде сонячну колісницю Даждьбога. Спокійний, у суперечки не вступає.": "He drives Dazhboh's solar chariot. Calm, he does not enter into disputes.",
+"Семаргл": "Semarhl",
+"Вогненний крилатий пес, бог вогню й вісник між небом і землею. Береже посіви.": "A fiery winged dog, god of fire and messenger between heaven and earth. He guards the crops.",
+"Син Сварога, відданий посланець Ірію.": "Son of Svarog, a devoted messenger of Iriy.",
+"Дана": "Dana",
+"Богиня рік, джерел і живої води. Руна Джерело — жива вода Дани.": "Goddess of rivers, springs and living water. The rune Dzherelo is Dana's living water.",
+"Приятелька Велеса й Мокоші: вода живить землю.": "A friend of Veles and Mokosh: water nourishes the earth.",
+"Лада і Леля": "Lada and Lelia",
+"Лада — богиня любові, злагоди й сім'ї. Леля — її донька, богиня весни й молодості.": "Lada is the goddess of love, harmony and family. Lelia is her daughter, goddess of spring and youth.",
+"Мирять богів між собою, зокрема Перуна й Велеса.": "They reconcile the gods with one another, Perun and Veles in particular.",
+"Ярило": "Yarylo",
+"Бог весняного сонця, сили й врожаю.": "God of the spring sun, strength and harvest.",
+"За переказами — син Перуна, що щовесни повертається з Наві. Вічний противник Марени.": "According to the tales — a son of Perun who returns from Nav every spring. Eternal opponent of Marena.",
+"Білобог": "Bilobog",
+"Бог добра, світла й удачі. Його знак — руна Мир.": "God of goodness, light and luck. His sign is the rune Myr.",
+"Вічна пара Чорнобога: де один кладе нещастя, другий повертає вдачу.": "The eternal pair of Chornobog: where one brings misfortune, the other returns luck.",
+"Асгард — головні боги": "Asgard — the Chief Gods",
+"Асгардом править Одін. Боги діляться на два роди: аси (війна й влада) та вани (родючість і море), що колись воювали, а потім помирилися. Нині Асгард утратив північні землі й військо — ейнхерії в полоні Хелли.": "Asgard is ruled by Odin. The gods are divided into two kins: the Aesir (war and power) and the Vanir (fertility and the sea), who once fought and then made peace. Now Asgard has lost its northern lands and its army — the einherjar are Hel's captives.",
+"Одін Всебатько": "Odin the All-Father",
+"Верховний ас, бог мудрості, війни, поезії й рун. Віддав око за мудрість, збирає полеглих у Валгаллі.": "The supreme As, god of wisdom, war, poetry and runes. He gave an eye for wisdom and gathers the fallen in Valhalla.",
+"Чоловік Фрігг, батько Тора, Бальдра й Відара. Побратим Локі за клятвою крові — і ця клятва тепер йому дорого коштує. Зійшов до Ірію як прохач і уклав угоду з Перуном; на знак угоди віддав Ірію знаки Футарка, тож руни Асгарду тепер записані поруч зі знаками Ірію.": "Husband of Frigg, father of Thor, Baldr and Víðarr. Blood-brother of Loki by oath — and that oath now costs him dearly. He came down to Iriy as a supplicant and made the pact with Perun; as a sign of the pact he gave Iriy the signs of the Futhark, so the runes of Asgard are now recorded alongside the signs of Iriy.",
+"Фрігг": "Frigg",
+"Верховна богиня, покровителька шлюбу, материнства й дому. Знає долі всіх, але мовчить.": "The supreme goddess, patron of marriage, motherhood and home. She knows the fates of all, but keeps silent.",
+"Дружина Одіна, мати Бальдра. Не пробачила Локі смерті сина.": "Wife of Odin, mother of Baldr. She has not forgiven Loki for her son's death.",
+"Тор": "Thor",
+"Бог грому, сили й захисту людей, володар молота Мйольнір, викуваного карликами Брокком і Ейтрі. Вічно б'ється з велетнями; руна Турісаз — його молот.": "God of thunder, strength and the protection of people, wielder of the hammer Mjölnir, forged by the dwarves Brokkr and Eitri. He fights giants forever; the rune Thurisaz is his hammer.",
+"Син Одіна, чоловік Сів. З Локі часто мандрував, але не довіряє йому. Найбільше палає бажанням помсти.": "Son of Odin, husband of Sif. He often travelled with Loki, but does not trust him. He burns most of all with the desire for revenge.",
+"Фрейя": "Freyja",
+"Богиня кохання, краси й чарів сейд. Забирає половину полеглих у свій чертог Фолькванг.": "Goddess of love, beauty and seiðr magic. She takes half of the fallen to her hall Fólkvangr.",
+"З роду ванів, донька Ньорда, сестра Фрейра. Навчила Одіна чарів сейд. Її полеглі теж у Хелли, тож вона має власний рахунок.": "Of the Vanir kin, daughter of Njörðr, sister of Freyr. She taught Odin seiðr magic. Her fallen are also with Hel, so she has her own score to settle.",
+"Тір": "Týr",
+"Бог війни, справедливості й чесної клятви. Пожертвував руку, щоб зв'язати вовка Фенріра. Руна Тейваз носить його ім'я.": "God of war, justice and the honest oath. He sacrificed his hand to bind the wolf Fenrir. The rune Teiwaz bears his name.",
+"Ас старого роду, шанований усіма. Запеклий ворог Фенріра — брата Хелли. Свідок угоди Перуна й Одіна.": "An As of the old kin, respected by all. A bitter enemy of Fenrir — Hel's brother. A witness of the pact between Perun and Odin.",
+"Асгард — другорядні боги": "Asgard — the Lesser Gods",
+"Бальдр": "Baldr",
+"Бог світла, чистоти й весни, найулюбленіший з асів.": "God of light, purity and spring, the most beloved of the Aesir.",
+"Син Одіна й Фрігг. Загинув через підступ Локі й відтоді перебуває в Хельгеймі.": "Son of Odin and Frigg. He died through Loki's treachery and has been in Helheim ever since.",
+"Хеймдалль": "Heimdallr",
+"Вартовий богів, сторож веселкового мосту Біфрест. Чує, як росте трава, і бачить у темряві.": "Watchman of the gods, guardian of the rainbow bridge Bifröst. He hears the grass grow and sees in the dark.",
+"Вірний Одінові, запеклий ворог Локі.": "Loyal to Odin, a bitter enemy of Loki.",
+"Ньорд": "Njörðr",
+"Ван, бог моря, вітрів і мореплавства.": "A Van, god of the sea, winds and seafaring.",
+"Батько Фрейра й Фрейї. Живе серед асів як запорука миру між родами.": "Father of Freyr and Freyja. He lives among the Aesir as a pledge of peace between the kins.",
+"Фрейр": "Freyr",
+"Ван, бог врожаю, дощу, сонячного світла й миру.": "A Van, god of harvest, rain, sunlight and peace.",
+"Син Ньорда, брат Фрейї. Віддав свій меч заради кохання.": "Son of Njörðr, brother of Freyja. He gave away his sword for love.",
+"Сів": "Sif",
+"Богиня золотих нив і родини.": "Goddess of golden fields and family.",
+"Дружина Тора. Локі колись зрізав її золоте волосся — і карлики викували їй нове, із золота.": "Wife of Thor. Loki once cut off her golden hair — and the dwarves forged her new hair of gold.",
+"Браґі та Ідун": "Bragi and Iðunn",
+"Браґі — бог поезії й скальдів. Ідун — його дружина, береже золоті яблука вічної молодості богів.": "Bragi is the god of poetry and skalds. Iðunn is his wife, she guards the golden apples of the gods' eternal youth.",
+"Браґі оспівує подвиги асів. Без яблук Ідун боги старіють.": "Bragi sings of the deeds of the Aesir. Without Iðunn's apples the gods grow old.",
+"Відар і Улль": "Víðarr and Ullr",
+"Відар — мовчазний бог помсти. Улль — бог полювання, лука й зими.": "Víðarr is the silent god of vengeance. Ullr is the god of hunting, the bow and winter.",
+"Відар — син Одіна, призначений помститися за батька. Улль — пасинок Тора, син Сів.": "Víðarr is a son of Odin, destined to avenge his father. Ullr is Thor's stepson, son of Sif.",
+"Сили темряви та смерті": "Powers of Darkness and Death",
+"Головний ворог — Хелла. Та інші темні боги не обов'язково її союзники: між ними є місце і зраді, і несподіваним союзам.": "The main enemy is Hel. But the other dark gods are not necessarily her allies: there is room among them both for betrayal and for unexpected alliances.",
+"Хелла (Хель)": "Hel (Hella)",
+"Володарка Хельгейму, царства тих, хто помер не в бою. Наполовину жива діва, наполовину мертва.": "Mistress of Helheim, the kingdom of those who did not die in battle. Half a living maiden, half dead.",
+"Донька Локі, сестра вовка Фенріра й змія Йормунганда. Одін колись скинув її в Ніфльхейм — цієї образи вона не пробачила. Отруїла коріння Дерева, захопила північ і ейнхеріїв. Шепотом у довгі ночі переманила декотрих Перунових посланців — тепер ці темні душі служать їй і досі тримають зброю з Небесної кузні.": "Daughter of Loki, sister of the wolf Fenrir and the serpent Jörmungandr. Odin once cast her down into Niflheim — she has not forgiven that insult. She poisoned the roots of the Tree, seized the north and the einherjar. With whispers in the long nights she lured away some of Perun's envoys — now these dark souls serve her and still hold weapons from the Heavenly Forge.",
+"Локі": "Loki",
+"Бог обману, хитрощів і перевтілень. Не ас і не велетень — чужий усім.": "God of deceit, cunning and shapeshifting. Neither As nor giant — a stranger to all.",
+"Побратим Одіна, батько Хелли. Винний у смерті Бальдра, тому закутий богами. Чи допомагає він доньці, чи грає власну гру — не знає ніхто.": "Blood-brother of Odin, father of Hel. Guilty of Baldr's death, and therefore chained by the gods. Whether he helps his daughter or plays his own game — no one knows.",
+"Слов'янський бог темряви, нещастя й хаосу. Його знак — руна прокляття ворогові.": "The Slavic god of darkness, misfortune and chaos. His sign is the rune of a curse upon the enemy.",
+"Вигнаний з Ірію, заздрить Перунові. Його вічна пара — Білобог.": "Exiled from Iriy, he envies Perun. His eternal pair is Bilobog.",
+"Марена (Морана)": "Marena (Morana)",
+"Слов'янська богиня зими, смерті й відродження. Щозими приходить, щовесни її проводжають.": "The Slavic goddess of winter, death and rebirth. She comes every winter and is seen off every spring.",
+"Вічна суперниця Ярила. Смерть, але частина природного кола, а не зло: Хелла ламає коло, яке Марена береже.": "The eternal rival of Yarylo. Death, but part of the natural circle, not evil: Hel breaks the circle that Marena guards.",
+"Пари богів між пантеонами": "Pairs of Gods Between the Pantheons",
+"Боги зі схожими сферами є в обох дворах. Інколи вони сперечаються, інколи стають пліч-о-пліч.": "Gods with similar spheres exist in both courts. Sometimes they argue, sometimes they stand shoulder to shoulder.",
+"Сфера": "Sphere",
+"Ірій": "Iriy",
+"Верховна влада": "Supreme power",
+"Перун (і рада зі Сварогом)": "Perun (and the council with Svarog)",
+"Одін": "Odin",
+"Грім і сила": "Thunder and strength",
+"Доля": "Fate",
+"Мудрість і пам'ять": "Wisdom and memory",
+"Браґі": "Bragi",
+"Ковальство й знаки": "Smithing and signs",
+"Одін (руни), Брокк і Ейтрі": "Odin (runes), Brokkr and Eitri",
+"Сонце й врожай": "Sun and harvest",
+"Даждьбог, Ярило": "Dazhboh, Yarylo",
+"Фрейр, Бальдр": "Freyr, Baldr",
+"Кохання": "Love",
+"Лада": "Lada",
+"Стихії": "Elements",
+"Семаргл, Стрибог, Дана, Мокоша": "Semarhl, Stryboh, Dana, Mokosh",
+"Варта": "Watch",
+"Смерть": "Death",
+"Марена": "Marena",
+"Хелла": "Hel",
+"Темрява й обман": "Darkness and deceit",
+"✦ Кінець довідника ✦": "✦ End of the reference book ✦",
+"Книга Сварога · друга": "Book of Svarog · second",
+"«Знаки Ірію — від Сварога, знаки Футарка — дар Всебатька Одіна після угоди. Вогнем горна записано для Перунових дітей»": "\"The signs of Iriy — from Svarog, the signs of the Futhark — a gift of the All-Father Odin after the pact. Written with the fire of the furnace for Perun's children\"",
+"29 рун · 2 пантеони · слідом за «Небесною кузнею»": "29 runes · 2 pantheons · following \"The Heavenly Forge\"",
+"Руна не робить слабкого сильним — вона кличе те, що вже є.": "A rune does not make the weak strong — it calls forth what is already there.",
+"Слово Сварога": "The Word of Svarog",
+"«Я викував перший плуг і перший меч. Тепер кую знаки, що вдихають силу в залізо. Руна не робить слабкого сильним — вона кличе те, що вже є в зброї та в руці, яка її тримає. Бережіть мої знаки: Хелла ненавидить усе, що пам'ятає вогонь.»": "\"I forged the first plough and the first sword. Now I forge signs that breathe strength into iron. A rune does not make the weak strong — it calls forth what is already in the weapon and in the hand that holds it. Guard my signs: Hel hates everything that remembers fire.\"",
+"Гнізда під руни": "Rune Sockets",
+"Хто прочитав цю книгу, починає бачити в речах гнізда під руни — вони були там завжди, та без науки їх не помітиш. Гніздо є не в кожній речі, а в якій є — видно з маленьких ромбиків на ній.": "Whoever has read this book begins to see rune sockets in items — they were always there, but without the knowledge you won't notice them. Not every item has a socket, and in those that do, you can tell by the small diamonds on it.",
+"Як вкладати руни": "How to Insert Runes",
+"Руни зброї — лише у зброю та речі лівої руки, руни броні — лише в броню. Універсальні — у будь-що, зокрема в персні й амулети.": "Weapon runes go only into weapons and left-hand items, armour runes only into armour. Universal ones — into anything, including rings and amulets.",
+"Дві однакові руни в одній речі не складаються — діє сильніша.": "Two identical runes in one item do not stack — the stronger one works.",
+"Вийнята з гнізда руна тріскається і стає зламаною. Так само тріскаються руни в речі, яку розбирають у кузні.": "A rune taken out of a socket cracks and becomes broken. Runes in an item being salvaged in the forge crack the same way.",
+"Де шукати руни": "Where to Find Runes",
+"Зламані — часто падають зі звичайних ворогів.": "Broken — often drop from ordinary enemies.",
+"Звичайні й магічні — з чемпіонів і скринь данжів.": "Common and magic — from champions and dungeon chests.",
+"Епічні — з босів данжів або з Горна Сварога.": "Epic — from dungeon bosses or from Svarog's Forge.",
+"Легендарні — лише з фінальних босів глав.": "Legendary — only from the final bosses of chapters.",
+"Рідкість рун": "Rarity of Runes",
+"Кожна руна буває п'яти рідкостей. Значення в описах — для кожної рідкості окремо; округлюються до цілого.": "Every rune comes in five rarities. The values in the descriptions are for each rarity separately; they are rounded to whole numbers.",
+"Рідкість": "Rarity",
+"Що відомо": "What is known",
+"Не дає нічого. Годиться лише як паливо для Горна Сварога.": "Gives nothing. Only good as fuel for Svarog's Forge.",
+"Базова сила знака.": "The basic power of the sign.",
+"Знак світиться синім, коли власник б'ється.": "The sign glows blue when its owner fights.",
+"Найвища рідкість, яку може дати Горно Сварога.": "The highest rarity Svarog's Forge can give.",
+"Знак горить золотом. У горні не народжується — лише з фінальних босів.": "The sign burns with gold. It is not born in the forge — only from final bosses.",
+"Атрибути (Сила, Витривалість…) ростуть на 1–2 очки за кожну рідкість.": "Attributes (Strength, Vitality…) grow by 1–2 points for each rarity.",
+"Руни зброї": "Weapon Runes",
+"Скандинавські знаки Футарка — дар Асгарду, і слов'янські знаки — дар Ірію. Лягають лише у зброю.": "Norse Futhark signs — a gift of Asgard, and Slavic signs — a gift of Iriy. They go only into weapons.",
+"Руни броні": "Armour Runes",
+"Знаки, що бережуть: лягають лише в броню.": "Signs that protect: they go only into armour.",
+"Універсальні руни": "Universal Runes",
+"Лягають у зброю, броню та прикраси. У персні чи амулеті діють так само, як у зброї чи броні.": "They go into weapons, armour and jewellery. In a ring or amulet they work the same as in a weapon or armour.",
+"Шість рун у вогонь — одна нова з попелу.": "Six runes into the fire — one new from the ashes.",
+"Покладіть у горно будь-які 6 рун, зламані теж. Сварог переплавить їх в одну нову руну — від звичайної до епічної. Легендарна з горна не виходить ніколи.": "Put any 6 runes into the forge, broken ones too. Svarog will smelt them into one new rune — from common to epic. A legendary never comes out of the forge.",
+"Кожна руна в горні": "Each rune in the forge",
+"Епічна чи легендарна": "Epic or legendary",
+"Кожна руна дає шосту частину свого рядка. Приклад: 3 зламані + 3 магічні → звичайна 45%, магічна 40%, епічна 15%.": "Each rune gives a sixth of its row. Example: 3 broken + 3 magic → common 45%, magic 40%, epic 15%.",
+"Вид нової руни: якщо всі шість одного виду (зброя, броня чи універсальні) — нова того ж виду; інакше — будь-яка з 29.": "Kind of the new rune: if all six are of one kind (weapon, armour or universal) — the new one is of the same kind; otherwise — any of the 29.",
+"Горно Сварога стоїть у Гільдії ремісників Дубової Застави (Торговий район). За кожне розпалювання — данина 200 золота.": "Svarog's Forge stands in the Craftsmen's Guild of Oak Outpost (Trade District). For each kindling — a tribute of 200 gold.",
+"✦ Кінець другої книги ✦": "✦ End of the second book ✦",
 "Мова": "Language",
 "Відновлення": "Regeneration",
 "Українська": "Українська",
@@ -5401,7 +5686,14 @@ RPG.I18N.en = {
 "^(.*?) — «(.*?)» \\(−(.*?) MP\\) по «(.*?)»: (.*?) шкоди$",
 "$1 — \"$2\" (−$3 MP) on \"$4\": $5 damage",
 1,
-1,
+0,
+"MP) по «"
+],
+[
+"(.*?) — «(.*?)» \\(−(.*?) MP\\) по «(.*?)»: (.*?) шкоди",
+"$1 — \"$2\" (−$3 MP) on \"$4\": $5 damage",
+0,
+0,
 "MP) по «"
 ],
 [
@@ -6374,14 +6666,28 @@ RPG.I18N.en = {
 "^(.*?) — «(.*?)» \\(−(.*?) MP\\): (.*?) шкоди$",
 "$1 — \"$2\" (−$3 MP): $4 damage",
 1,
-1,
+0,
+"MP):"
+],
+[
+"(.*?) — «(.*?)» \\(−(.*?) MP\\): (.*?) шкоди",
+"$1 — \"$2\" (−$3 MP): $4 damage",
+0,
+0,
 "MP):"
 ],
 [
 "^(.*?) лікує (.*?) \\(−(.*?) MP\\): \\+(.*?) HP$",
 "$1 heals $2 (−$3 MP): +$4 HP",
 1,
-1,
+0,
+"лікує"
+],
+[
+"(.*?) лікує (.*?) \\(−(.*?) MP\\): \\+(.*?) HP",
+"$1 heals $2 (−$3 MP): +$4 HP",
+0,
+0,
 "лікує"
 ],
 [
@@ -6696,7 +7002,14 @@ RPG.I18N.en = {
 "^(.*?) б'є \\((.*?)\\) «(.*?)»: (.*?) шкоди$",
 "$1 strikes ($2) \"$3\": $4 damage",
 1,
-1,
+0,
+"б'є ("
+],
+[
+"(.*?) б'є \\((.*?)\\) «(.*?)»: (.*?) шкоди",
+"$1 strikes ($2) \"$3\": $4 damage",
+0,
+0,
 "б'є ("
 ],
 [
@@ -6794,7 +7107,14 @@ RPG.I18N.en = {
 "^(.*?) — «(.*?)» по (.*?): (.*?) шкоди$",
 "$1 — \"$2\" on $3: $4 damage",
 1,
-1,
+0,
+"шкоди"
+],
+[
+"(.*?) — «(.*?)» по (.*?): (.*?) шкоди",
+"$1 — \"$2\" on $3: $4 damage",
+0,
+0,
 "шкоди"
 ],
 [
@@ -7018,7 +7338,14 @@ RPG.I18N.en = {
 "^(.*?) MP нижче (.*?)% до (.*?)%$",
 "$1 MP below $2% to $3%",
 1,
-1,
+0,
+"MP нижче"
+],
+[
+"(.*?) MP нижче (.*?)% до (.*?)%",
+"$1 MP below $2% to $3%",
+0,
+0,
 "MP нижче"
 ],
 [
@@ -7718,7 +8045,14 @@ RPG.I18N.en = {
 "^(.*?) · \\+(.*?) комірок$",
 "$1 · +$2 cells",
 1,
-1,
+0,
+"комірок"
+],
+[
+"(.*?) · \\+(.*?) комірок",
+"$1 · +$2 cells",
+0,
+0,
 "комірок"
 ],
 [
@@ -7739,7 +8073,14 @@ RPG.I18N.en = {
 "^У скриню: (.*?) ×(.*?)$",
 "To the chest: $1 ×$2",
 1,
-1,
+0,
+"У скриню:"
+],
+[
+"У скриню: (.*?) ×([^\\s·;,]+)",
+"To the chest: $1 ×$2",
+0,
+0,
 "У скриню:"
 ],
 [
@@ -7767,14 +8108,28 @@ RPG.I18N.en = {
 "^(.*?) — (.*?), рівень (.*?)$",
 "$1 — $2, level $3",
 1,
-1,
+0,
+", рівень"
+],
+[
+"(.*?) — (.*?), рівень ([^\\s·;,]+)",
+"$1 — $2, level $3",
+0,
+0,
 ", рівень"
 ],
 [
 "^«(.*?)» \\(рівень (.*?)\\)(.*?)$",
 "\"$1\" (level $2)$3",
 1,
-1,
+0,
+"» (рівень"
+],
+[
+"«(.*?)» \\(рівень (.*?)\\)([^\\s·;,]+)",
+"\"$1\" (level $2)$3",
+0,
+0,
 "» (рівень"
 ],
 [
@@ -7809,7 +8164,7 @@ RPG.I18N.en = {
 "^Ваш дім: «(.*?)»\\.$",
 "Your house: \"$1\".",
 1,
-1,
+0,
 "Ваш дім: «"
 ],
 [
@@ -7921,7 +8276,14 @@ RPG.I18N.en = {
 "^до (.*?) за раз(.*?)\\)$",
 "up to $1 at a time$2)",
 1,
-1,
+0,
+"за раз"
+],
+[
+"до (.*?) за раз(.*?)\\)",
+"up to $1 at a time$2)",
+0,
+0,
 "за раз"
 ],
 [
@@ -7998,7 +8360,14 @@ RPG.I18N.en = {
 "^(.*?) · ключів: (.*?)$",
 "$1 · keys: $2",
 1,
-1,
+0,
+"· ключів:"
+],
+[
+"(.*?) · ключів: ([^\\s·;,]+)",
+"$1 · keys: $2",
+0,
+0,
 "· ключів:"
 ],
 [
@@ -8033,7 +8402,7 @@ RPG.I18N.en = {
 "^\\+(.*?)% до криту$",
 "+$1% to crit",
 1,
-1,
+0,
 "% до криту"
 ],
 [
@@ -8089,14 +8458,28 @@ RPG.I18N.en = {
 "^Група: (.*?) \\/ (.*?)$",
 "Party: $1 / $2",
 1,
-1,
+0,
+"Група:"
+],
+[
+"Група: (.*?) \\/ ([^\\s·;,]+)",
+"Party: $1 / $2",
+0,
+0,
 "Група:"
 ],
 [
 "^Рівень (.*?) · (.*?)$",
 "Level $1 · $2",
 1,
-1,
+0,
+"Рівень"
+],
+[
+"Рівень (.*?) · ([^\\s·;,]+)",
+"Level $1 · $2",
+0,
+0,
 "Рівень"
 ],
 [
@@ -8124,14 +8507,21 @@ RPG.I18N.en = {
 "^У скриню: (.*?)(.*?)$",
 "To the chest: $1$2",
 1,
-1,
+0,
+"У скриню:"
+],
+[
+"У скриню: (.*?)([^\\s·;,]+)",
+"To the chest: $1$2",
+0,
+0,
 "У скриню:"
 ],
 [
 "^У скриню: (.*?)$",
 "To the chest: $1",
 1,
-1,
+0,
 "У скриню:"
 ],
 [
@@ -8166,21 +8556,42 @@ RPG.I18N.en = {
 "^(.*?) (.*?) (.*?): (.*?) шкоди$",
 "$1 $2 $3: $4 damage",
 1,
-1,
+0,
+"шкоди"
+],
+[
+"(.*?) (.*?) (.*?): (.*?) шкоди",
+"$1 $2 $3: $4 damage",
+0,
+0,
 "шкоди"
 ],
 [
 "^(.*?): рівень (.*?)!$",
 "$1: level $2!",
 1,
-1,
+0,
+": рівень"
+],
+[
+"(.*?): рівень (.*?)!",
+"$1: level $2!",
+0,
+0,
 ": рівень"
 ],
 [
 "^(.*?): рівень (.*?)\\/(.*?)$",
 "$1: level $2/$3",
 1,
-1,
+0,
+": рівень"
+],
+[
+"(.*?): рівень (.*?)\\/([^\\s·;,]+)",
+"$1: level $2/$3",
+0,
+0,
 ": рівень"
 ],
 [
@@ -8201,7 +8612,14 @@ RPG.I18N.en = {
 "^Вийде: (.*?) · (.*?)$",
 "Result: $1 · $2",
 1,
-1,
+0,
+"Вийде:"
+],
+[
+"Вийде: (.*?) · ([^\\s·;,]+)",
+"Result: $1 · $2",
+0,
+0,
 "Вийде:"
 ],
 [
@@ -8222,21 +8640,42 @@ RPG.I18N.en = {
 "^(.*?) · рівень (.*?)$",
 "$1 · level $2",
 1,
-1,
+0,
+"· рівень"
+],
+[
+"(.*?) · рівень ([^\\s·;,]+)",
+"$1 · level $2",
+0,
+0,
 "· рівень"
 ],
 [
 "^(.*?) \\(рівень (.*?)(.*?)\\)$",
 "$1 (level $2$3)",
 1,
-1,
+0,
+"(рівень"
+],
+[
+"(.*?) \\(рівень (.*?)(.*?)\\)",
+"$1 (level $2$3)",
+0,
+0,
 "(рівень"
 ],
 [
 "^(.*?) \\(рівень (.*?)\\)$",
 "$1 (level $2)",
 1,
-1,
+0,
+"(рівень"
+],
+[
+"(.*?) \\(рівень (.*?)\\)",
+"$1 (level $2)",
+0,
+0,
 "(рівень"
 ],
 [
@@ -8257,7 +8696,14 @@ RPG.I18N.en = {
 "^Вугілля: (.*?)\\/(.*?)$",
 "Coal: $1/$2",
 1,
-1,
+0,
+"Вугілля:"
+],
+[
+"Вугілля: (.*?)\\/([^\\s·;,]+)",
+"Coal: $1/$2",
+0,
+0,
 "Вугілля:"
 ],
 [
@@ -8278,7 +8724,7 @@ RPG.I18N.en = {
 "^Здобич: (.*?)\\.$",
 "Loot: $1.",
 1,
-1,
+0,
 "Здобич:"
 ],
 [
@@ -8292,14 +8738,21 @@ RPG.I18N.en = {
 "^(.*?), рівень (.*?)$",
 "$1, level $2",
 1,
-1,
+0,
+", рівень"
+],
+[
+"(.*?), рівень ([^\\s·;,]+)",
+"$1, level $2",
+0,
+0,
 ", рівень"
 ],
 [
 "^Вкласти: (.*?)$",
 "Insert: $1",
 1,
-1,
+0,
 "Вкласти:"
 ],
 [
@@ -8313,7 +8766,7 @@ RPG.I18N.en = {
 "^Забрати: (.*?)$",
 "Take: $1",
 1,
-1,
+0,
 "Забрати:"
 ],
 [
@@ -8327,7 +8780,7 @@ RPG.I18N.en = {
 "^(.*?) — промах$",
 "$1 — miss",
 1,
-1,
+0,
 "— промах"
 ],
 [
@@ -8362,7 +8815,7 @@ RPG.I18N.en = {
 "^\\+(.*?) досвіду$",
 "+$1 experience",
 1,
-1,
+0,
 "досвіду"
 ],
 [
@@ -8376,7 +8829,7 @@ RPG.I18N.en = {
 "^завдань: (.*?)$",
 "tasks: $1",
 1,
-1,
+0,
 "завдань:"
 ],
 [
@@ -8397,7 +8850,7 @@ RPG.I18N.en = {
 "^досвід — (.*?)$",
 "experience — $1",
 1,
-1,
+0,
 "досвід —"
 ],
 [
@@ -8411,7 +8864,7 @@ RPG.I18N.en = {
 "^Ворогів: (.*?)$",
 "Enemies: $1",
 1,
-1,
+0,
 "Ворогів:"
 ],
 [
@@ -8425,7 +8878,7 @@ RPG.I18N.en = {
 "^Чемпіон: (.*?)$",
 "Champion: $1",
 1,
-1,
+0,
 "Чемпіон:"
 ],
 [
@@ -8439,7 +8892,7 @@ RPG.I18N.en = {
 "^Бракує: (.*?)\\.$",
 "Missing: $1.",
 1,
-1,
+0,
 "Бракує:"
 ],
 [
@@ -8453,14 +8906,21 @@ RPG.I18N.en = {
 "^(.*?) Зараз: (.*?)\\.$",
 "$1 Now: $2.",
 1,
-1,
+0,
+"Зараз:"
+],
+[
+"(.*?) Зараз: (.*?)\\.",
+"$1 Now: $2.",
+0,
+0,
 "Зараз:"
 ],
 [
 "^Здобич: (.*?)$",
 "Loot: $1",
 1,
-1,
+0,
 "Здобич:"
 ],
 [
@@ -8474,7 +8934,7 @@ RPG.I18N.en = {
 "^Обрати: (.*?)$",
 "Choose: $1",
 1,
-1,
+0,
 "Обрати:"
 ],
 [
@@ -8495,14 +8955,21 @@ RPG.I18N.en = {
 "^(.*?) год (.*?) хв$",
 "$1 h $2 min",
 1,
-1,
+0,
+"год"
+],
+[
+"(.*?) год (.*?) хв",
+"$1 h $2 min",
+0,
+0,
 "год"
 ],
 [
 "^Власна: (.*?)$",
 "Own: $1",
 1,
-1,
+0,
 "Власна:"
 ],
 [
@@ -8516,7 +8983,7 @@ RPG.I18N.en = {
 "^Знято: (.*?)\\.$",
 "Removed: $1.",
 1,
-1,
+0,
 "Знято:"
 ],
 [
@@ -8530,7 +8997,7 @@ RPG.I18N.en = {
 "^Гнізда: (.*?)$",
 "Sockets: $1",
 1,
-1,
+0,
 "Гнізда:"
 ],
 [
@@ -8558,7 +9025,7 @@ RPG.I18N.en = {
 "^(.*?) із бою\\.$",
 "$1 from the battle.",
 1,
-1,
+0,
 "із бою."
 ],
 [
@@ -8572,7 +9039,7 @@ RPG.I18N.en = {
 "^Золото: (.*?)$",
 "Gold: $1",
 1,
-1,
+0,
 "Золото:"
 ],
 [
@@ -8586,7 +9053,7 @@ RPG.I18N.en = {
 "^Книга «(.*?)»$",
 "Book \"$1\"",
 1,
-1,
+0,
 "Книга «"
 ],
 [
@@ -8628,7 +9095,7 @@ RPG.I18N.en = {
 "^\\+(.*?) золота$",
 "+$1 gold",
 1,
-1,
+0,
 "золота"
 ],
 [
@@ -8642,14 +9109,21 @@ RPG.I18N.en = {
 "^(.*?) проти: (.*?)$",
 "$1 against: $2",
 1,
-1,
+0,
+"проти:"
+],
+[
+"(.*?) проти: ([^\\s·;,]+)",
+"$1 against: $2",
+0,
+0,
 "проти:"
 ],
 [
 "^ворогів (.*?)$",
 "enemies $1",
 1,
-1,
+0,
 "ворогів"
 ],
 [
@@ -8663,7 +9137,7 @@ RPG.I18N.en = {
 "^(.*?) золота$",
 "$1 gold",
 1,
-1,
+0,
 "золота"
 ],
 [
@@ -8677,7 +9151,7 @@ RPG.I18N.en = {
 "^речей: (.*?)$",
 "items: $1",
 1,
-1,
+0,
 "речей:"
 ],
 [
@@ -8691,7 +9165,7 @@ RPG.I18N.en = {
 "^рівень (.*?)$",
 "level $1",
 1,
-1,
+0,
 "рівень"
 ],
 [
@@ -8705,7 +9179,7 @@ RPG.I18N.en = {
 "^Знято: (.*?)$",
 "Removed: $1",
 1,
-1,
+0,
 "Знято:"
 ],
 [
@@ -8719,7 +9193,7 @@ RPG.I18N.en = {
 "^(.*?) героїв$",
 "$1 heroes",
 1,
-1,
+0,
 "героїв"
 ],
 [
@@ -8747,7 +9221,7 @@ RPG.I18N.en = {
 "^Герой: (.*?)$",
 "Hero: $1",
 1,
-1,
+0,
 "Герой:"
 ],
 [
@@ -8789,7 +9263,14 @@ RPG.I18N.en = {
 "^Убити (.*?) (.*?)$",
 "Kill $1 $2",
 1,
-1,
+0,
+"Убити"
+],
+[
+"Убити (.*?) ([^\\s·;,]+)",
+"Kill $1 $2",
+0,
+0,
 "Убити"
 ],
 [

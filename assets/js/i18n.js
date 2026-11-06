@@ -55,6 +55,9 @@
     if (!CYR.test(s)) return s;
     const core = s.trim();
     let out = trWhole(core, depth, whole);
+    // цілий шаблон підійшов, але лишив українські слова (« Зараз: {}» проковтнув чуже речення) — спробувати й по шматках
+    const whole1 = out != null && CYR.test(out) ? out : null;
+    if (whole1 != null) out = null;
     if (out == null && depth <= 3) {
       // довгі фрази → шаблони всередині рядка → доклеєні шматки → слабкі шаблони → кожна частина між « · » / « — » / «, » окремо
       let t = " " + core + " ";     // пробіли — щоб знайшлися шматки, що починаються з « · »
@@ -68,6 +71,10 @@
         t = t.split(sep).map(x => (CYR.test(x) && trWhole(x.trim(), depth + 1, whole)) || x).join(sep);
       }
       if (t !== core) out = t;
+    }
+    if (whole1 != null) {
+      const left = x => (x == null ? core : x).replace(/[^А-Яа-яІіЇїЄєҐґ]/g, "").length;
+      if (out == null || left(whole1) <= left(out)) out = whole1;
     }
     // усередині підстановки шаблону — ще й дієслова ворогів («Grey Wolf кусає Ivan» → «Grey Wolf bites Ivan»)
     if (depth > 0 && verbs.length && CYR.test(out == null ? core : out)) {
@@ -86,7 +93,7 @@
     let r = memo.get(s);
     if (r == null) {
       r = trCore(s, 0);
-      if (r !== s) r = r.replace(/[«»]/g, '"');   // в англійському тексті — звичайні лапки
+      if (r !== s) r = r.replace(/[«»]/g, '"').replace(/(^|[^\d.,])1 cells\b/g, "$11 cell");   // звичайні лапки; «1 cell»
       if (memo.size > 20000) memo.clear();
       memo.set(s, r);
     }
@@ -99,7 +106,7 @@
     "SCHOOLS", "RANGE_NAMES", "MONSTER_MOVES", "MONSTER_WEAPON_NAMES", "GS_MODES", "RUNE_GRADES", "RUNE_KIND_NAME",
     "SKILLS", "ITEMS", "CRAFT_MATERIALS", "RUNES", "ITEM_SETS", "RECIPE_GROUPS", "FORGE_TOOLS", "CRAFT_CHESTS",
     "CRAFT_CHEST_ALLOW_TEXT", "CHEST_STORAGES", "HOUSES", "ENEMIES", "LOCATIONS", "DUNGEONS", "WORLDS", "MAP_REGIONS",
-    "LIBRARY", "DEFAULT_LOCATION"];
+    "LIBRARY", "DEFAULT_LOCATION", "FORGE_BOOK", "GODS_BOOK", "RUNE_BOOK", "CHRONICLE"];
   {
     const vs = new Set(["кусає"]);
     for (const e of Object.values(RPG.ENEMIES || {})) if (e && typeof e.verb === "string") vs.add(e.verb);
@@ -129,6 +136,11 @@
     else if (typeof v === "string") RPG[k] = tr(v);
   }
   if (RPG.audio && RPG.audio.TRACKS) walk(RPG.audio.TRACKS, 0, "TRACKS");
+  // Літопис: розповіді про битви й підписи записів — готовими функціями (i18n/en-chronicle.js)
+  if (RPG.CHRONICLE && pack.chronicle) {
+    Object.assign(RPG.CHRONICLE.TALES, pack.chronicle.TALES || {});
+    Object.assign(RPG.CHRONICLE.WORDS, pack.chronicle.WORDS || {});
+  }
 
   // Предмети: звичайні — словником; матеріали інших рідкостей і руни — збираються з перекладених частин
   const G = pack.grades || {};
