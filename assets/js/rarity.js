@@ -13,6 +13,7 @@
 //                                    крит/ухилення/швидкість додаються після першого ліміту (остаточні межі 100% / 60% / 250–450 — і для них)
 //
 // «Сила криту, %» (critDmg) випадає лише на зброї та сережках (SECONDARY → only); межа — 250% (stats.js).
+// Швидкість (speed) — лише взуття (там завжди один з бонусів), рукавиці, каблучки й амулет.
 //
 // Однакові бонуси, що випали двічі, складаються.
 //
@@ -67,6 +68,7 @@
 
   // Основні характеристики (атрибути) і другорядні
   const ATTR_KEYS = ["str", "agi", "int", "vit", "spi"];
+  const SPEED_SLOTS = ["feet", "hands", "ring", "amulet"];
   const SECONDARY = {
     // [мін, макс] для рівнів сили бонусу 1..4; scale — чи росте з рівнем речі
     hp:           { tiers: [[5, 8], [10, 15], [15, 25], [25, 40]], scale: true },
@@ -74,7 +76,8 @@
     magicDefense: { tiers: [[1, 2], [2, 3], [3, 5], [5, 8]], scale: true },
     crit:         { tiers: [[1, 1], [1, 2], [2, 3], [3, 5]] },
     dodge:        { tiers: [[1, 1], [1, 2], [2, 3], [3, 5]] },
-    speed:        { tiers: [[1, 1], [1, 2], [2, 3], [3, 4]] },
+    // Швидкість: лише взуття (там — обов'язково, rollAffixes), рукавиці, каблучки й амулет
+    speed:        { tiers: [[1, 1], [1, 2], [2, 3], [3, 4]], only: it => SPEED_SLOTS.includes(it.slot) },
     blockPhys:    { tiers: [[1, 2], [2, 3], [3, 4], [4, 6]] },
     blockMag:     { tiers: [[1, 2], [2, 3], [3, 4], [4, 6]] },
     skillPct:     { tiers: [[1, 2], [2, 3], [3, 5], [5, 8]] },   // Сила навичок, %: і фізичні, і магічні навички, і лікування (battle.js → skillMul)
@@ -121,9 +124,11 @@
     addTo(aff, pick(ATTR_KEYS), v);
   }
 
-  function rollSecondary(aff, id, tier) {
+  // force — саме цей бонус (швидкість на взутті); інакше — випадковий з дозволених для цієї речі.
+  // Обмеження only стосується лише свого бонусу: решта другорядних випадає, як і раніше
+  function rollSecondary(aff, id, tier, force = null) {
     const it = RPG.ITEMS[id] || {};
-    const key = pick(Object.keys(SECONDARY).filter(k => !SECONDARY[k].only || SECONDARY[k].only(it)));
+    const key = force || pick(Object.keys(SECONDARY).filter(k => !SECONDARY[k].only || SECONDARY[k].only(it)));
     const def = SECONDARY[key];
     let v = rollRange(def.tiers[tier - 1], def.step || 1);
     if (def.scale) v = Math.max(1, Math.round(v * levelScale(id)));
@@ -133,25 +138,27 @@
   // Випадкові бонуси для рідкості. fromShop — магазинна біла річ без сюрпризів.
   function rollAffixes(id, r, fromShop = false) {
     const aff = {};
+    // Взуття: перший другорядний бонус — завжди швидкість (у білого взуття з бою — завжди є)
+    const first = RPG.ITEMS[id]?.slot === "feet" ? "speed" : null;
     switch (r) {
       case "common":
         if (!fromShop) {
           if (Math.random() < 0.3) rollAttr(aff, id, 1);
-          if (Math.random() < 0.3) rollSecondary(aff, id, 1);
+          if (first || Math.random() < 0.3) rollSecondary(aff, id, 1, first);
         }
         break;
       case "magic":
         if (Math.random() < 0.5) rollAttr(aff, id, 2);          // 1 атрибут, але більший
         else { rollAttr(aff, id, 1); rollAttr(aff, id, 1); }    // або одразу 2
-        rollSecondary(aff, id, 1);
+        rollSecondary(aff, id, 1, first);
         break;
       case "epic":
         rollAttr(aff, id, 3); rollAttr(aff, id, 3);
-        for (let i = RPG.randInt(2, 3); i > 0; i--) rollSecondary(aff, id, 2);
+        for (let i = RPG.randInt(2, 3); i > 0; i--) rollSecondary(aff, id, 2, i === 1 ? first : null);
         break;
       case "legendary":
         for (let i = RPG.randInt(2, 3); i > 0; i--) rollAttr(aff, id, 4);
-        for (let i = RPG.randInt(3, 4); i > 0; i--) rollSecondary(aff, id, 3);
+        for (let i = RPG.randInt(3, 4); i > 0; i--) rollSecondary(aff, id, 3, i === 1 ? first : null);
         break;
     }
     return aff;
