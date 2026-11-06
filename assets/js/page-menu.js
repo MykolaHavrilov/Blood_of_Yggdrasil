@@ -103,6 +103,16 @@
     const msg = $("msg");
     const settings = RPG.getSettings();
 
+    // Мова: зберегти й перезавантажити сторінку — переклад даних робиться під час завантаження (i18n.js)
+    const langSel = $("lang-select");
+    if (langSel) {
+      langSel.value = RPG.lang;
+      langSel.addEventListener("change", () => {
+        RPG.setSettings({ lang: langSel.value });
+        location.reload();
+      });
+    }
+
     document.querySelectorAll('input[name="battle-mode"]').forEach(radio => {
       radio.checked = radio.value === settings.battleView;
       radio.addEventListener("change", () => {

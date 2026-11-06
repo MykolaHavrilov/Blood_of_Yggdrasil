@@ -17,7 +17,14 @@
   <main>
     <h1 class="page-title">Налаштування</h1>
     <div class="narrow stack">
-      
+      <!-- Мова гри (page-menu.js → pageSettings, i18n.js): зберігається на пристрої, після вибору сторінка перезавантажується -->
+      <div class="panel stack">
+        <h2>Мова / Language</h2>
+        <select class="lang-select" id="lang-select" aria-label="Мова / Language">
+          <option value="uk">Українська</option>
+          <option value="en">English</option>
+        </select>
+      </div>
       <div class="panel stack">
         <h2>Звук</h2>
         <label class="field">
@@ -86,6 +93,8 @@
   <script src="../assets/js/battle.js" defer></script>
   <script src="../assets/js/data/routes.js" defer></script>
   <script src="../assets/js/travel.js" defer></script>
+  <script src="../assets/js/i18n/en.js" defer></script>
+  <script src="../assets/js/i18n.js" defer></script>
   <script src="../assets/js/game-common.js" defer></script>
   <script src="../assets/js/page-menu.js" defer></script>
   <script src="../assets/js/game-main.js" defer></script>

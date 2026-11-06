@@ -56,6 +56,18 @@ window.RPG = window.RPG || {};
     return next;
   };
 
+  // ---------- Мова гри (Налаштування → «Мова / Language», i18n.js) ----------
+  // Не обрана в налаштуваннях — за мовою браузера: українська → "uk", будь-яка інша → "en".
+  RPG.LANGS = { uk: "Українська", en: "English" };
+  RPG.lang = (function () {
+    const s = RPG.getSettings().lang;
+    if (s && RPG.LANGS[s]) return s;
+    const nav = (navigator.languages && navigator.languages[0]) || navigator.language || "uk";
+    return /^uk\b/i.test(nav) ? "uk" : "en";
+  })();
+  // Заглушка перекладу (i18n.js замінює її, коли обрано не українську)
+  RPG.t = RPG.t || (s => s);
+
   // ---------- Автозілля (сторінка «Налаштування» → «Автозілля», character.js → autoPotion) ----------
   // Зберігається на пристрої разом з іншими налаштуваннями (localStorage), у сейв НЕ потрапляє,
   // тож діє для всіх збережень на цьому пристрої.
