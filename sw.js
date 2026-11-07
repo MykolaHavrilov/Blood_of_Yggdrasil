@@ -2,7 +2,7 @@
 // HTML / JS / CSS: спершу мережа (щоб оновлення гри підтягувались одразу),
 // а без інтернету — з кешу. Картинки: спершу кеш.
 // Після великих змін можна збільшити номер версії — старий кеш видалиться.
-const CACHE = "rpg-game-v170";
+const CACHE = "rpg-game-v171";
 const PRECACHE = [
   "./",
   "./assets/css/game.css",
@@ -237,6 +237,12 @@ const PRECACHE = [
   "./assets/images/items/icon_ygg_head.webp",
   "./assets/images/items/icon_ygg_legs.webp",
   "./assets/images/locations/loc_city.webp",
+  "./assets/images/locations/loc_mine_start.webp",
+  "./assets/images/locations/loc_sawmill_start.webp",
+  "./assets/images/locations/loc_mine_dark.webp",
+  "./assets/images/locations/loc_sawmill_dark.webp",
+  "./assets/images/locations/loc_mine_alf.webp",
+  "./assets/images/locations/loc_sawmill_alf.webp",
   "./assets/images/locations/loc_dark_gate.webp",
   "./assets/images/locations/loc_dk_edge.webp",
   "./assets/images/locations/loc_dk_grave.webp",

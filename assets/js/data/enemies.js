@@ -2211,24 +2211,24 @@ const ENEMIES = {
   // ---------- ШАХТА Й ЛІСОПИЛКА (експедиції — expedition.js) ----------
   // На мапі кожного світу без дороги до них: з мапи лише відправляють туди експедицію (3 або 6 героїв на 4 години).
   // Вороги — усі звичайні (не боси) вороги бойових локацій свого світу. За кожен виграний бій — 1–3 кожного ресурсу з yields.
-  // image — чия картинка локації (assets/images/locations/loc_<image>.webp), поки немає власної.
+  // image — фон локації (assets/images/locations/loc_<image>.webp), у кожного світу свій (v171).
   const EXPEDITION_SITES = {
     start: {
-      mine:    { minLevel: 5, image: "forest_cave", yields: ["copper_ore", "coal"],
+      mine:    { minLevel: 5, image: "mine_start", yields: ["copper_ore", "coal"],
                  description: "Стара мідна шахта в скелях над Гардарикою. Хутірські рудокопи покинули її, коли зі штолень полізли щури й вовки, — та мідь і вугілля там ще є." },
-      sawmill: { minLevel: 5, image: "forest_path", yields: ["oak_wood", "ash_wood", "flax"],
+      sawmill: { minLevel: 5, image: "sawmill_start", yields: ["oak_wood", "ash_wood", "flax"],
                  description: "Хутірська лісопилка на узліссі: дубові й ясеневі колоди, а на полі поруч — льон. Звірі з лісу вважають ці місця своїми." }
     },
     dark: {
-      mine:    { minLevel: 10, image: "dk_ravine", yields: ["silver_ore", "iron_ore"],
+      mine:    { minLevel: 10, image: "mine_dark", yields: ["silver_ore", "iron_ore"],
                  description: "Штольні під скелями біля Центральної брами. Срібло й залізо Темного лісу варті ризику — якщо вийти живим з туману." },
-      sawmill: { minLevel: 10, image: "dk_edge", yields: ["oak_wood", "ash_wood"],
+      sawmill: { minLevel: 10, image: "sawmill_dark", yields: ["oak_wood", "ash_wood"],
                  description: "Покинута лісопилка вартових посеред Темного лісу. Пили ще гострі, колоди ще лежать, а з-поміж дерев дивляться жовті очі." }
     },
     alf: {
-      mine:    { minLevel: 25, image: "alf_towers", yields: ["gold_ore", "platinum_ore"],
+      mine:    { minLevel: 25, image: "mine_alf", yields: ["gold_ore", "platinum_ore"],
                  description: "Копальні альвів у світлих горах Альвгейму. Золото й платина тут виходять просто на поверхню, але тлін Хелли дістався й сюди." },
-      sawmill: { minLevel: 25, image: "alf_grove", yields: ["yew_wood"],
+      sawmill: { minLevel: 25, image: "sawmill_alf", yields: ["yew_wood"],
                  description: "Тисовий гай альвів, де колись різали дерево на луки. Здичавілі альви досі стережуть кожен стовбур." }
     }
   };
