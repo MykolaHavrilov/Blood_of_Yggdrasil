@@ -22,6 +22,10 @@
     sawmill: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="13" width="18" height="6" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="6" cy="16" r="1.6" fill="currentColor"/><path d="M5 10 L19 10 M6 10 l1 -2 M9 10 l1 -2 M12 10 l1 -2 M15 10 l1 -2 M18 10 l1 -2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`
   };
   const isSite = id => !!RPG.LOCATIONS[id]?.expeditionOnly;
+  // Будівлі Шахти й Лісопилки (assets/images/map/bld_<id>.webp) — у центрі SITE_ZONES, ширина в % мапи.
+  // Значок (кирка / пила) лишається маленьким у кутку: туди лише експедиція.
+  const SITE_BLD_W = 6.8;      // ~68% від першої версії (10)
+  const SITE_BUILDINGS = new Set(["mine_start", "sawmill_start", "mine_dark", "sawmill_dark", "mine_alf", "sawmill_alf"]);
   // Порядок місць у списку під мапою
   const REGION_ORDER = {
     start: ["home", "temple", "village_start", "tavern", "south_gate", "forest_path", "forest_cave"],
@@ -166,6 +170,18 @@
       }
       img.after(layer);
     }
+    const siteBlds = Object.keys(SITE_ZONES[region] || {}).filter(id => RPG.LOCATIONS[id] && SITE_BUILDINGS.has(id));
+    if (siteBlds.length) {
+      const layer = el("div", "map-buildings");
+      for (const id of siteBlds) {
+        const z = SITE_ZONES[region][id], bi = el("img", "map-building");
+        bi.src = RPG.asset(`assets/images/map/bld_${id}.webp`);
+        bi.alt = "";
+        Object.assign(bi.style, { left: z.x + "%", top: z.y + "%", width: SITE_BLD_W + "%", height: (SITE_BLD_W * R.w / R.h) + "%" });
+        layer.append(bi);
+      }
+      img.after(layer);
+    }
     // Лінія маршруту (видно під час дороги)
     const pathLayer = el("div", "map-route");
     img.after(pathLayer);
@@ -177,6 +193,11 @@
       spot.dataset.loc = id;
       if (isSite(id)) spot.innerHTML = `<span class="site-badge">${SITE_ICON[RPG.LOCATIONS[id].type]}</span>`;
       Object.assign(spot.style, { left: pos.x + "%", top: pos.y + "%", width: pos.w + "%", height: pos.h + "%" });
+      if (SITE_BUILDINGS.has(id)) {           // зона кліку — по будівлі
+        const w = SITE_BLD_W * 0.8;
+        spot.classList.add("has-bld");
+        Object.assign(spot.style, { width: w + "%", height: (w * R.w / R.h) + "%" });
+      }
       spot.setAttribute("aria-label", p.name);
       spot.addEventListener("mouseenter", () => showTip(id));
       spot.addEventListener("focus", () => showTip(id));
