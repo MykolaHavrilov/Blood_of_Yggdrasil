@@ -295,7 +295,8 @@
     "peasant", "peasant_f",
     "warrior", "warrior_f", "knight", "knight_f", "berserker", "berserker_f", "rogue", "rogue_f", "hunter", "hunter_f",
     "mage_fire", "mage_fire_f", "mage_water", "mage_water_f", "mage_wind", "mage_wind_f", "mage_earth", "mage_earth_f",
-    "paladin", "paladin_f", "priest", "priest_f", "monk", "monk_f"
+    "paladin", "paladin_f", "priest", "priest_f", "monk", "monk_f",
+    "shaman", "shaman_f"
   ]);
   function heroSpriteId(classId, gender) {
     const cls = HERO_SPRITE_FILES.has(classId) ? classId : DEFAULT_CLASS;

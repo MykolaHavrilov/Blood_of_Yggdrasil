@@ -5,6 +5,8 @@
 // + секретна (Шаман потойбіччя): креслення з Володаря Темного лісу, лише коли в групі є Шаман.
 // Зброя професій — окремі комплекти з 2 речей (зброя + ліва рука), WEAPON_SETS нижче; креслення — з тих самих босів.
 // Носить лише своя професія (classes), кує будь-хто — але лише за вивченим кресленням.
+// Іконки — assets/images/items/icon_<id>.webp (prof_<клас>_<слот>, profw_<клас>_main / _off), додаються в ITEM_ICON_FILES;
+// промти — H:\Game_NEW\Комплекти професій - броня і зброя (промти).txt. Поле icon лишається запасним (листи броні).
 // Креслення (type "blueprint") падає з босів Альвгейму: кожен бос — 2 професії (BLUEPRINT_DROPS).
 // «Використати» креслення в інвентарі — рецепт назавжди відкривається в кузні (save.story.blueprints).
 // Бонуси комплекту — за 3 і 5 вдягнених частин (ITEM_SETS[…].steps; character.js → calcStats).
@@ -163,6 +165,7 @@
         description: L(`Частина комплекту «${set.name}». Носить лише ${RPG.CLASSES[cls].name.toLowerCase()}.`,
           `Part of the "${set.name}" set. Only ${/^[aeiou]/.test(set.cls) ? "an" : "a"} ${set.cls} can wear it.`)
       };
+      RPG.ITEM_ICON_FILES?.add(id);           // своя іконка комплекту
       const q = PART_Q[slot];
       if (RPG.RECIPES) RPG.RECIPES[id] = { tier: TIER, mats: matsFor(set, ARMOR_MATS[set.weight](q), ARMOR_LOC[set.weight] * q),
                                           tools: ARMOR_TOOLS[set.weight], blueprint: true };   // recipes.js є лише на сторінці гри
@@ -215,6 +218,7 @@
         description: L(`Частина комплекту «${setName}». Носить лише ${RPG.CLASSES[cls].name.toLowerCase()}.`,
           `Part of the "${setName}" set. Only ${/^[aeiou]/.test(set.cls) ? "an" : "a"} ${set.cls} can wear it.`)
       };
+      RPG.ITEM_ICON_FILES?.add(id);           // своя іконка комплекту
       const br = RPG.RECIPES?.[W_BASE[kind]];
       if (br) RPG.RECIPES[id] = { tier: TIER, mats: matsFor(set, WEAPON_MATS[kind], part === "main" ? 6 : 4), tools: br.tools, blueprint: true };
       addBlueprint(cls, set, id, name, L("Зброя", "Weapon"));
