@@ -42,6 +42,11 @@
   const EXP_SIZES = [3, 6];
   const EXP_MAX_STEPS = 2000;                    // запобіжник для одного виклику
   const EXP_MAX_BAGS = 3;                        // скільки повернених експедицій з незабраною здобиччю може чекати
+  // Сила ворогів експедиції (здоров'я, атака, магія, захисти — monstergear.js → spec.power) за світом.
+  // Ворогів у бою — стільки ж, скільки героїв, і 4 години боїв поспіль (з чемпіонами) без цього не пережити;
+  // підібрано симуляцією так, щоб група з 3 героїв свого рівня доживала до кінця приблизно в половині експедицій,
+  // група з 6 — майже завжди (Гардарика й Темний ліс — Селяни в синіх/фіолетових речах; Альвгейм — професії в повному сеті).
+  const EXP_POWER = { start: 0.5, dark: 0.32, alf: 0.37 };
 
   // ---------- Герої ----------
   function memberIdOf(save, ms) {
@@ -137,10 +142,11 @@
     const range = RPG.enemyGroupRange(team);
     const n = range.min + Math.floor(Math.random() * (range.max - range.min + 1));
     const lvl = Math.max(...team.map(ms => ms.character.level));
+    const power = EXP_POWER[RPG.LOCATIONS[locId]?.region || "start"] ?? 1;
     const specs = [];
     for (let i = 0; i < n; i++) {
       const id = RPG.pickEnemy(locId, lvl, { noBoss: true });
-      if (id) specs.push({ id, champion: RPG.rollChampion(id) });
+      if (id) specs.push({ id, champion: RPG.rollChampion(id), power });
     }
     if (RPG.equipFoes) RPG.equipFoes(specs, team);
     return specs;
@@ -380,7 +386,7 @@
   }
 
   Object.assign(RPG, {
-    EXP_DURATION_MS, EXP_BATTLE_MS, EXP_SIZES, EXP_REST_BELOW, EXP_REST_UNTIL, EXP_CAMP_PCT, EXP_MAX_BAGS,
+    EXP_DURATION_MS, EXP_BATTLE_MS, EXP_POWER, EXP_SIZES, EXP_REST_BELOW, EXP_REST_UNTIL, EXP_CAMP_PCT, EXP_MAX_BAGS,
     expeditionList: expList, expeditionActive, isAway, memberIdOf, viewById, isExpeditionLoc, canStartExpedition, startExpedition,
     expeditionTick, recallExpedition, finishExpedition, collectExpedition, dropExpeditionLoot, expeditionInfo
   });

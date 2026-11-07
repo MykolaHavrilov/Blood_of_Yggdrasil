@@ -81,15 +81,19 @@
   }
 
   // ID ворогів для бою stage
-  function stageFoes(d, stage) {
-    if (stage === 1) return [pick(d.pool)];
+  // n — живих героїв у бою: ворогів не менше, ніж героїв (бій 1 — n, бій 2 — не менше 3; бос — один, але сильніший за групу)
+  function stageFoes(d, stage, n = 1) {
+    n = Math.max(1, Math.min(6, n || 1));
+    if (stage === 1) return Array.from({ length: n }, () => pick(d.pool));
     if (stage === 2) {
-      const list = shuffle(d.pool).slice(0, 3);
-      while (list.length < 3) list.push(pick(d.pool));
+      const size = Math.max(3, n);
+      const list = shuffle(d.pool).slice(0, size);
+      while (list.length < size) list.push(pick(d.pool));
       return shuffle(list);
     }
     return [d.boss];
   }
+  const fighters = save => (RPG.aliveMembers ? RPG.aliveMembers(save).length : 1);
 
   // Поточний данж (або null). Якщо герой уже не на локації данжу — данж скасовується.
   function activeDungeon(save) {
@@ -100,7 +104,7 @@
       delete save.dungeon;
       return null;
     }
-    if (!Array.isArray(s.foes) || !s.foes.length) s.foes = stageFoes(d, s.stage);
+    if (!Array.isArray(s.foes) || !s.foes.length) s.foes = stageFoes(d, s.stage, fighters(save));
     return { ...d, stage: s.stage, stages: STAGES, foes: s.foes };
   }
 
@@ -117,7 +121,7 @@
     if (!useKey(save, d.key)) {
       return { ok: false, reason: `Потрібен ${RPG.ITEMS[d.key].name}. Його можна знайти під час «${d.explore}» (шанс ${Math.round(d.keyChance * 100)}% з кожного ворога).` };
     }
-    save.dungeon = { id: d.id, stage: 1, foes: stageFoes(d, 1) };
+    save.dungeon = { id: d.id, stage: 1, foes: stageFoes(d, 1, fighters(save)) };
     return { ok: true };
   }
 
@@ -127,7 +131,7 @@
     if (!s) return { done: true, stage: 0 };
     if (s.stage >= STAGES) { delete save.dungeon; return { done: true, stage: STAGES }; }
     s.stage++;
-    s.foes = stageFoes(getDungeon(s.id), s.stage);
+    s.foes = stageFoes(getDungeon(s.id), s.stage, fighters(save));
     return { done: false, stage: s.stage };
   }
 
@@ -135,13 +139,17 @@
 
   // Множник сили ВСІХ ворогів данжу (боїв 1–3) за розміром групи — живих героїв у бою:
   // здоров'я, атака, магія, захисти × множник (monstergear.js → equipFoes).
-  // Підібрано симуляцією (група однакових Селян рівня боса, лише звичайні удари, без лікування):
-  // група 2–6 героїв проходить УВЕСЬ данж приблизно з тією ж вірогідністю, з якою один герой
-  // перемагає боса (≈10–60% залежно від речей, у середньому ≈35%). 1 герой — ×1 (без змін).
+  // Підібрано симуляцією (листопад 2026, після перерахунку ворогів): увесь данж (3 бої поспіль без зілля,
+  // по ворогу на кожного героя в 1-му бою, не менше 3 — у 2-му) проходять ≈35% спроб за будь-якого розміру групи.
+  // Герої: Темний ліс і Печера — Селяни рівня боса в синіх/фіолетових речах; Альвгейм — різні професії
+  // в повному професійному сеті (броня + зброя). Соло — < 1, бо бої 1–2 перед босом виснажують героя.
+  const ALF_POWER = { 1: 0.57, 2: 1.06, 3: 1.37, 4: 1.52, 5: 1.56, 6: 1.63 };
   const GROUP_POWER = {
-    cave_secret: { 1: 1, 2: 1.04, 3: 1.64, 4: 2.2,  5: 2.62, 6: 3.19 },
-    web_nest:    { 1: 1, 2: 0.59, 3: 0.86, 4: 1.11, 5: 1.35, 6: 1.55 },
-    dark_throne: { 1: 1, 2: 0.66, 3: 0.95, 4: 1.2,  5: 1.41, 6: 1.66 }
+    cave_secret: { 1: 0.82, 2: 1.3,  3: 1.7,  4: 1.9,  5: 2.1,  6: 2.15 },
+    web_nest:    { 1: 0.48, 2: 0.71, 3: 0.88, 4: 0.92, 5: 0.93, 6: 0.94 },
+    dark_throne: { 1: 0.54, 2: 0.78, 3: 0.96, 4: 1.04, 5: 1.07, 6: 1.08 },
+    alf_moth_nest: ALF_POWER, alf_lake_depths: ALF_POWER, alf_rot_garden: ALF_POWER,
+    alf_dawn_spire: ALF_POWER, alf_freyr_throne: ALF_POWER, alf_beli_barrow: ALF_POWER
   };
   function groupPower(dungeonId, size) {
     const row = (RPG.DUNGEON_GROUP_POWER || GROUP_POWER)[dungeonId];
@@ -153,8 +161,8 @@
   // Опис бою stage для гравця
   function dungeonStageText(d, stage) {
     const names = d.pool.map(id => RPG.ENEMIES[id].name);
-    if (stage === 1) return `один випадковий ворог (${names.join(" / ")}) з GS як у вашої групи`;
-    if (stage === 2) return `три вороги (${names.join(", ")}) з GS як у вашої групи`;
+    if (stage === 1) return `випадкові вороги (${names.join(" / ")}) — по одному на кожного героя, з GS як у вашої групи`;
+    if (stage === 2) return `три вороги або більше — не менше, ніж героїв (${names.join(", ")}), з GS як у вашої групи`;
     return `бос «${RPG.ENEMIES[d.boss].name}»`;
   }
 

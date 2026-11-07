@@ -25,8 +25,10 @@
 //   Новий бос без рядка в таблиці отримує множник 1 — для нього треба підібрати свій.
 //   Боси-гуманоїди отримують таке спорядження, а боси-звірі (напр. Король слайм)
 //   — так само 6 прихованих «частин сили» (природна броня, ікла, слиз…).
-// Звичайні звірі спорядження не мають (GS 0) — окрім боїв 1–2 у данжі (dungeon.js):
-//   там будь-який ворог отримує речі з GS, рівним GS групи героїв.
+// Звичайні звірі (не гуманоїди) — лише «броню»: 5 прихованих частин (голова, тіло, штани, наручі, взуття —
+//   шкура, панцир, слиз…) з GS = BEAST_GS_SHARE × GS групи; зброї (атаки) не мають. Гуманоїди, що носять броню
+//   (5 частин), отримують ще й зброю — 6 речей. Отже, сильніші речі героїв — сильніші й вороги.
+//   У боях 1–2 данжу (dungeon.js) будь-який ворог отримує всі 6 речей з GS, рівним GS групи героїв.
 //
 // ЗБРОЯ ГУМАНОЇДІВ (data/enemies.js → weapons): разом зі спорядженням ворог випадково
 //   обирає зброю зі свого списку. Вона визначає дальність, як у героя (skills.js → actionRange):
@@ -81,6 +83,8 @@
   };
   const BOSS_POWER_KEYS = ["hp", "attack", "magic", "defense", "magicDefense"];
   const PIECES = ["mainHand", "head", "chest", "legs", "hands", "feet"];
+  const ARMOR_PIECES = PIECES.slice(1);      // звірі — лише броня, без зброї
+  const BEAST_GS_SHARE = 1;                  // GS «броні» звіра від GS групи героїв
   const PIECE_SPREAD = 0.1;      // кожна річ — GS ±10% від цілі
   const CORE_SHARE = 0.4;        // частка балів на основу речі
 
@@ -139,7 +143,7 @@
     if (!e) return 0;
     if (forced && !e.boss) return pGs;
     if (e.boss) return Math.round(lGs / BOSS_GS_DIV);
-    return e.humanoid ? pGs : 0;
+    return e.humanoid ? pGs : Math.round(pGs * BEAST_GS_SHARE);
   }
 
   // Бали → значення характеристики
@@ -194,13 +198,14 @@
     if (target <= 0) return e.boss || power !== 1 ? { gs: 0, partyGs: pGs, leaderGs: lGs, power, pieces: [], stats: {} } : null;
     const caster = (e.stats.magic || 0) > (e.stats.attack || 0);
     const withMp = (e.stats.mp || 0) > 0;
-    const w = PIECES.map(() => rnd(1 - PIECE_SPREAD, 1 + PIECE_SPREAD));
+    const slots = e.humanoid || e.boss || forced ? PIECES : ARMOR_PIECES;
+    const w = slots.map(() => rnd(1 - PIECE_SPREAD, 1 + PIECE_SPREAD));
     const mean = w.reduce((a, b) => a + b, 0) / w.length;
-    const pieces = PIECES.map((slot, i) => rollPiece(slot, target * w[i] / mean, caster, withMp));
+    const pieces = slots.map((slot, i) => rollPiece(slot, target * w[i] / mean, caster, withMp));
     const stats = {};
     for (const p of pieces) for (const k in p.stats) add(stats, k, p.stats[k]);
     const gs = Math.round(target);
-    return { gs, partyGs: pGs, leaderGs: lGs, power: e.boss || forced ? power : 1, humanoid: !!e.humanoid, pieces, stats,
+    return { gs, partyGs: pGs, leaderGs: lGs, power, humanoid: !!e.humanoid, pieces, stats,
              weapon: rollMonsterWeapon(e) };
   }
 
@@ -212,7 +217,8 @@
     for (const spec of specs || []) {
       // Бос — множник за речами першого героя; у данжі — ще й за розміром групи (dungeon.js)
       const group = spec.dungeon && RPG.dungeonGroupPower ? RPG.dungeonGroupPower(spec.dungeon, (members || []).filter(Boolean).length) : 1;
-      const power = (RPG.ENEMIES[spec.id]?.boss ? bossPower(members, spec.id) : 1) * group;
+      // spec.power — додатковий множник (експедиції: expedition.js → EXP_POWER)
+      const power = (RPG.ENEMIES[spec.id]?.boss ? bossPower(members, spec.id) : 1) * group * (spec.power || 1);
       const key = pGs + "/" + lGs + "/" + power.toFixed(4);
       if (spec.gear !== undefined && spec.gearFor === key) continue;
       spec.gear = rollMonsterGear(spec.id, pGs, lGs, power, !!spec.dungeonGs);
@@ -274,7 +280,7 @@
   }
 
   Object.assign(RPG, {
-    BOSS_GS_DIV, BOSS_POWER, BOSS_POWER_MEAN, bossPower, leaderGs, isHumanoid, partyGs, rollMonsterGear, equipFoes, enemyFromSpec,
+    BOSS_GS_DIV, BEAST_GS_SHARE, BOSS_POWER, BOSS_POWER_MEAN, bossPower, leaderGs, isHumanoid, partyGs, rollMonsterGear, equipFoes, enemyFromSpec,
     MONSTER_WEAPON_NAMES: WEAPON_NAMES, monsterWeaponRange: weaponRange
   });
 })(window.RPG);

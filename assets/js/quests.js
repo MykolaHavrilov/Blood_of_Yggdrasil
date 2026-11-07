@@ -52,7 +52,13 @@
     slime_king: { name: "Королів слайм", match: id => id === "slime_king", minLevel: 99 },
     white_wolf: { name: "білих вовків", match: id => id === "wolf3", minLevel: 99 },
     undead: { name: "нежиті", match: id => !!RPG.ENEMIES?.[id]?.undead, minLevel: 99 },
-    ghoul: { name: "гулів", match: id => id === "ghoul", minLevel: 99 }
+    ghoul: { name: "гулів", match: id => id === "ghoul", minLevel: 99 },
+    // Темний ліс — завдання Відреченого («Шлях відреченого»)
+    dk_spider: { name: "павуків", match: id => ["forest_spider", "web_hunter", "web_weaver"].includes(id), minLevel: 99 },
+    dk_beast:  { name: "тіньових звірів", match: id => ["shadow_wolf", "werewolf", "pack_leader", "shadow_beast"].includes(id), minLevel: 99 },
+    dk_marsh:  { name: "болотяних тварюк", match: id => ["bog_leech", "drowner", "will_wisp"].includes(id), minLevel: 99 },
+    dk_ruins:  { name: "слуг відьминої вежі", match: id => ["cultist", "witch", "stone_golem"].includes(id), minLevel: 99 },
+    dk_heart:  { name: "вартових Серця лісу", match: id => ["ancient_treant", "black_rider"].includes(id), minLevel: 99 }
   };
 
   // Шаблони: amounts — варіанти кількості; exp/gold — за 1 одиницю
@@ -196,12 +202,12 @@
       gs.kills++;
       lines.push(`«${GATE.name}»: ${TARGETS[gpart.kill.target].name} ${gs.kills}/${gpart.kill.need}`);
     }
-    // «Шлях відреченого» (секретний квест Шамана потойбіччя): частина «убити»
+    // «Шлях відреченого» (секретний квест Шамана потойбіччя): доручення «убити»
     const sh = shamanState(save);
-    const spart = SHAMAN.parts[sh.stage - 2];
-    if (spart?.kill && TARGETS[spart.kill.target].match(enemyId) && sh.kills < spart.kill.need) {
+    const stask = sh.stage === 2 ? sh.tasks?.[sh.task - 1] : null;
+    if (stask?.kind === "kill" && TARGETS[stask.target].match(enemyId) && sh.kills < stask.need) {
       sh.kills++;
-      lines.push(`«${SHAMAN.name}»: ${TARGETS[spart.kill.target].name} ${sh.kills}/${spart.kill.need}`);
+      lines.push(`«${SHAMAN.name}»: ${TARGETS[stask.target].name} ${sh.kills}/${stask.need}`);
     }
     // Особливе завдання: частина «убити»
     const st = storyState(save);
@@ -760,35 +766,85 @@
   }
 
   // ---------- Секретний квест «Шлях відреченого» → професія «Шаман потойбіччя» ----------
-  // Лише головний герой-Селянин, що дійшов до 30 рівня й так і не обрав професії.
-  // 1) На 30 рівні знову з'являється незнайомець у запиленому плащі (вікно на сторінці «Локація») —
-  //    це Відречений; кличе до Храму.
-  // 2) Храм, «Відречений»: розповідь; дає «Знак відреченого» — варта пропускає Селянина через Північну браму
-  //    (character.js → isDistrictOpen). Завдання: упокоїти 40 нежиті (Туманні болота, Старий цвинтар…).
-  // 3) Упокоїти 10 гулів (Старий цвинтар).
-  // 4) Храм, «Відречений»: обряд — «Прийняти тавро мертвих» → професія shaman (назавжди).
+  // Лише головний герой-Селянин без професії, з 20 рівня (SHAMAN.level).
+  // 1) На 20 рівні з'являється незнайомець у запиленому плащі (вікно на сторінці «Локація») — Відречений; кличе до Храму.
+  // 2) Храм, «Відречений»: «Знак відреченого» (варта пропускає Селянина через Північну браму — character.js → isDistrictOpen)
+  //    і 18 доручень (SHAMAN.total) — випадкових, складаються один раз при старті: убити ворогів Темного лісу
+  //    (не менше 125), добути з них матеріали або принести багато руди чи деревини (Шахта й Лісопилка Темного лісу).
+  //    За кожне доручення — досвід: після 18-го герой рівно на 30 рівні (shamanCheckpoint, як у «Шляху професії»).
+  // 3) Храм, «Відречений»: обряд — «Прийняти тавро мертвих» → професія shaman (назавжди, з 30 рівня — classes.js).
   // Поки квест не почався — його ніде не видно (секретний).
-  // Стан: save.story.shaman = { stage: 0 | 1 (зустрів) | 2..3 (завдання) | 4 (обряд) | 5 (Шаман), kills }
+  // Стан: save.story.shaman = { stage: 0 | 1 (зустрів) | 2 (доручення) | 4 (обряд) | 5 (Шаман),
+  //                             task (1..18), tasks: [{ kind, target?, item?, need }], kills, startExp, rewards }
+  //   Старі збереження зі stage 2–3 (давні 2 завдання на 30 рівні) — доручення складаються заново (shamanState).
+  const SHAMAN_KILL = {
+    undead:    { title: "Упокоїти неспокійних", text: "«Мертві не знають спокою, доки Хелла тримає їхні душі. Упокой нежить — потопельників, скелетів, привидів, гулів. Хай кожен відчує, що ти прийшов не вбити, а відпустити.»" },
+    ghoul:     { title: "Голод, що не вгамовується", text: "«Гулі — ті, кого голод поглинув навіть після смерті. Упокой їх на Старому кладовищі. Їхня кров — найгірша, і саме вона навчить тебе, чого коштує тавро.»" },
+    dk_spider: { title: "Нитки Хелли", text: "«Павуки обплутують ліс, а в їхніх коконах — ще живі. Винищ павуків на Похмурому узліссі й у Лісі павутини.»" },
+    dk_beast:  { title: "Тіні у звірах", text: "«Тіні Хелли вселяються у звірів. Убий тіньових вовків і звірів, вовкулак і ватажків зграй — на узліссі та у Вовкулачому яру.»" },
+    dk_marsh:  { title: "Тиша над болотом", text: "«Туманні болота кишать тими, хто шукає чужого тепла: п'явки, утопленики, блукаючі вогники. Очисти болота.»" },
+    dk_ruins:  { title: "Попіл відьминої вежі", text: "«У Руїнах відьминої вежі досі служать Хеллі. Розжени культистів, відьом і кам'яних големів, яких вони піднімають.»" },
+    dk_heart:  { title: "Варта Серця лісу", text: "«Серце лісу стережуть древні лісовики й чорні вершники. Покажи їм, що мертві тобі вже не владні.»" }
+  };
+  const SHAMAN_MAT = {
+    shadow_fur:    { title: "Хутро з тіні", text: "«З тіньового хутра я шию пов'язки, що не пускають мертвих до живих. Збери його з ворогів Похмурого узлісся.»" },
+    bog_moss:      { title: "Мох із трясовини", text: "«Болотяний мох пам'ятає кожного утопленого. Збери його на Туманних болотах — з нього я зварю настій для обряду.»" },
+    grave_bone:    { title: "Кістки без імені", text: "«Кістки зі Старого кладовища ще кличуть своїх. Принеси їх — я поверну їм імена, а тобі — їхню силу.»" },
+    spider_silk:   { title: "Павутинна нитка", text: "«Павутина з Лісу павутини міцніша за сухожилля. Нею я зшиватиму тавро.»" },
+    werewolf_fang: { title: "Ікла вовкулак", text: "«Ікла з Вовкулачого яру тримають у собі лють звіра. Без неї кров не відгукнеться на твій поклик.»" },
+    witch_ash:     { title: "Відьмин попіл", text: "«Попіл з Руїн відьминої вежі — те, що лишається від чужих прокльонів. Збери його: прокляття мають служити тобі.»" },
+    black_bark:    { title: "Чорна кора", text: "«Кора дерев із Серця лісу почорніла від Хелли. Із неї я виріжу знаки, що триматимуть мертвих біля тебе.»" }
+  };
+  const SHAMAN_RES = {
+    iron_ore:   { title: "Залізо для ланцюгів", text: "«Мертвих тримають ланцюги, а ланцюги — залізо. Пошли групу в Шахту Темного лісу й принеси залізної руди.»" },
+    silver_ore: { title: "Срібло проти мерців", text: "«Срібло пече нежить. Принеси срібної руди з Шахти Темного лісу — для оберегів усім, хто йтиме з тобою.»" },
+    oak_wood:   { title: "Дуб для кургану", text: "«Мертвим треба де спочити. Принеси дубової деревини з Лісопилки — на зруби для курганів.»" },
+    ash_wood:   { title: "Ясен для вогнищ", text: "«Ясен горить чисто й довго. Принеси його з Лісопилки — на поминальні вогнища за тих, кого упокоїш.»" }
+  };
   const SHAMAN = {
     name: "Шлях відреченого",
     classId: "shaman",
-    level: 30,
-    parts: [
-      { title: "Упокоїти неспокійних", kill: { target: "undead", need: 40 },
-        text: "«Мертві не знають спокою, доки Хелла тримає їхні душі. Упокой сорок — потопельників, скелетів, привидів, гулів. " +
-              "Хай кожен відчує, що ти прийшов не вбити, а відпустити.»" },
-      { title: "Голод, що не вгамовується", kill: { target: "ghoul", need: 10 },
-        text: "«Гулі — ті, кого голод поглинув навіть після смерті. Упокой десятьох на Старому цвинтарі. " +
-              "Їхня кров — найгірша, і саме вона навчить тебе, чого коштує тавро.»" }
-    ]
+    level: 20,                    // з якого рівня Селянина з'являється Відречений
+    endLevel: 30,                 // після останнього доручення — рівно цей рівень
+    total: 18,                    // скільки доручень
+    // частки досвіду 20 → 30 рівня для доручень 1–18 (разом 100%)
+    weights: [3, 3, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 6, 7, 8, 8, 9],
+    minReward: 5000,
+    kills: [125, 150, 175, 200],  // «убити» — не менше 125
+    mats: [30, 40, 50, 60],       // матеріали з ворогів Темного лісу
+    res: [150, 200, 250, 300],    // руда / деревина
+    KILL: SHAMAN_KILL, MAT: SHAMAN_MAT, RES: SHAMAN_RES
   };
+  const pickOf = arr => arr[Math.floor(Math.random() * arr.length)];
+  // 18 випадкових доручень: різні види по черзі (два однакові поспіль не трапляються)
+  function shamanMakeTasks() {
+    const kinds = [];
+    for (let i = 0; i < SHAMAN.total; i++) kinds.push(i % 9 < 4 ? "kill" : i % 9 < 7 ? "mat" : "res");
+    for (let i = kinds.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [kinds[i], kinds[j]] = [kinds[j], kinds[i]]; }
+    const out = [];
+    let last = "";
+    for (const kind of kinds) {
+      const pool = Object.keys(kind === "kill" ? SHAMAN_KILL : kind === "mat" ? SHAMAN_MAT : SHAMAN_RES);
+      let key = pickOf(pool);
+      for (let t = 0; t < 5 && kind + key === last; t++) key = pickOf(pool);
+      last = kind + key;
+      if (kind === "kill") out.push({ kind, target: key, need: pickOf(SHAMAN.kills) });
+      else out.push({ kind: "bring", item: key, need: pickOf(kind === "mat" ? SHAMAN.mats : SHAMAN.res) });
+    }
+    return out;
+  }
   function shamanState(save) {
     save.story ??= {};
     const st = save.story.shaman ??= { stage: 0, kills: 0 };
     st.kills ??= 0;
+    // Старий квест (2 завдання на 30 рівні) або доручення ще не складені — 18 нових доручень
+    if ((st.stage === 2 || st.stage === 3) && !Array.isArray(st.tasks)) {
+      Object.assign(st, { stage: 2, task: 1, kills: 0, tasks: shamanMakeTasks(), startExp: save.character.exp, rewards: [] });
+    }
+    st.rewards ??= [];
     return st;
   }
-  // Чи час Відреченому з'явитися: Селянин 30 рівня (головний герой), квест ще не почався
+  // Чи час Відреченому з'явитися: Селянин від 20 рівня (головний герой), квест ще не почався
   function shamanDue(save) {
     const ch = save.character;
     return shamanState(save).stage === 0 && ch.classId === RPG.DEFAULT_CLASS && ch.level >= SHAMAN.level;
@@ -798,30 +854,61 @@
     shamanState(save).stage = 1;
     return true;
   }
-  // Що зараз: { stage, part?, have, need, complete }
+  // Дані доручення: { title, text, label } (label — що рахується)
+  function shamanTaskDef(t) {
+    if (!t) return null;
+    if (t.kind === "kill") return { ...SHAMAN_KILL[t.target], label: "Упокоєно " + TARGETS[t.target].name };
+    const d = SHAMAN_MAT[t.item] || SHAMAN_RES[t.item];
+    return { ...d, label: RPG.ITEMS[t.item]?.name || t.item };
+  }
+  // Досвід, у якому має опинитися герой після доручення index (1..18)
+  function shamanCheckpoint(save, index) {
+    const st = shamanState(save);
+    const table = RPG.getClass(save.character.classId).levelTable;
+    const end = RPG.expForLevel(table, SHAMAN.endLevel);
+    const start = Math.min(st.startExp ?? save.character.exp, end);
+    if (index >= SHAMAN.total) return end;
+    const w = SHAMAN.weights.slice(0, index).reduce((a, b) => a + b, 0) / 100;
+    return Math.round(start + (end - start) * w);
+  }
+  // Що зараз: { stage, index, total, task, def, have, need, complete }
   function shamanInfo(save) {
     const st = shamanState(save);
-    const part = SHAMAN.parts[st.stage - 2] || null;
-    if (!part) return { stage: st.stage, part: null, complete: st.stage === 1 || st.stage === 4 };
-    return { stage: st.stage, part, have: Math.min(st.kills, part.kill.need), need: part.kill.need,
-             complete: st.kills >= part.kill.need };
+    if (st.stage !== 2) return { stage: st.stage, task: null, complete: st.stage === 1 || st.stage === 4 };
+    const task = st.tasks[st.task - 1];
+    const def = shamanTaskDef(task);
+    const have = task.kind === "kill" ? Math.min(st.kills, task.need) : Math.min(RPG.countItem(save, task.item), task.need);
+    return { stage: 2, index: st.task, total: SHAMAN.total, task, def, have, need: task.need, complete: have >= task.need };
   }
-  // Поговорити з Відреченим у Храмі: взяти перше завдання / здати поточне → { ok, stage }
+  // Поговорити з Відреченим у Храмі: узяти Знак і перше доручення / здати поточне → { ok, stage, exp, levelUps, index }
   function shamanAdvance(save) {
     const st = shamanState(save);
-    const info = shamanInfo(save);
     if (save.character.classId !== RPG.DEFAULT_CLASS && st.stage < 5) return { ok: false, reason: "«Ти вже обрав інший шлях.»" };
-    if (st.stage < 1 || st.stage >= 4) return { ok: false, reason: "«Ще не час.»" };
-    if (!info.complete) return { ok: false, reason: "«Мертві ще не упокоєні.»" };
-    st.stage++;
+    if (st.stage === 1) {
+      Object.assign(st, { stage: 2, task: 1, kills: 0, tasks: shamanMakeTasks(), startExp: save.character.exp, rewards: [] });
+      return { ok: true, stage: 2, index: 1 };
+    }
+    if (st.stage !== 2) return { ok: false, reason: "«Ще не час.»" };
+    const info = shamanInfo(save);
+    if (!info.complete) return { ok: false, reason: info.task.kind === "kill" ? "«Мертві ще не упокоєні.»" : "«Ще не все зібрано.»" };
+    if (info.task.kind === "bring") RPG.removeItem(save, info.task.item, info.task.need);
+    const done = st.task;
+    const exp = Math.max(done >= SHAMAN.total ? 0 : SHAMAN.minReward, shamanCheckpoint(save, done) - save.character.exp);
+    const levelUps = exp > 0 ? RPG.addExp(save, exp) : [];
+    st.rewards.push(exp);
     st.kills = 0;
-    return { ok: true, stage: st.stage };
+    if (done >= SHAMAN.total) st.stage = 4;
+    else st.task++;
+    return { ok: true, stage: st.stage, exp, levelUps, index: done };
   }
   // Обряд: стати Шаманом потойбіччя (назавжди) → { ok, change }
   function shamanRite(save) {
     const st = shamanState(save);
     if (st.stage !== 4) return { ok: false, reason: "«Ще не час.»" };
     if (save.character.classId !== RPG.DEFAULT_CLASS) return { ok: false, reason: "«Ти вже обрав інший шлях.»" };
+    // Досвід до 30 рівня (якщо раптом бракує — доливається)
+    const need = RPG.expForLevel(RPG.getClass(save.character.classId).levelTable, SHAMAN.endLevel) - save.character.exp;
+    if (need > 0) RPG.addExp(save, need);
     const change = RPG.changeClass(save, SHAMAN.classId, { force: true });
     if (!change.ok) return change;
     st.stage = 5;
@@ -853,8 +940,8 @@
         lines: ["Усі 10 завдань виконано. Нагорода за шлях — ???"], where: GUILD_PLACE, ready: true });
     }
     const sq = shamanInfo(save);
-    if (sq.stage >= 1 && sq.stage <= 4) out.push({ title: `«${SHAMAN.name}»`, special: true,
-      lines: sq.part ? [`${sq.part.title}: ${TARGETS[sq.part.kill.target].name} ${sq.have}/${sq.need}`]
+    if (sq.stage >= 1 && sq.stage <= 4) out.push({ title: sq.task ? `«${SHAMAN.name}» (${sq.index}/${sq.total}): ${sq.def.title}` : `«${SHAMAN.name}»`, special: true,
+      lines: sq.task ? [`${sq.def.label}: ${sq.have}/${sq.need}`, "Нагорода: досвід (скільки — дізнаєтесь при здачі)"]
         : [sq.stage === 1 ? "Знайти Відреченого в Храмі." : "Повернутися до Відреченого в Храмі — обряд."],
       where: "Храм", ready: sq.complete });
     const vs = velesState(save);
@@ -885,7 +972,7 @@
     describeReward, acceptQuest, abandonQuest, turnInQuest, questOnKill,
     EXPLORE, storyState, isCentralOpen, isHiringOpen, CENTRAL_MIN_LEVEL, exploreInfo, describeExploreReward, startExplore, turnInExplore,
     NORTH_PEASANT_LEVEL, canPassNorth,
-    SHAMAN, shamanState, shamanDue, shamanMeet, shamanInfo, shamanAdvance, shamanRite, shamanSign,
+    SHAMAN, shamanState, shamanDue, shamanMeet, shamanInfo, shamanAdvance, shamanRite, shamanSign, shamanCheckpoint, shamanTaskDef,
     VELES, velesState, velesStrangerDue, velesGiveOrb, velesAdvance, velesPlaceOrb, springLeft, springCooldown, drinkSpring, springExpMult,
     PROFESSION, PROFESSION_BRANCHES, PROFESSION_QUEST_LEVEL, PROFESSION_END, PROFESSION_REFUSE,
     professionState, professionInfo, professionName, professionBranches, professionCheckpoint, startProfession, turnInProfession,

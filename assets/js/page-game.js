@@ -638,31 +638,38 @@
       card.append(el("p", null, "У тіні за вівтарем, де не дістає світло свічок, стоїть чоловік у запиленому плащі. " +
         "Темні візерунки на його шкірі ледь помітно ворушаться, коли він говорить."));
       const act = (label, fn) => card.append(button(label, "wf wf-button", fn));
+      const levelTxt = lv => lv?.length ? ` Новий рівень: ${lv[lv.length - 1]}!` : "";
       if (info.stage === 1) {
         card.append(el("p", null, "«Нас було багато — тих, хто відмовився від шляхів, які давали боги. Ми думали, що вільні. " +
           "А потім прийшла Хелла, і мертві встали з могил. Я пішов до коренів, до Велеса, щоб навчитися їх упокоювати. " +
           "Навчився. Але магія мертвих лишає тавро: відтоді мої руки не лікують — лише зв'язують кров'ю і палять зеленим вогнем.»"));
         card.append(el("p", null, "«Візьми мій знак — з ним варта Північної брами пропустить тебе одразу, без доручень капітана. " +
-          `А там — ${S.parts[0].text.replace(/^«|»$/g, "")}»`));
+          `А знак — лише початок: ${S.total} доручень у Темному лісі. Упокоїти мертвих, зібрати з них те, що тримає їх по цей бік, ` +
+          "принести руди й дерева на обряди. Хто пройде все — того мертві почують, як чують мене.»"));
         act("Прийняти Знак відреченого", async () => {
           const r = RPG.shamanAdvance(save);
           if (!r.ok) { showMsg(msg, r.reason, true); return; }
           await RPG.saveGame(save);
+          const next = RPG.shamanInfo(save);
           showMsg(msg, `Відречений торкається вашого чола холодними пальцями — шкірою пробігає дрож. Отримано: Знак відреченого. ` +
-            `Завдання: ${S.parts[0].title} (Темний ліс, за Північною брамою).`);
+            `Доручення 1 з ${S.total}: ${next.def.title} (Темний ліс, за Північною брамою).`);
           renderAll();
         });
-      } else if (info.part) {
-        card.append(el("p", "note", info.part.text));
-        card.append(el("div", info.complete ? "rt-magic" : null,
-          `${info.part.title}: упокоєно ${info.have} / ${info.need}`));
-        const b = button("Розповісти Відреченому", "wf wf-button", async () => {
+      } else if (info.task) {
+        card.append(el("p", null, `Доручення ${info.index} з ${info.total}: ${info.def.title}`));
+        card.append(el("p", "note", info.def.text));
+        card.append(el("div", info.complete ? "rt-magic" : null, `${info.def.label}: ${fmtNum(info.have)} / ${fmtNum(info.need)}`));
+        card.append(el("p", "status", "Нагорода: досвід (скільки — дізнаєтесь при здачі)"));
+        const b = button(info.task.kind === "kill" ? "Розповісти Відреченому" : "Віддати Відреченому", "wf wf-button", async () => {
           const r = RPG.shamanAdvance(save);
           if (!r.ok) { showMsg(msg, r.reason, true); return; }
           await RPG.saveGame(save);
-          showMsg(msg, r.stage === 3
-            ? `Відречений повільно киває. «Ти чув, як вони видихають, коли відпускаєш? Це і є наша робота.» ${S.parts[1].text}`
-            : "«Тепер ти знаєш ціну. Коли будеш готовий — приходь до обряду. Назад дороги не буде.»");
+          const next = RPG.shamanInfo(save);
+          const got = r.exp > 0 ? ` Нагорода: ${fmtNum(r.exp)} EXP.${levelTxt(r.levelUps)}` : "";
+          showMsg(msg, r.stage === 4
+            ? `«Тепер ти знаєш ціну. Коли будеш готовий — приходь до обряду. Назад дороги не буде.»${got}`
+            : `Відречений повільно киває. «Ти чув, як вони видихають, коли відпускаєш? Це і є наша робота.»${got} ` +
+              `Доручення ${next.index} з ${next.total}: ${next.def.title}.`);
           renderAll();
         });
         b.disabled = !info.complete;
@@ -1848,7 +1855,7 @@
     const logBox = $("battle-log");
     let foes = [];              // вороги наступного бою: [{ id, champion }]
     const fighters = () => RPG.aliveMembers(save);
-    // Від половини групи до розміру групи (макс. 6) — випадково (RPG.enemyGroupRange); данж — без змін
+    // Ворогів — стільки ж, скільки героїв (макс. 6; RPG.enemyGroupRange); данж — без змін
     let champWarn = false;      // показати вікно-попередження про чемпіона
     // Кут поля, де з'являться герої в наступному бою (battle.js → corner 0…3);
     // з кожною новою групою ворогів — інший кут, вороги — у протилежному
@@ -2896,7 +2903,7 @@
       if (!fighters().length) startBtn.disabled = true;
       // Герой досяг 12 рівня — підходить незнайомець зі сферою (квест «Долоні Велеса»)
       if (RPG.velesStrangerDue(save)) setTimeout(() => meetStranger(save).then(renderAll), 800);
-      // Селянин дійшов до 30 рівня без професії — повертається Відречений (секретний «Шлях відреченого»)
+      // Селянин дійшов до 20 рівня без професії — повертається Відречений (секретний «Шлях відреченого»)
       else if (RPG.shamanDue(save)) setTimeout(() => RPG.ui.meetRenouncer(save).then(renderAll), 800);
       // Інвентар заповнився (або щось уже пропало) — окреме повідомлення, щоб не пропустити
       if (result.win && (Object.keys(lost).length || (freeBefore > 0 && !RPG.invFree(save)))) {

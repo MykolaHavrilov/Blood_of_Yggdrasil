@@ -982,6 +982,44 @@ const ITEMS = {
     description: "Липкий і трохи світиться."
   },
 
+  // ---------- Темний ліс — трофеї ворогів (по одному на локацію; data/enemies.js → DARK_LOC_MAT) ----------
+  // Потрібні для доручень Відреченого (quests.js → SHAMAN), а так — на продаж. Іконки поки позичені.
+  shadow_fur: {
+    name: "Тіньове хутро", g: "n", icon: ["material", 2],
+    type: "material", price: 14, stackable: true, maxStack: MATERIAL_STACK,
+    description: "Хутро звірів Похмурого узлісся — темніше за ніч, і тінь від нього не падає."
+  },
+  bog_moss: {
+    name: "Болотяний мох", g: "m", iconFile: "flax",
+    type: "material", price: 14, stackable: true, maxStack: MATERIAL_STACK,
+    description: "Сивий мох із Туманних боліт. Кажуть, він пам'ятає кожного утопленого."
+  },
+  grave_bone: {
+    name: "Могильна кістка", g: "f", icon: ["material", 3],
+    type: "material", price: 16, stackable: true, maxStack: MATERIAL_STACK,
+    description: "Кістка зі Старого кладовища, холодна навіть у руці біля вогню."
+  },
+  spider_silk: {
+    name: "Павутинна нитка", g: "f", iconFile: "flax",
+    type: "material", price: 18, stackable: true, maxStack: MATERIAL_STACK,
+    description: "Нитка з Лісу павутини, міцніша за сухожилля. Ткачі й шамани дають за неї добру ціну."
+  },
+  werewolf_fang: {
+    name: "Ікло вовкулаки", g: "n", icon: ["material", 3],
+    type: "material", price: 20, stackable: true, maxStack: MATERIAL_STACK,
+    description: "Ікло з Вовкулачого яру. У ньому досі живе лють звіра."
+  },
+  witch_ash: {
+    name: "Відьмин попіл", g: "m", iconFile: "coal",
+    type: "material", price: 22, stackable: true, maxStack: MATERIAL_STACK,
+    description: "Попіл з Руїн відьминої вежі — те, що лишається від чужих прокльонів."
+  },
+  black_bark: {
+    name: "Чорна кора", g: "f", iconFile: "oak_wood",
+    type: "material", price: 24, stackable: true, maxStack: MATERIAL_STACK,
+    description: "Кора дерев Серця лісу, почорніла від подиху Хелли."
+  },
+
   // ---------- Мішечки на пояс (група «мішечок на пояс», type: "pouch") ----------
   // Вішаються в слоти пояса (5 слотів, character.js → BELT_SLOTS) і додають комірки до інвентаря: bag — скільки.
   // Падають лише з босів (1%, окремо від звичайної здобичі — character.js → rollPouchDrop). Картинок поки немає.

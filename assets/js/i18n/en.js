@@ -2673,9 +2673,191 @@ RPG.I18N.en = {
 "Сила криту, %": "Crit Damage, %",
 "Основа: критичний удар ×1,5": "Base: critical hit ×1.5",
 "Як часто герой ходить у бою. Межа: 250 без професії; 350 — з професією від 25 рівня; 450 — з другою професією від 51 рівня.": "How often the hero acts in battle. Cap: 250 without a profession; 350 with a profession from level 25; 450 with a second profession from level 51.",
-"У скільки разів посилюється критичний удар: 150% — це ×1,5 шкоди. Бонус дають лише зброя та сережки. Межа — 250%.": "How much a critical hit is amplified: 150% means ×1.5 damage. Only weapons and earrings give this bonus. Cap: 250%."
+"У скільки разів посилюється критичний удар: 150% — це ×1,5 шкоди. Бонус дають лише зброя та сережки. Межа — 250%.": "How much a critical hit is amplified: 150% means ×1.5 damage. Only weapons and earrings give this bonus. Cap: 250%.",
+"павуків": "spiders",
+"тіньових звірів": "shadow beasts",
+"болотяних тварюк": "swamp creatures",
+"слуг відьминої вежі": "servants of the witch's tower",
+"вартових Серця лісу": "guardians of the Forest Heart",
+"«Мертві не знають спокою, доки Хелла тримає їхні душі. Упокой нежить — потопельників, скелетів, привидів, гулів. Хай кожен відчує, що ти прийшов не вбити, а відпустити.»": "\"The dead know no rest while Hel holds their souls. Lay the undead to rest — the drowned, skeletons, ghosts, ghouls. Let each of them feel that you came not to kill, but to release.\"",
+"«Гулі — ті, кого голод поглинув навіть після смерті. Упокой їх на Старому кладовищі. Їхня кров — найгірша, і саме вона навчить тебе, чого коштує тавро.»": "\"Ghouls are those whom hunger swallowed even after death. Lay them to rest in the Old Graveyard. Their blood is the worst — and it is what will teach you the price of the brand.\"",
+"Нитки Хелли": "Hel's Threads",
+"«Павуки обплутують ліс, а в їхніх коконах — ще живі. Винищ павуків на Похмурому узліссі й у Лісі павутини.»": "\"Spiders are entangling the forest, and in their cocoons there are people still alive. Wipe out the spiders on the Gloomy Forest Edge and in the Web Forest.\"",
+"Тіні у звірах": "Shadows in the Beasts",
+"«Тіні Хелли вселяються у звірів. Убий тіньових вовків і звірів, вовкулак і ватажків зграй — на узліссі та у Вовкулачому яру.»": "\"Hel's shadows possess the beasts. Kill the shadow wolves and beasts, the werewolves and pack leaders — on the forest edge and in the Werewolf Ravine.\"",
+"Тиша над болотом": "Silence over the Marsh",
+"«Туманні болота кишать тими, хто шукає чужого тепла: п'явки, утопленики, блукаючі вогники. Очисти болота.»": "\"The Misty Marshes swarm with those who crave the warmth of others: leeches, drowned men, will-o'-the-wisps. Cleanse the marshes.\"",
+"Попіл відьминої вежі": "Ashes of the Witch's Tower",
+"«У Руїнах відьминої вежі досі служать Хеллі. Розжени культистів, відьом і кам'яних големів, яких вони піднімають.»": "\"In the Ruins of the Witch's Tower they still serve Hel. Scatter the cultists, the witches and the stone golems they raise.\"",
+"Варта Серця лісу": "Guard of the Forest Heart",
+"«Серце лісу стережуть древні лісовики й чорні вершники. Покажи їм, що мертві тобі вже не владні.»": "\"The Forest Heart is guarded by ancient leshies and black riders. Show them that the dead no longer have power over you.\"",
+"Хутро з тіні": "Fur from the Shadow",
+"«З тіньового хутра я шию пов'язки, що не пускають мертвих до живих. Збери його з ворогів Похмурого узлісся.»": "\"From shadow fur I sew bands that keep the dead away from the living. Gather it from the enemies of the Gloomy Forest Edge.\"",
+"Мох із трясовини": "Moss from the Quagmire",
+"«Болотяний мох пам'ятає кожного утопленого. Збери його на Туманних болотах — з нього я зварю настій для обряду.»": "\"Bog moss remembers every drowned soul. Gather it in the Misty Marshes — I will brew a draught for the rite from it.\"",
+"Кістки без імені": "Nameless Bones",
+"«Кістки зі Старого кладовища ще кличуть своїх. Принеси їх — я поверну їм імена, а тобі — їхню силу.»": "\"The bones of the Old Graveyard still call to their own. Bring them — I will give them back their names, and give you their strength.\"",
+"Павутинна нитка": "Spider Silk",
+"«Павутина з Лісу павутини міцніша за сухожилля. Нею я зшиватиму тавро.»": "\"The silk of the Web Forest is stronger than sinew. With it I will stitch the brand.\"",
+"Ікла вовкулак": "Werewolf Fangs",
+"«Ікла з Вовкулачого яру тримають у собі лють звіра. Без неї кров не відгукнеться на твій поклик.»": "\"The fangs of the Werewolf Ravine hold the fury of the beast. Without it, blood will not answer your call.\"",
+"Відьмин попіл": "Witch Ash",
+"«Попіл з Руїн відьминої вежі — те, що лишається від чужих прокльонів. Збери його: прокляття мають служити тобі.»": "\"The ash of the Ruins of the Witch's Tower is what remains of other people's curses. Gather it: curses must serve you.\"",
+"Чорна кора": "Black Bark",
+"«Кора дерев із Серця лісу почорніла від Хелли. Із неї я виріжу знаки, що триматимуть мертвих біля тебе.»": "\"The bark of the trees in the Forest Heart has blackened from Hel. From it I will carve signs that will keep the dead at your side.\"",
+"Залізо для ланцюгів": "Iron for the Chains",
+"«Мертвих тримають ланцюги, а ланцюги — залізо. Пошли групу в Шахту Темного лісу й принеси залізної руди.»": "\"Chains hold the dead, and iron holds the chains. Send a party to the Dark Forest Mine and bring iron ore.\"",
+"Срібло проти мерців": "Silver against the Dead",
+"«Срібло пече нежить. Принеси срібної руди з Шахти Темного лісу — для оберегів усім, хто йтиме з тобою.»": "\"Silver burns the undead. Bring silver ore from the Dark Forest Mine — for charms for everyone who walks with you.\"",
+"Дуб для кургану": "Oak for the Barrow",
+"«Мертвим треба де спочити. Принеси дубової деревини з Лісопилки — на зруби для курганів.»": "\"The dead need a place to rest. Bring oak wood from the Sawmill — for the log frames of the barrows.\"",
+"Ясен для вогнищ": "Ash for the Pyres",
+"«Ясен горить чисто й довго. Принеси його з Лісопилки — на поминальні вогнища за тих, кого упокоїш.»": "\"Ash wood burns clean and long. Bring it from the Sawmill — for the funeral pyres of those you lay to rest.\"",
+"Тіньове хутро": "Shadow Fur",
+"Хутро звірів Похмурого узлісся — темніше за ніч, і тінь від нього не падає.": "The fur of the beasts of the Gloomy Forest Edge — darker than night, and it casts no shadow.",
+"Болотяний мох": "Bog Moss",
+"Сивий мох із Туманних боліт. Кажуть, він пам'ятає кожного утопленого.": "Grey moss from the Misty Marshes. They say it remembers every drowned soul.",
+"Могильна кістка": "Grave Bone",
+"Кістка зі Старого кладовища, холодна навіть у руці біля вогню.": "A bone from the Old Graveyard, cold even in a hand by the fire.",
+"Нитка з Лісу павутини, міцніша за сухожилля. Ткачі й шамани дають за неї добру ціну.": "A thread from the Web Forest, stronger than sinew. Weavers and shamans pay a good price for it.",
+"Ікло вовкулаки": "Werewolf Fang",
+"Ікло з Вовкулачого яру. У ньому досі живе лють звіра.": "A fang from the Werewolf Ravine. The fury of the beast still lives in it.",
+"Попіл з Руїн відьминої вежі — те, що лишається від чужих прокльонів.": "Ash from the Ruins of the Witch's Tower — what remains of other people's curses.",
+"Кора дерев Серця лісу, почорніла від подиху Хелли.": "The bark of the trees of the Forest Heart, blackened by Hel's breath.",
+"Віддати Відреченому": "Give to the Renouncer",
+"«Ще не все зібрано.»": "\"Not everything has been gathered yet.\"",
+"«Візьми мій знак — з ним варта Північної брами пропустить тебе одразу, без доручень капітана. А знак — лише початок: 18 доручень у Темному лісі. Упокоїти мертвих, зібрати з них те, що тримає їх по цей бік, принести руди й дерева на обряди. Хто пройде все — того мертві почують, як чують мене.»": "\"Take my sign — with it the guards of the Northern Gate will let you through at once, without the captain's errands. But the sign is only the beginning: 18 errands in the Dark Forest. Lay the dead to rest, gather from them what holds them on this side, bring ore and wood for the rites. Whoever completes them all — the dead will hear them as they hear me.\"",
+"«Долоні Велеса»": "\"The Palms of Veles\"",
+"«Шлях відреченого»": "\"Path of the Renouncer\"",
+"Здати: Храм": "Hand in: Temple"
 },
 "patterns": [
+[
+"^Відречений торкається вашого чола холодними пальцями — шкірою пробігає дрож\\. Отримано: Знак відреченого\\. Доручення 1 з (.*?): (.*?) \\(Темний ліс, за Північною брамою\\)\\.$",
+"The Renouncer touches your forehead with cold fingers — a shiver runs over your skin. Received: Renouncer's Sign. Errand 1 of $1: $2 (the Dark Forest, beyond the Northern Gate).",
+1,
+0,
+"Відречений торкається вашого чола холодними пальцями — шкірою пробігає дрож. Отримано: Знак відреченого. Доручення 1 з"
+],
+[
+"Відречений торкається вашого чола холодними пальцями — шкірою пробігає дрож\\. Отримано: Знак відреченого\\. Доручення 1 з (.*?): (.*?) \\(Темний ліс, за Північною брамою\\)\\.",
+"The Renouncer touches your forehead with cold fingers — a shiver runs over your skin. Received: Renouncer's Sign. Errand 1 of $1: $2 (the Dark Forest, beyond the Northern Gate).",
+0,
+0,
+"Відречений торкається вашого чола холодними пальцями — шкірою пробігає дрож. Отримано: Знак відреченого. Доручення 1 з"
+],
+[
+"^Відречений повільно киває\\. «Ти чув, як вони видихають, коли відпускаєш\\? Це і є наша робота\\.» Нагорода: (.*?) EXP\\.(.*?) Доручення (.*?) з (.*?): (.*?)\\.$",
+"The Renouncer nods slowly. \"Did you hear how they exhale when you let them go? That is our work.\" Reward: $1 EXP.$2 Errand $3 of $4: $5.",
+1,
+0,
+"Відречений повільно киває. «Ти чув, як вони видихають, коли відпускаєш? Це і є наша робота.» Нагорода:"
+],
+[
+"Відречений повільно киває\\. «Ти чув, як вони видихають, коли відпускаєш\\? Це і є наша робота\\.» Нагорода: (.*?) EXP\\.(.*?) Доручення (.*?) з (.*?): (.*?)\\.",
+"The Renouncer nods slowly. \"Did you hear how they exhale when you let them go? That is our work.\" Reward: $1 EXP.$2 Errand $3 of $4: $5.",
+0,
+0,
+"Відречений повільно киває. «Ти чув, як вони видихають, коли відпускаєш? Це і є наша робота.» Нагорода:"
+],
+[
+"^«Тепер ти знаєш ціну\\. Коли будеш готовий — приходь до обряду\\. Назад дороги не буде\\.» Нагорода: (.*?) EXP\\.(.*?)$",
+"\"Now you know the price. When you are ready — come for the rite. There will be no way back.\" Reward: $1 EXP.$2",
+1,
+0,
+"«Тепер ти знаєш ціну. Коли будеш готовий — приходь до обряду. Назад дороги не буде.» Нагорода:"
+],
+[
+"«Тепер ти знаєш ціну\\. Коли будеш готовий — приходь до обряду\\. Назад дороги не буде\\.» Нагорода: (.*?) EXP\\.(.*?)",
+"\"Now you know the price. When you are ready — come for the rite. There will be no way back.\" Reward: $1 EXP.$2",
+0,
+0,
+"«Тепер ти знаєш ціну. Коли будеш готовий — приходь до обряду. Назад дороги не буде.» Нагорода:"
+],
+[
+"^Доручення (.*?) з (.*?): (.*?)$",
+"Errand $1 of $2: $3",
+1,
+0,
+"Доручення"
+],
+[
+"Доручення (.*?) з (.*?): (.*?)",
+"Errand $1 of $2: $3",
+0,
+0,
+"Доручення"
+],
+[
+"^Упокоєно (.*?): (.*?) / (.*?)$",
+"Laid to rest — $1: $2 / $3",
+1,
+0,
+"Упокоєно"
+],
+[
+"Упокоєно (.*?): (.*?) / (.*?)",
+"Laid to rest — $1: $2 / $3",
+0,
+0,
+"Упокоєно"
+],
+[
+"^Упокоєно (.*?): (.*?)/(.*?)$",
+"Laid to rest — $1: $2/$3",
+1,
+0,
+"Упокоєно"
+],
+[
+"Упокоєно (.*?): (.*?)/(.*?)",
+"Laid to rest — $1: $2/$3",
+0,
+0,
+"Упокоєно"
+],
+[
+"^«Шлях відреченого» \\((.*?)/(.*?)\\): (.*?)$",
+"\"Path of the Renouncer\" ($1/$2): $3",
+1,
+0,
+"«Шлях відреченого» ("
+],
+[
+"«Шлях відреченого» \\((.*?)/(.*?)\\): (.*?)",
+"\"Path of the Renouncer\" ($1/$2): $3",
+0,
+0,
+"«Шлях відреченого» ("
+],
+[
+"^випадкові вороги \\((.*?)\\) — по одному на кожного героя, з GS як у вашої групи$",
+"random enemies ($1) — one for each hero, with a GS like your party's",
+1,
+0,
+") — по одному на кожного героя, з GS як у вашої групи"
+],
+[
+"випадкові вороги \\((.*?)\\) — по одному на кожного героя, з GS як у вашої групи",
+"random enemies ($1) — one for each hero, with a GS like your party's",
+0,
+0,
+") — по одному на кожного героя, з GS як у вашої групи"
+],
+[
+"^три вороги або більше — не менше, ніж героїв \\((.*?)\\), з GS як у вашої групи$",
+"three enemies or more — no fewer than heroes ($1), with a GS like your party's",
+1,
+0,
+"три вороги або більше — не менше, ніж героїв ("
+],
+[
+"три вороги або більше — не менше, ніж героїв \\((.*?)\\), з GS як у вашої групи",
+"three enemies or more — no fewer than heroes ($1), with a GS like your party's",
+0,
+0,
+"три вороги або більше — не менше, ніж героїв ("
+],
 [
 "^(.*?) — «(.*?)» \\(−(.*?) MP\\): кривавий ланцюг сковує (.*?) — (.*?) хід без руху, (.*?)% здоров'я щоходу × (.*?)$",
 "$1 — \"$2\" (−$3 MP): a blood chain binds $4 — $5 turn without moving, $6% health per turn × $7",

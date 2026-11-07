@@ -1153,12 +1153,12 @@
   }
 
   // Скільки ворогів може вийти проти групи (звичайні бої, не данж):
-  // від половини групи (округлення вгору) до розміру групи, але не більше 6.
-  // Кожна кількість у цьому діапазоні — з однаковою ймовірністю.
+  // не менше, ніж героїв — рівно розмір групи (соло — 1), але не більше 6.
   const MAX_FOES = 6;
+  // Ворогів — не менше, ніж героїв: рівно стільки, скільки героїв у бою (не більше 6)
   function enemyGroupRange(members) {
     const n = Math.max(1, Math.min(MAX_FOES, members.length));
-    return { min: Math.ceil(n / 2), max: n };
+    return { min: n, max: n };
   }
   // Сумісність: верхня межа діапазону
   function enemyGroupCap(members) { return enemyGroupRange(members).max; }
