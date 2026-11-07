@@ -118,5 +118,17 @@
     return { ok: true };
   }
 
-  Object.assign(RPG, { WORLD_MAP, WORLDS, isWorldOpen });
+  // ---------- Світи «лише ремесла» (з 4-го світу) ----------
+  // Починаючи з CRAFT_ONLY_FROM-го світу, вороги НЕ дають спорядження (зброя, броня, прикраси, щити, ліва рука)
+  // і трофеїв чемпіонів — краще вдягнутися можна лише куванням із матеріалів, які падають з монстрів і з експедицій.
+  // Падає й надалі: золото, зілля, ключі данжів, руни, квестові предмети, мішечки на пояс, креслення, матеріали.
+  // Альвгейм (3-й світ) — без змін. Діє сама собою для кожного світу, щойно йому дадуть region (enemies.js → rollLoot).
+  const CRAFT_ONLY_FROM = 4;
+  function worldOfRegion(region) {
+    if (region === "city") return 1;                       // Дубова Застава — Мідгард
+    return WORLDS.find(w => w.region === region)?.n || 0;
+  }
+  function isCraftOnlyRegion(region) { return worldOfRegion(region) >= CRAFT_ONLY_FROM; }
+
+  Object.assign(RPG, { WORLD_MAP, WORLDS, isWorldOpen, CRAFT_ONLY_FROM, worldOfRegion, isCraftOnlyRegion });
 })(window.RPG);

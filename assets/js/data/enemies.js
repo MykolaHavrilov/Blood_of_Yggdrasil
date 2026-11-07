@@ -2368,6 +2368,7 @@ const ENEMIES = {
   // Трофей чемпіона: { id, r } або null. Річ береться зі здобичі цього ворога
   // (зброя/броня/біжутерія), а якщо такої немає — будь-яка річ 1 виду.
   function rollChampionDrop(enemyId) {
+    if (isCraftOnlyEnemy(enemyId)) return null;     // з 4-го світу трофеїв-речей немає (нагорода гільдії лишається)
     let r = null;
     for (const [rarity, chance] of CHAMPION.drops) {
       if (Math.random() < chance) { r = rarity; break; }
@@ -2481,11 +2482,35 @@ const ENEMIES = {
   // Випадкова здобич після перемоги: { gold, items: [{id, qty}] }
   // chanceAdd — скільки додати до шансу випадіння кожного предмета (частка: 0.1 = +10 пунктів; Сфера Богів),
   // не більше 100%. На рідкість речі не впливає — її визначає rarity.js окремо.
+  // Регіони, де трапляється ворог (локації + данжі) — для правила «лише ремесло» з 4-го світу (worlds.js).
+  let enemyRegionsCache = null;
+  function enemyRegions(enemyId) {
+    if (!enemyRegionsCache) {
+      enemyRegionsCache = {};
+      const add = (id, region) => { if (id && region) (enemyRegionsCache[id] ??= new Set()).add(region); };
+      for (const L of Object.values(LOCATIONS)) for (const id of L.enemies || []) add(id, L.region);
+      for (const D of Object.values(DUNGEONS)) {
+        const region = LOCATIONS[D.location]?.region;
+        add(D.boss, region);
+        for (const id of D.pool || []) add(id, region);
+      }
+    }
+    return enemyRegionsCache[enemyId] || new Set();
+  }
+  // Ворог зі світу «лише ремесла»: усі його регіони — зі світів від RPG.CRAFT_ONLY_FROM (з 4-го).
+  function isCraftOnlyEnemy(enemyId) {
+    const regs = [...enemyRegions(enemyId)];
+    return !!RPG.isCraftOnlyRegion && regs.length > 0 && regs.every(r => RPG.isCraftOnlyRegion(r));
+  }
+  const GEAR_TYPES = new Set(["weapon", "armor", "accessory", "shield", "offhand"]);
+
   function rollLoot(enemyId, chanceAdd = 0) {
     const enemy = ENEMIES[enemyId];
     if (!enemy) return { gold: 0, items: [] };
     const items = [];
+    const craftOnly = isCraftOnlyEnemy(enemyId);      // з 4-го світу спорядження не падає — лише кування
     for (const drop of enemy.loot) {
+      if (craftOnly && GEAR_TYPES.has(RPG.ITEMS[drop.id]?.type)) continue;
       if (Math.random() < Math.min(1, drop.chance + chanceAdd)) {
         items.push({ id: drop.id, qty: RPG.randInt(drop.qty[0], drop.qty[1]) });
       }
@@ -2497,6 +2522,6 @@ const ENEMIES = {
     MONSTER_MOVES, RANGE_NAMES, enemyRange, enemyMove,
     ENEMIES, LOCATIONS, DUNGEONS, DEFAULT_LOCATION, RESPAWN_LOCATION, GUILD_SHOP, isAlfheimOpen,
     CHAMPION, rollChampion, rollChampionDrop, championBounty,
-    getEnemy, enemyExp, enemySpriteStyle, getLocation, isCombatLocation, canEnterLocation, pickEnemy, rollLoot
+    getEnemy, enemyExp, enemySpriteStyle, getLocation, isCombatLocation, canEnterLocation, pickEnemy, rollLoot, isCraftOnlyEnemy
   });
 })(window.RPG);
