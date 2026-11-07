@@ -1,4 +1,15 @@
+Шрифти гри (assets/fonts) — усі під SIL Open Font License 1.1:
+  alegreya-sans-*.woff — Alegreya Sans
+  cormorant.woff — Cormorant
+  ruslan.woff — Ruslan Display (без змін, лише формат WOFF)
+  kurale.woff — Kurale (лише латиниця й кирилиця)
+  ponomar.woff — Ponomar (лише латиниця й кирилиця)
+
 Copyright 2011 The Alegreya Project Authors (https://github.com/huertatipografica/Alegreya)
+Copyright 2015 the Cormorant Project Authors (github.com/CatharsisFonts/Cormorant)
+Copyright 2011 Oleg Snarsky, Denis Masharov, Vladimir Rabdu, with Reserved Font Name 'Ruslan', 'Ruslan Display'.
+Copyright 2013 The Kurale Project Authors (edu@tipo.net.ar)
+Copyright 2025 The Ponomar Project Authors (https://github.com/slavonic/Ponomar.git)
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:

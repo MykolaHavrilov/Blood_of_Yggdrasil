@@ -8,6 +8,8 @@
 @font-face { font-family: "Alegreya Sans"; src: url("../fonts/alegreya-sans-400.woff") format("woff"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Alegreya Sans"; src: url("../fonts/alegreya-sans-700.woff") format("woff"); font-weight: 700; font-display: swap; }
 @font-face { font-family: "Ruslan Display"; src: url("../fonts/ruslan.woff") format("woff"); font-display: swap; }
+@font-face { font-family: "Kurale"; src: url("../fonts/kurale.woff") format("woff"); font-display: swap; }
+@font-face { font-family: "Ponomar"; src: url("../fonts/ponomar.woff") format("woff"); font-display: swap; }
 
 :root {
   --bg: #0d0b09;
@@ -50,7 +52,8 @@
   --focus: #f3d892;
 
   --font-body: "Alegreya Sans", system-ui, sans-serif;
-  --font-head: "Cormorant", Georgia, serif;
+  --font-head: "Kurale", "Cormorant", Georgia, serif;      /* кнопки й менші заголовки */
+  --font-title: "Ponomar", "Kurale", Georgia, serif;       /* великі заголовки — устав */
   --fs-base: 1.05rem;
 
   --slot-bg: radial-gradient(circle at 50% 40%, #2a2219, #15110d);
@@ -302,3 +305,12 @@ header nav a[aria-current="page"] { background: none; border-image-source: url("
 a.wf-button, button.wf-button { padding-left: 30px; padding-right: 30px; }
 a.wf-danger, button.wf-danger, a.wf-secondary, button.wf-secondary { padding-left: 26px; padding-right: 26px; }
 button.attr-plus { padding: 0; }
+
+/* ---------- Шрифти (v170): Ponomar — великі заголовки, Kurale — кнопки й менші заголовки, Alegreya Sans — текст ---------- */
+.wf-button, .wf-link, .wf-secondary, .wf-danger, .carousel-dot { font-family: var(--font-head); }
+.panel h2, .location strong,
+.notice-dialog h3, .formation-dialog h3,
+.chronicle-cover, .chronicle-title, .chronicle-end, .chronicle-p.is-initial::first-letter {
+  font-family: var(--font-title); font-weight: 400;
+}
+.panel h2 { font-size: 1.45rem; letter-spacing: .01em; }
