@@ -2,7 +2,7 @@
 // HTML / JS / CSS: спершу мережа (щоб оновлення гри підтягувались одразу),
 // а без інтернету — з кешу. Картинки: спершу кеш.
 // Після великих змін можна збільшити номер версії — старий кеш видалиться.
-const CACHE = "rpg-game-v168";
+const CACHE = "rpg-game-v169";
 const PRECACHE = [
   "./",
   "./assets/css/game.css",
@@ -385,6 +385,22 @@ const PRECACHE = [
   "./assets/images/skills/wind_light.webp",
   "./assets/images/skills/wind_storm.webp",
   "./assets/images/skills/wind_tail.webp",
+  "./assets/images/ui/arrow_l.webp",
+  "./assets/images/ui/arrow_r.webp",
+  "./assets/images/ui/btn_close.webp",
+  "./assets/images/ui/btn_danger.webp",
+  "./assets/images/ui/btn_link.webp",
+  "./assets/images/ui/btn_main.webp",
+  "./assets/images/ui/btn_menu.webp",
+  "./assets/images/ui/btn_plus.webp",
+  "./assets/images/ui/btn_sec.webp",
+  "./assets/images/ui/btn_square.webp",
+  "./assets/images/ui/nav_tab.webp",
+  "./assets/images/ui/nav_tab_a.webp",
+  "./assets/images/ui/nav_tab_h.webp",
+  "./assets/images/ui/pill.webp",
+  "./assets/images/ui/pill_a.webp",
+  "./assets/images/ui/slot.webp",
   "./assets/images/ui/logo.webp",
   "./assets/images/ui/page_bg.webp",
   "./assets/images/ui/title_bg.webp",

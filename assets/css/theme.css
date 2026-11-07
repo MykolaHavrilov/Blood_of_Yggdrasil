@@ -230,3 +230,75 @@ body[data-page="index"] {
 }
 .info-tip { color: #bfa77a; }
 .info-tip:hover, .info-tip.has-popover { color: var(--gold); }
+
+/* ---------- Кнопки з картинок (v169) — assets/images/ui/*.webp ----------
+   Розтягування «на 9 частин» (border-image): кути й кінці кнопки не змінюються, середина тягнеться під напис.
+   Наведення / натиск / недоступна — фільтрами з main.css (яскравість, зсув, сірість). */
+.wf-button, .wf-link, .wf-secondary, .wf-danger { border-color: transparent; background: none; box-shadow: none; }
+.wf-button    { border-image: url("../images/ui/btn_main.webp") 81 100 fill / 50% 28px stretch; }
+.wf-link      { border-image: url("../images/ui/btn_link.webp") 50 42 fill / 14px 12px stretch; }
+.wf-secondary { border-image: url("../images/ui/btn_sec.webp") 81 90 fill / 50% 25px stretch; }
+.wf-danger    { border-image: url("../images/ui/btn_danger.webp") 62 95 fill / 17px 26px stretch; }
+.wf-link:hover { box-shadow: none; }
+button.wf:disabled { filter: grayscale(.75) brightness(.85); }
+
+/* Головне меню — великі кнопки з орнаментом ясена */
+.menu .wf {
+  border-image: url("../images/ui/btn_menu.webp") 72 100 fill / 50% 38px stretch;
+  background: none; box-shadow: none; border-color: transparent;
+}
+.menu .wf::before, .menu .wf::after { content: none; }
+.menu .wf:hover { box-shadow: none; filter: brightness(1.18) drop-shadow(0 0 10px rgba(201, 150, 70, .35)); }
+
+/* Вкладки верхнього меню */
+header nav a.wf {
+  border: 1px solid transparent;
+  border-image: url("../images/ui/nav_tab.webp") 89 30 fill / 50% 8px stretch;
+}
+header nav a.wf:hover { border-image-source: url("../images/ui/nav_tab_h.webp"); }
+header nav a[aria-current="page"] { background: none; border-image-source: url("../images/ui/nav_tab_a.webp"); }
+
+/* Перемикачі-«пігулки»: сторінки атрибутів і вибір героя в групі */
+.carousel-dot {
+  background: none; border: 1px solid transparent;
+  border-image: url("../images/ui/pill.webp") 89 90 fill / 50% 13px stretch;
+}
+.carousel-dot.is-active { background: none; color: #1a120a; border-image-source: url("../images/ui/pill_a.webp"); }
+.carousel-dot:hover { filter: brightness(1.15); }
+.member-tabs .member-tab { border-image: url("../images/ui/pill.webp") 89 90 fill / 50% 18px stretch; text-shadow: none; }
+.member-tabs .member-tab.wf-button { color: #1a120a; border-image-source: url("../images/ui/pill_a.webp"); }
+
+/* Квадратні кнопки-значки (фільтр здобичі, пояс) */
+.loot-filter-btn {
+  border-color: transparent; border-image: none; border-radius: 0;
+  background: url("../images/ui/btn_square.webp") center / 100% 100% no-repeat;
+}
+.loot-filter-btn.is-on { border-color: transparent; box-shadow: none; filter: drop-shadow(0 0 6px rgba(201, 163, 90, .7)); }
+
+/* Значки замість символів: «+», стрілки, хрестик (символ лишається для читачів екрана, але прозорий) */
+.attr-plus, .carousel-arrow,
+.notice-close, .popover-close, .toast-close, .globe-close, .chronicle-close {
+  border: 0; border-image: none; border-radius: 50%; box-shadow: none;
+  color: transparent; text-shadow: none; opacity: 1;
+  background: center / 100% 100% no-repeat;
+}
+.attr-plus { border-radius: 0; background-image: url("../images/ui/btn_plus.webp"); }
+.carousel-arrow[data-step="-1"] { background-image: url("../images/ui/arrow_l.webp"); }
+.carousel-arrow[data-step="1"]  { background-image: url("../images/ui/arrow_r.webp"); }
+.notice-close, .popover-close, .toast-close, .globe-close, .chronicle-close { background-image: url("../images/ui/btn_close.webp"); }
+.carousel-arrow:hover, .carousel-arrow:focus-visible,
+.notice-close:hover, .notice-close:focus-visible, .popover-close:hover, .toast-close:hover, .toast-close:focus-visible,
+.globe-close:hover, .globe-close:focus-visible, .chronicle-close:hover {
+  color: transparent; background-color: transparent; filter: brightness(1.2) drop-shadow(0 0 6px rgba(201, 150, 70, .5));
+}
+.popover-close { width: 30px; height: 30px; }
+
+/* Комірки предметів: заглиблене гніздо (рамку рідкості гра малює поверх — тінню) */
+.wf-slot {
+  border-color: transparent;
+  background: url("../images/ui/slot.webp") center / 100% 100% no-repeat, #120e0a;
+}
+/* Напис не налазить на орнамент кінців кнопки */
+a.wf-button, button.wf-button { padding-left: 30px; padding-right: 30px; }
+a.wf-danger, button.wf-danger, a.wf-secondary, button.wf-secondary { padding-left: 26px; padding-right: 26px; }
+button.attr-plus { padding: 0; }
