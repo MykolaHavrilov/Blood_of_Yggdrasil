@@ -43,7 +43,8 @@
     magicDefense: "secondary", hp: "secondary", mp: "secondary",
     crit: "auxiliary", dodge: "auxiliary", speed: "auxiliary",
     blockPhys: "auxiliary", blockMag: "auxiliary",
-    hpRegen: "auxiliary", mpRegen: "auxiliary", attackSpeedPct: "auxiliary", skillPct: "auxiliary", critDmg: "auxiliary"
+    hpRegen: "auxiliary", mpRegen: "auxiliary", attackSpeedPct: "auxiliary", skillPct: "auxiliary", critDmg: "auxiliary",
+    attackPct: "primary"      // «Атака, %» артефактів — і атака, і сила магії (1% ≈ основна характеристика)
   };
 
   // Варіант 2 і 3: скільки «сирих» очок складають 1 одиницю
@@ -83,13 +84,13 @@
   function gearScore(ref, mode = gsMode()) {
     const id = RPG.refId(ref);
     const item = RPG.ITEMS[id];
-    if (!item || !item.slot || item.type === "artifact") return null;   // артефакти — без GS
+    if (!item || !item.slot) return null;
     const st = RPG.itemStats(ref);
     let sum = 0;
     for (const key in st) sum += statPoints(key, st[key], mode);
     if (mode === 3) {
       if (RPG.hasRarity(id)) sum += RARITY_BONUS[RPG.rarityOf(ref)] || 0;
-      sum += (item.levelReq || 1) * LEVEL_BONUS;
+      sum += (item.gsLevel || item.levelReq || 1) * LEVEL_BONUS;
     }
     return Math.max(0, Math.round(sum));
   }
@@ -106,7 +107,7 @@
     }
     if (mode === 3) {
       parts.extra = (RPG.hasRarity(id) ? RARITY_BONUS[RPG.rarityOf(ref)] || 0 : 0) +
-                    (item.levelReq || 1) * LEVEL_BONUS;
+                    (item.gsLevel || item.levelReq || 1) * LEVEL_BONUS;
     }
     for (const k of ["primary", "secondary", "auxiliary", "extra"]) parts[k] = Math.round(parts[k] * 10) / 10;
     parts.total = gearScore(ref, mode);

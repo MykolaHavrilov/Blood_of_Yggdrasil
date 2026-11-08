@@ -966,7 +966,7 @@ function canEquip(save, id) {
   if ((item.levelReq || 1) > save.character.level) {
     return { ok: false, reason: `Потрібен ${item.levelReq} рівень.` };
   }
-  // Артефакти — лише з професією (4 комірки), і той самий артефакт двічі не вдягнеш (equipSlotFor поміняє його)
+  // Артефакти — лише з професією (4 комірки); однакові можна вдягати хоч усі 4 — бонуси складаються
   if (item.slot === "artifact" && !RPG.hasArtifactSlots?.(save)) {
     return { ok: false, reason: "Комірки артефактів відкриваються з професією." };
   }
@@ -1053,8 +1053,6 @@ function equipSlotFor(save, id) {
     return "offHand";
   }
   const group = RPG.slotsFor(ITEMS[id]?.slot);
-  // Артефакт, що вже вдягнений, — міняється в тій самій комірці (два однакових не буває)
-  if (ITEMS[id]?.slot === "artifact") { const same = group.find(s => RPG.refId(save.equipment[s]) === id); if (same) return same; }
   return group.find(s => !save.equipment[s]) || group[0];
 }
 

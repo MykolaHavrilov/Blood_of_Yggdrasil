@@ -3,7 +3,7 @@
 //
 // Пасивні бонуси, поки артефакт вдягнений. Комірки — 4 у кожного героя з професією (тір 2+; Селянин — без них):
 // data/items.js → SLOTS artifact1…artifact4, slot "artifact". Носить лише своя професія (classes).
-// Один і той самий артефакт двічі вдягнути не можна (character.js → equipSlotFor / canEquip).
+// Однакові артефакти можна вдягати в кілька комірок (хоч усі 4) — бонуси всіх складаються (character.js → calcStats).
 //
 // На кожну професію — 8 видів (KINDS), рідкість у кожного виду фіксована: 2 звичайні, 2 магічні, 2 епічні, 2 легендарні.
 // Який бонус і яка характеристика — задано для виду (CLASS_ART, MAIN); числа випадають при появі артефакта (RANGES):
@@ -14,7 +14,8 @@
 // «Атака, %» (attackPct) — character.js → calcStats множить на неї атаку й силу магії.
 //
 // Падають з ворогів від 31 рівня (світ 4 і далі), з малим шансом (DROP; data/enemies.js → rollLoot).
-// Рідкість — завжди своя (фільтр здобичі й лічильник удачі їх не чіпають). Без гнізд під руни, без GS.
+// Рідкість — завжди своя (фільтр здобичі й лічильник удачі їх не чіпають). Без гнізд під руни.
+// GS — як у речей (gearscore.js: «Атака, %» — основна група), рівень для GS — 31 (gsLevel).
 // Іконки — icon_artifact_<1…8>.webp (одна на вид, спільна для всіх професій) — додаються в ITEM_ICON_FILES,
 // коли з'являться файли (ICON_READY); промти — H:\Game_NEW\Іконки й портрети, яких не вистачає (промти).txt.
 // Підключається після data/profsets.js (бере назви професій звідти).
@@ -91,7 +92,7 @@
       RPG.ITEMS[id] = {
         name: EN ? `${k.noun} of ${of}` : `${k.noun} ${of}`,
         type: "artifact", slot: "artifact", classes: [cls], kind: i + 1,
-        rarityFixed: k.r,
+        rarityFixed: k.r, gsLevel: MIN_LEVEL,
         artifact: { main: MAIN[i], attr: k.r === "common" ? null : conf.attrs[i % 2], sec: k.r === "epic" || k.r === "legendary" ? conf.sec[i % 2] : null },
         price: PRICE[k.r], noShop: true,
         iconFile: ICON_READY.includes(i + 1) ? `artifact_${i + 1}` : undefined,
