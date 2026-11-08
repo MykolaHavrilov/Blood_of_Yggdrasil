@@ -990,14 +990,14 @@ const ITEMS = {
   },
 
   // ---------- Темний ліс — трофеї ворогів (по одному на локацію; data/enemies.js → DARK_LOC_MAT) ----------
-  // Потрібні для доручень Відреченого (quests.js → SHAMAN), а так — на продаж. Іконки поки позичені.
+  // Потрібні для доручень Відреченого (quests.js → SHAMAN), а так — на продаж. Іконки — icon_<id>.webp (ICON_FILES).
   shadow_fur: {
     name: "Тіньове хутро", g: "n", icon: ["material", 2],
     type: "material", price: 14, stackable: true, maxStack: MATERIAL_STACK,
     description: "Хутро звірів Похмурого узлісся — темніше за ніч, і тінь від нього не падає."
   },
   bog_moss: {
-    name: "Болотяний мох", g: "m", iconFile: "flax",
+    name: "Болотяний мох", g: "m",
     type: "material", price: 14, stackable: true, maxStack: MATERIAL_STACK,
     description: "Сивий мох із Туманних боліт. Кажуть, він пам'ятає кожного утопленого."
   },
@@ -1007,7 +1007,7 @@ const ITEMS = {
     description: "Кістка зі Старого кладовища, холодна навіть у руці біля вогню."
   },
   spider_silk: {
-    name: "Павутинна нитка", g: "f", iconFile: "flax",
+    name: "Павутинна нитка", g: "f",
     type: "material", price: 18, stackable: true, maxStack: MATERIAL_STACK,
     description: "Нитка з Лісу павутини, міцніша за сухожилля. Ткачі й шамани дають за неї добру ціну."
   },
@@ -1017,12 +1017,12 @@ const ITEMS = {
     description: "Ікло з Вовкулачого яру. У ньому досі живе лють звіра."
   },
   witch_ash: {
-    name: "Відьмин попіл", g: "m", iconFile: "coal",
+    name: "Відьмин попіл", g: "m",
     type: "material", price: 22, stackable: true, maxStack: MATERIAL_STACK,
     description: "Попіл з Руїн відьминої вежі — те, що лишається від чужих прокльонів."
   },
   black_bark: {
-    name: "Чорна кора", g: "f", iconFile: "oak_wood",
+    name: "Чорна кора", g: "f",
     type: "material", price: 24, stackable: true, maxStack: MATERIAL_STACK,
     description: "Кора дерев Серця лісу, почорніла від подиху Хелли."
   },
@@ -1058,7 +1058,7 @@ const ITEMS = {
   },
   // Квест «Долоні Велеса» (quests.js → VELES): незнайомець підкидає героєві на 12 рівні
   orb_veles: {
-    name: "Дивна сфера", iconFile: "orb_t1",
+    name: "Дивна сфера",
     type: "quest", quest: true, price: 0, noShop: true,
     description: "Важка куля з темного каменю, тепла на дотик. На одному боці — глибоке заглиблення у формі ромба. " +
       "Її підкинув незнайомець у запиленому плащі й зник у натовпі."
@@ -1108,7 +1108,7 @@ const ITEMS = {
   // locked: true — не продається, не викидається, не розбирається; покласти можна лише в спільну скриню «main»
   // (Домівка). Видається кодом god.mod у рядку «Код» на сторінці «Налаштування» (одна на збереження). Іконка — магічна сфера 3 виду.
   orb_gods: {
-    name: "Сфера Богів", iconFile: "orb_t3",
+    name: "Сфера Богів",
     type: "admin", locked: true, price: 0, noShop: true,
     gods: { expPct: 800, masteryPct: 600, lifestealPct: 55, travelSec: 3, lootPct: 10 },
     description: "Сфера Богів - з'явилась для тестування прогресу гри, предмет адміністратора"
@@ -1281,7 +1281,14 @@ const ICON_FILES = new Set(["sword", "dagger", "axe", "bow", "staff", "shield", 
  "key_alf_grove", "key_alf_lake", "key_alf_gardens", "key_alf_towers", "key_alf_freyr", "key_alf_beli",
  // матеріали тірів 4–7 (спрайт-лист new_assets/new_assets/items/Items_mats_t4-7.png)
  "steel_ingot", "platinum_ore", "platinum_ingot", "yew_wood", "seal_leather", "amber", "pearl", "darksteel_ingot", "ironwood", "lizard_leather", "rock_crystal", "rune_gem",
- "celestial_ore", "celestial_ingot", "sun_gold_ingot", "white_ash", "eagle_feather", "bifrost_shard", "ygg_heartwood", "ygg_bark", "ygg_root", "ygg_sap", "mimir_water", "star_spark"]
+ "celestial_ore", "celestial_ingot", "sun_gold_ingot", "white_ash", "eagle_feather", "bifrost_shard", "ygg_heartwood", "ygg_bark", "ygg_root", "ygg_sap", "mimir_water", "star_spark",
+ // матеріали Альвгейму (Items_mats_alf.png), трофеї Темного лісу (Items_mats_dark.png), креслення за слотом (Items_blueprints.png),
+ // особливі сфери (v0.3.16; промти — H:\Game_NEW\Іконки й портрети, яких не вистачає (промти).txt)
+ "silver_pollen", "mirror_scale", "spring_shoot", "dawn_shard", "golden_bristle", "stag_antler",
+ "moth_wing", "necken_string", "rot_rose", "dawn_eye", "gullin_tusk", "beli_bronze",
+ "shadow_fur", "bog_moss", "grave_bone", "spider_silk", "werewolf_fang", "witch_ash", "black_bark",
+ "blueprint_head", "blueprint_chest", "blueprint_legs", "blueprint_hands", "blueprint_feet", "blueprint_main", "blueprint_off",
+ "orb_veles", "orb_gods"]
   .forEach(id => ICON_FILES.add(id));
 const ICON_FILE_BASE = RPG.asset("assets/images/items/icon_");
 

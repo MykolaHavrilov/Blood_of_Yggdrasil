@@ -133,7 +133,9 @@
   // Креслення до рецепта речі id: blueprint_<id речі без «prof_»> (напр. blueprint_warrior_head, blueprint_w_warrior_main)
   function addBlueprint(cls, set, id, name, tab) {
     const bp = "blueprint_" + id.replace(/^profw_/, "w_").replace(/^prof_/, "");
+    const slotIcon = "blueprint_" + id.split("_").pop();            // іконка за видом речі: head…feet, main, off
     RPG.ITEMS[bp] = {
+      iconFile: slotIcon,
       name: L(`Креслення: ${name}`, `Blueprint: ${name}`),
       type: "blueprint", recipe: id, stackable: true, maxStack: 99, price: 300, noShop: true, secretFor: set.secret ? cls : undefined,
       description: L(`Креслення ковальського рецепта. Використайте — і «${name}» назавжди з'явиться у вашій кузні (вкладка «${tab}», тір 3). ` +
