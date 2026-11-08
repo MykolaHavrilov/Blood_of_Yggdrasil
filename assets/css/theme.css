@@ -323,3 +323,24 @@ button.attr-plus { padding: 0; }
   .map-tip .tip-status { margin: 1px 0; }
   .map-tip .tip-desc { display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 }
+
+/* ---------- Вкладки світів над мапою й далека дорога (v0.3.11) ---------- */
+.map-worlds { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 8px; }
+.map-world {
+  position: relative; padding: 4px 12px; border: 1px solid var(--pop-border); border-radius: 999px;
+  font-family: var(--font-head); font-size: .86rem; line-height: 1.3; color: var(--text, #e8dcc4);
+  background: rgba(20, 14, 8, .55); text-decoration: none;
+}
+a.map-world:hover, a.map-world:focus-visible { outline: none; border-color: var(--gold); color: var(--gold); }
+.map-world.is-active { color: #1b1209; background: var(--gold); border-color: var(--gold); }
+.map-world.is-locked { opacity: .45; filter: grayscale(1); }
+.map-world.is-here::before {               /* світ, де зараз герой */
+  content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 6px; vertical-align: 1px;
+  border-radius: 50%; background: #2f6fd6; box-shadow: 0 0 0 1px #10213f, 0 0 6px rgba(80, 150, 255, .8);
+}
+.map-tip.has-go { pointer-events: auto; }
+.globe-tip .globe-go { display: block; width: 100%; margin-top: 6px; min-height: 0; padding-top: 4px; padding-bottom: 4px; font-size: .85rem; }
+@media (max-width: 700px) {
+  .map-worlds { gap: 4px; }
+  .map-world { padding: 3px 9px; font-size: .78rem; }
+}

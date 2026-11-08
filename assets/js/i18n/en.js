@@ -2729,9 +2729,41 @@ RPG.I18N.en = {
 "«Візьми мій знак — з ним варта Північної брами пропустить тебе одразу, без доручень капітана. А знак — лише початок: 18 доручень у Темному лісі. Упокоїти мертвих, зібрати з них те, що тримає їх по цей бік, принести руди й дерева на обряди. Хто пройде все — того мертві почують, як чують мене.»": "\"Take my sign — with it the guards of the Northern Gate will let you through at once, without the captain's errands. But the sign is only the beginning: 18 errands in the Dark Forest. Lay the dead to rest, gather from them what holds them on this side, bring ore and wood for the rites. Whoever completes them all — the dead will hear them as they hear me.\"",
 "«Долоні Велеса»": "\"The Palms of Veles\"",
 "«Шлях відреченого»": "\"Path of the Renouncer\"",
-"Здати: Храм": "Hand in: Temple"
+"Здати: Храм": "Hand in: Temple",
+"Світи": "Worlds",
+"Експедицію сюди відправляють, коли ви в цьому світі.": "An expedition can be sent here while you are in this world."
 },
 "patterns": [
+["^Звідси — далі: (.*?)$",
+"From here on to: $1",
+1,
+0,
+"Звідси — далі: "
+],
+["^(.*?) — ви тут$",
+"$1 — you are here",
+1,
+0,
+" — ви тут"
+],
+["^Ви в дорозі до «(.*?)» \\((.*?)\\)\\. Дорога: (.*?)\\. Брами герой пройде сам\\. Переміщення не скасувати — дочекайтеся прибуття\\.$",
+"You are on the way to \"$1\" ($2). Road: $3. The hero passes the gates on their own. The move cannot be cancelled — wait until you arrive.",
+1,
+0,
+". Брами герой пройде сам. Переміщення не скасувати — дочекайтеся прибуття."
+],
+["^Дорога: (.*?)\\. Брами й корінь Іггдрасиля герой пройде сам, а час — як пішки всіма відрізками дороги\\. Переміщення не можна скасувати\\.$",
+"Road: $1. The hero passes the gates and the root of Yggdrasil on their own; the time is the same as walking every stretch of the road. The move cannot be cancelled.",
+1,
+0,
+". Брами й корінь Іггдрасиля герой пройде сам, а час — як пішки всіма відрізками дороги. Переміщення не можна скасувати."
+],
+["^(.*?) → (.*?)$",
+"$1 → $2",
+1,
+1,
+" → "
+],
 [
 "^Відречений торкається вашого чола холодними пальцями — шкірою пробігає дрож\\. Отримано: Знак відреченого\\. Доручення 1 з (.*?): (.*?) \\(Темний ліс, за Північною брамою\\)\\.$",
 "The Renouncer touches your forehead with cold fingers — a shiver runs over your skin. Received: Renouncer's Sign. Errand 1 of $1: $2 (the Dark Forest, beyond the Northern Gate).",

@@ -89,12 +89,16 @@
     const mapBox = $("world-map");
     const t0 = RPG.travelState(save);
     const here = RPG.whereIs(save);
-    const region = t0 ? t0.region : here.region;
+    // maps.html?region=… — переглянути інший відкритий світ (вкладки світів над мапою) і вирушити туди одразу (далека дорога)
+    const want = new URLSearchParams(location.search).get("region");
+    const view = !t0 && want && RPG.MAP_REGIONS[want] && RPG.REGION_CHAIN.includes(want) && RPG.isRegionOpen(save, want) ? want : here.region;
+    const region = t0 ? t0.region : view;
+    const away = !t0 && region !== here.region;   // інший світ: героя тут немає, дорога — через брами
     const R = RPG.MAP_REGIONS[region];
     const ZONES = Object.assign({}, region === "city" ? CITY_ZONES : region === "dark" ? DARK_ZONES : region === "alf" ? ALF_ZONES : startZones(), SITE_ZONES[region] || {});
     const districts = RPG.LOCATIONS.city.districts || [];
     const ids = REGION_ORDER[region].filter(id => ZONES[id] && R.spots[id]).concat(Object.keys(SITE_ZONES[region] || {}).filter(id => RPG.LOCATIONS[id]));
-    let selected = t0 ? t0.to : here.spot;
+    let selected = t0 ? t0.to : away ? (ids.find(id => !isSite(id)) || ids[0]) : here.spot;
     let tipPinned = false;   // опис місця на мапі — лише після натискання гравця (спершу видно тільки фігурку й ім'я героя)
     let travelTimer = null;
     // Музика мапи: регіон світу; на мапі Дубової Застави — тема району, куди йде (або де стоїть) герой
@@ -117,13 +121,22 @@
         return can.ok ? { kind: "site", text: "Без дороги — лише експедиція (3 або 6 героїв, 4 год)" } : { kind: "closed", text: can.reason };
       }
       const tr = RPG.travelState(save);
-      if (tr) return tr.to === id ? { kind: "here", text: "Сюди прямуєте" } : { kind: "closed", text: "Ви в дорозі" };
+      if (tr) {
+        if (tr.to !== id) return { kind: "closed", text: "Ви в дорозі" };
+        return tr.next ? { kind: "here", text: `Звідси — далі: ${RPG.regionName(tr.next.region)}` } : { kind: "here", text: "Сюди прямуєте" };
+      }
+      if (away) {                                  // інший світ — маршрут складеться через брами
+        const p = RPG.planTrip(save, region, id);
+        if (!p.ok) return { kind: "closed", text: p.reason };
+        return { kind: "open", text: `Час у дорозі: ${RPG.fmtLeft(p.seconds * 1000)}`, seconds: p.seconds, trip: p };
+      }
       if (here.spot === id) return { kind: "here", text: "Ви тут" };
       const can = RPG.canGo(save, region, id);
       if (!can.ok) return { kind: "closed", text: can.reason };
       const r = RPG.route(region, here.spot, id);
       if (!r) return { kind: "closed", text: "Туди немає дороги." };
-      return { kind: "open", text: `Час у дорозі: ${RPG.fmtLeft(RPG.travelSeconds(r.cells, region, save) * 1000)}`, cells: r.cells };
+      const sec = RPG.travelSeconds(r.cells, region, save);
+      return { kind: "open", text: `Час у дорозі: ${RPG.fmtLeft(sec * 1000)}`, cells: r.cells, seconds: sec };
     }
 
     function shortText(s, n = 130) {
@@ -144,6 +157,28 @@
       sub.textContent = R.desc ? `(${R.desc})` : "";
       sub.hidden = !R.desc;
     }
+    // Вкладки світів: переглянути мапу іншого відкритого світу (у дорозі — лише показують, де герой)
+    mapBox.parentElement.querySelector(".map-worlds")?.remove();
+    const tabs = el("div", "map-worlds");
+    tabs.setAttribute("role", "group");
+    tabs.setAttribute("aria-label", "Світи");
+    for (const r of RPG.REGION_CHAIN) {
+      if (!RPG.MAP_REGIONS[r]) continue;
+      const open = RPG.isRegionOpen(save, r);
+      const cls = "map-world" + (r === region ? " is-active" : "") + (r === here.region ? " is-here" : "") + (open ? "" : " is-locked");
+      let tab;
+      if (open && !t0 && r !== region) {
+        tab = el("a", cls, RPG.MAP_REGIONS[r].name);
+        tab.href = r === here.region ? "maps.html" : `maps.html?region=${r}`;
+      } else {
+        tab = el("span", cls, RPG.MAP_REGIONS[r].name);
+        if (!open) tab.title = "Закрито";
+        if (r === region) tab.setAttribute("aria-current", "page");
+      }
+      if (r === here.region) tab.setAttribute("aria-label", `${RPG.MAP_REGIONS[r].name} — ви тут`);
+      tabs.append(tab);
+    }
+    mapBox.before(tabs);
     const img = mapBox.querySelector(".map-img");
     img.src = RPG.asset(R.image);
     img.width = R.w; img.height = R.h;
@@ -267,11 +302,12 @@
       const tr = RPG.travelState(save);
       if (!tr) return;
       setHero(tr.pos.x, tr.pos.y);
-      timerTag.textContent = RPG.fmtLeft(tr.leftMs);
+      timerTag.textContent = RPG.fmtLeft(tr.totalLeftMs);
       if (tr.leftMs > 0) return;
       clearInterval(travelTimer);
       RPG.finishTravel(save);
-      RPG.saveGame(save).then(() => { location.href = "game.html"; });
+      // Далека дорога: відрізок скінчився — брама позаду, мапа змінюється на наступний світ
+      RPG.saveGame(save).then(() => { location.replace(RPG.isTraveling(save) ? "maps.html" : "game.html"); });
     }
 
     function followTravel() {
@@ -292,11 +328,12 @@
 
     async function go(id) {
       if (RPG.isTraveling(save)) return;
-      const can = RPG.canGo(save, region, id);
-      if (can.ok && RPG.route(region, here.spot, id) && save.fieldLoot) await showFieldLoot(save);   // здобич поля бою — перед дорогою
-      const r = RPG.startTravel(save, id);
+      const can = away ? RPG.planTrip(save, region, id) : RPG.canGo(save, region, id);
+      if (can.ok && (away || RPG.route(region, here.spot, id)) && save.fieldLoot) await showFieldLoot(save);   // здобич поля бою — перед дорогою
+      const r = RPG.startTravel(save, id, Date.now(), away ? region : null);
       if (!r.ok) { selected = id; render(); showMsg($("map-msg"), r.reason, true); return; }
       await RPG.saveGame(save);
+      if (away) { location.replace("maps.html"); return; }   // далека дорога: мапа першого відрізка
       selected = id;
       render();
       followTravel();
@@ -351,7 +388,25 @@
       }
       const tr = RPG.travelState(save);
       if (tr) {
-        details.append(el("p", "status", `Ви в дорозі до «${place(tr.to).name}». Переміщення не скасувати — дочекайтеся прибуття.`));
+        if (!tr.dest || (tr.dest.region === tr.region && !tr.next)) {
+          details.append(el("p", "status", `Ви в дорозі до «${tr.destName}». Переміщення не скасувати — дочекайтеся прибуття.`));
+          return;
+        }
+        const path = [tr.region, ...(tr.legs || []).map(l => l.region)].map(RPG.regionName).join(" → ");
+        details.append(el("p", "status", `Ви в дорозі до «${tr.destName}» (${RPG.regionName(tr.dest.region)}). Дорога: ${path}. ` +
+          `Брами герой пройде сам. Переміщення не скасувати — дочекайтеся прибуття.`));
+        return;
+      }
+      if (away) {                                  // інший світ: лише далека дорога
+        if (st.kind === "open") {
+          const path = [...new Set(st.trip.legs.map(l => l.region))].map(RPG.regionName).join(" → ");
+          details.append(button(`Вирушити · ${RPG.fmtLeft(st.seconds * 1000)}`, "wf wf-button", () => go(selected)));
+          details.append(noteP(`Дорога: ${path}. Брами й корінь Іггдрасиля герой пройде сам, а час — як пішки всіма відрізками дороги. Переміщення не можна скасувати.`));
+        } else if (st.kind === "site") {
+          details.append(el("p", "status", "Експедицію сюди відправляють, коли ви в цьому світі."));
+        } else {
+          details.append(el("p", "status", st.text));
+        }
         return;
       }
       // Експедиція: бойові локації (вороги без босів), Шахта й Лісопилка
@@ -383,7 +438,7 @@
         return;
       }
       if (st.kind === "open") {
-        details.append(button(`Вирушити · ${RPG.fmtLeft(RPG.travelSeconds(st.cells, region, save) * 1000)}`, "wf wf-button", () => go(selected)));
+        details.append(button(`Вирушити · ${RPG.fmtLeft(st.seconds * 1000)}`, "wf wf-button", () => go(selected)));
         details.append(noteP("Переміщення не можна скасувати; у дорозі доступні лише «Персонаж», «Інвентар» і «Мапа»."));
       } else {
         details.append(el("p", "status", st.text));
@@ -465,6 +520,8 @@
 
     if (t0) {
       followTravel();
+    } else if (away) {
+      hero.hidden = true;                          // героя в цьому світі немає
     } else {
       const s = R.spots[here.spot] || R.spots[ids[0]];
       hero.classList.add("no-anim");
@@ -561,13 +618,27 @@
 
     const tip = el("div", "map-tip globe-tip");
     tip.hidden = true;
-    let tipFor = null;
+    let tipFor = null, tipPin = null;   // tipPin — точка, на яку натиснули: підказка з кнопкою «Вирушити» не ховається
     function showTip(dot, w, s, here) {
       tipFor = dot;
       tip.innerHTML = "";
-      const st = here ? ["here", "Ви тут"] : s.open ? ["open", "Доступно"] : ["closed", s.reason || "Закрито"];
+      // Далека дорога: у відкриту точку будь-якого відкритого світу — одразу, маршрут через брами складеться сам
+      const trip = !here && s.open && w.region && !RPG.isTraveling(save) ? RPG.planTrip(save, w.region, s.id) : null;
+      const st = here ? ["here", "Ви тут"] : !s.open ? ["closed", s.reason || "Закрито"]
+        : trip && !trip.ok && trip.reason !== "Ви вже тут." ? ["closed", trip.reason] : ["open", "Доступно"];
       tip.append(el("strong", null, s.name), el("div", "tip-desc", `Світ ${w.n} · ${w.name}`),
                  el("div", `tip-status tip-${st[0]}`, st[1]));
+      tip.classList.toggle("has-go", !!trip?.ok);
+      if (trip?.ok) {
+        tip.append(button(`Вирушити · ${RPG.fmtLeft(trip.seconds * 1000)}`, "wf wf-button globe-go", async ev => {
+          ev.stopPropagation();
+          if (save.fieldLoot) await showFieldLoot(save);          // здобич поля бою — перед дорогою
+          const r = RPG.startTravel(save, s.id, Date.now(), w.region);
+          if (!r.ok) { tip.querySelector(".tip-status").textContent = r.reason; return; }
+          await RPG.saveGame(save);
+          location.replace("maps.html");
+        }));
+      }
       tip.hidden = false;
       const br = board.getBoundingClientRect(), dr = dot.getBoundingClientRect();
       const x = dr.left + dr.width / 2 - br.left, top = dr.top - br.top;
@@ -577,7 +648,10 @@
       const half = tip.offsetWidth / 2;
       tip.style.left = Math.max(half + 4, Math.min(br.width - half - 4, x)) + "px";
     }
-    function hideTip(dot) { if (!dot || tipFor === dot) { tip.hidden = true; tipFor = null; } }
+    function hideTip(dot) {
+      if (dot && tipPin) return;                   // натиснута точка — підказка лишається, доки не клікнуть деінде
+      if (!dot || tipFor === dot) { tip.hidden = true; tipFor = null; tipPin = null; }
+    }
 
     for (const w of worlds) {
       if (w.label) {
@@ -593,9 +667,9 @@
         dot.style.left = s.x + "%";
         dot.style.top = s.y + "%";
         dot.setAttribute("aria-label", `${s.name} — ${here ? "ви тут" : s.open ? "доступно" : "закрито"}`);
-        dot.addEventListener("mouseenter", () => showTip(dot, w, s, here));
-        dot.addEventListener("focus", () => showTip(dot, w, s, here));
-        dot.addEventListener("click", () => showTip(dot, w, s, here));
+        dot.addEventListener("mouseenter", () => { if (!tipPin) showTip(dot, w, s, here); });
+        dot.addEventListener("focus", () => { if (!tipPin) showTip(dot, w, s, here); });
+        dot.addEventListener("click", () => { tipPin = dot; showTip(dot, w, s, here); });
         dot.addEventListener("mouseleave", () => hideTip(dot));
         dot.addEventListener("blur", () => hideTip(dot));
         board.append(dot);
@@ -611,7 +685,7 @@
       board.append(heroEl);
     }
     board.append(tip);
-    board.addEventListener("click", ev => { if (!ev.target.closest(".globe-dot")) hideTip(); });
+    board.addEventListener("click", ev => { if (!ev.target.closest(".globe-dot, .globe-tip")) hideTip(); });
 
     dlg.append(head, scroll);
     document.body.append(dlg);

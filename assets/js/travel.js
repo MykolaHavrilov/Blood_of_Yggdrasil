@@ -6,12 +6,20 @@
 //           («Південний район»): дійшовши туди, герой опиняється в Дубовій Заставі, у Південному районі;
 //   city  — Дубова Застава: 5 районів, герой ходить між ними;
 //   dark  — Темний ліс (за Центральною брамою, через капітана варти).
-// Між регіонами переходять лише через брами (миттєво): south_gate ↔ Дубова Застава, Північний район ↔ dark_gate.
+//   alf   — Альвгейм (світ 3), за коренем Іггдрасиля в Серці Темного лісу.
+// Між регіонами переходять лише через брами (миттєво): south_gate ↔ Дубова Застава, Північний район ↔ dark_gate,
+// Серце Темного лісу (dk_heart) ↔ Корінь Іггдрасиля в Альвгеймі (alf_gate).
+//
+// ДАЛЕКА ДОРОГА (planTrip): з мапи можна вирушити одразу в місце іншого відкритого світу (вкладки світів над мапою
+// або точка на мапі дев'яти світів). Маршрут складається одразу з відрізків — по одному на кожен регіон дорогою,
+// брами між ними герой проходить сам. Час = сума звичайних переходів (брами — миттєво, як і пішки).
+// Поточний відрізок лежить у save.travel як звичайна дорога, решта — у save.travel.legs (з готовими start/end),
+// кінцева точка — save.travel.dest = { region, spot }. finishTravel переводить героя на наступний відрізок.
 //
 // У межах регіону герой іде дорогами (ROUTES): клітинки маршруту × TRAVEL_SEC_PER_CELL секунд;
 // у Дубовій Заставі будь-який перехід між районами триває CITY_TRAVEL_SEC (3 с).
 // Переміщення не скасовується. Поки воно триває, доступні лише «Персонаж», «Інвентар» і «Мапа».
-// Стан у сейві: save.travel = { region, from, to, cells, pts, start, end }.
+// Стан у сейві: save.travel = { region, from, to, cells, pts, start, end, legs?, dest? }.
 //
 // Підключається ПІСЛЯ data/routes.js, character.js і quests.js.
 // ============================================================
@@ -61,10 +69,92 @@
     return RPG.canEnterLocation(to, save.character.level, save);
   }
 
-  function startTravel(save, to, now = Date.now()) {
+  // ---------- Далека дорога між світами ----------
+  // Регіони підряд (як вони з'єднані) і брами між сусідніми: [точка виходу з першого, точка входу в другий]
+  const REGION_CHAIN = ["start", "city", "dark", "alf"];
+  const GATES = { "start>city": ["south_gate", "south"], "city>dark": ["north", "dark_gate"], "dark>alf": ["dk_heart", "alf_gate"] };
+  function gateBetween(a, b) {
+    if (GATES[`${a}>${b}`]) return GATES[`${a}>${b}`];
+    const g = GATES[`${b}>${a}`];
+    return g ? [g[1], g[0]] : null;
+  }
+  const regionName = r => RPG.MAP_REGIONS[r]?.name || r;
+  function spotName(region, id) {
+    if (region === "city") return (RPG.LOCATIONS.city.districts || []).find(d => d.id === id)?.name || id;
+    return RPG.LOCATIONS[id]?.name || id;
+  }
+  // Чи відкритий регіон (вкладка світу на мапі): Гардарика й Застава — завжди, Темний ліс — коли відчинено браму,
+  // Альвгейм — після першої перемоги над Володарем
+  function isRegionOpen(save, region) {
+    if (region === "start" || region === "city") return true;
+    if (region === "dark") return !!RPG.isGateOpen?.(save);
+    if (region === "alf") return RPG.canEnterLocation("alf_gate", save.character.level, save).ok;
+    return false;
+  }
+  // Брама між регіонами: чи пропустять
+  function crossCheck(save, a, b) {
+    if (b === "dark" && a === "city" && !RPG.isGateOpen?.(save)) return { ok: false, reason: "Центральна брама зачинена — спершу поговоріть з капітаном варти (Дубова Застава, Північний район)." };
+    if (b === "alf" && !isRegionOpen(save, "alf")) return { ok: false, reason: "Шлях в Альвгейм відкриється після першої перемоги над Володарем Темного лісу (корінь Іггдрасиля в Серці Темного лісу)." };
+    return { ok: true };
+  }
+
+  // Маршрут до точки to регіону toRegion (може бути інший світ): { ok, legs: [{ region, from, to, cells, pts, sec }], seconds } або { ok: false, reason }
+  function planTrip(save, toRegion, to) {
+    const here = whereIs(save);
+    let r = here.region, cur = here.spot;
+    let i = REGION_CHAIN.indexOf(r);
+    const j = REGION_CHAIN.indexOf(toRegion);
+    if (i < 0 || j < 0) return { ok: false, reason: "Туди немає дороги." };
+    if (!RPG.MAP_REGIONS[toRegion]?.spots?.[to]) return { ok: false, reason: "Туди немає дороги." };
+    const legs = [];
+    const leg = (reg, from, dest) => {
+      if (from === dest) return { ok: true };
+      const can = canGo(save, reg, dest);
+      if (!can.ok) return can;
+      const rt = route(reg, from, dest);
+      if (!rt) return { ok: false, reason: "Туди немає дороги." };
+      legs.push({ region: reg, from, to: dest, cells: rt.cells, pts: rt.pts, sec: travelSeconds(rt.cells, reg, save) });
+      return { ok: true };
+    };
+    const step = j > i ? 1 : -1;
+    while (r !== toRegion) {
+      const nr = REGION_CHAIN[i + step];
+      const [exit, entry] = gateBetween(r, nr);
+      let c = leg(r, cur, exit);
+      if (!c.ok) return c;
+      c = crossCheck(save, r, nr);
+      if (!c.ok) return c;
+      c = canGo(save, nr, entry);                  // де герой опиниться за брамою
+      if (!c.ok) return c;
+      r = nr; cur = entry; i += step;
+    }
+    const c = leg(r, cur, to);
+    if (!c.ok) return c;
+    if (!legs.length) return { ok: false, reason: "Ви вже тут." };
+    return { ok: true, legs, seconds: legs.reduce((a, l) => a + l.sec, 0) };
+  }
+
+  // Поставити героя в точку регіону (прохід крізь браму)
+  function placeAt(save, region, spot) {
+    if (region === "city") { save.location.map = "city"; save.location.district = spot; }
+    else save.location.map = spot;
+  }
+
+  // toRegion — регіон точки to (інший світ → далека дорога); без нього — точка поточного регіону
+  function startTravel(save, to, now = Date.now(), toRegion = null) {
     if (isTraveling(save, now)) return { ok: false, reason: "Ви вже в дорозі — переміщення не скасувати." };
     if (RPG.expeditionActive?.(save)) return { ok: false, reason: "Поки експедиція в дорозі, переходити між локаціями не можна." };
     const { region, spot } = whereIs(save);
+    if (toRegion && toRegion !== region) {
+      const p = planTrip(save, toRegion, to);
+      if (!p.ok) return p;
+      let t = now;
+      const legs = p.legs.map(l => { const start = t; t += l.sec * 1000; return { region: l.region, from: l.from, to: l.to, cells: l.cells, pts: l.pts, start, end: t }; });
+      const last = legs[legs.length - 1];
+      placeAt(save, legs[0].region, legs[0].from);   // брама одразу на виході (напр. із Застави — у Гардарику)
+      save.travel = Object.assign({}, legs[0], { legs: legs.slice(1), dest: { region: last.region, spot: last.to } });
+      return { ok: true, seconds: (t - now) / 1000, legs: legs.length };
+    }
     if (spot === to) return { ok: false, reason: "Ви вже тут." };
     const can = canGo(save, region, to);
     if (!can.ok) return can;
@@ -75,8 +165,13 @@
     return { ok: true, cells: r.cells, seconds: ms / 1000 };
   }
 
+  // Кінець усієї дороги (з усіма відрізками далекої дороги)
+  function tripEnd(t) {
+    return t.legs?.length ? t.legs[t.legs.length - 1].end : t.end;
+  }
+
   function isTraveling(save, now = Date.now()) {
-    return !!save.travel && now < save.travel.end;
+    return !!save.travel && now < tripEnd(save.travel);
   }
 
   // Точка на маршруті за часткою пройденого шляху (0…1)
@@ -111,13 +206,24 @@
     if (!t) return null;
     const dur = Math.max(1, t.end - t.start);
     const progress = Math.min(1, (now - t.start) / dur);
-    return Object.assign({}, t, { leftMs: Math.max(0, t.end - now), progress, pos: pointAt(t.pts, progress, aspectOf(t.region)) });
+    const dest = t.dest || { region: t.region, spot: t.to };
+    return Object.assign({}, t, { leftMs: Math.max(0, t.end - now), progress, pos: pointAt(t.pts, progress, aspectOf(t.region)),
+      totalLeftMs: Math.max(0, tripEnd(t) - now), dest, destName: spotName(dest.region, dest.spot), next: t.legs?.[0] || null });
   }
 
-  // Якщо дорога скінчилась — герой на місці. Повертає { arrived, locId, district } або null
+  // Якщо дорога скінчилась — герой на місці. Повертає { arrived, locId, district } або null.
+  // Далека дорога: скінчився відрізок — герой проходить браму й іде далі ({ arrived: false, leg: true, region })
   function finishTravel(save, now = Date.now()) {
-    const t = save.travel;
+    let t = save.travel;
     if (!t || now < t.end) return null;
+    let moved = false;
+    while (t.legs?.length && now >= t.end) {
+      const [next, ...rest] = t.legs;
+      placeAt(save, next.region, next.from);
+      save.travel = t = Object.assign({}, next, { legs: rest, dest: t.dest });
+      moved = true;
+    }
+    if (now < t.end) return moved ? { arrived: false, leg: true, region: t.region } : null;
     delete save.travel;
     delete save.formationAt;              // нове прибуття — розстановку героїв обирають знову (game.js)
     if (t.region === "city") {
@@ -150,6 +256,7 @@
 
   Object.assign(RPG, {
     TRAVEL_PAGES, CITY_TRAVEL_SEC, regionOf, whereIs, route, travelSeconds, canGo, startTravel, isTraveling,
-    travelState, finishTravel, enterCity, leaveCityToStart, fmtLeft
+    travelState, finishTravel, enterCity, leaveCityToStart, fmtLeft,
+    REGION_CHAIN, isRegionOpen, planTrip, spotName, regionName
   });
 })(window.RPG);

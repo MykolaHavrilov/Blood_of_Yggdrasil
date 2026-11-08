@@ -921,15 +921,15 @@
     const text = el("span");
     bar.append(text, link("Мапа", "maps.html"));
     main.prepend(bar);
-    const name = id => (save.travel.region === "city"
-      ? (RPG.LOCATIONS.city.districts.find(d => d.id === id) || {}).name
-      : RPG.LOCATIONS[id]?.name) || id;
-    const to = name(save.travel.to);
+    const to = RPG.travelState(save).destName;      // далека дорога — кінцева точка, час — усієї дороги
     const upd = async () => {
       const tr = RPG.travelState(save);
-      if (tr && tr.leftMs > 0) { text.textContent = `В дорозі до «${to}»: ${RPG.fmtLeft(tr.leftMs)}`; return; }
+      if (tr && tr.leftMs > 0) { text.textContent = `В дорозі до «${to}»: ${RPG.fmtLeft(tr.totalLeftMs)}`; return; }
+      if (tr && RPG.finishTravel(save) && RPG.isTraveling(save)) {   // брама позаду — далі наступний відрізок
+        await RPG.saveGame(save).catch(e => console.error(e));
+        return;
+      }
       clearInterval(timer);
-      RPG.finishTravel(save);
       await RPG.saveGame(save).catch(e => console.error(e));
       text.textContent = `Ви прибули: «${to}».`;
       bar.classList.add("is-done");
