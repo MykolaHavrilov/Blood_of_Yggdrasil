@@ -109,7 +109,7 @@ function createNewSave(name, classId = DEFAULT_CLASS, gender = null) {
 // база професії + приріст за рівні + атрибути + екіпірування
 
 const STAT_KEYS = ["hp", "mp", "attack", "magic", "defense", "magicDefense", "speed",
-                   "crit", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct", "skillPct", "critDmg"];
+                   "crit", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct", "skillPct", "critDmg", "attackPct"];
 const DECIMAL_KEYS = ["crit", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct"];
 
 // trace — необов'язковий об'єкт: якщо передати {}, у нього запишеться, з чого склалась
@@ -202,6 +202,13 @@ function calcStats(save, trace = null) {
 
   // Руни: % до атаки, захисту, магічного захисту, здоров'я й відновлення
   if (runes) for (const [key, v] of Object.entries(runes.pct)) change(key, "Руни в гніздах", x => x * (1 + v / 100));
+
+  // Артефакти: «Атака, %» — і до атаки, і до сили магії (data/artifacts.js)
+  if (stats.attackPct) {
+    const p = stats.attackPct;
+    change("attack", "Артефакти: атака, %", v => v * (1 + p / 100));
+    change("magic", "Артефакти: атака, %", v => v * (1 + p / 100));
+  }
 
   // Межі (STAT_CAP) діють один раз — у самому кінці, на суму з усіх джерел, і з легендарними речами теж
   const CAP = RPG.STAT_CAP;
@@ -529,7 +536,8 @@ function applyDeath(save, enemyIds) {
   const expLost = exp.expLost;
 
   // Перевірка втрати речей — у випадковому порядку слотів
-  const slots = Object.keys(save.equipment).sort(() => Math.random() - 0.5);
+  // Артефакти при загибелі не втрачаються
+  const slots = Object.keys(save.equipment).filter(s => !s.startsWith("artifact")).sort(() => Math.random() - 0.5);
   const lostItems = [];
   for (const slot of slots) {
     if (lostItems.length >= limit) break;
@@ -958,6 +966,10 @@ function canEquip(save, id) {
   if ((item.levelReq || 1) > save.character.level) {
     return { ok: false, reason: `Потрібен ${item.levelReq} рівень.` };
   }
+  // Артефакти — лише з професією (4 комірки), і той самий артефакт двічі не вдягнеш (equipSlotFor поміняє його)
+  if (item.slot === "artifact" && !RPG.hasArtifactSlots?.(save)) {
+    return { ok: false, reason: "Комірки артефактів відкриваються з професією." };
+  }
   if (item.classes && !item.classes.includes(save.character.classId)) {
     const names = item.classes.map(c => CLASSES[c]?.name || c).join(", ");
     return { ok: false, reason: `Лише для професій: ${names}.` };
@@ -1041,6 +1053,8 @@ function equipSlotFor(save, id) {
     return "offHand";
   }
   const group = RPG.slotsFor(ITEMS[id]?.slot);
+  // Артефакт, що вже вдягнений, — міняється в тій самій комірці (два однакових не буває)
+  if (ITEMS[id]?.slot === "artifact") { const same = group.find(s => RPG.refId(save.equipment[s]) === id); if (same) return same; }
   return group.find(s => !save.equipment[s]) || group[0];
 }
 
@@ -1498,6 +1512,9 @@ function applyReward(save, exp, loot) {
       const filterOn = RPG.lootFilterActive(save);
       for (let i = 0; i < it.qty; i++) {
         if (!filterOn && !invFree(save)) break;        // місця немає — решта пропадає
+        // артефакт — завжди своєї рідкості, повз лічильник удачі й фільтр здобичі
+        const fixedR = ITEMS[it.id]?.rarityFixed;
+        if (fixedR) { if (invFree(save)) { const ref = RPG.makeItem(it.id, fixedR); save.inventory.push(ref); it.refs.push(ref); } continue; }
         let r = RPG.rollRarity(save);
         // руна Даждьбог: шанс підняти рідкість на крок (крім легендарної)
         if (loot.rarityUp && r !== "legendary" && Math.random() * 100 < loot.rarityUp) r = RPG.RARITY_ORDER[RPG.RARITY_ORDER.indexOf(r) + 1];

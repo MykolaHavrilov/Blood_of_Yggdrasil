@@ -54,7 +54,7 @@
   }
 
   function fmtStat(key, value) {
-    const pct = ["crit", "dodge", "blockPhys", "blockMag", "skillPct", "critDmg"].includes(key);
+    const pct = ["crit", "dodge", "blockPhys", "blockMag", "skillPct", "critDmg", "attackPct"].includes(key);
     return fmtNum(value) + (pct ? "%" : "");
   }
 
@@ -1060,7 +1060,8 @@
   // порожня — коротка назва слота. Повна назва — у спливаючому вікні.
   const SLOT_SHORT = {
     mainHand: "Зброя", offHand: "Ліва рука", head: "Голова", chest: "Тіло", legs: "Штани", hands: "Наручі",
-    feet: "Взуття", earring1: "Сережка", ring1: "Кільце", amulet: "Амулет", ring2: "Кільце", earring2: "Сережка"
+    feet: "Взуття", earring1: "Сережка", ring1: "Кільце", amulet: "Амулет", ring2: "Кільце", earring2: "Сережка",
+    artifact1: "Артефакт", artifact2: "Артефакт", artifact3: "Артефакт", artifact4: "Артефакт"
   };
   function fillEquipCell(cell, ref, slot) {
     const item = ref && RPG.ITEMS[RPG.refId(ref)];
@@ -1377,7 +1378,7 @@
   // ---------- Опис предмета для спливаючого вікна та інвентаря ----------
   const TYPE_NAMES = {
     weapon: "Зброя", armor: "Броня", accessory: "Прикраса", consumable: "Зілля",
-    material: "Матеріал", offhand: "Ліва рука", shield: "Щит", quest: "Квестовий предмет", admin: "Предмет адміністратора", blueprint: "Креслення"
+    material: "Матеріал", offhand: "Ліва рука", shield: "Щит", quest: "Квестовий предмет", admin: "Предмет адміністратора", blueprint: "Креслення", artifact: "Артефакт"
   };
   const RARITY_NAMES = {
     broken: "зламана", common: "звичайна", magic: "магічна", epic: "епічна", legendary: "легендарна"

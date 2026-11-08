@@ -80,12 +80,18 @@ const SLOTS = {
   ring1: "Кільце 1",
   amulet: "Амулет",
   ring2: "Кільце 2",
-  earring2: "Сережка 2"
+  earring2: "Сережка 2",
+  // Артефакти (data/artifacts.js) — лише в героїв з професією
+  artifact1: "Артефакт 1",
+  artifact2: "Артефакт 2",
+  artifact3: "Артефакт 3",
+  artifact4: "Артефакт 4"
 };
 // Кільця й сережки можна носити по дві: slot предмета → слоти персонажа
 const SLOT_GROUPS = {
   ring: ["ring1", "ring2"],
-  earring: ["earring1", "earring2"]
+  earring: ["earring1", "earring2"],
+  artifact: ["artifact1", "artifact2", "artifact3", "artifact4"]
 };
 function slotsFor(itemSlot) {
   return SLOT_GROUPS[itemSlot] || (itemSlot ? [itemSlot] : []);
@@ -102,6 +108,7 @@ const STAT_NAMES = {
   speed: "Швидкість",
   crit: "Шанс криту, %",
   critDmg: "Сила криту, %",
+  attackPct: "Атака, %",
   blockPhys: "Блок фіз. шкоди, %",
   blockMag: "Блок маг. шкоди, %",
   attackSpeedPct: "Швидкість атаки (володіння), %",

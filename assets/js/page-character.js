@@ -24,7 +24,7 @@
     function renderMemberTabs() { members.tabs(); }
 
     const DERIVED = ["hp", "mp", "attack", "magic", "skillPct", "defense", "magicDefense", "speed",
-                     "crit", "critDmg", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct"];
+                     "crit", "critDmg", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct", "attackPct"];
 
     // ---------- Карусель «Атрибути / Характеристики / Розвиток» ----------
     const CAROUSEL_KEY = "rpg.charPage";
@@ -99,6 +99,7 @@
       magicDefense: "Зменшує магічну шкоду, яку отримує герой.",
       speed: "Як часто герой ходить у бою. Межа: 250 без професії; 350 — з професією від 25 рівня; 450 — з другою професією від 51 рівня.",
       crit: "Шанс завдати посиленого (критичного) удару.",
+      attackPct: "Бонус артефактів: на стільки відсотків зростають і атака, і сила магії.",
       critDmg: "У скільки разів посилюється критичний удар: 150% — це ×1,5 шкоди. Бонус дають лише зброя та сережки. Межа — 250%.",
       dodge: "Шанс повністю ухилитися від фізичного удару.",
       blockPhys: "Шанс заблокувати половину фізичної шкоди.",
@@ -164,7 +165,7 @@
       box.append(el("p", "stat-info-sub", "Впливає на:"));
       const eff = el("ul", "stat-parts");
       for (const e of RPG.attrEffects(key, total, ms.character.classId)) {
-        eff.append(partRow(RPG.STAT_NAMES[e.key], e.value, "", ["crit", "dodge", "blockPhys", "blockMag", "skillPct", "critDmg"].includes(e.key) ? "%" : ""));
+        eff.append(partRow(RPG.STAT_NAMES[e.key], e.value, "", ["crit", "dodge", "blockPhys", "blockMag", "skillPct", "critDmg", "attackPct"].includes(e.key) ? "%" : ""));
       }
       box.append(eff);
       return box;
@@ -238,6 +239,7 @@
       const trace = {};
       RPG.calcStats(ms, trace);
       for (const key of DERIVED) {
+        if (key === "attackPct" && !st[key]) continue;          // «Атака, %» — лише з артефактами
         const row = el("div", "stat-row");
         row.append(el("span", null, RPG.STAT_NAMES[key]),
           infoButton(RPG.STAT_NAMES[key], () => statInfo(key, st, trace)),
@@ -292,6 +294,8 @@
       const slots = $("equip-slots");
       slots.innerHTML = "";
       for (const slot in RPG.SLOTS) {
+        if (slot.startsWith("artifact") && !RPG.hasArtifactSlots?.(ms)) continue;   // артефакти — з професією
+        if (slot === "artifact1") slots.append(el("div", "equip-sep", "Артефакти"));
         const ref = ms.equipment[slot];
         const item = RPG.ITEMS[RPG.refId(ref)];
         const cell = el("div", item ? slotClass(ref, "equip-cell") : "wf wf-slot equip-cell slot-empty");

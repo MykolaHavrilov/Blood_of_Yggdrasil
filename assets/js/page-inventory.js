@@ -73,6 +73,8 @@
       const eq = $("equip-list");
       eq.innerHTML = "";
       for (const slot in RPG.SLOTS) {
+        if (slot.startsWith("artifact") && !RPG.hasArtifactSlots?.(ms)) continue;   // артефакти — з професією
+        if (slot === "artifact1") eq.append(el("div", "equip-sep", "Артефакти"));
         const ref = ms.equipment[slot];
         const item = RPG.ITEMS[RPG.refId(ref)];
         const cell = button("", item ? slotClass(ref, "equip-cell") : "wf wf-slot equip-cell slot-empty");

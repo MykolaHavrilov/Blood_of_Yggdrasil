@@ -53,7 +53,7 @@
   };
 
   // Які предмети мають рідкість
-  const RARITY_TYPES = ["weapon", "shield", "offhand", "armor", "accessory"];
+  const RARITY_TYPES = ["weapon", "shield", "offhand", "armor", "accessory", "artifact"];
 
   // «Параметри атаки/захисту» — те, що лишається навіть у зламаної речі
   const CORE_KEYS = {
@@ -181,6 +181,11 @@
   // Створити екземпляр речі (для інвентаря/скрині)
   function makeItem(id, r = "common", opts = {}) {
     if (!hasRarity(id)) return { id, qty: 1 };
+    // Артефакт (data/artifacts.js): рідкість — своя, числа — свої, гнізд немає
+    if (RPG.ITEMS[id].type === "artifact") {
+      const aff = RPG.rollArtifactAffixes ? RPG.rollArtifactAffixes(id) : {};
+      return { id, qty: 1, r: RPG.ITEMS[id].rarityFixed || "common", aff, sockets: 0 };
+    }
     if (!RARITIES[r]) r = "common";
     const entry = { id, qty: 1, r };
     const aff = rollAffixes(id, r, opts.fromShop);
@@ -289,6 +294,7 @@
     if (typeof ref === "string") ref = { id: ref, qty: 1 };
     if (hasRarity(ref.id)) {
       if (!RARITIES[ref.r]) ref.r = "common";
+      if (RPG.ITEMS[ref.id].rarityFixed) { ref.r = RPG.ITEMS[ref.id].rarityFixed; ref.sockets = 0; delete ref.runes; }
       ref.qty = 1;
       if (typeof ref.sockets !== "number") rollSockets(ref);          // речі зі старих сейвів — один розіграш
       else if (ref.sockets > 0) {

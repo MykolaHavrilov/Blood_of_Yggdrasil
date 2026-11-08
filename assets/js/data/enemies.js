@@ -2537,6 +2537,9 @@ const ENEMIES = {
         items.push({ id: drop.id, qty: RPG.randInt(drop.qty[0], drop.qty[1]) });
       }
     }
+    // Артефакт професії — з ворогів від 31 рівня, з малим шансом (data/artifacts.js)
+    const art = RPG.rollArtifactDrop ? RPG.rollArtifactDrop(enemyId) : null;
+    if (art) items.push({ id: art, qty: 1 });
     return { gold: RPG.randInt(enemy.gold[0], enemy.gold[1]), items };
   }
 

@@ -156,6 +156,7 @@
   // Річ з рідкістю: рідкість, руна Даждьбог (rarityUp), фільтр здобичі — як у character.js → applyReward
   function bagAddLootItem(save, bag, id, qty, rarityUp) {
     if (!RPG.hasRarity(id)) { bagAddStack(bag, id, qty); return; }
+    if (RPG.ITEMS[id]?.rarityFixed) { for (let i = 0; i < qty; i++) bagAddRef(bag, RPG.makeItem(id)); return; }   // артефакт
     const filterOn = RPG.lootFilterActive?.(save);
     for (let i = 0; i < qty; i++) {
       let r = RPG.rollRarity(save);

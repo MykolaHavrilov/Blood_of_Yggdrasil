@@ -83,7 +83,7 @@
   function gearScore(ref, mode = gsMode()) {
     const id = RPG.refId(ref);
     const item = RPG.ITEMS[id];
-    if (!item || !item.slot) return null;
+    if (!item || !item.slot || item.type === "artifact") return null;   // артефакти — без GS
     const st = RPG.itemStats(ref);
     let sum = 0;
     for (const key in st) sum += statPoints(key, st[key], mode);
