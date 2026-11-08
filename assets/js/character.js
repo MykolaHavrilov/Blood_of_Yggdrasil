@@ -884,6 +884,23 @@ function adminSetClass(ms, classId) {
   for (const id of dropped) delete ch.skills[id];
   const q = ms.battleQueue || [];
   q.forEach((a, i) => { if (dropped.includes(a)) q[i] = "attack"; });
+  // Володіння основною зброєю переходить на основну зброю нової професії (рівень і досвід усередині рівня;
+  // вище вже набране володіння не знижується). Основна зброя старої — та, що в руці (якщо її професія носить), або перша з її списку.
+  let mastery = null;
+  const inHand = ITEMS[RPG.refId(ms.equipment.mainHand)]?.weaponType;
+  const oldMain = (cur.weapons || []).includes(inHand) ? inHand : (cur.weapons || [])[0];
+  const newMain = (next.weapons || [])[0];
+  if (oldMain && newMain && !(next.weapons || []).includes(oldMain)) {
+    ch.mastery ??= {};
+    ch.masteryExp ??= {};
+    const lvl = ch.mastery[oldMain] || 0, mexp = ch.masteryExp[oldMain] || 0;
+    const had = ch.mastery[newMain] || 0;
+    if (lvl > had || (lvl === had && mexp > (ch.masteryExp[newMain] || 0))) {
+      ch.mastery[newMain] = lvl;
+      ch.masteryExp[newMain] = mexp;
+    }
+    mastery = { from: oldMain, to: newMain, level: ch.mastery[newMain] || 0 };
+  }
   ch.classId = classId;
   if (next.levelTable !== cur.levelTable) ch.exp = expForLevel(next.levelTable, ch.level);
   const removed = [];
@@ -900,7 +917,7 @@ function adminSetClass(ms, classId) {
   const off = fixHands(ms);
   if (off) removed.push(off);
   clampHpMp(ms);
-  return { ok: true, old: oldId, removed, dropped };
+  return { ok: true, old: oldId, removed, dropped, mastery };
 }
 
 // Повний комплект зброї й броні (вікно адміністрування, пункт 4).

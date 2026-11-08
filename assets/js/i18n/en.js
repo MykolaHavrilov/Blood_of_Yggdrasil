@@ -2774,9 +2774,16 @@ RPG.I18N.en = {
 "Асгардська броня": "Asgardian armour",
 "Іггдрасилева броня": "Yggdrasil armour",
 "Такого комплекту немає.": "There is no such set.",
-"Броня за видом — 5 частин, зброя обраного типу й річ лівої руки до неї; комплект професії — 5 частин і зброя професії. Речі, які герой ще не може вдягнути (рівень, професія), лишаються в інвентарі.": "Armour by type — 5 pieces, a weapon of the chosen type and an off-hand item to match; a profession set — 5 pieces and the profession's weapons. Items the hero cannot wear yet (level, profession) stay in the inventory."
+"Броня за видом — 5 частин, зброя обраного типу й річ лівої руки до неї; комплект професії — 5 частин і зброя професії. Речі, які герой ще не може вдягнути (рівень, професія), лишаються в інвентарі.": "Armour by type — 5 pieces, a weapon of the chosen type and an off-hand item to match; a profession set — 5 pieces and the profession's weapons. Items the hero cannot wear yet (level, profession) stay in the inventory.",
+"Рівень і досвід лишаються. Володіння основною зброєю переходить на основну зброю нової професії. Навички старої професії зникають, а речі, яких нова професія не носить, переходять в інвентар.": "Level and experience stay. Mastery of the main weapon moves to the new profession's main weapon. Skills of the old profession are lost, and items the new profession cannot wear go to the inventory."
 },
 "patterns": [
+["^Володіння зброєю: (.*?) → (.*?), рівень (\\d+)\\.$",
+"Weapon mastery: $1 → $2, level $3.",
+1,
+0,
+"Володіння зброєю: "
+],
 ["^Вдягнуто: (\\d+)\\.$",
 "Equipped: $1.",
 1,

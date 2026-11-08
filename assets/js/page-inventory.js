@@ -285,9 +285,14 @@
             const r = RPG.adminSetClass(m, clsSel.value);
             const extra = r.ok && (r.removed.length || r.dropped.length)
               ? ` ${r.removed.length ? `Знято в інвентар: ${r.removed.map(x => RPG.itemFullName(x)).join(", ")}.` : ""}${r.dropped.length ? ` Навички старої професії зникли: ${r.dropped.length}.` : ""}` : "";
-            done(r, `${ch.name}: тепер ${RPG.getClass(clsSel.value).name}.${extra}`);
+            const lines = [`${ch.name}: тепер ${RPG.getClass(clsSel.value).name}.${extra}`];
+            if (r.ok && r.mastery) {                    // володіння основною зброєю перейшло на зброю нової професії
+              const wn = t => T(RPG.WEAPON_TYPES[t]?.name || t).toLowerCase();
+              lines.push(`Володіння зброєю: ${wn(r.mastery.from)} → ${wn(r.mastery.to)}, рівень ${r.mastery.level}.`);
+            }
+            done(r, lines);
           })));
-          clsBox.append(noteP("Рівень і досвід лишаються. Навички старої професії зникають, а речі, яких нова професія не носить, переходять в інвентар."));
+          clsBox.append(noteP("Рівень і досвід лишаються. Володіння основною зброєю переходить на основну зброю нової професії. Навички старої професії зникають, а речі, яких нова професія не носить, переходять в інвентар."));
         }
         dlg.append(clsBox);
 
