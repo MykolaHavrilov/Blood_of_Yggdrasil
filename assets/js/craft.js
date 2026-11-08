@@ -355,7 +355,8 @@
     const bonus = DISASSEMBLE_BONUS[rarity] || null;
     const exp = mats.reduce((n, m) => n + m[1], 0) * DISASSEMBLE_EXP.common + (bonus ? DISASSEMBLE_EXP[bonus] : 0);
     const ready = forgeReady(save);
-    return { ref, recipe, rarity, share, mats, bonus, exp, ready, confirm: rarity === "epic" || rarity === "legendary" };
+    const locked = !!RPG.isItemLocked?.(ref);   // замок закрито — не розбирається
+    return { ref, recipe, rarity, share, mats, bonus, exp, ready, locked, confirm: rarity === "epic" || rarity === "legendary" };
   }
 
   // Розібрати річ з інвентаря. Повертає { ok, reason } або { ok, got: [[id, qty]], exp, levelUps, name }
@@ -363,6 +364,7 @@
     const info = disassembleInfo(save, index);
     if (!info) return { ok: false, reason: "Цю річ не можна розібрати." };
     if (!info.ready.ok) return { ok: false, reason: info.ready.reason };
+    if (info.locked) return { ok: false, reason: RPG.LOCKED_REASON };
     const got = info.mats.map(m => [...m]);
     // руни з гнізд при розборі тріскаються й повертаються зламаними
     for (const id of (RPG.crackedRunes ? RPG.crackedRunes(info.ref) : [])) got.push([id, 1]);
@@ -387,7 +389,37 @@
     return { ok: true, got, exp: info.exp, levelUps, cat, catUps, name, rarity: info.rarity };
   }
 
+  // «Розібрати все»: усі речі інвентаря з відкритим замком, які можна розібрати. Що не влізло (немає місця
+  // для матеріалів) — лишається в інвентарі. Повертає { ok, done, left, got: {id: qty}, exp, levelUps: [рівні], catUps: {група: рівень} }
+  // або { ok: false, reason }
+  function disassembleAllCandidates(save) {
+    const out = [];
+    save.inventory.forEach((ref, index) => { const info = disassembleInfo(save, index); if (info && !info.locked) out.push(index); });
+    return out;
+  }
+  function disassembleAll(save) {
+    const ready = forgeReady(save);
+    if (!ready.ok) return { ok: false, reason: ready.reason };
+    const idx = disassembleAllCandidates(save);
+    if (!idx.length) return { ok: false, reason: "Нічого розбирати: в інвентарі немає речей з відкритим замком, які можна розібрати." };
+    const got = {}, names = [], levelUps = [], catUps = {};
+    let done = 0, left = 0, exp = 0;
+    for (const i of idx.sort((a, b) => b - a)) {      // з кінця — індекси попереду не зсуваються
+      const r = disassemble(save, i);
+      if (!r.ok) { left++; continue; }
+      done++;
+      exp += r.exp;
+      levelUps.push(...(r.levelUps || []));
+      if (r.catUps?.length) catUps[r.cat] = r.catUps.at(-1);
+      names.push(r.name);
+      for (const [id, q] of r.got) got[id] = (got[id] || 0) + q;
+    }
+    if (!done) return { ok: false, reason: "Інвентар повний — нікуди скласти матеріали. Нічого не розібрано." };
+    return { ok: true, done, left, got, exp, levelUps, catUps, names };
+  }
+
   Object.assign(RPG, {
+    disassembleAll, disassembleAllCandidates,
     CRAFT_MAX_LEVEL: MAX_LEVEL, CRAFT_CAT_MAX_LEVEL: CAT_MAX_LEVEL, CRAFT_EXP, craftState, craftExpToNext: expToNext, baseCraftChance: baseChance,
     craftSuccessChance: successChance, craftRarityTable: rarityTable, craftOdds, haveMaterial, recipeInfo,
     craftForgeReady: forgeReady, craftItem, addCraftExp, smeltInfo, smelt,

@@ -4,7 +4,7 @@
 // ============================================================
 
 (function (RPG) {
-  const { $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX } = RPG.ui;
+  const { $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, lockMark, lockButton, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX } = RPG.ui;
 
   // ІНВЕНТАР + СУНДУК
   // ============================================================
@@ -58,11 +58,13 @@
         const entry = list[i];
         if (!entry) { box.append(el("div", "wf wf-slot slot-empty", "")); continue; }
         const cell = fillItemCell(button("", slotClass(entry)), entry, entry.qty);
+        const lm = lockMark(entry);
+        if (lm) cell.append(lm);
         cell.removeAttribute("title");
         cell.setAttribute("aria-label", itemLabel(entry));
         cell.dataset.key = kind + ":" + i;
         if (selected?.kind === kind && selected.index === i) cell.classList.add("is-selected");
-        RPG.bindTip(cell, () => itemInfo(entry, entry.qty, ms), null,
+        RPG.bindTip(cell, () => itemInfo(entry, entry.qty, ms, { onLock }), null,
           { onOpen: () => { pick({ kind, index: i }, cell.dataset.key); return false; } });
         box.append(cell);
       }
@@ -79,10 +81,12 @@
         const item = RPG.ITEMS[RPG.refId(ref)];
         const cell = button("", item ? slotClass(ref, "equip-cell") : "wf wf-slot equip-cell slot-empty");
         fillEquipCell(cell, ref, slot);
+        const lm = item && lockMark(ref);
+        if (lm) cell.append(lm);
         if (selected?.kind === "eq" && selected.slot === slot) cell.classList.add("is-selected");
         cell.dataset.key = "eq:" + slot;
         if (item) {
-          RPG.bindTip(cell, () => itemInfo(ref, 1, ms), null,
+          RPG.bindTip(cell, () => itemInfo(ref, 1, ms, { onLock }), null,
             { onOpen: () => { pick({ kind: "eq", slot }, cell.dataset.key); return false; } });
         } else {
           cell.addEventListener("click", () => { selected = null; RPG.popover.hide(); render(); });
@@ -143,6 +147,29 @@
       }
     }
 
+    // Замок перемкнули в описі речі: зберегти й оновити позначки замків на клітинках (вікно опису лишається відкритим)
+    async function onLock() {
+      await RPG.saveGame(save).catch(e => console.error(e));
+      for (const cell of document.querySelectorAll("[data-key]")) {
+        const [kind, k] = cell.dataset.key.split(":");
+        const ref = kind === "eq" ? ms.equipment[k] : kind === "chest" ? chestOf()[Number(k)] : ms.inventory[Number(k)];
+        cell.querySelector(".item-lock")?.remove();
+        const lm = ref && lockMark(ref);
+        if (lm) cell.append(lm);
+      }
+      renderDesc();
+      // відкрите вікно опису — перебудувати, щоб кнопки дій (напр. «Викинути») відповідали новому замку
+      const open = document.querySelector(".popover:not([hidden]):not(.is-preview)");
+      const cell = openKey && document.querySelector(`[data-key="${CSS.escape(openKey)}"]`);
+      const ref = selectedRef();
+      if (open && cell && ref) {
+        const box = itemInfo(ref, ref.qty || 1, ms, { onLock });
+        const diff = desc.querySelector(".item-diff");
+        if (diff) box.append(diff.cloneNode(true));
+        RPG.popover.show(cell, box, { actions: invActions() });
+      }
+    }
+
     // Клік по предмету: виділити його і показати вікно з описом та діями.
     // Повторний клік по тому ж предмету — закрити вікно.
     let openKey = null;
@@ -154,7 +181,7 @@
       const cell = document.querySelector(`[data-key="${CSS.escape(key)}"]`);
       const ref = selectedRef();
       if (!cell || !ref) return;
-      const box = itemInfo(ref, ref.qty || 1, ms);
+      const box = itemInfo(ref, ref.qty || 1, ms, { onLock });
       const diff = desc.querySelector(".item-diff");
       if (diff) box.append(diff.cloneNode(true));
       RPG.popover.show(cell, box, { actions: invActions() });
@@ -194,7 +221,7 @@
       }
       const ref = selectedRef();
       const item = RPG.ITEMS[id];
-      desc.append(itemInfo(ref, ref.qty || 1, ms));
+      desc.append(itemInfo(ref, ref.qty || 1, ms, { onLock }));
 
       if (selected.kind === "inv" && item.slot) {
         const diff = RPG.previewEquip(ms, selected.index);
@@ -207,7 +234,11 @@
       if (selected.kind === "eq") btnUnequip.disabled = false;
       if (selected.kind === "inv" && (item.type === "consumable" || item.type === "blueprint" || item.adminPanel)) btnUse.disabled = false;
       btnUse.textContent = item.adminPanel ? "Відкрити" : "Використати";   // Печатка Адміністратора — вікно адміністрування
-      if (selected.kind === "inv") btnDrop.disabled = !!RPG.ITEMS[ms.inventory[selected.index]?.id]?.locked;   // Сфера Богів не викидається
+      if (selected.kind === "inv") {
+        const e = ms.inventory[selected.index];
+        btnDrop.disabled = !!RPG.ITEMS[e?.id]?.locked || RPG.isItemLocked(e);   // Сфера Богів і речі під замком не викидаються
+        btnDrop.title = RPG.isItemLocked(e) ? RPG.LOCKED_REASON : "";
+      }
       if (selected.kind === "inv" && atHome) btnToChest.disabled = false;
       if (selected.kind === "chest" && atHome) btnFromChest.disabled = false;
       if (RPG.uiRunesSeen && (selected.kind === "inv" || selected.kind === "eq") && ref.sockets > 0) btnRunes.disabled = false;
@@ -485,6 +516,7 @@
       const entry = ms.inventory[selected.index];
       const item = RPG.ITEMS[entry.id];
       if (item?.locked) { await commit(`«${item.name}» — предмет адміністратора, його не можна викинути.`, true); return; }
+      if (RPG.isItemLocked(entry)) { await commit(RPG.LOCKED_REASON, true); return; }
       if (!confirm(`Викинути «${RPG.itemFullName(entry)}»${entry.qty > 1 ? ` ×${entry.qty}` : ""}?`)) return;
       ms.inventory.splice(selected.index, 1);
       selected = null;

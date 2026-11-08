@@ -4,7 +4,7 @@
 // ============================================================
 
 (function (RPG) {
-  const { $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX } = RPG.ui;
+  const { $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, lockMark, lockButton, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX } = RPG.ui;
 
   // ЕКРАН ЛОКАЦІЇ (бій, Домівка, Храм, Шинок)
   // ============================================================
@@ -108,6 +108,8 @@
         if (!entry) { box.append(el("div", "wf wf-slot slot-empty", "")); continue; }
         const item = RPG.ITEMS[entry.id];
         const cell = fillItemCell(button("", slotClass(entry)), entry, entry.qty);
+        const lm = lockMark(entry);
+        if (lm) cell.append(lm);
         cell.removeAttribute("title");
         cell.setAttribute("aria-label", itemLabel(entry));
         const usable = item.type === "consumable";
@@ -127,7 +129,10 @@
         } else {
           cell.classList.add("slot-passive");
         }
-        RPG.bindTip(cell, () => itemInfo(entry, entry.qty, ms), () => [
+        RPG.bindTip(cell, () => itemInfo(entry, entry.qty, ms, { onLock: async () => {
+          await RPG.saveGame(save).catch(e => console.error(e));
+          cell.querySelector(".item-lock")?.replaceWith(lockMark(entry));
+        } }), () => [
           usable && { text: "Використати", className: "wf-button", onClick: use },
           { text: "Інвентар", className: "wf-link", onClick: () => { location.href = "inventory.html"; } }
         ]);
@@ -468,15 +473,35 @@
           "епічна — 60% + 1 епічний, легендарна — 70% + Небесна іскра. Досвід — за кожен матеріал: 1 / 3 / 8 / 25. Розбираються лише речі з інвентаря — рецепт не потрібен; вдягнені спершу зніміть, зі скринь — заберіть в інвентар."));
         const ready = RPG.craftForgeReady(save);
         if (!ready.ok) list.append(el("small", "forge-why", ready.reason));
+        // «Розібрати все» — усе з відкритим замком; що не влізло (немає місця для матеріалів) — лишається
+        const allIdx = RPG.disassembleAllCandidates(save);
+        const allBtn = button(`Розібрати все (${allIdx.length})`, "wf wf-danger forge-btn forge-all-btn", async () => {
+          const q = `Розібрати всі речі з відкритим замком (${allIdx.length})? Речі під замком не чіпаються. Цю дію не можна скасувати.`;
+          if (!confirm(RPG.t ? RPG.t(q) : q)) return;
+          disConfirm = null;
+          const r = RPG.disassembleAll(save);
+          if (!r.ok) { forgeResult = { text: r.reason, error: true }; draw(); return; }
+          await RPG.saveGame(save);
+          const got = Object.entries(r.got).map(([id, q]) => `${RPG.ITEMS[id].name} ×${fmtNum(q)}`).join(", ");
+          const ups = craftUpsText({ levelUps: r.levelUps, cat: null, catUps: [] });
+          forgeResult = { text: `Розібрано речей: ${r.done}. Отримано: ${got}. +${fmtNum(r.exp)} досвіду майстерності` + ups +
+            (r.left ? ` Не вистачило місця для матеріалів — лишилось нерозібраними: ${r.left}.` : ""), error: r.left > 0 };
+          draw();
+        });
+        allBtn.disabled = !ready.ok || !allIdx.length;
+        allBtn.title = allIdx.length ? "" : "Немає речей з відкритим замком, які можна розібрати.";
+        list.append(allBtn);
         let any = false;
         save.inventory.forEach((ref, index) => {
           const info = RPG.disassembleInfo(save, index);
           if (!info) return;
           any = true;
-          const row = el("div", "forge-row");
+          const row = el("div", "forge-row" + (info.locked ? " is-locked" : ""));
           const head = el("div", "forge-head");
+          const lm = lockMark(ref);
           head.append(smallIcon(ref), el("strong", "forge-dis-name" + rarityTextClass(ref), RPG.itemFullName(ref)),
             el("small", "forge-tier", `${RARITY_LABEL[info.rarity]} · ${pct(info.share)}`));
+          if (lm) head.append(lm);
           row.append(head);
           const mats = el("div", "forge-mats");
           for (const [id, q] of info.mats) mats.append(el("span", "forge-mat is-ok", `${RPG.ITEMS[id].name} ×${q}`));
@@ -495,7 +520,8 @@
               craftUpsText(r) };
             draw();
           });
-          b.disabled = !ready.ok;
+          b.disabled = !ready.ok || info.locked;
+          if (info.locked) { b.textContent = "Під замком"; b.title = RPG.LOCKED_REASON; }
           row.append(b);
           if (asking) row.append(button("Скасувати", "wf wf-link", () => { disConfirm = null; forgeResult = null; draw(); }));
           list.append(row);
@@ -992,6 +1018,28 @@
       const sellBox = el("div", "stack shop-list");
       sellBox.append(el("h3", null, "Продати (з інвентаря)"));
       if (!save.inventory.length) sellBox.append(el("p", "status", "Інвентар порожній. Вдягнені речі спершу зніміть."));
+      // «Продати все» — усе з відкритим замком, крім квестових предметів, ключів і мішечків на пояс
+      const sellList = RPG.sellAllCandidates(save);
+      if (save.inventory.length) {
+        const total = sellList.reduce((n, x) => n + x.price, 0);
+        const allBtn = button(`Продати все · +${fmtNum(total)} зол.`, "wf wf-danger sell-all-btn", async () => {
+          RPG.popover.hide();
+          const now = RPG.sellAllCandidates(save);           // замки могли змінитися в описі речі
+          if (!now.length) { showMsg(msg, "Нічого продати: усе в інвентарі під замком або не продається.", true); renderAll(); return; }
+          const sum = now.reduce((n, x) => n + x.price, 0);
+          const q = `Продати всі речі? З інвентаря буде продано ${now.length} клітинок з відкритим замком за ${fmtNum(sum)} золота. ` +
+            "Речі під замком, квестові предмети, ключі й мішечки на пояс лишаться.";
+          if (!confirm(RPG.t ? RPG.t(q) : q)) return;
+          const res = RPG.sellAll(save);
+          if (!res.ok) { showMsg(msg, res.reason, true); return; }
+          await RPG.saveGame(save);
+          showMsg(msg, `Продано всі речі: ${fmtNum(res.count)} шт. (${res.kinds} клітинок) за ${fmtNum(res.gold)} золота.`);
+          renderAll();
+        });
+        allBtn.disabled = !sellList.length;
+        allBtn.title = sellList.length ? "" : "Нічого продати: усе під замком або не продається.";
+        sellBox.append(allBtn);
+      }
       save.inventory.forEach((entry, index) => {
         const item = RPG.ITEMS[entry.id];
         const unit = RPG.refSellPrice(entry);
@@ -999,7 +1047,11 @@
         r.type = "button";
         const label = el("span", "shop-name", itemLabel(entry));
         if (RPG.hasRarity(entry.id)) label.classList.add("rt-" + RPG.rarityOf(entry));
-        r.append(smallIcon(entry), label, el("span", "shop-price is-sell", `+${fmtNum(unit)} зол.`));
+        r.append(smallIcon(entry), label);
+        const lm = lockMark(entry);
+        if (lm) r.append(lm);
+        r.append(el("span", "shop-price is-sell", `+${fmtNum(unit)} зол.`));
+        if (RPG.isItemLocked(entry)) r.classList.add("is-locked");
 
         async function sell(qty) {
           RPG.popover.hide();
@@ -1012,7 +1064,11 @@
 
         // Вікно продажу: опис + (для стопки) вибір кількості
         const build = () => {
-          const box = itemInfo(entry, entry.qty, save);
+          const box = itemInfo(entry, entry.qty, save, { onLock: async () => {
+            await RPG.saveGame(save).catch(e => console.error(e));
+            r.classList.toggle("is-locked", RPG.isItemLocked(entry));
+            r.querySelector(".item-lock")?.replaceWith(lockMark(entry));
+          } });
           if (entry.qty > 1) {
             const sellRow = el("div", "sell-qty");
             const minus = button("−", "wf wf-secondary qty-btn");

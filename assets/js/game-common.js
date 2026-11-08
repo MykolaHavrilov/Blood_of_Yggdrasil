@@ -1046,6 +1046,44 @@
     if (sockets) cell.append(sockets);
     return cell;
   }
+  // Замок речі (character.js → isItemLocked): маленька позначка внизу по центру клітинки —
+  // сірий відкритий або чорний закритий. Лише для речей гравця (інвентар, скрині, вдягнене, продаж, розбір).
+  const LOCK_SVG = {
+    closed: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 7V5a3.5 3.5 0 0 1 7 0v2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="2.5" y="7" width="11" height="8" rx="1.5" fill="currentColor"/></svg>',
+    open: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 7V5a3.5 3.5 0 0 1 6.6-1.6" fill="none" stroke="currentColor" stroke-width="2"/><rect x="2.5" y="7" width="11" height="8" rx="1.5" fill="currentColor"/></svg>'
+  };
+  function lockMark(ref) {
+    if (!ref || typeof ref !== "object" || !RPG.isItemLocked) return null;
+    const item = RPG.ITEMS[ref.id];
+    if (!item || item.quest || item.locked) return null;     // квестові й предмети адміністратора — без замка
+    const locked = RPG.isItemLocked(ref);
+    const m = el("span", "item-lock " + (locked ? "is-locked" : "is-open"));
+    m.innerHTML = locked ? LOCK_SVG.closed : LOCK_SVG.open;
+    m.setAttribute("aria-hidden", "true");
+    return m;
+  }
+  // Кнопка замка в описі речі: перемикає замок і викликає onChange (зберегти, перемалювати)
+  function lockButton(ref, onChange) {
+    const b = el("button", "tip-lock");
+    b.type = "button";
+    const paint = () => {
+      const locked = RPG.isItemLocked(ref);
+      b.className = "tip-lock " + (locked ? "is-locked" : "is-open");
+      b.innerHTML = locked ? LOCK_SVG.closed : LOCK_SVG.open;
+      b.title = locked ? "Замок закрито: річ не продається й не розбирається. Натисніть, щоб відкрити."
+                       : "Замок відкрито: річ можна продати й розібрати. Натисніть, щоб закрити.";
+      b.setAttribute("aria-label", locked ? "Відкрити замок" : "Закрити замок");
+      b.setAttribute("aria-pressed", String(locked));
+    };
+    paint();
+    b.addEventListener("click", ev => {
+      ev.stopPropagation();
+      RPG.toggleItemLock(ref);
+      paint();
+      onChange?.(ref);
+    });
+    return b;
+  }
   // Ромбики гнізд у куті комірки: порожній — вільне гніздо, кольоровий — руна (колір рідкості руни).
   // Видно лише після прочитання книги «Руни Небесної Кузні» (RPG.uiRunesSeen).
   function socketMarks(ref) {
@@ -1385,7 +1423,8 @@
   };
 
   // ref — ID або екземпляр; qty — кількість у стопці; ms — сейв героя (для комплектів)
-  function itemInfo(ref, qty = 1, ms = null) {
+  // opts.onLock — показати кнопку замка (лише для речей гравця); викликається після перемикання
+  function itemInfo(ref, qty = 1, ms = null, opts = {}) {
     const id = RPG.refId(ref);
     const item = RPG.ITEMS[id];
     const box = el("div", "tip-item");
@@ -1413,6 +1452,7 @@
         `другорядні ${p.secondary}, допоміжні ${p.auxiliary}` + (p.extra ? `, рідкість і рівень ${p.extra}` : "");
       head.append(badge);
     }
+    if (opts.onLock && ref && typeof ref === "object" && !item.locked && !item.quest) head.append(lockButton(ref, opts.onLock));
     box.append(head);
 
     const stats = Object.entries(RPG.itemStats(ref));
@@ -1485,6 +1525,6 @@
   // ============================================================
 
   RPG.pages = {};
-  RPG.ui = { expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, showExpeditionBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
+  RPG.ui = { expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, showExpeditionBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, lockMark, lockButton, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
   RPG.ui.meetRenouncer = meetRenouncer;   // «Шлях відреченого»
 })(window.RPG);

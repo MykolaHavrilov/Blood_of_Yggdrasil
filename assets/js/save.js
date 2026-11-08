@@ -166,7 +166,11 @@
   function compactStacks(list, maxOf = null) {
     const out = [];
     for (const entry of list) {
-      if (RPG.ITEMS[entry.id]?.stackable) RPG.addToList(out, entry.id, entry.qty, maxOf);
+      if (RPG.ITEMS[entry.id]?.stackable) {
+        RPG.addToList(out, entry.id, entry.qty, maxOf);
+        // замок стопки (character.js → isItemLocked) не губиться при зведенні: закритий, якщо закрита хоч одна
+        if (typeof entry.lock === "boolean") for (const e of out) if (e.id === entry.id) e.lock = e.lock === true || entry.lock;
+      }
       else out.push(entry);
     }
     return out;

@@ -820,6 +820,28 @@ function removeGodsOrb(save) {
   return removed ? { ok: true, removed } : { ok: false, reason: "Сфери Богів у цьому збереженні немає." };
 }
 
+// ---------- Замок на речах (v0.3.24) ----------
+// entry.lock: true — замок закрито, false — відкрито; поля немає — за замовчуванням:
+// легендарні речі й речі комплектів з бонусом (ITEM_SETS: комплекти професій, слизовий тощо) — закриті, решта — відкриті.
+// Закритий замок не дає продати, розібрати чи викинути річ; вдягнути й покласти в скриню — можна.
+// Замок перемикається кнопкою в описі речі (game-common.js → itemInfo, опція onLock).
+function lockedByDefault(entry) {
+  const item = ITEMS[entry?.id];
+  if (!item) return false;
+  if (RPG.hasRarity?.(entry.id) && RPG.rarityOf?.(entry) === "legendary") return true;
+  return !!(item.set && RPG.ITEM_SETS?.[item.set]);
+}
+function isItemLocked(entry) {
+  if (!entry || typeof entry !== "object") return false;
+  return typeof entry.lock === "boolean" ? entry.lock : lockedByDefault(entry);
+}
+function toggleItemLock(entry) {
+  if (!entry || typeof entry !== "object") return false;
+  entry.lock = !isItemLocked(entry);
+  return entry.lock;
+}
+const LOCKED_REASON = "Річ під замком — відкрийте замок в описі речі.";
+
 // ---------- Печатка Адміністратора (data/items.js → admin_seal, код open.admin) ----------
 // Лише в інвентарі (не в скрині), одна на збереження. Функції нижче працюють, лише поки печатка в інвентарі.
 const ADMIN_SEAL = "admin_seal";
@@ -1663,6 +1685,7 @@ function sellItem(save, invIndex, qty = 1) {
   if (!entry) return { ok: false, reason: "Порожня клітинка." };
   if (ITEMS[entry.id]?.quest) return { ok: false, reason: "Квестові предмети торговець не купує." };
   if (ITEMS[entry.id]?.locked) return { ok: false, reason: `«${ITEMS[entry.id].name}» — предмет адміністратора, його не можна продати.` };
+  if (isItemLocked(entry)) return { ok: false, reason: LOCKED_REASON };
   qty = Math.floor(Number(qty));
   if (!(qty >= 1)) return { ok: false, reason: "Вкажіть кількість від 1." };
   qty = Math.min(qty, entry.qty);
@@ -1671,6 +1694,32 @@ function sellItem(save, invIndex, qty = 1) {
   if (entry.qty <= 0) save.inventory.splice(invIndex, 1);
   save.character.gold += price;
   return { ok: true, id: entry.id, qty, price, ref: entry };
+}
+
+// Що з інвентаря піде в «Продати все»: усе з відкритим замком, крім квестових предметів, ключів, мішечків на пояс
+// і предметів адміністратора
+function sellAllCandidates(save) {
+  const out = [];
+  save.inventory.forEach((entry, index) => {
+    const item = ITEMS[entry?.id];
+    if (!item || item.quest || item.type === "quest" || item.pocket === "keys" || item.type === "pouch" || item.locked) return;
+    if (isItemLocked(entry)) return;
+    out.push({ entry, index, price: RPG.refSellPrice(entry) * (entry.qty || 1) });
+  });
+  return out;
+}
+// Продати все одним махом (торговець має бути поруч). Повертає { ok, count, kinds, gold } або { ok: false, reason }
+function sellAll(save) {
+  if (!currentShop(save)) return { ok: false, reason: "Тут немає торговця." };
+  const list = sellAllCandidates(save);
+  if (!list.length) return { ok: false, reason: "Нічого продати: усе в інвентарі під замком або не продається." };
+  let gold = 0, count = 0, kinds = 0;
+  for (const { index } of [...list].sort((a, b) => b.index - a.index)) {
+    const entry = save.inventory[index];
+    const r = sellItem(save, index, entry.qty || 1);
+    if (r.ok) { gold += r.price; count += r.qty; kinds++; }
+  }
+  return { ok: true, gold, count, kinds };
 }
 
 // ---------- Нагорода за бій ----------
@@ -1716,6 +1765,7 @@ function applyReward(save, exp, loot) {
 Object.assign(RPG, {
   autoPotion, AUTO_POTIONS, GODS_ORB, godsOrb, hasGodsOrb, grantGodsOrb, removeGodsOrb,
   ADMIN_SEAL, hasAdminSeal, grantAdminSeal, removeAdminSeal, adminSetLevel, adminSetClass,
+  isItemLocked, lockedByDefault, toggleItemLock, LOCKED_REASON, sellAllCandidates, sellAll,
   ADMIN_ARMOR_SETS, adminWeaponTypes, adminGearIds, adminGiveGear, INV_SIZE, invFree, fitQty, invSize, BELT_SLOTS, POUCH_DROP, beltOf, beltBonus, putOnBelt, takeFromBelt, rollPouchDrop,
   TRADE_MIN_LEVEL, TRADE_PRICE_MULT, tradeStock, tradePrice, buyFromTrade, isDistrictOpen, districtLockText,
   IFRIT, ifritPrice, buyFromIfrit,                // ТЕСТ: прибрати разом з блоком IFRIT
