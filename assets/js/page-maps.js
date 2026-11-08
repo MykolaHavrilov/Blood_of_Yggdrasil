@@ -73,13 +73,20 @@
     return z;
   }
 
-  // Фігурка героя (SVG)
-  const HERO_FIGURE = `<svg viewBox="0 0 24 40" aria-hidden="true">
-    <circle cx="12" cy="6" r="5" fill="#f4d3a6" stroke="#3a2a14" stroke-width="1.2"/>
-    <path d="M6 13 h12 l2 13 h-4 l-1 13 h-3 l-0.5 -9 h-1 l-0.5 9 h-3 l-1 -13 h-4 z" fill="#2f6fd6" stroke="#10213f" stroke-width="1.2" stroke-linejoin="round"/>
-    <path d="M7 15 l-4 9" stroke="#f4d3a6" stroke-width="2.4" stroke-linecap="round"/>
-    <path d="M17 15 l3 6 l1 -7" stroke="#8a5a2b" stroke-width="2" stroke-linecap="round" fill="none"/>
-  </svg>`;
+  // Фігурка героя на мапі (assets/images/map/map_hero_*.webp): 1 герой — чоловік / жінка (стать головного героя),
+  // 2 герої — 2 фігурки, 3 і більше — 3. Рахуються герої, що зараз удома (не в експедиції). Намальовані обличчям праворуч;
+  // коли дорога веде ліворуч, фігурка дзеркалиться (клас is-left).
+  function heroFigure(save) {
+    const n = RPG.partyMembers(save).filter(ms => !RPG.isAway?.(ms)).length;
+    const key = n >= 3 ? "3" : n === 2 ? "2" : RPG.heroGender(save) === "f" ? "1f" : "1m";
+    const wrap = el("span", "hero-fig");
+    const img = el("img");
+    img.src = RPG.asset(`assets/images/map/map_hero_${key}.webp`);
+    img.alt = "";
+    img.decoding = "async";
+    wrap.append(img);
+    return wrap;
+  }
 
   async function pageMaps() {
     const save = await requireSave();
@@ -247,7 +254,7 @@
     tip.hidden = true;
     mapBox.append(tip);
     hero = el("div", "map-hero");
-    hero.innerHTML = HERO_FIGURE;
+    hero.append(heroFigure(save));
     hero.append(el("span", "hero-tag", save.character.name));
     timerTag = el("span", "hero-timer");
     timerTag.hidden = true;
@@ -298,9 +305,14 @@
       pathLayer.innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="${line}"/></svg>`;
     }
 
+    let lastX = null;
     function tick() {
       const tr = RPG.travelState(save);
       if (!tr) return;
+      // Куди йде фігурка: ліворуч — дзеркально (на початку — за напрямком усієї дороги)
+      const dx = lastX == null ? tr.pts[tr.pts.length - 1][0] - tr.pts[0][0] : tr.pos.x - lastX;
+      if (Math.abs(dx) > 0.02) hero.classList.toggle("is-left", dx < 0);
+      lastX = tr.pos.x;
       setHero(tr.pos.x, tr.pos.y);
       timerTag.textContent = RPG.fmtLeft(tr.totalLeftMs);
       if (tr.leftMs > 0) return;
@@ -573,7 +585,7 @@
       const a = w.at[tr.from], b = w.at[tr.to];
       if (!a || !b) return null;
       const k = tr.progress;
-      return { n: w.n, x: a[0] + (b[0] - a[0]) * k, y: a[1] + (b[1] - a[1]) * k };
+      return { n: w.n, x: a[0] + (b[0] - a[0]) * k, y: a[1] + (b[1] - a[1]) * k, left: b[0] < a[0] };
     }
     const spot = RPG.whereIs(save).spot, p = w.at[spot];
     return p ? { n: w.n, x: p[0], y: p[1], spot } : null;
@@ -678,7 +690,8 @@
     let heroEl = null;
     if (hero) {
       heroEl = el("div", "globe-hero");
-      heroEl.innerHTML = HERO_FIGURE;
+      heroEl.append(heroFigure(save));
+      heroEl.classList.toggle("is-left", !!hero.left);
       heroEl.append(el("span", "hero-tag", save.character.name));
       heroEl.style.left = hero.x + "%";
       heroEl.style.top = hero.y + "%";
