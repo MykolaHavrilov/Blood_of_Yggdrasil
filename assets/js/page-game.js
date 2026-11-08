@@ -2763,7 +2763,8 @@
             if (it.lost) { const n = RPG.ITEMS[it.id].name; lost[n] = (lost[n] || 0) + it.lost; }
             if (it.filtered) it.filtered.forEach(ref => { const n = RPG.itemFullName(ref); filtered[n] = (filtered[n] || 0) + 1; });
           }
-          save.character.kills = (save.character.kills || 0) + 1;
+          // Перемогу над ворогом записуємо кожному героєві, що бився (і найманим — «Розвиток» на сторінці «Персонаж»)
+          for (const ms of team) ms.character.kills = (ms.character.kills || 0) + 1;
           summary.push(...RPG.questOnKill(save, e.id).map(s => "Завдання: " + s));
           if (e.champion) {
             // Трофей чемпіона: одна річ (легендарна 5% → епічна 25% → магічна 50%)

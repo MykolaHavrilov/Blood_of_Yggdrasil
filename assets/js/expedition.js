@@ -203,7 +203,7 @@
         if (runeEco.gold && gold) gold = Math.round(gold * (1 + runeEco.gold / 100));
         bag.gold += gold;
         for (const it of loot.items) bagAddLootItem(save, bag, it.id, it.qty, runeEco.lootRarity);
-        save.character.kills = (save.character.kills || 0) + 1;
+        for (const ms of team) ms.character.kills = (ms.character.kills || 0) + 1;   // кожному, хто бився
         RPG.questOnKill?.(save, en.id);
         if (en.champion) {
           e.champions++;
