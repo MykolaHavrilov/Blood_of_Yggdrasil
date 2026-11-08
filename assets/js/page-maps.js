@@ -95,6 +95,7 @@
     const districts = RPG.LOCATIONS.city.districts || [];
     const ids = REGION_ORDER[region].filter(id => ZONES[id] && R.spots[id]).concat(Object.keys(SITE_ZONES[region] || {}).filter(id => RPG.LOCATIONS[id]));
     let selected = t0 ? t0.to : here.spot;
+    let tipPinned = false;   // опис місця на мапі — лише після натискання гравця (спершу видно тільки фігурку й ім'я героя)
     let travelTimer = null;
     // Музика мапи: регіон світу; на мапі Дубової Застави — тема району, куди йде (або де стоїть) герой
     RPG.audio?.scene({ screen: "map", region, district: region === "city" ? selected : null });
@@ -203,7 +204,7 @@
       spot.addEventListener("focus", () => showTip(id));
       spot.addEventListener("mouseleave", restTip);
       spot.addEventListener("blur", restTip);
-      spot.addEventListener("click", () => { selected = id; render(); });
+      spot.addEventListener("click", () => { selected = id; tipPinned = true; render(); });
       spot.addEventListener("dblclick", () => isSite(id) ? showExpeditionDialog(id) : go(id));
       mapBox.append(spot);
     }
@@ -302,10 +303,11 @@
     }
 
     // ---------- Список місць і опис ----------
-    // Без наведення: підказка обраного місця (у дорозі — схована, щоб не закривати фігурку)
+    // Без наведення: підказка обраного місця — лише якщо гравець сам натиснув на місце
+    // (на початку видно тільки фігурку героя з ім'ям; у дорозі підказка схована, щоб не закривати фігурку)
     function restTip() {
       showTip(selected);
-      if (RPG.isTraveling(save)) tip.hidden = true;
+      if (!tipPinned || RPG.isTraveling(save)) tip.hidden = true;
     }
 
     function render() {
@@ -319,7 +321,7 @@
           : st.kind === "closed" && !RPG.isTraveling(save) ? "Закрито" : st.text));
         if (selected === id) cell.classList.add("is-selected");
         if (st.kind === "closed") cell.setAttribute("aria-disabled", "true");
-        cell.addEventListener("click", () => { selected = id; render(); });
+        cell.addEventListener("click", () => { selected = id; tipPinned = true; render(); });
         grid.append(cell);
       }
       renderDetails();
