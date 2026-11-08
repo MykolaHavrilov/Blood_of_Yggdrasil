@@ -5,6 +5,9 @@
 
 (function (RPG) {
   const { $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, lockMark, lockButton, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX } = RPG.ui;
+  const T = x => (RPG.t ? RPG.t(x) : x);
+  // Стовпчик із 5 золотих монет — кнопка швидкого продажу в торговця
+  const COINS_SVG = '<svg viewBox="0 0 20 28" width="18" height="25" aria-hidden="true" focusable="false"><rect x="2.5" y="21.0" width="15" height="3" fill="#b07c0c"/><path d="M2.5 22.5h15" stroke="#7a5506" stroke-width=".5"/><ellipse cx="10" cy="24.0" rx="7.5" ry="2.2" fill="#9a6a08"/><ellipse cx="10" cy="21.0" rx="7.5" ry="2.2" fill="#ffd45a" stroke="#7a5506" stroke-width=".6"/><rect x="2.5" y="17.4" width="15" height="3" fill="#b07c0c"/><path d="M2.5 18.9h15" stroke="#7a5506" stroke-width=".5"/><ellipse cx="10" cy="20.4" rx="7.5" ry="2.2" fill="#9a6a08"/><ellipse cx="10" cy="17.4" rx="7.5" ry="2.2" fill="#ffd45a" stroke="#7a5506" stroke-width=".6"/><rect x="2.5" y="13.8" width="15" height="3" fill="#b07c0c"/><path d="M2.5 15.3h15" stroke="#7a5506" stroke-width=".5"/><ellipse cx="10" cy="16.8" rx="7.5" ry="2.2" fill="#9a6a08"/><ellipse cx="10" cy="13.8" rx="7.5" ry="2.2" fill="#ffd45a" stroke="#7a5506" stroke-width=".6"/><rect x="2.5" y="10.2" width="15" height="3" fill="#b07c0c"/><path d="M2.5 11.7h15" stroke="#7a5506" stroke-width=".5"/><ellipse cx="10" cy="13.2" rx="7.5" ry="2.2" fill="#9a6a08"/><ellipse cx="10" cy="10.2" rx="7.5" ry="2.2" fill="#ffd45a" stroke="#7a5506" stroke-width=".6"/><rect x="2.5" y="6.6" width="15" height="3" fill="#b07c0c"/><path d="M2.5 8.1h15" stroke="#7a5506" stroke-width=".5"/><ellipse cx="10" cy="9.6" rx="7.5" ry="2.2" fill="#9a6a08"/><ellipse cx="10" cy="6.6" rx="7.5" ry="2.2" fill="#ffd45a" stroke="#7a5506" stroke-width=".6"/><ellipse cx="8.3" cy="6.2" rx="3" ry=".7" fill="#fff6c8" opacity=".75"/></svg>';
 
   // ЕКРАН ЛОКАЦІЇ (бій, Домівка, Храм, Шинок)
   // ============================================================
@@ -1043,6 +1046,8 @@
       save.inventory.forEach((entry, index) => {
         const item = RPG.ITEMS[entry.id];
         const unit = RPG.refSellPrice(entry);
+        const qtyAll = entry.qty || 1;
+        const line = el("div", "sell-line");
         const r = el("button", "shop-row shop-info");
         r.type = "button";
         const label = el("span", "shop-name", itemLabel(entry));
@@ -1050,8 +1055,27 @@
         r.append(smallIcon(entry), label);
         const lm = lockMark(entry);
         if (lm) r.append(lm);
-        r.append(el("span", "shop-price is-sell", `+${fmtNum(unit)} зол.`));
+        // Ціна — скільки дасть кнопка «Продати» поруч (для стопки — за всю клітинку)
+        const priceEl = el("span", "shop-price is-sell", `+${fmtNum(unit * qtyAll)} зол.`);
+        if (qtyAll > 1) priceEl.title = T(`${fmtNum(qtyAll)} × ${fmtNum(unit)} зол.`);
+        r.append(priceEl);
         if (RPG.isItemLocked(entry)) r.classList.add("is-locked");
+        // Кнопка швидкого продажу (стовпчик монет) — продає всю клітинку одним натиском
+        const quick = el("button", "quick-sell");
+        quick.type = "button";
+        quick.innerHTML = COINS_SVG;
+        const noSell = item?.quest || item?.type === "quest" || item?.locked;
+        const paintQuick = () => {
+          const locked = RPG.isItemLocked(entry);
+          quick.disabled = !!(noSell || locked);
+          const t = noSell ? "Торговець це не купує."
+            : locked ? RPG.LOCKED_REASON
+            : `Продати${qtyAll > 1 ? ` (${qtyAll})` : ""} · +${fmtNum(unit * qtyAll)} зол.`;
+          quick.title = T(t);
+          quick.setAttribute("aria-label", T(t));
+        };
+        paintQuick();
+        quick.addEventListener("click", e => { e.stopPropagation(); sell(qtyAll); });
 
         async function sell(qty) {
           RPG.popover.hide();
@@ -1068,6 +1092,7 @@
             await RPG.saveGame(save).catch(e => console.error(e));
             r.classList.toggle("is-locked", RPG.isItemLocked(entry));
             r.querySelector(".item-lock")?.replaceWith(lockMark(entry));
+            paintQuick();
           } });
           if (entry.qty > 1) {
             const sellRow = el("div", "sell-qty");
@@ -1099,7 +1124,8 @@
         RPG.bindTip(r, build, () => entry.qty > 1
           ? [{ text: `Продати все (${entry.qty}) · +${fmtNum(unit * entry.qty)} зол.`, className: "wf-secondary", onClick: () => sell(entry.qty) }]
           : [{ text: `Продати · +${fmtNum(unit)} зол.`, className: "wf-button", onClick: () => sell(1) }]);
-        sellBox.append(r);
+        line.append(r, quick);
+        sellBox.append(line);
       });
 
       cols.append(buyBox, sellBox);

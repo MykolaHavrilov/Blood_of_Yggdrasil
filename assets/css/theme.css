@@ -424,3 +424,19 @@ a.map-world:hover, a.map-world:focus-visible { outline: none; border-color: var(
 .shop-row.is-locked .shop-price { opacity: .5; text-decoration: line-through; }
 .sell-all-btn, .forge-all-btn { justify-self: start; }
 .forge-row.is-locked .forge-btn { opacity: .7; }
+
+/* ---------- Торговець: швидкий продаж (рядок · ціна · кнопка-монети) ---------- */
+.sell-line { display: flex; align-items: stretch; gap: 6px; }
+.sell-line > .shop-row { flex: 1 1 auto; min-width: 0; }
+.quick-sell {
+  flex: 0 0 auto; width: 42px; min-height: 38px; padding: 0; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: linear-gradient(#3a3020, #241c12); border: 1px solid #8a6a2a; border-radius: var(--radius-sm);
+  box-shadow: inset 0 1px 0 rgba(255, 220, 140, .18);
+}
+.quick-sell:hover:not(:disabled) { border-color: var(--gold); filter: brightness(1.2); }
+.quick-sell:active:not(:disabled) { transform: translateY(1px); }
+.quick-sell:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+.quick-sell svg { width: 18px; height: 25px; display: block; }
+.quick-sell:disabled { opacity: .35; cursor: not-allowed; filter: grayscale(1); }
+@media (hover: none), (max-width: 700px) { .quick-sell { width: 48px; min-height: 44px; } .quick-sell svg { width: 21px; height: 29px; } }

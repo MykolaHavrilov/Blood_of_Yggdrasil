@@ -2788,9 +2788,16 @@ RPG.I18N.en = {
 "Нічого продати: усе під замком або не продається.": "Nothing to sell: everything is locked or not for sale.",
 "Немає речей з відкритим замком, які можна розібрати.": "No unlocked items that can be salvaged.",
 "Нічого розбирати: в інвентарі немає речей з відкритим замком, які можна розібрати.": "Nothing to salvage: no unlocked items in the inventory can be salvaged.",
-"Інвентар повний — нікуди скласти матеріали. Нічого не розібрано.": "The inventory is full — no room for materials. Nothing was salvaged."
+"Інвентар повний — нікуди скласти матеріали. Нічого не розібрано.": "The inventory is full — no room for materials. Nothing was salvaged.",
+"Торговець це не купує.": "The merchant won't buy that."
 },
 "patterns": [
+["^(.+?) × (.+?) зол\\.$",
+"$1 × $2 gold",
+1,
+0,
+" × "
+],
 ["^Продати все · \\+(\\S+) зол\\.$",
 "Sell all · +$1 gold",
 1,
