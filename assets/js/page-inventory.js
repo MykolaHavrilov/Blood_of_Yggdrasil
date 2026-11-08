@@ -288,11 +288,13 @@
             const lines = [`${ch.name}: тепер ${RPG.getClass(clsSel.value).name}.${extra}`];
             if (r.ok && r.mastery) {                    // володіння основною зброєю перейшло на зброю нової професії
               const wn = t => T(RPG.WEAPON_TYPES[t]?.name || t).toLowerCase();
-              lines.push(`Володіння зброєю: ${wn(r.mastery.from)} → ${wn(r.mastery.to)}, рівень ${r.mastery.level}; ${wn(r.mastery.from)} — 0.`);
+              lines.push(r.mastery.moved
+                ? `Володіння зброєю: ${wn(r.mastery.from)} → ${wn(r.mastery.to)}, рівень ${r.mastery.level}; ${wn(r.mastery.from)} — 0.`
+                : `Володіння зброєю (${wn(r.mastery.to)}) вже прокачане — лишається рівень ${r.mastery.level}.`);
             }
             done(r, lines);
           })));
-          clsBox.append(noteP("Рівень і досвід лишаються. Володіння основною зброєю переноситься на основну зброю нової професії (стара зброя — 0). Навички старої професії зникають, а речі, яких нова професія не носить, переходять в інвентар."));
+          clsBox.append(noteP("Рівень і досвід лишаються. Якщо основна зброя нової професії ще не прокачана — на неї переноситься володіння старої (стара — 0); якщо прокачана — лишається як є. Навички старої професії зникають, а речі, яких нова професія не носить, переходять в інвентар."));
         }
         dlg.append(clsBox);
 

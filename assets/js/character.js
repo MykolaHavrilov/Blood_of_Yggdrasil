@@ -884,8 +884,8 @@ function adminSetClass(ms, classId) {
   for (const id of dropped) delete ch.skills[id];
   const q = ms.battleQueue || [];
   q.forEach((a, i) => { if (dropped.includes(a)) q[i] = "attack"; });
-  // Володіння основною зброєю переноситься на основну зброю нової професії (рівень і досвід усередині рівня;
-  // вище вже набране володіння новою зброєю не знижується), а володіння старою зброєю обнуляється. Основна зброя старої — та, що в руці (якщо її професія носить), або перша з її списку.
+  // Володіння основною зброєю: якщо основна зброя нової професії ще не прокачана (0) — рівень і досвід рівня
+  // переносяться на неї, а в старої зброї обнуляються; якщо вже прокачана — обидва значення лишаються як були. Основна зброя старої — та, що в руці (якщо її професія носить), або перша з її списку.
   let mastery = null;
   const inHand = ITEMS[RPG.refId(ms.equipment.mainHand)]?.weaponType;
   const oldMain = (cur.weapons || []).includes(inHand) ? inHand : (cur.weapons || [])[0];
@@ -894,15 +894,18 @@ function adminSetClass(ms, classId) {
     ch.mastery ??= {};
     ch.masteryExp ??= {};
     const lvl = ch.mastery[oldMain] || 0, mexp = ch.masteryExp[oldMain] || 0;
-    const had = ch.mastery[newMain] || 0;
-    if (lvl > had || (lvl === had && mexp > (ch.masteryExp[newMain] || 0))) {
+    const trained = (ch.mastery[newMain] || 0) > 0 || (ch.masteryExp[newMain] || 0) > 0;
+    if (trained) {
+      // новою зброєю вже вчився — її володіння лишається, старе теж не чіпаємо
+      mastery = { from: oldMain, to: newMain, level: ch.mastery[newMain] || 0, kept: true };
+    } else if (lvl > 0 || mexp > 0) {
+      // нова зброя ще не прокачана — володіння переноситься, а в старої зброї обнуляється
       ch.mastery[newMain] = lvl;
       ch.masteryExp[newMain] = mexp;
+      ch.mastery[oldMain] = 0;
+      ch.masteryExp[oldMain] = 0;
+      mastery = { from: oldMain, to: newMain, level: lvl, moved: true };
     }
-    // перенесення, а не копія: володіння старою зброєю обнуляється
-    ch.mastery[oldMain] = 0;
-    ch.masteryExp[oldMain] = 0;
-    mastery = { from: oldMain, to: newMain, level: ch.mastery[newMain] || 0, was: lvl };
   }
   ch.classId = classId;
   if (next.levelTable !== cur.levelTable) ch.exp = expForLevel(next.levelTable, ch.level);
