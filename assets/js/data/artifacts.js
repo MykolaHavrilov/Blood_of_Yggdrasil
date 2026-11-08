@@ -16,9 +16,9 @@
 // Падають з ворогів від 31 рівня (світ 4 і далі), з малим шансом (DROP; data/enemies.js → rollLoot).
 // Рідкість — завжди своя (фільтр здобичі й лічильник удачі їх не чіпають). Без гнізд під руни.
 // GS — як у речей (gearscore.js: «Атака, %» — основна група), рівень для GS — 31 (gsLevel).
-// Іконки — icon_artifact_<1…8>.webp (одна на вид, спільна для всіх професій) — додаються в ITEM_ICON_FILES,
-// коли з'являться файли (ICON_READY); промти — H:\Game_NEW\Артефакти - іконки (промти).txt
-// (варіант А — 8 спільних icon_artifact_<n>; варіант Б — свої icon_art_<клас>_<n>: тоді ICON_FILES.add(id) для кожного).
+// Іконки (v0.3.27) — свої в кожної професії: assets/images/items/icon_art_<клас>_<1…8>.webp (256×256, прозоре тло),
+// нарізані з листів H:\Game_NEW\new_assets\new_assets\items\Items_art_<клас>.png (сітка 4×2 у порядку KINDS);
+// реєструються в ITEM_ICON_FILES (ICON_OWN). Промти — H:\Game_NEW\Артефакти - іконки (промти).txt.
 // Підключається після data/profsets.js (бере назви професій звідти).
 // ============================================================
 
@@ -78,8 +78,8 @@
     monk:       { attrs: ["agi", "spi"], sec: ["dodge", "skillPct"] },
     shaman:     { attrs: ["int", "spi"], sec: ["skillPct", "dodge"] }
   };
-  // Іконки артефактів, що вже є у assets/images/items (icon_artifact_<n>.webp) — дописати номери, коли з'являться файли
-  const ICON_READY = [];
+  // Іконки: true — у кожного артефакта свій файл icon_art_<клас>_<n>.webp
+  const ICON_OWN = true;
 
   const ART_IDS = [];                         // усі артефакти
   const BY_CLASS = {};                        // професія → [id × 8]
@@ -96,15 +96,14 @@
         rarityFixed: k.r, gsLevel: MIN_LEVEL,
         artifact: { main: MAIN[i], attr: k.r === "common" ? null : conf.attrs[i % 2], sec: k.r === "epic" || k.r === "legendary" ? conf.sec[i % 2] : null },
         price: PRICE[k.r], noShop: true,
-        iconFile: ICON_READY.includes(i + 1) ? `artifact_${i + 1}` : undefined,
         description: k.desc + " " + L(`Артефакт професії «${clsName}»: бонуси діють, поки він вдягнений.`,
                                       `An artifact of the ${set?.cls || cls} profession: its bonuses work while it is worn.`)
       };
+      if (ICON_OWN) RPG.ITEM_ICON_FILES?.add(id);
       ART_IDS.push(id);
       BY_CLASS[cls].push(id);
     });
   }
-  for (const n of ICON_READY) RPG.ITEM_ICON_FILES?.add(`artifact_${n}`);
 
   const rnd = ([a, b]) => a + Math.floor(Math.random() * (b - a + 1));
   // Числа нового артефакта (rarity.js → makeItem): { attackPct | crit | critDmg, [атрибут], [другорядна] }
