@@ -368,3 +368,8 @@ a.map-world:hover, a.map-world:focus-visible { outline: none; border-color: var(
 .admin-select { flex: 1 1 200px; min-width: 0; padding: 5px 8px; border-radius: 4px; border: 1px solid var(--pop-border); background: #1a130c; color: inherit; font: inherit; }
 .admin-num { width: 6em; padding: 5px 8px; border-radius: 4px; border: 1px solid var(--pop-border); background: #1a130c; color: inherit; font: inherit; }
 .admin-row .wf-button { flex: 0 0 auto; }
+
+/* ---------- Квести на «Персонажі»: перші 3 + «Переглянути все» (v0.3.19) ---------- */
+.quest-all-btn { justify-self: start; }
+.quest-all-dialog { width: min(640px, 94vw); }
+.quest-all-dialog .quest-log-all { max-height: min(70vh, 640px); overflow-y: auto; padding-right: 4px; }

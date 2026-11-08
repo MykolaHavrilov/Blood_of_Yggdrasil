@@ -79,13 +79,30 @@
         box.append(el("p", "status keep", "Розпочатих квестів немає. Завдання дає Артеміда, адміністратор гільдії — Дубова Застава, Південний район."));
         return;
       }
-      for (const q of log) {
-        const item = el("div", "quest-entry" + (q.ready ? " is-ready" : "") + (q.special ? " is-special" : ""));
-        item.append(el("strong", "quest-entry-title", q.title));
-        for (const line of q.lines) item.append(el("span", "quest-entry-line", line));
-        item.append(el("span", "quest-entry-where", (q.ready ? "✔ Готово — здати: " : "Здати: ") + q.where));
-        box.append(item);
+      // На сторінці — перші QUEST_SHOWN квестів; решта — у вікні «Переглянути все»
+      for (const q of log.slice(0, QUEST_SHOWN)) box.append(questEntry(q));
+      if (log.length > QUEST_SHOWN) {
+        box.append(button(`Переглянути все (${log.length})`, "wf wf-secondary quest-all-btn", showAllQuests));
       }
+    }
+    const QUEST_SHOWN = 3;
+    function questEntry(q) {
+      const item = el("div", "quest-entry" + (q.ready ? " is-ready" : "") + (q.special ? " is-special" : ""));
+      item.append(el("strong", "quest-entry-title", q.title));
+      for (const line of q.lines) item.append(el("span", "quest-entry-line", line));
+      item.append(el("span", "quest-entry-where", (q.ready ? "✔ Готово — здати: " : "Здати: ") + q.where));
+      return item;
+    }
+    // Повний перелік квестів окремим вікном
+    function showAllQuests() {
+      document.querySelector(".quest-all-dialog")?.remove();
+      const { dlg, closeBtn } = noticeDialog("quest-all-dialog");
+      const log = RPG.questLog(save);
+      const list = el("div", "quest-log quest-log-all");
+      for (const q of log) list.append(questEntry(q));
+      dlg.append(closeBtn("Закрити"), el("h3", null, `Квести · ${log.length}`), list);
+      document.body.append(dlg);
+      dlg.showModal();
     }
 
     // ---------- Підказки «i» для атрибутів і характеристик ----------

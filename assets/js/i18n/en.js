@@ -2778,6 +2778,18 @@ RPG.I18N.en = {
 "Рівень і досвід лишаються. Володіння основною зброєю переходить на основну зброю нової професії. Навички старої професії зникають, а речі, яких нова професія не носить, переходять в інвентар.": "Level and experience stay. Mastery of the main weapon moves to the new profession's main weapon. Skills of the old profession are lost, and items the new profession cannot wear go to the inventory."
 },
 "patterns": [
+["^Переглянути все \\((\\d+)\\)$",
+"View all ($1)",
+1,
+0,
+"Переглянути все ("
+],
+["^Квести · (\\d+)$",
+"Quests · $1",
+1,
+0,
+"Квести · "
+],
 ["^Володіння зброєю: (.*?) → (.*?), рівень (\\d+)\\.$",
 "Weapon mastery: $1 → $2, level $3.",
 1,
