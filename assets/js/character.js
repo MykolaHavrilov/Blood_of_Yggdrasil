@@ -903,6 +903,76 @@ function adminSetClass(ms, classId) {
   return { ok: true, old: oldId, removed, dropped };
 }
 
+// Повний комплект зброї й броні (вікно адміністрування, пункт 4).
+// kind "tier": броня виду tier (5 частин, ADMIN_ARMOR_SETS) + зброя того ж виду (тип weaponType) і річ лівої руки до неї;
+// kind "prof": комплект професії prof_<id> (5 частин) + зброя професії profw_<id> (2 речі).
+// rarity — рідкість усіх речей. equip — одразу вдягнути на героя ms (що не вдягається — лишається в інвентарі).
+const ADMIN_ARMOR_SETS = [
+  { tier: 1, set: "linen",   name: "Лляна броня" },
+  { tier: 2, set: "leather", name: "Шкіряна броня" },
+  { tier: 3, set: "iron",    name: "Залізна броня" },
+  { tier: 4, set: "steel",   name: "Сталева броня" },
+  { tier: 5, set: "dwarf",   name: "Двергська броня" },
+  { tier: 6, set: "asgard",  name: "Асгардська броня" },
+  { tier: 7, set: "ygg",     name: "Іггдрасилева броня" }
+];
+const ADMIN_OFF_FOR = { sword: "shield", dagger: "knife", axe: "shield", bow: "quiver", staff: "orb" };
+const ARMOR_ORDER = ["head", "chest", "legs", "hands", "feet"];
+// Яка зброя пасує героєві (для пункту 4): типи зброї його професії, у Селянина — усі
+function adminWeaponTypes(ms) {
+  const cls = getClass(ms.character.classId);
+  return cls.weapons?.length ? [...cls.weapons] : ["sword", "dagger", "axe", "bow", "staff"];
+}
+function adminGearIds(ms, kind, key, weaponType) {
+  const bySlot = (a, b) => ARMOR_ORDER.indexOf(ITEMS[a].slot) - ARMOR_ORDER.indexOf(ITEMS[b].slot);
+  if (kind === "prof") {
+    if (!CLASSES[key] || (CLASSES[key].tier || 1) < 2) return null;
+    const armor = Object.keys(ITEMS).filter(id => ITEMS[id].set === `prof_${key}`).sort(bySlot);
+    const arms = [`profw_${key}_main`, `profw_${key}_off`].filter(id => ITEMS[id]);
+    return [...arms, ...armor];
+  }
+  const t = ADMIN_ARMOR_SETS.find(x => x.tier === Number(key));
+  if (!t) return null;
+  const armor = Object.keys(ITEMS).filter(id => ITEMS[id].type === "armor" && ITEMS[id].set === t.set).sort(bySlot);
+  const main = `${weaponType}_t${t.tier}`;
+  if (!ITEMS[main]) return null;
+  const cls = getClass(ms.character.classId);
+  let off = ADMIN_OFF_FOR[weaponType];
+  if (cls.offHand && !cls.offHand.includes(off)) off = cls.offHand.find(o => o !== "axe" || weaponType === "axe") || null;
+  const offId = off === "axe" ? `axe_t${t.tier}` : off ? `${off}_t${t.tier}` : null;
+  return [main, ...(offId && ITEMS[offId] ? [offId] : []), ...armor];
+}
+function adminGiveGear(ms, kind, key, opts = {}) {
+  if (!hasAdminSeal(ms)) return NO_SEAL;
+  const rarity = RPG.RARITIES?.[opts.rarity] ? opts.rarity : "common";
+  const ids = adminGearIds(ms, kind, key, opts.weaponType || adminWeaponTypes(ms)[0]);
+  if (!ids?.length) return { ok: false, reason: "Такого комплекту немає." };
+  const offInSet = ids.some(id => ITEMS[id].slot === "offHand" || (ITEMS[id].weaponType && id !== ids[0] && ITEMS[id].slot === "mainHand"));
+  const mainInSet = ITEMS[ids[0]]?.slot === "mainHand";
+  const need = ids.length + (opts.equip && offInSet && ms.equipment.offHand ? 1 : 0) + (opts.equip && mainInSet && ms.equipment.mainHand ? 1 : 0);
+  if (invFree(ms) < need) return { ok: false, reason: `Потрібно ${need} вільних клітинок в інвентарі (вільно ${invFree(ms)}).` };
+  const refs = ids.map(id => RPG.makeItem(id, rarity));
+  for (const ref of refs) ms.inventory.push(ref);
+  const equipped = [], left = [];
+  if (opts.equip) {
+    if (RPG.isAway?.(ms)) return { ok: true, refs, equipped, left: refs.map(ref => ({ ref, reason: `${ms.character.name} в експедиції.` })), away: true };
+    // руки звільняються заздалегідь — щоб зброя стала в праву руку, а друга сокира Берсерка чи щит — у ліву
+    const back = {};                                  // зняте заздалегідь — повернути, якщо нове не вдягнулось
+    if (offInSet && ms.equipment.offHand && unequipItem(ms, "offHand").ok) back.offHand = ms.inventory[ms.inventory.length - 1];
+    if (mainInSet && ms.equipment.mainHand && unequipItem(ms, "mainHand").ok) back.mainHand = ms.inventory[ms.inventory.length - 1];
+    for (const ref of refs) {
+      const idx = ms.inventory.indexOf(ref);
+      const r = idx >= 0 ? equipItem(ms, idx) : { ok: false, reason: "" };
+      if (r.ok) equipped.push(ref); else left.push({ ref, reason: r.reason || "" });
+    }
+    for (const slot of ["mainHand", "offHand"]) {
+      const idx = back[slot] ? ms.inventory.indexOf(back[slot]) : -1;
+      if (!ms.equipment[slot] && idx >= 0) equipItem(ms, idx);
+    }
+  }
+  return { ok: true, refs, equipped, left: opts.equip ? left : refs.map(ref => ({ ref, reason: "" })) };
+}
+
 // ---------- Скрині ремесла на складі власного дому (план крафту, етап 5) ----------
 // Склад добудовують при домі; на складі купують «меблі» — скрині ремесла. Кожна скриня — окреме
 // сховище з id "<id дому>:<вид>:<номер>" (напр. "h_oak:mat:2"), свої для кожного дому.
@@ -1622,7 +1692,8 @@ function applyReward(save, exp, loot) {
 
 Object.assign(RPG, {
   autoPotion, AUTO_POTIONS, GODS_ORB, godsOrb, hasGodsOrb, grantGodsOrb, removeGodsOrb,
-  ADMIN_SEAL, hasAdminSeal, grantAdminSeal, removeAdminSeal, adminSetLevel, adminSetClass, INV_SIZE, invFree, fitQty, invSize, BELT_SLOTS, POUCH_DROP, beltOf, beltBonus, putOnBelt, takeFromBelt, rollPouchDrop,
+  ADMIN_SEAL, hasAdminSeal, grantAdminSeal, removeAdminSeal, adminSetLevel, adminSetClass,
+  ADMIN_ARMOR_SETS, adminWeaponTypes, adminGearIds, adminGiveGear, INV_SIZE, invFree, fitQty, invSize, BELT_SLOTS, POUCH_DROP, beltOf, beltBonus, putOnBelt, takeFromBelt, rollPouchDrop,
   TRADE_MIN_LEVEL, TRADE_PRICE_MULT, tradeStock, tradePrice, buyFromTrade, isDistrictOpen, districtLockText,
   IFRIT, ifritPrice, buyFromIfrit,                // ТЕСТ: прибрати разом з блоком IFRIT
   HOUSES, HOUSE_NAME_MAX, houseOf, houseHere, buyHouse, enterHouse,

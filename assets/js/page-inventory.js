@@ -217,11 +217,14 @@
     }
 
     // Вікно адміністрування (Печатка Адміністратора, data/items.js → admin_seal):
-    // рівень будь-якого героя групи, заміна вже обраної професії, миттєве переміщення в будь-яке місце.
+    // рівень будь-якого героя групи, заміна вже обраної професії, миттєве переміщення в будь-яке місце,
+    // повний комплект зброї й броні на вибір (character.js → adminGiveGear).
     function showAdminPanel() {
       document.querySelector(".admin-dialog")?.remove();
       const { dlg, closeBtn } = noticeDialog("admin-dialog", () => { selected = null; RPG.popover.hide(); render(); });
       let who = memberIndex, note = null;
+      let gearPick = null, gearWeapon = null, gearRarity = "legendary", gearEquip = true;   // пункт 4 — що обрано
+      const T = x => (RPG.t ? RPG.t(x) : x);
       const done = async (r, text) => {
         note = { text: r.ok ? text : r.reason, error: !r.ok };
         if (r.ok) await RPG.saveGame(save).catch(e => console.error(e));
@@ -241,7 +244,12 @@
       const draw = () => {
         dlg.innerHTML = "";
         dlg.append(closeBtn("Закрити"), el("h3", null, "Адміністрування"));
-        if (note) dlg.append(el("p", "forge-result" + (note.error ? " is-error" : ""), note.text));
+        if (note) {
+          const p = el("p", "forge-result" + (note.error ? " is-error" : ""));
+          const lines = Array.isArray(note.text) ? note.text : [note.text];
+          lines.forEach((l, i) => p.append(...(i ? [" "] : []), el("span", null, l)));   // кожне речення — окремо (переклад)
+          dlg.append(p);
+        }
         const members = RPG.partyMembers(save);
         if (!members[who]) who = 0;
         const m = members[who], ch = m.character, cls = RPG.getClass(ch.classId);
@@ -301,6 +309,47 @@
         })));
         goBox.append(noteP("Миттєво, без дороги й без перевірок рівня та брам. Дорога, якщо герой був у дорозі, скасовується."));
         dlg.append(goBox);
+
+        // 4) Повний комплект зброї й броні
+        const gearBox = el("div", "panel stack admin-sec");
+        const tiers = RPG.ADMIN_ARMOR_SETS.map(t => ({ value: `tier|${t.tier}`,
+          text: `Вид ${t.tier} · ${t.name} і зброя (з ${RPG.ITEMS[`${t.set}_chest`]?.levelReq || 1} рівня)` }));
+        const profList = Object.keys(RPG.CLASSES).filter(id => RPG.ITEM_SETS[`prof_${id}`])
+          .map(id => ({ value: `prof|${id}`, text: `${T(RPG.ITEM_SETS[`prof_${id}`].name)} — ${T(RPG.getClass(id).name)}` }));
+        if (!gearPick) {
+          const own = RPG.ITEM_SETS[`prof_${ch.classId}`] ? `prof|${ch.classId}` : null;
+          const fit = [...RPG.ADMIN_ARMOR_SETS].reverse().find(t => (RPG.ITEMS[`${t.set}_chest`]?.levelReq || 1) <= ch.level) || RPG.ADMIN_ARMOR_SETS[0];
+          gearPick = own || `tier|${fit.tier}`;
+        }
+        const setSel = select([{ group: "Броня й зброя за видом", items: tiers }, { group: "Комплекти професій", items: profList }], gearPick);
+        const wTypes = RPG.adminWeaponTypes(m);
+        if (!wTypes.includes(gearWeapon)) gearWeapon = wTypes[0];
+        const wSel = select(wTypes.map(t => ({ value: t, text: RPG.WEAPON_TYPES[t]?.name || t })), gearWeapon);
+        const rSel = select(["common", "magic", "epic", "legendary"].map(r => ({ value: r, text: RPG.RARITIES[r].name })), gearRarity);
+        const eq = el("input"); eq.type = "checkbox"; eq.checked = gearEquip;
+        const eqLabel = el("label", "choice admin-check"); eqLabel.append(eq, document.createTextNode(" Одразу вдягнути на героя"));
+        const syncW = () => { wSel.disabled = setSel.value.startsWith("prof|"); };
+        setSel.addEventListener("change", () => { gearPick = setSel.value; syncW(); });
+        wSel.addEventListener("change", () => { gearWeapon = wSel.value; });
+        rSel.addEventListener("change", () => { gearRarity = rSel.value; });
+        eq.addEventListener("change", () => { gearEquip = eq.checked; });
+        syncW();
+        gearBox.append(el("h4", null, "Комплект зброї й броні"), field("Комплект", setSel), field("Зброя (для броні за видом)", wSel),
+          field("Рідкість", rSel), eqLabel, button("Отримати", "wf wf-button", () => {
+            const [kind, key] = setSel.value.split("|");
+            const r = RPG.adminGiveGear(m, kind, key, { weaponType: wSel.value, rarity: rSel.value, equip: eq.checked });
+            // назви речей і причини перекладаються одразу (англійська мова гри), речення — шаблонами i18n
+            const names = list => list.map(x => T(RPG.ITEMS[x.ref.id].name) + (x.reason ? ` (${T(x.reason).replace(/\.$/, "").toLowerCase()})` : "")).join(", ");
+            const lines = [];
+            if (r.ok) {
+              lines.push(`${ch.name}: отримано ${r.refs.length} речей (${T(RPG.RARITIES[rSel.value].name).toLowerCase()}).`);
+              if (eq.checked && r.equipped.length) lines.push(`Вдягнуто: ${r.equipped.length}.`);
+              if (eq.checked && r.left.length) lines.push(`В інвентарі (не вдягаються зараз): ${names(r.left)}.`);
+            }
+            done(r, lines);
+          }));
+        gearBox.append(noteP("Броня за видом — 5 частин, зброя обраного типу й річ лівої руки до неї; комплект професії — 5 частин і зброя професії. Речі, які герой ще не може вдягнути (рівень, професія), лишаються в інвентарі."));
+        dlg.append(gearBox);
       };
       document.body.append(dlg);
       draw();
