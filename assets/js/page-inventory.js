@@ -205,7 +205,8 @@
         btnEquip.title = check.ok ? "" : check.reason;
       }
       if (selected.kind === "eq") btnUnequip.disabled = false;
-      if (selected.kind === "inv" && (item.type === "consumable" || item.type === "blueprint")) btnUse.disabled = false;
+      if (selected.kind === "inv" && (item.type === "consumable" || item.type === "blueprint" || item.adminPanel)) btnUse.disabled = false;
+      btnUse.textContent = item.adminPanel ? "Відкрити" : "Використати";   // Печатка Адміністратора — вікно адміністрування
       if (selected.kind === "inv") btnDrop.disabled = !!RPG.ITEMS[ms.inventory[selected.index]?.id]?.locked;   // Сфера Богів не викидається
       if (selected.kind === "inv" && atHome) btnToChest.disabled = false;
       if (selected.kind === "chest" && atHome) btnFromChest.disabled = false;
@@ -213,6 +214,97 @@
       const isStack = !ref.r && item.stackable && (ref.qty || 1) > 1;
       if (isStack && selected.kind === "inv" && atHome) btnToChestPart.disabled = false;
       if (isStack && selected.kind === "chest" && atHome) btnFromChestPart.disabled = false;
+    }
+
+    // Вікно адміністрування (Печатка Адміністратора, data/items.js → admin_seal):
+    // рівень будь-якого героя групи, заміна вже обраної професії, миттєве переміщення в будь-яке місце.
+    function showAdminPanel() {
+      document.querySelector(".admin-dialog")?.remove();
+      const { dlg, closeBtn } = noticeDialog("admin-dialog", () => { selected = null; RPG.popover.hide(); render(); });
+      let who = memberIndex, note = null;
+      const done = async (r, text) => {
+        note = { text: r.ok ? text : r.reason, error: !r.ok };
+        if (r.ok) await RPG.saveGame(save).catch(e => console.error(e));
+        draw();
+      };
+      const field = (label, ...nodes) => { const row = el("div", "admin-row"); row.append(el("span", "admin-label", label), ...nodes); return row; };
+      const select = (opts, value) => {
+        const sel = el("select", "admin-select");
+        for (const o of opts) {
+          if (o.group) { const g = document.createElement("optgroup"); g.label = o.group; for (const x of o.items) g.append(option(x)); sel.append(g); }
+          else sel.append(option(o));
+        }
+        sel.value = value;
+        return sel;
+      };
+      const option = o => { const op = el("option", null, o.text); op.value = o.value; return op; };
+      const draw = () => {
+        dlg.innerHTML = "";
+        dlg.append(closeBtn("Закрити"), el("h3", null, "Адміністрування"));
+        if (note) dlg.append(el("p", "forge-result" + (note.error ? " is-error" : ""), note.text));
+        const members = RPG.partyMembers(save);
+        if (!members[who]) who = 0;
+        const m = members[who], ch = m.character, cls = RPG.getClass(ch.classId);
+
+        // Герой групи
+        const heroSel = select(members.map((x, i) => ({ value: String(i),
+          text: `${x.character.name} · ${RPG.getClass(x.character.classId).name}, ${x.character.level} рівень` })), String(who));
+        heroSel.addEventListener("change", () => { who = Number(heroSel.value); note = null; draw(); });
+        dlg.append(field("Герой групи", heroSel));
+
+        // 1) Рівень
+        const cap = RPG.levelCap(m);
+        const lvl = el("input", "admin-num");
+        Object.assign(lvl, { type: "number", min: 1, max: cap, step: 1, value: ch.level, inputMode: "numeric" });
+        const lvlBox = el("div", "panel stack admin-sec");
+        lvlBox.append(el("h4", null, "Рівень"), field(`Рівень (1–${cap})`, lvl,
+          button("Встановити", "wf wf-button", () => {
+            const r = RPG.adminSetLevel(m, lvl.value);
+            done(r, `${ch.name}: рівень ${r.old} → ${r.level}.`);
+          })));
+        dlg.append(lvlBox);
+
+        // 2) Професія (лише для героя, що вже обрав професію)
+        const clsBox = el("div", "panel stack admin-sec");
+        clsBox.append(el("h4", null, "Професія"));
+        if ((cls.tier || 1) < 2) {
+          clsBox.append(noteP(`${ch.name} ще без професії — змінити можна лише вже обрану професію.`));
+        } else {
+          const list = Object.entries(RPG.CLASSES).filter(([id, c]) => c.tier === cls.tier && id !== ch.classId)
+            .map(([id, c]) => ({ value: id, text: c.name }));
+          const clsSel = select(list, list[0]?.value || "");
+          clsBox.append(field(`Зараз: ${cls.name}`, clsSel, button("Змінити", "wf wf-button", () => {
+            const r = RPG.adminSetClass(m, clsSel.value);
+            const extra = r.ok && (r.removed.length || r.dropped.length)
+              ? ` ${r.removed.length ? `Знято в інвентар: ${r.removed.map(x => RPG.itemFullName(x)).join(", ")}.` : ""}${r.dropped.length ? ` Навички старої професії зникли: ${r.dropped.length}.` : ""}` : "";
+            done(r, `${ch.name}: тепер ${RPG.getClass(clsSel.value).name}.${extra}`);
+          })));
+          clsBox.append(noteP("Рівень і досвід лишаються. Навички старої професії зникають, а речі, яких нова професія не носить, переходять в інвентар."));
+        }
+        dlg.append(clsBox);
+
+        // 3) Переміщення — миттєво, у будь-яке місце
+        const here = RPG.whereIs(save);
+        const groups = RPG.REGION_CHAIN.filter(r => RPG.MAP_REGIONS[r]).map(r => ({
+          group: RPG.regionName(r),
+          items: Object.keys(RPG.MAP_REGIONS[r].spots).map(id => ({ value: `${r}|${id}`,
+            text: RPG.spotName(r, id) + (r === here.region && id === here.spot ? " — ви тут" : "") }))
+        }));
+        const placeSel = select(groups, `${here.region}|${here.spot}`);
+        const goBox = el("div", "panel stack admin-sec");
+        goBox.append(el("h4", null, "Переміщення"), field("Куди", placeSel, button("Перемістити", "wf wf-button", async () => {
+          const [r, id] = placeSel.value.split("|");
+          const res = RPG.adminTeleport(save, r, id);
+          if (!res.ok) { note = { text: res.reason, error: true }; draw(); return; }
+          await RPG.saveGame(save);
+          location.href = "game.html";
+        })));
+        goBox.append(noteP("Миттєво, без дороги й без перевірок рівня та брам. Дорога, якщо герой був у дорозі, скасовується."));
+        dlg.append(goBox);
+      };
+      document.body.append(dlg);
+      draw();
+      dlg.showModal();
     }
 
     // Пояс: 5 слотів для мішечків (character.js → putOnBelt / takeFromBelt). Порожній слот — вибрати мішечок з інвентаря.
@@ -327,6 +419,7 @@
 
     btnUse.addEventListener("click", async () => {
       const id = selectedItemId();
+      if (RPG.ITEMS[id]?.adminPanel) { showAdminPanel(); return; }
       const r = RPG.useItem(ms, id);
       if (!ms.inventory[selected.index] || ms.inventory[selected.index].id !== id) selected = null;
       await commit(r.ok ? useResultText(RPG.ITEMS[id], r) : r.reason, !r.ok);

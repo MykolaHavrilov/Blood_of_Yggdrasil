@@ -820,6 +820,89 @@ function removeGodsOrb(save) {
   return removed ? { ok: true, removed } : { ok: false, reason: "Сфери Богів у цьому збереженні немає." };
 }
 
+// ---------- Печатка Адміністратора (data/items.js → admin_seal, код open.admin) ----------
+// Лише в інвентарі (не в скрині), одна на збереження. Функції нижче працюють, лише поки печатка в інвентарі.
+const ADMIN_SEAL = "admin_seal";
+function hasAdminSeal(save) { return countItem(save, ADMIN_SEAL) > 0; }
+function grantAdminSeal(save) {
+  if (hasAdminSeal(save)) return { ok: false, reason: "Печатка Адміністратора вже є в інвентарі." };
+  if (!invFree(save)) return { ok: false, reason: "Інвентар повний — звільніть клітинку." };
+  addItem(save, ADMIN_SEAL, 1);
+  return { ok: true };
+}
+// Прибрати печатку (код open.admin.off; також — з будь-якої скрині, якщо туди потрапила)
+function removeAdminSeal(save) {
+  let removed = 0;
+  const strip = list => {
+    for (let i = list.length - 1; i >= 0; i--) if (list[i]?.id === ADMIN_SEAL) { removed += list[i].qty || 1; list.splice(i, 1); }
+  };
+  strip(save.inventory || []);
+  for (const list of Object.values(save.chests || {})) if (Array.isArray(list)) strip(list);
+  return removed ? { ok: true, removed } : { ok: false, reason: "Печатки Адміністратора в цьому збереженні немає." };
+}
+const NO_SEAL = { ok: false, reason: "Потрібна Печатка Адміністратора в інвентарі." };
+
+// Рівень героя групи (ms — його «вигляд» сейву) у межах 1…межа рівня. Вище — додаються очки атрибутів, як за звичайні рівні;
+// нижче — очки знімаються (спершу невкладені), як при втраті рівня після загибелі.
+function adminSetLevel(ms, level) {
+  if (!hasAdminSeal(ms)) return NO_SEAL;
+  const ch = ms.character;
+  const table = getClass(ch.classId).levelTable;
+  const cap = levelCap(ms);
+  const L = Math.floor(Number(level));
+  if (!(L >= 1 && L <= cap)) return { ok: false, reason: `Рівень — від 1 до ${cap}.` };
+  const old = ch.level;
+  if (L === old) return { ok: false, reason: `${ch.name} вже на ${L} рівні.` };
+  const exp = expForLevel(table, L);
+  if (L > old) {
+    ch.totalExp = (ch.totalExp || 0) + Math.max(0, exp - ch.exp);
+    ch.freePoints = (ch.freePoints || 0) + (L - old) * RPG.POINTS_PER_LEVEL;
+    ch.exp = exp;
+    ch.level = L;
+    fullHeal(ms);
+  } else {
+    ch.exp = exp;
+    ch.level = L;
+    removeLevelPoints(ms, (old - L) * RPG.POINTS_PER_LEVEL);
+    clampHpMp(ms);
+  }
+  return { ok: true, old, level: L };
+}
+
+// Інша професія того ж рангу для героя, що вже має професію. Рівень і досвід лишаються;
+// навички старої професії зникають (у черзі бою — звичайний удар), речі, які нова професія не носить, — в інвентар.
+function adminSetClass(ms, classId) {
+  if (!hasAdminSeal(ms)) return NO_SEAL;
+  const ch = ms.character;
+  const cur = getClass(ch.classId);
+  if ((cur.tier || 1) < 2) return { ok: false, reason: `${ch.name} ще без професії — змінити можна лише вже обрану професію.` };
+  const next = CLASSES[classId];
+  if (!next || next.tier !== cur.tier) return { ok: false, reason: "Такої професії немає." };
+  if (classId === ch.classId) return { ok: false, reason: `${ch.name} вже ${next.name}.` };
+  const oldId = ch.classId;
+  const dropped = Object.keys(ch.skills || {}).filter(id => RPG.SKILLS?.[id]?.cls && RPG.SKILLS[id].cls !== classId);
+  for (const id of dropped) delete ch.skills[id];
+  const q = ms.battleQueue || [];
+  q.forEach((a, i) => { if (dropped.includes(a)) q[i] = "attack"; });
+  ch.classId = classId;
+  if (next.levelTable !== cur.levelTable) ch.exp = expForLevel(next.levelTable, ch.level);
+  const removed = [];
+  for (const slot in ms.equipment) {
+    const ref = ms.equipment[slot];
+    const id = RPG.refId(ref);
+    const bad = !canEquip(ms, id).ok || (slot === "offHand" && ITEMS[id]?.weaponType && offHandProblem(ms, "axe"));
+    if (bad) {
+      delete ms.equipment[slot];
+      addRefToList(ms.inventory, ref);
+      removed.push(ref);
+    }
+  }
+  const off = fixHands(ms);
+  if (off) removed.push(off);
+  clampHpMp(ms);
+  return { ok: true, old: oldId, removed, dropped };
+}
+
 // ---------- Скрині ремесла на складі власного дому (план крафту, етап 5) ----------
 // Склад добудовують при домі; на складі купують «меблі» — скрині ремесла. Кожна скриня — окреме
 // сховище з id "<id дому>:<вид>:<номер>" (напр. "h_oak:mat:2"), свої для кожного дому.
@@ -905,6 +988,7 @@ function moveToChest(save, invIndex, storageId = null, want = null) {
   if (!sid || !chestsHere(save).includes(sid)) return { ok: false, reason: "Тут немає скрині." };
   const entry = save.inventory[invIndex];
   if (!entry) return { ok: false, reason: "Порожня клітинка." };
+  if (ITEMS[entry.id]?.noChest) return { ok: false, reason: `«${ITEMS[entry.id].name}» завжди лежить в інвентарі — у скриню її не покласти.` };
   if (ITEMS[entry.id]?.locked && sid !== DEFAULT_CHEST) {
     return { ok: false, reason: `«${ITEMS[entry.id].name}» можна покласти лише в спільну скриню Домівки.` };
   }
@@ -1537,7 +1621,8 @@ function applyReward(save, exp, loot) {
 }
 
 Object.assign(RPG, {
-  autoPotion, AUTO_POTIONS, GODS_ORB, godsOrb, hasGodsOrb, grantGodsOrb, removeGodsOrb, INV_SIZE, invFree, fitQty, invSize, BELT_SLOTS, POUCH_DROP, beltOf, beltBonus, putOnBelt, takeFromBelt, rollPouchDrop,
+  autoPotion, AUTO_POTIONS, GODS_ORB, godsOrb, hasGodsOrb, grantGodsOrb, removeGodsOrb,
+  ADMIN_SEAL, hasAdminSeal, grantAdminSeal, removeAdminSeal, adminSetLevel, adminSetClass, INV_SIZE, invFree, fitQty, invSize, BELT_SLOTS, POUCH_DROP, beltOf, beltBonus, putOnBelt, takeFromBelt, rollPouchDrop,
   TRADE_MIN_LEVEL, TRADE_PRICE_MULT, tradeStock, tradePrice, buyFromTrade, isDistrictOpen, districtLockText,
   IFRIT, ifritPrice, buyFromIfrit,                // ТЕСТ: прибрати разом з блоком IFRIT
   HOUSES, HOUSE_NAME_MAX, houseOf, houseHere, buyHouse, enterHouse,

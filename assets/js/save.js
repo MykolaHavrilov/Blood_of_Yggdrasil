@@ -493,8 +493,17 @@
     }
   }
 
+  // Предмети з noExport (Печатка Адміністратора, data/items.js → admin_seal) у файл не потрапляють — ні з інвентаря, ні зі скринь.
+  // Зміни, зроблені ними (рівень, професія, місце), лишаються. Сам сейв у грі не змінюється — чиститься копія.
+  function stripNoExport(data) {
+    const bad = e => !!(e && RPG.ITEMS?.[e.id]?.noExport);
+    if (Array.isArray(data.inventory)) data.inventory = data.inventory.filter(e => !bad(e));
+    for (const sid in data.chests || {}) if (Array.isArray(data.chests[sid])) data.chests[sid] = data.chests[sid].filter(e => !bad(e));
+    return data;
+  }
+
   function exportSave(save) {
-    const json = packSave(save);
+    const json = packSave(stripNoExport(JSON.parse(JSON.stringify(save))));
     const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -514,6 +523,7 @@
   async function importSave(file) {
     const text = await file.text();
     const data = unpackSave(text);   // перевірка підпису; змінений файл → помилка
+    stripNoExport(data);
     data.id = newSlotId();
     migrateSave(data);
     await saveGame(data);

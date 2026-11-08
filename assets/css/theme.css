@@ -358,3 +358,13 @@ a.map-world:hover, a.map-world:focus-visible { outline: none; border-color: var(
 .globe-hero .hero-fig img { height: 34px; }
 @keyframes hero-step { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-2px) rotate(2deg); } }
 @media (prefers-reduced-motion: reduce) { .map-hero .hero-fig img, .globe-hero .hero-fig img { animation: none; } }
+
+/* ---------- Вікно адміністрування (Печатка Адміністратора, v0.3.15) ---------- */
+.admin-dialog { width: min(560px, 94vw); }
+.admin-dialog .admin-sec { margin: 8px 0 0; padding: 8px 10px; gap: 6px; }
+.admin-dialog h4 { margin: 0; font-family: var(--font-head); color: var(--gold); font-weight: 400; }
+.admin-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.admin-label { flex: 1 1 100%; font-size: .85rem; opacity: .85; }
+.admin-select { flex: 1 1 200px; min-width: 0; padding: 5px 8px; border-radius: 4px; border: 1px solid var(--pop-border); background: #1a130c; color: inherit; font: inherit; }
+.admin-num { width: 6em; padding: 5px 8px; border-radius: 4px; border: 1px solid var(--pop-border); background: #1a130c; color: inherit; font: inherit; }
+.admin-row .wf-button { flex: 0 0 auto; }

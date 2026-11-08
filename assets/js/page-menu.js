@@ -232,7 +232,8 @@
     const current = await RPG.loadCurrentGame().catch(() => null);
 
     // Рядок коду: «god.mod» — Сфера Богів у інвентар поточної гри (одна на збереження);
-    // «god.mod.off» — прибрати сферу з гри (з інвентаря й скринь). Будь-який інший текст нічого не виконує.
+    // «god.mod.off» — прибрати сферу з гри (з інвентаря й скринь);
+    // «open.admin» — Печатка Адміністратора (вікно адміністрування), «open.admin.off» — прибрати її. Будь-який інший текст нічого не виконує.
     const codeForm = $("code-form"), codeInput = $("code-input");
     if (codeForm) {
       codeForm.addEventListener("submit", async ev => {
@@ -240,9 +241,18 @@
         const code = codeInput.value.trim().toLowerCase();
         codeInput.value = "";
         codeInput.placeholder = "код";
-        if (code !== "god.mod" && code !== "god.mod.off") { showMsg(msg, "Невірний код.", true); return; }
+        const ADMIN = { "open.admin": 1, "open.admin.off": 1 };
+        if (code !== "god.mod" && code !== "god.mod.off" && !ADMIN[code]) { showMsg(msg, "Невірний код.", true); return; }
         const s = await RPG.loadCurrentGame().catch(() => null);
         if (!s) { showMsg(msg, "Немає активної гри.", true); return; }
+        if (ADMIN[code]) {                       // Печатка Адміністратора (data/items.js → admin_seal)
+          const offA = code === "open.admin.off";
+          const r = offA ? RPG.removeAdminSeal(s) : RPG.grantAdminSeal(s);
+          if (!r.ok) { showMsg(msg, r.reason, true); return; }
+          await RPG.saveGame(s);
+          showMsg(msg, offA ? "Печатку Адміністратора прибрано з гри." : "Печатка Адміністратора — в інвентарі.");
+          return;
+        }
         const off = code === "god.mod.off";
         const r = off ? RPG.removeGodsOrb(s) : RPG.grantGodsOrb(s);
         if (!r.ok) { showMsg(msg, r.reason, true); return; }

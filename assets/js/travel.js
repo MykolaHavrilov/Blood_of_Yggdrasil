@@ -249,6 +249,15 @@
     save.location.map = "south_gate";
   }
 
+  // Печатка Адміністратора: миттєво в будь-яке місце будь-якого регіону (без дороги, без перевірок рівня й брам)
+  function adminTeleport(save, region, spot) {
+    if (!RPG.hasAdminSeal?.(save)) return { ok: false, reason: "Потрібна Печатка Адміністратора в інвентарі." };
+    if (!RPG.MAP_REGIONS[region]?.spots?.[spot]) return { ok: false, reason: "Такого місця немає." };
+    delete save.travel;
+    placeAt(save, region, spot);
+    return { ok: true, name: spotName(region, spot) };
+  }
+
   function fmtLeft(ms) {
     const s = Math.ceil(ms / 1000);
     return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
@@ -257,6 +266,6 @@
   Object.assign(RPG, {
     TRAVEL_PAGES, CITY_TRAVEL_SEC, regionOf, whereIs, route, travelSeconds, canGo, startTravel, isTraveling,
     travelState, finishTravel, enterCity, leaveCityToStart, fmtLeft,
-    REGION_CHAIN, isRegionOpen, planTrip, spotName, regionName
+    REGION_CHAIN, isRegionOpen, planTrip, spotName, regionName, adminTeleport
   });
 })(window.RPG);
