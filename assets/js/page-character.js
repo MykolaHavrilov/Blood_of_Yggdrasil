@@ -86,6 +86,9 @@
       }
     }
     const QUEST_SHOWN = 3;
+    // Комірки навколо героя (варіант В): ліворуч і праворуч, згори вниз
+    const DOLL_LEFT = ["mainHand", "head", "earring1", "chest", "hands", "ring1", "artifact1", "artifact3"];
+    const DOLL_RIGHT = ["offHand", "amulet", "earring2", "legs", "feet", "ring2", "artifact2", "artifact4"];
     function questEntry(q) {
       const item = el("div", "quest-entry" + (q.ready ? " is-ready" : "") + (q.special ? " is-special" : ""));
       item.append(el("strong", "quest-entry-title", q.title));
@@ -308,20 +311,30 @@
         }
       }
 
-      const slots = $("equip-slots");
-      slots.innerHTML = "";
-      for (const slot in RPG.SLOTS) {
-        if (slot.startsWith("artifact") && !RPG.hasArtifactSlots?.(ms)) continue;   // артефакти — з професією
-        if (slot === "artifact1") slots.append(el("div", "equip-sep", "Артефакти"));
-        const ref = ms.equipment[slot];
-        const item = RPG.ITEMS[RPG.refId(ref)];
-        const cell = el("div", item ? slotClass(ref, "equip-cell") : "wf wf-slot equip-cell slot-empty");
-        fillEquipCell(cell, ref, slot);
-        if (item) RPG.bindTip(cell, () => itemInfo(ref, 1, ms), () => [
-          { text: "Змінити в інвентарі", className: "wf-link", onClick: () => { location.href = "inventory.html"; } }
-        ]);
-        slots.append(cell);
-      }
+      // Вдягнені речі навколо героя (варіант В): по 8 комірок ліворуч і праворуч від картинки.
+      // Артефакти — з професією; без неї комірки видно, але вони приглушені (підказка — чому).
+      const artOpen = !!RPG.hasArtifactSlots?.(ms);
+      const dollCol = (box, list) => {
+        if (!box) return;
+        box.innerHTML = "";
+        for (const slot of list) {
+          const ref = ms.equipment[slot];
+          const item = RPG.ITEMS[RPG.refId(ref)];
+          const cell = el("div", item ? slotClass(ref, "equip-cell") : "wf wf-slot equip-cell slot-empty");
+          fillEquipCell(cell, ref, slot);
+          if (item) RPG.bindTip(cell, () => itemInfo(ref, 1, ms), () => [
+            { text: "Змінити в інвентарі", className: "wf-link", onClick: () => { location.href = "inventory.html"; } }
+          ]);
+          else {
+            const locked = slot.startsWith("artifact") && !artOpen;
+            if (locked) cell.classList.add("is-locked");
+            cell.title = locked ? "Комірки артефактів відкриваються з професією." : `${RPG.SLOTS[slot]}: порожньо`;
+          }
+          box.append(cell);
+        }
+      };
+      dollCol($("doll-left"), DOLL_LEFT);
+      dollCol($("doll-right"), DOLL_RIGHT);
 
       // Володіння зброєю та вивчені навички
       const mBox = $("mastery-list");

@@ -32,10 +32,16 @@
     <!-- Верх: герой і смужки під ним | журнал квестів | карусель «Атрибути / Характеристики / Розвиток» -->
     <div class="char-top">
       <div class="stack char-left">
-        <figure class="pic char-pic">
-          <span id="hero-img" class="hero-sprite" role="img" aria-label="Персонаж"></span>
-          <figcaption id="hero-name">Персонаж</figcaption>
-        </figure>
+        <!-- Герой і вдягнені речі навколо (варіант В): ліворуч — зброя, голова, сережка, тіло, наручі, кільце, артефакти 1 і 3;
+             праворуч — ліва рука, амулет, сережка, штани, взуття, кільце, артефакти 2 і 4 (page-character.js → DOLL_LEFT / DOLL_RIGHT) -->
+        <div class="hero-doll">
+          <div class="doll-col" id="doll-left"></div>
+          <figure class="pic char-pic">
+            <span id="hero-img" class="hero-sprite" role="img" aria-label="Персонаж"></span>
+            <figcaption id="hero-name">Персонаж</figcaption>
+          </figure>
+          <div class="doll-col" id="doll-right"></div>
+        </div>
         <div class="stats">
           <div class="bar bar-hp" id="hero-hp" data-name="HP"><div class="bar-fill"></div><span class="bar-label">HP</span></div>
           <div class="bar bar-mp" id="hero-mp" data-name="MP"><div class="bar-fill"></div><span class="bar-label">MP</span></div>
@@ -73,12 +79,6 @@
     </div>
 
     <div class="stack char-bottom">
-        <div class="panel stack">
-          <h2>Спорядження</h2>
-          <div class="equip-grid" id="equip-slots"></div>
-          <a class="wf wf-link" href="inventory.html">Змінити спорядження</a>
-        </div>
-
         <div class="panel stack">
           <h2>Володіння зброєю та навички</h2>
           <div class="stat-list" id="mastery-list"></div>

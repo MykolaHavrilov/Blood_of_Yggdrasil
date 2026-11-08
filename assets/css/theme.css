@@ -373,3 +373,30 @@ a.map-world:hover, a.map-world:focus-visible { outline: none; border-color: var(
 .quest-all-btn { justify-self: start; }
 .quest-all-dialog { width: min(640px, 94vw); }
 .quest-all-dialog .quest-log-all { max-height: min(70vh, 640px); overflow-y: auto; padding-right: 4px; }
+
+/* ---------- «Персонаж»: вдягнені речі навколо героя, варіант В (v0.3.20) ---------- */
+/* Колонки 3fr | 16fr | 3fr: 8 квадратних комірок по краях ≈ висота картинки 2:3; картинка тягнеться на всю висоту колонок. */
+.hero-doll {
+  --dg: 6px;
+  display: grid;
+  grid-template-columns: 3fr 16fr 3fr;
+  column-gap: var(--dg);
+  align-items: stretch;
+  width: 100%;
+}
+.hero-doll .doll-col { display: grid; grid-template-rows: repeat(8, auto); align-content: start; gap: var(--dg); min-width: 0; }
+.hero-doll .doll-col .equip-cell { width: 100%; height: auto; aspect-ratio: 1; }
+.hero-doll .doll-col .equip-cell.has-icon { padding: 2px; }
+.hero-doll .equip-slot-name { font-size: .5rem; padding: 1px; }
+.hero-doll .equip-cell .item-gs { font-size: .55rem; }
+.hero-doll .equip-cell.is-locked { opacity: .35; }
+.hero-doll .char-pic { width: 100%; max-width: none; height: 100%; aspect-ratio: auto; margin: 0; min-width: 0; }
+.char-top { grid-template-columns: minmax(320px, 410px) minmax(0, 1fr) minmax(280px, 340px); }
+@media (max-width: 1000px) {
+  .char-top { grid-template-columns: minmax(320px, 400px) minmax(0, 1fr); }
+}
+@media (max-width: 700px) {
+  .char-top { grid-template-columns: minmax(0, 1fr); }
+  .hero-doll { max-width: 440px; justify-self: center; margin: 0 auto; }
+  body[data-page="character"] .hero-doll .pic { max-width: none; margin: 0; }
+}
