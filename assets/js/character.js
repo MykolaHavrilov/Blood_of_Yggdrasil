@@ -822,14 +822,15 @@ function removeGodsOrb(save) {
 
 // ---------- Замок на речах (v0.3.24) ----------
 // entry.lock: true — замок закрито, false — відкрито; поля немає — за замовчуванням:
-// легендарні речі й речі комплектів з бонусом (ITEM_SETS: комплекти професій, слизовий тощо) — закриті, решта — відкриті.
+// легендарні речі, зілля (type "consumable") і матеріали (type "material": трофеї, руда, деревина…) — закриті,
+// решта (звичайна зброя й броня будь-якої іншої рідкості, комплекти, руни, креслення…) — відкриті (v0.3.26).
 // Закритий замок не дає продати, розібрати чи викинути річ; вдягнути й покласти в скриню — можна.
 // Замок перемикається кнопкою в описі речі (game-common.js → itemInfo, опція onLock).
 function lockedByDefault(entry) {
   const item = ITEMS[entry?.id];
   if (!item) return false;
-  if (RPG.hasRarity?.(entry.id) && RPG.rarityOf?.(entry) === "legendary") return true;
-  return !!(item.set && RPG.ITEM_SETS?.[item.set]);
+  if (item.type === "consumable" || item.type === "material") return true;
+  return !!(RPG.hasRarity?.(entry.id) && RPG.rarityOf?.(entry) === "legendary");
 }
 function isItemLocked(entry) {
   if (!entry || typeof entry !== "object") return false;
