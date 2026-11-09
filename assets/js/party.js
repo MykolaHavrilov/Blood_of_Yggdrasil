@@ -270,6 +270,7 @@
       equipment: fresh.equipment,
       battleQueue: ["attack"]
     };
+    if (save.hardcore) member.character.lives = RPG.HC_LIVES;   // смертельний режим: 3 життя й у напарника
     save.character.gold -= can.cost;
     partyState(save).push(member);
     const stored = save.story.board.cards.find(c => c.name === name);
@@ -287,7 +288,74 @@
     return { ok: true, name: m.character.name };
   }
 
-  Object.assign(RPG, { PARTY_EXP_BONUS,
+  // ---------- Смертельний режим (save.hardcore, character.js → HC_LIVES / loseLife) ----------
+  // Напарник без життів іде з групи назавжди: вдягнені речі — в інвентар, а що не влізло — у «мішок загиблого»
+  // (save.deathBag: [{ ref, from, until }]), звідки їх можна забрати DEATH_BAG_MS (30 хв), потім вони пропадають.
+  // Головний герой без життів — кінець гри: save.gameOver = підсумок (game-common.js → showGameOver).
+  // Викликається після кожного бою (page-game.js) і під час завантаження сторінки (game-common.js → requireSave).
+  const DEATH_BAG_MS = 30 * 60 * 1000;
+  function deathBag(save, now = Date.now()) {
+    if (!Array.isArray(save.deathBag)) save.deathBag = [];
+    const before = save.deathBag.length;
+    save.deathBag = save.deathBag.filter(e => e && e.ref && e.until > now);
+    if (!save.deathBag.length && before) delete save.deathBag;
+    return save.deathBag || [];
+  }
+  // Забрати з мішка (index — номер запису; null — усе, що влізе): { ok, got, left }
+  function takeFromDeathBag(save, index = null) {
+    const bag = deathBag(save);
+    const idx = index === null ? bag.map((_, i) => i) : [index];
+    let got = 0;
+    for (const i of idx.sort((a, b) => b - a)) {
+      const e = bag[i];
+      if (!e) continue;
+      if (!RPG.invFree(save)) break;
+      RPG.addRefToList(save.inventory, e.ref);
+      bag.splice(i, 1);
+      got++;
+    }
+    if (!bag.length) delete save.deathBag;
+    if (!got) return { ok: false, reason: bag.length ? "Інвентар повний — звільніть місце." : "Мішок порожній." };
+    return { ok: true, got, left: bag.length };
+  }
+  function heroSummary(ms) {
+    const ch = ms.character;
+    return { name: ch.name, f: RPG.heroGender(ms) === "f", cls: RPG.getClass(ch.classId).name, classId: ch.classId,
+             level: ch.level, kills: ch.kills || 0, deaths: ch.deaths || 0, gs: RPG.equipmentScore ? RPG.equipmentScore(ms).avg || null : null };
+  }
+  function hardcoreResolve(save, now = Date.now()) {
+    if (!save.hardcore || save.gameOver) return null;
+    const out = { removed: [], over: false };
+    for (let i = partyState(save).length; i >= 1; i--) {
+      const ms = memberSave(save, i);
+      if ((ms.character.lives ?? RPG.HC_LIVES) > 0 || RPG.isAway?.(ms)) continue;
+      const m = save.party[i - 1];
+      const r = { ...heroSummary(ms), toInv: 0, toBag: 0, at: now };
+      for (const slot in m.equipment) {
+        const ref = m.equipment[slot];
+        if (!ref || !RPG.ITEMS[RPG.refId(ref)]) continue;
+        if (RPG.invFree(save)) { RPG.addRefToList(save.inventory, ref); r.toInv++; }
+        else { (save.deathBag ??= []).push({ ref, from: m.character.name, until: now + DEATH_BAG_MS }); r.toBag++; }
+      }
+      save.party.splice(i - 1, 1);
+      (save.hcFallen ??= []).push({ name: r.name, f: r.f, cls: r.cls, level: r.level, kills: r.kills, at: now });
+      out.removed.push(r);
+    }
+    if ((save.character.lives ?? RPG.HC_LIVES) <= 0) {
+      out.over = true;
+      save.gameOver = {
+        at: now,
+        heroes: partyMembers(save).map(heroSummary),
+        fallen: save.hcFallen || [],
+        totalKills: save.totalKills || 0,
+        best: save.bestLoc ? { ...save.bestLoc, name: RPG.getLocation(save.bestLoc.loc)?.name || save.bestLoc.loc } : null,
+        days: Math.max(1, Math.ceil((now - (save.createdAt || now)) / 86400000))
+      };
+    }
+    return out;
+  }
+
+  Object.assign(RPG, { PARTY_EXP_BONUS, DEATH_BAG_MS, deathBag, takeFromDeathBag, hardcoreResolve,
     RECRUIT_GEAR, gearText, MAX_PARTY, HIRE_COSTS, HIRE_PROF_FEE, HIRE_LEVEL_FEE, HIRE_FREE_LEVELS, HIRE_MIN_LEVEL, BOARD_HOURS, RECRUIT_PEASANT_MAX,
     partyState, partySize, memberSave, partyMembers, aliveMembers, isMemberDead: isDead, applyRegenAll,
     nextHireCost, hireCost, boardState, boardNextAt, canHire, hireMember, dismissMember

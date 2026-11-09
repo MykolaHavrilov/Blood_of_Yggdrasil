@@ -217,6 +217,7 @@
       }
       // ключі данжу (якщо локація з данжем) — одразу в кишеню для ключів
       RPG.rollKeyDrops?.(save, e.loc, result.enemyIds);
+      RPG.noteVictory?.(save, e.loc, result.enemyIds);   // загальний лічильник ворогів і найскладніша локація
       // володіння зброєю
       if (RPG.masteryGainFor && RPG.addMasteryExp) {
         team.forEach((ms, k) => {
@@ -265,6 +266,7 @@
         const d = RPG.deathExpPenalty(ms, expSum * (RPG.DEATH_EXP_MULT || 10));
         e.penalty[memberIdOf(save, ms)] = d.expLost;
         ms.character.deaths = (ms.character.deaths || 0) + 1;
+        RPG.loseLife?.(ms);                        // смертельний режим: −1 життя (party.js → hardcoreResolve)
       }
       // удома теж ніхто не стоїть на ногах (і немає інших експедицій у дорозі) — усі прокидаються в Храмі
       const homeAlive = RPG.partyMembers(save).filter(ms => !e.members.includes(memberIdOf(save, ms)) && !isDown(ms));
@@ -283,7 +285,7 @@
         for (const ms of team) { ms.character.hp = 0; ms.character.mp = 0; ms.character.dead = true; }
       }
     } else {
-      for (const ms of fallen) { ms.character.hp = 0; ms.character.mp = 0; ms.character.dead = true; ms.character.deaths = (ms.character.deaths || 0) + 1; }
+      for (const ms of fallen) { ms.character.hp = 0; ms.character.mp = 0; ms.character.dead = true; ms.character.deaths = (ms.character.deaths || 0) + 1; RPG.loseLife?.(ms); }
     }
     for (const ms of team) ms.character.regenAt = now;
     return true;

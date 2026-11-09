@@ -20,6 +20,18 @@
     }
     drawIntro();
     form.querySelectorAll("input[name=gender]").forEach(r => r.addEventListener("change", drawIntro));
+    // Режим: звичайний або смертельний (у кожного героя 3 життя; головний втратив усі — кінець гри)
+    const hardcore = () => form.elements.mode?.value === "hardcore";
+    const modeNote = $("mode-note");
+    const drawMode = () => {
+      if (!modeNote) return;
+      modeNote.textContent = hardcore()
+        ? `Смертельний: у кожного героя лише ${RPG.HC_LIVES} життя. Головний герой загинув ${RPG.HC_LIVES} рази — гра завершується. Напарник без життів назавжди йде з групи; його речі — в інвентар або в «мішок загиблого» на 30 хвилин.`
+        : "Звичайний: після загибелі герої відроджуються в Храмі (штраф досвіду, рідко — втрата речі).";
+      modeNote.classList.toggle("is-hardcore", hardcore());
+    };
+    drawMode();
+    form.querySelectorAll("input[name=mode]").forEach(r => r.addEventListener("change", drawMode));
     form.addEventListener("submit", async event => {
       event.preventDefault();
       const name = form.elements.name.value.trim();
@@ -28,6 +40,7 @@
       btn.disabled = true;
       try {
         const save = RPG.createNewSave(name, undefined, gender());
+        if (hardcore()) { save.hardcore = true; save.character.lives = RPG.HC_LIVES; }
         await RPG.saveGame(save);
         RPG.setCurrentSlot(save.id);
         location.href = "game.html";
@@ -68,6 +81,9 @@
         btn.append(el("strong", null, `${s.character?.name || "Герой"} — ${cls}, рівень ${s.character?.level || 1}`));
         btn.append(el("span", "save-date",
           `${place} · збережено: ${fmtDate(s.savedAt)}${s.id === current ? " · поточна гра" : ""}`));
+        if (s.hardcore) btn.append(el("span", "save-date save-hc", s.gameOver
+          ? "☠ Смертельний режим · персонаж загинув, гру завершено"
+          : `☠ Смертельний режим · життів: ${Math.max(0, s.character?.lives ?? RPG.HC_LIVES)} з ${RPG.HC_LIVES}`));
 
         const del = button("Видалити", "wf wf-danger save-del", async () => {
           if (!confirm(`Видалити збереження «${s.character?.name}»? Цю дію не можна скасувати.`)) return;

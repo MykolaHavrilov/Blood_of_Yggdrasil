@@ -440,3 +440,35 @@ a.map-world:hover, a.map-world:focus-visible { outline: none; border-color: var(
 .quick-sell svg { width: 18px; height: 25px; display: block; }
 .quick-sell:disabled { opacity: .35; cursor: not-allowed; filter: grayscale(1); }
 @media (hover: none), (max-width: 700px) { .quick-sell { width: 48px; min-height: 44px; } .quick-sell svg { width: 21px; height: 29px; } }
+
+/* ---------- «Інвентар»: герой і вдягнені речі навколо, як на «Персонажі» (v0.3.29) ---------- */
+.inv-doll { max-width: 440px; margin: 0 auto; }
+/* Тір речі — «T1» у лівому нижньому куті клітинки; гнізда рун тоді — над ним */
+.item-tier {
+  position: absolute; left: 3px; bottom: 2px; z-index: 2;
+  font-size: .6rem; font-weight: 800; line-height: 1; letter-spacing: .02em;
+  color: #e8d5ae; text-shadow: 0 0 2px #000, 0 1px 2px #000; pointer-events: none;
+}
+.item-tier ~ .item-sockets { bottom: 13px; }
+.hero-doll .item-tier { font-size: .5rem; left: 2px; bottom: 1px; }
+.hero-doll .item-tier ~ .item-sockets { bottom: 10px; }
+
+/* ---------- Смертельний режим (v0.3.29): вибір на «Новій грі», кінець гри, мішок загиблого ---------- */
+.mode-note { margin: 0; font-size: .9rem; color: var(--text-dim); }
+.mode-note.is-hardcore { color: #f0a08a; }
+.save-hc { color: #f0a08a; }
+.game-over-panel, .game-over-dialog { width: min(560px, 94vw); }
+.game-over-title { font-family: var(--font-head); color: #e06a5a; text-align: center; margin: 0; }
+.game-over-lead { text-align: center; }
+.game-over h3 { margin: 6px 0 0; }
+.game-over-hero { display: grid; gap: 2px; padding: 6px 10px; border: 1px solid var(--link-border); border-radius: var(--radius-sm); }
+.game-over-hero.is-fallen { opacity: .8; font-size: .92rem; }
+.game-over-nav { justify-content: center; gap: 10px; margin-top: 6px; }
+.death-bag-dialog { width: min(520px, 94vw); }
+.death-bag-list { max-height: min(60vh, 520px); overflow-y: auto; }
+.death-bag-row { align-items: center; gap: 10px; flex-wrap: nowrap; }
+.death-bag-row .equip-cell { --equip-size: 52px; flex: 0 0 auto; }
+.death-bag-row .stack { flex: 1 1 0; gap: 2px; min-width: 0; }
+.death-bag-row > .wf-button { flex: 0 0 auto; }
+.death-bag-btn { color: #f0a08a; }
+.game-over-sub { font-size: .88rem; color: var(--text-dim); }

@@ -87,8 +87,7 @@
     }
     const QUEST_SHOWN = 3;
     // Комірки навколо героя (варіант В): ліворуч і праворуч, згори вниз
-    const DOLL_LEFT = ["mainHand", "head", "earring1", "chest", "hands", "ring1", "artifact1", "artifact3"];
-    const DOLL_RIGHT = ["offHand", "amulet", "earring2", "legs", "feet", "ring2", "artifact2", "artifact4"];
+    const { left: DOLL_LEFT, right: DOLL_RIGHT } = RPG.DOLL_SLOTS;   // game-common.js — ті самі й на «Інвентарі»
     function questEntry(q) {
       const item = el("div", "quest-entry" + (q.ready ? " is-ready" : "") + (q.special ? " is-special" : ""));
       item.append(el("strong", "quest-entry-title", q.title));
@@ -297,6 +296,8 @@
         ["Переможено ворогів", fmtNum(ch.kills || 0)],
         ["Загибелей", fmtNum(ch.deaths || 0)]
       ];
+      // Смертельний режим: скільки життів лишилось у цього героя
+      if (ms.hardcore) infoRows.push(["Режим", "Смертельний"], ["Життів лишилось", `${RPG.livesOf(ms)} / ${RPG.HC_LIVES}`]);
       for (const [k, v] of infoRows) {
         const row = el("div", "stat-row");
         row.append(el("span", null, k), el("strong", null, String(v)));

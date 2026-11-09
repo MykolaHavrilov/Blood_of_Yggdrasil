@@ -524,7 +524,7 @@
     // Експедиція: бої йдуть і поки відкрита мапа
     setInterval(async () => {
       if (!RPG.expeditionActive(save)) return;
-      if (RPG.expeditionTick(save)) await RPG.saveGame(save).catch(e => console.error(e));
+      if (RPG.expeditionTick(save)) { RPG.ui.hardcoreCheck(save); await RPG.saveGame(save).catch(e => console.error(e)); }
       if (!document.querySelector("dialog[open]")) renderDetails();
     }, 15000);
 

@@ -145,6 +145,82 @@
     main.append(box);
   }
 
+  // ---------- Смертельний режим: кінець гри (party.js → hardcoreResolve, save.gameOver) ----------
+  // Підсумок: герої групи (професія, рівень, переможені вороги, GS), полеглі напарники,
+  // скільки ворогів переможено групою, найскладніша пройдена локація.
+  function gameOverContent(save) {
+    const g = save.gameOver || {};
+    const main = g.heroes?.[0] || { name: save.character.name, f: RPG.heroGender(save) === "f" };
+    const box = el("div", "stack game-over");
+    box.append(el("h2", "game-over-title", "Персонаж загинув"));
+    box.append(el("p", "game-over-lead", main.f
+      ? `${main.name} втратила останнє життя. Смертельний режим: її шлях скінчено, гру завершено.`
+      : `${main.name} втратив останнє життя. Смертельний режим: його шлях скінчено, гру завершено.`));
+    const row = (k, v) => { const r = el("div", "stat-row"); r.append(el("span", null, k), el("strong", null, String(v))); return r; };
+    box.append(el("h3", null, "Група"));
+    for (const h of g.heroes || []) {
+      const card = el("div", "game-over-hero");
+      card.append(el("strong", null, `${h.name} — ${h.cls}, рівень ${h.level}`));
+      card.append(el("span", "game-over-sub", `Переможено ворогів: ${fmtNum(h.kills)} · загибелей: ${fmtNum(h.deaths)}` + (typeof h.gs === "number" && h.gs ? ` · GS ${h.gs}` : "")));
+      box.append(card);
+    }
+    if (g.fallen?.length) {
+      box.append(el("h3", null, "Полеглі напарники"));
+      for (const h of g.fallen) box.append(el("div", "game-over-hero is-fallen", `✝ ${h.name} — ${h.cls}, рівень ${h.level} · переможено ворогів: ${fmtNum(h.kills)}`));
+    }
+    box.append(el("h3", null, "Підсумок"));
+    box.append(row("Переможено ворогів (групою)", fmtNum(g.totalKills || 0)));
+    const b = g.best;
+    box.append(row("Найскладніша пройдена локація", b ? (b.dungeon ? `Данж «${b.dungeon}» (${b.name})` : b.name) + ` — вороги до ${b.level} рівня` : "—"));
+    if (g.days) box.append(row("Днів у грі", fmtNum(g.days)));
+    const nav = el("div", "row game-over-nav");
+    nav.append(link("Нова гра", "new-game.html"), link("Головне меню", "../index.html"));
+    box.append(nav);
+    return box;
+  }
+  // На місці сторінки (гру з save.gameOver далі не продовжити)
+  function showGameOverPage(save) {
+    const main = document.querySelector("main");
+    if (!main) return;
+    main.innerHTML = "";
+    const panel = el("div", "panel stack narrow game-over-panel");
+    panel.append(gameOverContent(save));
+    main.append(panel);
+  }
+  // Вікно одразу після бою (сторінка «Гра»): закривається лише переходом
+  function showGameOver(save) {
+    return queueDialog(() => {
+      const { dlg } = noticeDialog("game-over-dialog");
+      dlg.append(gameOverContent(save));
+      dlg.addEventListener("cancel", ev => ev.preventDefault());
+      document.body.append(dlg);
+      dlg.showModal();
+      return dlg;
+    });
+  }
+  // Напарники, що втратили останнє життя (party.js → hardcoreResolve): коротке вікно
+  function showHardcoreLosses(removed) {
+    if (!removed?.length) return;
+    const lines = [];
+    for (const r of removed) {
+      lines.push(r.f ? `${r.name} (${r.cls}, ${r.level} рів.) загинула втретє й назавжди покидає групу.`
+                     : `${r.name} (${r.cls}, ${r.level} рів.) загинув утретє й назавжди покидає групу.`);
+      if (r.toInv || r.toBag) lines.push(`Речі полеглого: в інвентар — ${r.toInv}, у «мішок загиблого» — ${r.toBag}` +
+        (r.toBag ? " (забрати протягом 30 хв на сторінці «Інвентар», потім вони пропадуть)." : "."));
+    }
+    lines.push("Нового напарника можна найняти на Дошці оголошень біля Мерії.");
+    return showNotice("Полеглий напарник", lines, "is-fallen");
+  }
+
+  // Після боїв експедиції, поки сторінка відкрита: полеглі назавжди / кінець гри (смертельний режим)
+  function hardcoreCheck(save) {
+    const hc = RPG.hardcoreResolve?.(save);
+    if (!hc || (!hc.removed.length && !hc.over)) return false;
+    if (hc.over) showGameOver(save);
+    else showHardcoreLosses(hc.removed);
+    return true;
+  }
+
   // Завантажує поточну гру й одразу нараховує відновлення за час відсутності
   async function requireSave() {
     try {
@@ -155,7 +231,14 @@
       const fixed = RPG.partyMembers(save).map(ms => RPG.fixHands(ms)).some(Boolean);
       const arrived = RPG.finishTravel(save);          // дорога скінчилась, поки гра була закрита
       const expMoved = RPG.expeditionTick ? RPG.expeditionTick(save) : false;   // бої експедиції за час відсутності
-      if (RPG.applyRegenAll(save) || fixed || arrived || expMoved) await RPG.saveGame(save);
+      // Смертельний режим: полеглі назавжди, кінець гри; «мішок загиблого» — прибрати прострочене
+      const bagWas = save.deathBag?.length || 0;
+      const hc = RPG.hardcoreResolve ? RPG.hardcoreResolve(save) : null;
+      if (RPG.deathBag && bagWas) RPG.deathBag(save);
+      const hcMoved = !!(hc && (hc.removed.length || hc.over)) || (save.deathBag?.length || 0) !== bagWas;
+      if (RPG.applyRegenAll(save) || fixed || arrived || expMoved || hcMoved) await RPG.saveGame(save);
+      if (save.gameOver) { showGameOverPage(save); return null; }
+      if (hc?.removed.length) showHardcoreLosses(hc.removed);
       // У дорозі доступні лише «Персонаж», «Інвентар» і «Мапа»
       if (RPG.isTraveling(save)) {
         const page = document.body.dataset.page;
@@ -951,7 +1034,7 @@
       main.prepend(bar);
     }
     const upd = async () => {
-      if (RPG.expeditionTick(save)) await RPG.saveGame(save).catch(e => console.error(e));
+      if (RPG.expeditionTick(save)) { hardcoreCheck(save); await RPG.saveGame(save).catch(e => console.error(e)); }
       const act = (RPG.expeditionList(save) || []).filter(e => !e.done);
       if (act.length) {
         if (text) {
@@ -975,6 +1058,7 @@
     setInterval(async () => {
       if (isPaused && isPaused()) return;
       const expMoved = RPG.expeditionTick ? RPG.expeditionTick(save) : false;   // експедиція: наступні бої
+      if (expMoved) hardcoreCheck(save);
       if (RPG.applyRegenAll(save) || expMoved) {
         await RPG.saveGame(save).catch(e => console.error(e));
         onChange();
@@ -1042,6 +1126,8 @@
     if (qty > 1) cell.append(el("span", "item-qty", `×${qty}`));
     const gs = RPG.gearScore ? RPG.gearScore(ref) : null;
     if (gs !== null) cell.append(el("span", "item-gs", String(gs)));
+    const tier = tierMark(ref);
+    if (tier) cell.append(tier);
     const sockets = socketMarks(ref);
     if (sockets) cell.append(sockets);
     return cell;
@@ -1094,6 +1180,18 @@
     return box;
   }
 
+  // Комірки навколо картинки героя («Персонаж» і «Інвентар»): ліворуч — зброя, голова, сережка, тіло, наручі, кільце,
+  // артефакти 1 і 3; праворуч — ліва рука, амулет, сережка, штани, взуття, кільце, артефакти 2 і 4
+  RPG.DOLL_SLOTS = {
+    left: ["mainHand", "head", "earring1", "chest", "hands", "ring1", "artifact1", "artifact3"],
+    right: ["offHand", "amulet", "earring2", "legs", "feet", "ring2", "artifact2", "artifact4"]
+  };
+  // Тір речі (ITEMS[id].tier: 1…7) — маленьке «T1» у лівому нижньому куті клітинки
+  function tierMark(ref) {
+    const t = RPG.ITEMS[RPG.refId(ref)]?.tier;
+    return t ? el("span", "item-tier", "T" + t) : null;
+  }
+
   // Комірка спорядження розміром з іконку: річ — лише картинка,
   // порожня — коротка назва слота. Повна назва — у спливаючому вікні.
   const SLOT_SHORT = {
@@ -1110,6 +1208,8 @@
       cell.append(smallIcon(ref, "equip-icon"));
       const gs = RPG.gearScore ? RPG.gearScore(ref) : null;
       if (gs !== null) cell.append(el("span", "item-gs", String(gs)));
+      const tier = tierMark(ref);
+      if (tier) cell.append(tier);
       const sockets = socketMarks(ref);                // гнізда під руни — як у комірках інвентаря
       if (sockets) cell.append(sockets);
       cell.setAttribute("aria-label", `${RPG.SLOTS[slot]}: ${RPG.itemFullName(ref)}`);
@@ -1525,6 +1625,6 @@
   // ============================================================
 
   RPG.pages = {};
-  RPG.ui = { expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, showExpeditionBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, lockMark, lockButton, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
+  RPG.ui = { hardcoreCheck, showGameOver, showGameOverPage, showHardcoreLosses, gameOverContent, expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, showExpeditionBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, lockMark, lockButton, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
   RPG.ui.meetRenouncer = meetRenouncer;   // «Шлях відреченого»
 })(window.RPG);

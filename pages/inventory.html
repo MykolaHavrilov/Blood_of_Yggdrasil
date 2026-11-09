@@ -31,9 +31,17 @@
     <div class="row member-tabs" id="member-tabs" hidden></div>
     <div class="row">
 
-      <section class="panel stack" style="flex:1 1 280px">
+      <section class="panel stack" style="flex:1 1 320px">
         <h2 id="equip-title">Спорядження</h2>
-        <div class="equip-grid" id="equip-list"></div>
+        <!-- Герой і вдягнені речі навколо — як на «Персонажі» (game-common.js → DOLL_SLOTS): картинка героя змінюється разом із речами -->
+        <div class="hero-doll inv-doll" id="equip-list">
+          <div class="doll-col" id="doll-left"></div>
+          <figure class="pic char-pic">
+            <span id="hero-img" class="hero-sprite" role="img" aria-label="Персонаж"></span>
+            <figcaption id="hero-name">Персонаж</figcaption>
+          </figure>
+          <div class="doll-col" id="doll-right"></div>
+        </div>
       </section>
 
       <section class="stack" style="flex:2 1 460px">
@@ -46,6 +54,8 @@
           <!-- праворуч — фільтр здобичі за рідкістю (game.js → showLootFilter) -->
           <div class="inv-tools">
             <button class="wf wf-link key-pocket-btn" id="key-pocket-btn" type="button">Кишеня для ключів</button>
+            <!-- смертельний режим: речі полеглого напарника, що не влізли в інвентар (party.js → deathBag), 30 хв -->
+            <button class="wf wf-link death-bag-btn" id="death-bag-btn" type="button" hidden>Мішок загиблого</button>
             <!-- пояс: 5 слотів для мішечків, що додають комірки (game.js → showBelt) -->
             <button class="wf loot-filter-btn belt-btn" id="belt-btn" type="button" title="Пояс" aria-label="Пояс: мішечки">
               <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">

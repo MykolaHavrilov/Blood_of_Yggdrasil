@@ -548,6 +548,7 @@ function applyDeath(save, enemyIds) {
   }
 
   ch.deaths = (ch.deaths || 0) + 1;
+  loseLife(save);                            // смертельний режим: −1 життя
 
   // Уся група загинула — кожен відроджується в Храмі.
   // (Якщо хтось вижив, полеглі лишаються мертвими — див. markFallen() і pray().)
@@ -570,6 +571,30 @@ function markFallen(ms) {
   ms.character.mp = 0;
   ms.character.dead = true;
   ms.character.deaths = (ms.character.deaths || 0) + 1;
+  loseLife(ms);
+}
+
+// ---------- Смертельний режим (хардкор, v0.3.29) ----------
+// save.hardcore = true — вибирається при створенні гри (pages/new-game.html). У кожного героя HC_LIVES життів
+// (character.lives); кожна загибель (applyDeath, markFallen, експедиція) забирає одне.
+// Наслідки — party.js → hardcoreResolve: головний герой без життів — кінець гри (save.gameOver),
+// напарник — іде з групи назавжди, його речі — в інвентар або в «мішок загиблого» (save.deathBag, 30 хв).
+const HC_LIVES = 3;
+function livesOf(ms) {
+  return ms.hardcore ? Math.max(0, ms.character.lives ?? HC_LIVES) : null;
+}
+function loseLife(ms) {
+  if (!ms.hardcore) return null;
+  const ch = ms.character;
+  ch.lives = Math.max(0, (ch.lives ?? HC_LIVES) - 1);
+  return ch.lives;
+}
+// Перемога в бою: загальний лічильник ворогів групи (кожен ворог — один раз) і найскладніша пройдена локація
+// (за найвищим рівнем переможених ворогів; для данжу — лише коли його пройдено до кінця). save — спільний сейв.
+function noteVictory(save, locId, enemyIds, dungeonName = null) {
+  save.totalKills = (save.totalKills || 0) + enemyIds.length;
+  const level = Math.max(0, ...enemyIds.map(id => RPG.getEnemy(id)?.level || 0));
+  if (level > (save.bestLoc?.level || 0)) save.bestLoc = { loc: locId, level, dungeon: dungeonName || null, at: Date.now() };
 }
 
 // ---------- Храм: молитва за полеглих ----------
@@ -1778,6 +1803,7 @@ Object.assign(RPG, {
   createNewSave, calcStats, speedCap, clampHpMp, fullHeal, FEMALE_NAMES, heroGender, gw,
   regenPerTick, applyRegen, msToNextRegen,
   addExp, levelCap, levelCapOpen, LEVEL_CAP_BASE, LEVEL_CAP_PROFESSION, LEVEL_CAP_BOSS, removeExp, deathExpPenalty, DEATH_MAX_PCT, expProgress, applyDeath, markFallen, pray,
+  HC_LIVES, livesOf, loseLife, noteVictory,
   getClassChanges, changeClass,
   countInList, addToList, addRefToList, removeFromList, countItem, addItem, removeItem,
   isAtHome, moveToChest, takeFromChest,

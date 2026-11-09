@@ -72,27 +72,36 @@
 
     function render() {
       renderMemberTabs();
-      const eq = $("equip-list");
-      eq.innerHTML = "";
-      for (const slot in RPG.SLOTS) {
-        if (slot.startsWith("artifact") && !RPG.hasArtifactSlots?.(ms)) continue;   // артефакти — з професією
-        if (slot === "artifact1") eq.append(el("div", "equip-sep", "Артефакти"));
-        const ref = ms.equipment[slot];
-        const item = RPG.ITEMS[RPG.refId(ref)];
-        const cell = button("", item ? slotClass(ref, "equip-cell") : "wf wf-slot equip-cell slot-empty");
-        fillEquipCell(cell, ref, slot);
-        const lm = item && lockMark(ref);
-        if (lm) cell.append(lm);
-        if (selected?.kind === "eq" && selected.slot === slot) cell.classList.add("is-selected");
-        cell.dataset.key = "eq:" + slot;
-        if (item) {
-          RPG.bindTip(cell, () => itemInfo(ref, 1, ms, { onLock }), null,
-            { onOpen: () => { pick({ kind: "eq", slot }, cell.dataset.key); return false; } });
-        } else {
-          cell.addEventListener("click", () => { selected = null; RPG.popover.hide(); render(); });
+      // Вдягнене — навколо картинки героя, як на «Персонажі» (game-common.js → DOLL_SLOTS); герой перемальовується з речами
+      const artOpen = !!RPG.hasArtifactSlots?.(ms);
+      const dollCol = (box, list) => {
+        box.innerHTML = "";
+        for (const slot of list) {
+          const ref = ms.equipment[slot];
+          const item = RPG.ITEMS[RPG.refId(ref)];
+          const cell = button("", item ? slotClass(ref, "equip-cell") : "wf wf-slot equip-cell slot-empty");
+          fillEquipCell(cell, ref, slot);
+          const lm = item && lockMark(ref);
+          if (lm) cell.append(lm);
+          if (selected?.kind === "eq" && selected.slot === slot) cell.classList.add("is-selected");
+          cell.dataset.key = "eq:" + slot;
+          if (item) {
+            RPG.bindTip(cell, () => itemInfo(ref, 1, ms, { onLock }), null,
+              { onOpen: () => { pick({ kind: "eq", slot }, cell.dataset.key); return false; } });
+          } else {
+            const locked = slot.startsWith("artifact") && !artOpen;   // артефакти — з професією
+            if (locked) { cell.classList.add("is-locked"); cell.title = "Комірки артефактів відкриваються з професією."; }
+            cell.addEventListener("click", () => { selected = null; RPG.popover.hide(); render(); });
+          }
+          box.append(cell);
         }
-        eq.append(cell);
-      }
+      };
+      dollCol($("doll-left"), RPG.DOLL_SLOTS.left);
+      dollCol($("doll-right"), RPG.DOLL_SLOTS.right);
+      const heroImg = $("hero-img");
+      if (heroImg) renderHeroDoll(heroImg, ms);
+      const heroName = $("hero-name");
+      if (heroName) heroName.textContent = `${ms.character.name} — ${RPG.getClass(ms.character.classId).name}`;
 
       gridOf(ms.inventory, RPG.invSize(ms), "inv", $("item-grid"));
       const conf = RPG.chestConf(viewChest);
@@ -116,6 +125,7 @@
         beltBtn.classList.toggle("is-on", bonus > 0);
         beltBtn.onclick = () => showBelt();
       }
+      renderDeathBagBtn();
       const pocketBtn = $("key-pocket-btn");
       if (pocketBtn) pocketBtn.onclick = () => showKeyPocket(save);
       const filterBtn = $("loot-filter-btn");
@@ -124,6 +134,51 @@
       $("gold").classList.toggle("is-full", !RPG.invFree(ms));
       renderDesc();
     }
+
+    // «Мішок загиблого» (смертельний режим, party.js → deathBag): речі полеглого напарника, що не влізли в інвентар.
+    // Кожна річ чекає 30 хв від загибелі, потім пропадає.
+    const leftText = until => { const m = Math.max(0, Math.ceil((until - Date.now()) / 60000)); return `${m} хв`; };
+    function renderDeathBagBtn() {
+      const b = $("death-bag-btn");
+      if (!b) return;
+      const bag = RPG.deathBag ? RPG.deathBag(save) : [];
+      b.hidden = !bag.length;
+      if (!bag.length) return;
+      b.textContent = `Мішок загиблого: ${bag.length} · ще ${leftText(Math.min(...bag.map(e => e.until)))}`;
+      b.onclick = () => showDeathBag();
+    }
+    function showDeathBag() {
+      const { dlg, closeBtn } = RPG.ui.noticeDialog("death-bag-dialog");
+      const draw = () => {
+        dlg.innerHTML = "";
+        dlg.append(closeBtn(), el("h3", null, "Мішок загиблого"));
+        const bag = RPG.deathBag(save);
+        if (!bag.length) { dlg.append(el("p", null, "Мішок порожній.")); return; }
+        dlg.append(el("p", "note", `Речі полеглих напарників, що не влізли в інвентар. Кожна пропаде через 30 хвилин після загибелі. Вільних клітинок в інвентарі: ${RPG.invFree(save)}.`));
+        const list = el("div", "stack death-bag-list");
+        bag.forEach((e, i) => {
+          const row = el("div", "row death-bag-row");
+          const cell = fillItemCell(el("div", slotClass(e.ref, "equip-cell")), e.ref);
+          const info = el("div", "stack");
+          info.append(rarityName(e.ref), el("span", "note", `${e.from} · пропаде за ${leftText(e.until)}`));
+          row.append(cell, info, button("Забрати", "wf wf-button", () => take(i)));
+          list.append(row);
+        });
+        dlg.append(list);
+        dlg.append(button("Забрати все, що влізе", "wf wf-secondary", () => take(null)));
+      };
+      const take = async i => {
+        const r = RPG.takeFromDeathBag(save, i);
+        if (!r.ok) showMsg(msg, r.reason, true);
+        await RPG.saveGame(save).catch(e => console.error(e));
+        render();
+        draw();
+      };
+      draw();
+      document.body.append(dlg);
+      dlg.showModal();
+    }
+    setInterval(() => { if (save.deathBag?.length) renderDeathBagBtn(); }, 30000);
 
     // Вкладки сховищ (спільна скриня + скрині ремесла складу) і «Розкласти все»
     function renderChestTabs() {

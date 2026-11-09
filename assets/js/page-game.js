@@ -2878,6 +2878,22 @@
         else RPG.leaveDungeon(save);
         if (result.win && dunNext.done && RPG.chronicleRecord) chron = RPG.chronicleRecord(save, dun.id, team, result);
       }
+      // Загальний лічильник ворогів групи й найскладніша пройдена локація (данж — лише пройдений до кінця)
+      if (result.win) {
+        if (!dun || dunNext?.done) RPG.noteVictory(save, locId, result.enemyIds, dun ? dun.name : null);
+        else save.totalKills = (save.totalKills || 0) + result.enemyIds.length;
+      }
+      // Смертельний режим: хто втратив останнє життя — напарник іде з групи, головний герой — кінець гри (party.js)
+      const hc = RPG.hardcoreResolve?.(save);
+      const lifeLines = [];
+      if (save.hardcore) {
+        team.forEach((ms, k) => {
+          if (!result.heroes[k]?.dead || !RPG.partyMembers(save).some(m => m.character === ms.character)) return;
+          lifeLines.push(`☠ ${ms.character.name}: лишилось життів — ${RPG.livesOf(ms)} з ${RPG.HC_LIVES}`);
+        });
+        for (const r of hc?.removed || []) lifeLines.push(r.f ? `☠ ${r.name} загинула втретє й назавжди покидає групу.` : `☠ ${r.name} загинув утретє й назавжди покидає групу.`);
+        for (const r of hc?.removed || []) if (r.toInv || r.toBag) lifeLines.push(`Речі полеглого: в інвентар — ${r.toInv}, у «мішок загиблого» — ${r.toBag} (забрати протягом 30 хв, сторінка «Інвентар»).`);
+      }
       if (!result.draw || result.win) fieldLootAdd(save, { win: result.win, exp: battleExp, gold: battleGold, items: got, lost, filtered });
       // Автозілля після бою (не після загибелі всієї групи; у данжі між боями не діє)
       const postPotion = deaths ? [] : runAutoPotion();
@@ -2911,6 +2927,7 @@
         outcome = { title: foes.length > 1 ? "Вороги втекли" : "Ворог утік", lines: ["Нагороди немає."], state: "draw" };
       }
       if (masteryLines.length) outcome.lines.push("Володіння: " + masteryLines.join("; "));
+      outcome.lines.push(...lifeLines);
       outcome.lines.push(...prePotion, ...postPotion);
       const fightTitle = `${team.map(ms => ms.character.name).join(", ")} проти: ${foesText()}`;
       // Журнал бою (journal.js): увесь хід бою + підсумок; найстаріший запис понад 100 затирається
@@ -2955,6 +2972,19 @@
       liveLines = liveEntry = null;
       journalCtl?.refresh({ skip: null, live: null });
       setArena(outcome.title, outcome.lines, outcome.state);
+      // Смертельний режим: головний герой втратив останнє життя — кінець гри (вікно з підсумком)
+      if (save.gameOver) {
+        document.body.classList.remove("is-fighting");
+        fighting = false;
+        startBtn.disabled = rerollBtn.disabled = true;
+        const li = el("li", "log-action");
+        li.append(button("☠ Підсумок гри", "wf wf-link", () => RPG.ui.showGameOver(save)));
+        logBox.append(li);
+        logBox.scrollTop = logBox.scrollHeight;
+        setTimeout(() => RPG.ui.showGameOver(save), 1200);
+        return;
+      }
+      if (hc?.removed.length) RPG.ui.showHardcoreLosses(hc.removed);
       if (deaths) {
         const wake = el("li", "log-action");
         wake.append(link("Прокинутися в Храмі", "game.html"));

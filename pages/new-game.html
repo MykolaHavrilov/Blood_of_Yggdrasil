@@ -36,6 +36,13 @@
           <label><input type="radio" name="gender" value="m" checked> Герой</label>
           <label><input type="radio" name="gender" value="f"> Героїня</label>
         </fieldset>
+        <!-- Режим гри (page-menu.js → pageNewGame; character.js → HC_LIVES, party.js → hardcoreResolve) -->
+        <fieldset class="gender-pick mode-pick">
+          <legend>Режим</legend>
+          <label><input type="radio" name="mode" value="normal" checked> Звичайний</label>
+          <label><input type="radio" name="mode" value="hardcore"> Смертельний (хардкор)</label>
+        </fieldset>
+        <p class="mode-note" id="mode-note">Звичайний: після загибелі герої відроджуються в Храмі (штраф досвіду, рідко — втрата речі).</p>
         <p class="note" data-anchor="heading">Професія: Рекрут. Старт у Домівці — дерев'яний меч, лляна сорочка й штани, щит і чоботи в інвентарі, кілька зілль. Атрибути: Сила, Спритність, Інтелект, Витривалість, Дух — по 1, +3 очки за кожен рівень.</p>
       </div>
 
