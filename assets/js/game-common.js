@@ -173,10 +173,49 @@
     const b = g.best;
     box.append(row("Найскладніша пройдена локація", b ? (b.dungeon ? `Данж «${b.dungeon}» (${b.name})` : b.name) + ` — вороги до ${b.level} рівня` : "—"));
     if (g.days) box.append(row("Днів у грі", fmtNum(g.days)));
+    if (g.score) box.append(scoreBox(g.score));
     const nav = el("div", "row game-over-nav");
     nav.append(link("Нова гра", "new-game.html"), link("Головне меню", "../index.html"));
     box.append(nav);
     return box;
+  }
+  // Рахунок гри (character.js → hardcoreScore): n + b + v + c + x + z, по рядку на кожну частину
+  function scoreBox(sc, title = true) {
+    const box = el("div", "stack score-box");
+    const i = sc.info || {};
+    const S = RPG.SCORE || {};
+    const row = (k, hint, v, cls = "") => {
+      const r = el("div", "stat-row" + cls);
+      const name = el("span", null, k);
+      if (hint) name.append(el("small", "score-hint", " " + hint));
+      r.append(name, el("strong", null, fmtNum(v)));
+      return r;
+    };
+    if (title) box.append(el("h3", null, "Рахунок"));
+    box.append(row("Рівні головного героя", `(${i.heroLevels ?? "?"} × ${S.heroLevel})`, sc.n));
+    box.append(row("Рівні, прокачані напарниками", `(${i.mercGain ?? 0} × ${S.mercLevel})`, sc.b));
+    box.append(row("Найскладніша локація", `(місце ${i.rank ?? 0} × ${S.locRank})`, sc.v));
+    box.append(row("Переможені вороги", "(за їхніми рівнями)", sc.c));
+    box.append(row("Данжі й експедиції", `(данжів: ${i.dungeons ?? 0}, експедицій: ${i.exps ?? 0})`, sc.x));
+    box.append(row("Спорядження й ремесло", `(рівні речей: ${i.items ?? 0} × ${S.itemLevel}, ремесло: ${fmtNum(i.craftPts ?? 0)})`, sc.z));
+    box.append(row("Разом", "", sc.total, " score-total"));
+    return box;
+  }
+  // Вікно з рахунком живої хардкор-гри (сторінка «Персонаж»)
+  function showScore(save) {
+    return showNotice("Рахунок гри", [scoreBox(RPG.hardcoreScore(save), false)], "is-score");
+  }
+  // Збереження героя, що вже загинув в іншій копії гри (save.js → hcBuried): замість сторінки — пояснення
+  function showBuriedPage() {
+    const main = document.querySelector("main");
+    if (!main) return;
+    main.innerHTML = "";
+    const box = el("div", "panel stack narrow game-over-panel");
+    box.append(el("h2", "game-over-title", "Персонаж загинув"), el("p", "game-over-lead", RPG.BURIED_TEXT));
+    const nav = el("div", "row game-over-nav");
+    nav.append(link("Нова гра", "new-game.html"), link("Завантажити гру", "load.html"), link("Головне меню", "../index.html"));
+    box.append(nav);
+    main.append(box);
   }
   // На місці сторінки (гру з save.gameOver далі не продовжити)
   function showGameOverPage(save) {
@@ -226,6 +265,7 @@
     try {
       const save = await RPG.loadCurrentGame();
       if (!save) { showNoGame(); return null; }
+      if (RPG.hcBuried?.(save)) { showBuriedPage(); return null; }   // смертельний режим: цей герой уже загинув в іншій копії
       RPG.currentSave = save;                        // для сповіщень → журнал бою
       // старий сейв: зайва річ з лівої руки — в інвентар (для кожного героя групи)
       const fixed = RPG.partyMembers(save).map(ms => RPG.fixHands(ms)).some(Boolean);
@@ -1625,6 +1665,6 @@
   // ============================================================
 
   RPG.pages = {};
-  RPG.ui = { hardcoreCheck, showGameOver, showGameOverPage, showHardcoreLosses, gameOverContent, expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, showExpeditionBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, lockMark, lockButton, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
+  RPG.ui = { scoreBox, showScore, showBuriedPage, hardcoreCheck, showGameOver, showGameOverPage, showHardcoreLosses, gameOverContent, expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, showExpeditionBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, lockMark, lockButton, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
   RPG.ui.meetRenouncer = meetRenouncer;   // «Шлях відреченого»
 })(window.RPG);

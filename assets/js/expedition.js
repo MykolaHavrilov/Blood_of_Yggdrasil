@@ -255,6 +255,7 @@
   function finishExpedition(save, e, reason, now = Date.now(), wipeIds = null) {
     if (!e || e.done) return false;
     e.done = true; e.reason = reason; e.finishedAt = now;
+    if (reason === "time") RPG.noteExpedition?.(save, e.loc);   // рахунок гри: експедиція відходила весь час
     const team = expMembers(save, e);
     const fallen = team.filter(isDown);
     e.fallen = fallen.map(ms => memberIdOf(save, ms));

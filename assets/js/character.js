@@ -589,12 +589,90 @@ function loseLife(ms) {
   ch.lives = Math.max(0, (ch.lives ?? HC_LIVES) - 1);
   return ch.lives;
 }
-// Перемога в бою: загальний лічильник ворогів групи (кожен ворог — один раз) і найскладніша пройдена локація
-// (за найвищим рівнем переможених ворогів; для данжу — лише коли його пройдено до кінця). save — спільний сейв.
-function noteVictory(save, locId, enemyIds, dungeonName = null) {
+// ---------- Рахунок гри (для смертельного режиму, v0.3.30) ----------
+// Рахунок = n + b + v + c + x + z (hardcoreScore):
+//   n — SCORE.heroLevel за кожен рівень головного героя (усі професії разом: heroLevels);
+//   b — SCORE.mercLevel за кожен рівень, прокачаний найманим героєм ПІСЛЯ найму (і тими, хто вже поліг);
+//   v — SCORE.locRank × місце найскладнішої пройденої локації в спільному списку всіх світів (1 — найлегша);
+//   c — за кожного переможеного ворога: його рівень (бос — × SCORE.bossMult);
+//   x — пройдений данж: SCORE.dungeon × рівень боса × номер світу; експедиція, що відходила весь час:
+//       SCORE.expedition × рівень локації × номер світу;
+//   z — спорядження й ремесло: SCORE.itemLevel × рівень кожної вдягненої речі всіх героїв групи
+//       + SCORE.craftLevel × (загальна майстерність коваля − 1) + SCORE.craftCat × (рівень кожного виду − 1).
+// Лічильники в сейві — save.score: { kills, dungeons, dunPts, exps, expPts } (рахуються в будь-якій грі).
+const SCORE = { heroLevel: 100, mercLevel: 50, locRank: 100, bossMult: 5, dungeon: 20, expedition: 10, itemLevel: 5, craftLevel: 100, craftCat: 50 };
+const REGION_WORLD = { start: 1, city: 1, dark: 2, alf: 3 };
+function worldOfLoc(locId) {
+  const r = RPG.LOCATIONS?.[locId]?.region || "start";
+  return RPG.worldOfRegion?.(r) || REGION_WORLD[r] || 1;
+}
+// Рівень локації — найвищий рівень її ворогів
+function locLevel(locId) {
+  return Math.max(0, ...(RPG.LOCATIONS?.[locId]?.enemies || []).map(id => RPG.getEnemy(id)?.level || 0));
+}
+// Місце рівня серед усіх локацій з ворогами (1 — найлегша); рівні однакові — одне місце
+function locRankOf(level) {
+  if (!level) return 0;
+  const levels = [...new Set(Object.keys(RPG.LOCATIONS || {}).map(locLevel).filter(Boolean))].sort((a, b) => a - b);
+  return levels.filter(l => l <= level).length || 1;
+}
+// Усі рівні героя: попередні професії + поточна (після зміни професії рівень починається з 1)
+function heroLevels(ch) {
+  const hist = ch.classHistory || [];
+  return hist.reduce((n, h) => n + (h.level || 1), 0) + (ch.level || 1) - hist.length;
+}
+function scoreState(save) {
+  save.score ??= { kills: 0, dungeons: 0, dunPts: 0, exps: 0, expPts: 0 };
+  return save.score;
+}
+// Переможені вороги: загальний лічильник групи (кожен ворог — один раз) і очки за рівні
+function noteKills(save, enemyIds) {
   save.totalKills = (save.totalKills || 0) + enemyIds.length;
+  const sc = scoreState(save);
+  for (const id of enemyIds) { const e = RPG.getEnemy(id); sc.kills += (e?.level || 1) * (e?.boss ? SCORE.bossMult : 1); }
+}
+// Перемога в бою: вороги + найскладніша пройдена локація (за найвищим рівнем переможених ворогів;
+// для данжу — лише коли його пройдено до кінця: dungeonName — тоді ще й очки за данж). save — спільний сейв.
+function noteVictory(save, locId, enemyIds, dungeonName = null) {
+  noteKills(save, enemyIds);
   const level = Math.max(0, ...enemyIds.map(id => RPG.getEnemy(id)?.level || 0));
   if (level > (save.bestLoc?.level || 0)) save.bestLoc = { loc: locId, level, dungeon: dungeonName || null, at: Date.now() };
+  if (dungeonName) {
+    const sc = scoreState(save);
+    sc.dungeons++;
+    sc.dunPts += SCORE.dungeon * level * worldOfLoc(locId);
+  }
+}
+// Експедиція відходила весь свій час (expedition.js → finishExpedition, причина "time")
+function noteExpedition(save, locId) {
+  const sc = scoreState(save);
+  sc.exps++;
+  sc.expPts += SCORE.expedition * locLevel(locId) * worldOfLoc(locId);
+}
+function itemLevelOf(ref) {
+  const it = ITEMS[RPG.refId(ref)];
+  return it ? (it.levelReq || it.gsLevel || 1) : 0;
+}
+function hardcoreScore(save) {
+  const members = RPG.partyMembers ? RPG.partyMembers(save) : [save];
+  const sc = scoreState(save);
+  const mercGain = members.slice(1).reduce((n, ms) => n + Math.max(0, heroLevels(ms.character) - (ms.character.hireLevels ?? heroLevels(ms.character))), 0)
+    + (save.hcFallen || []).reduce((n, f) => n + (f.gained || 0), 0);
+  const items = members.reduce((n, ms) => n + Object.values(ms.equipment || {}).reduce((k, ref) => k + itemLevelOf(ref), 0), 0);
+  const craft = save.character.craft;
+  const craftPts = craft ? SCORE.craftLevel * Math.max(0, (craft.level || 1) - 1)
+    + Object.values(craft.cats || {}).reduce((k, c) => k + SCORE.craftCat * Math.max(0, (c.level || 1) - 1), 0) : 0;
+  const rank = locRankOf(save.bestLoc?.level || 0);
+  const parts = {
+    n: SCORE.heroLevel * heroLevels(save.character),
+    b: SCORE.mercLevel * mercGain,
+    v: SCORE.locRank * rank,
+    c: sc.kills,
+    x: sc.dunPts + sc.expPts,
+    z: SCORE.itemLevel * items + craftPts
+  };
+  return { ...parts, total: Object.values(parts).reduce((a, b) => a + b, 0),
+           info: { heroLevels: heroLevels(save.character), mercGain, rank, dungeons: sc.dungeons, exps: sc.exps, items, craftPts } };
 }
 
 // ---------- Храм: молитва за полеглих ----------
@@ -1803,7 +1881,7 @@ Object.assign(RPG, {
   createNewSave, calcStats, speedCap, clampHpMp, fullHeal, FEMALE_NAMES, heroGender, gw,
   regenPerTick, applyRegen, msToNextRegen,
   addExp, levelCap, levelCapOpen, LEVEL_CAP_BASE, LEVEL_CAP_PROFESSION, LEVEL_CAP_BOSS, removeExp, deathExpPenalty, DEATH_MAX_PCT, expProgress, applyDeath, markFallen, pray,
-  HC_LIVES, livesOf, loseLife, noteVictory,
+  HC_LIVES, livesOf, loseLife, noteVictory, noteKills, noteExpedition, hardcoreScore, heroLevels, locLevel, locRankOf, SCORE,
   getClassChanges, changeClass,
   countInList, addToList, addRefToList, removeFromList, countItem, addItem, removeItem,
   isAtHome, moveToChest, takeFromChest,

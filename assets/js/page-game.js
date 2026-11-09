@@ -2881,7 +2881,7 @@
       // Загальний лічильник ворогів групи й найскладніша пройдена локація (данж — лише пройдений до кінця)
       if (result.win) {
         if (!dun || dunNext?.done) RPG.noteVictory(save, locId, result.enemyIds, dun ? dun.name : null);
-        else save.totalKills = (save.totalKills || 0) + result.enemyIds.length;
+        else RPG.noteKills(save, result.enemyIds);
       }
       // Смертельний режим: хто втратив останнє життя — напарник іде з групи, головний герой — кінець гри (party.js)
       const hc = RPG.hardcoreResolve?.(save);

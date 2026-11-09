@@ -229,6 +229,8 @@
     save.character.freePoints ??= 0;
     save.character.deaths ??= 0;
     save.character.regenAt ??= Date.now();
+    for (const m of save.party || []) if (m?.character && m.character.hireLevels == null && RPG.heroLevels) m.character.hireLevels = RPG.heroLevels(m.character);   // рахунок гри
+    if (save.hardcore && !save.hcKey) save.hcKey = "hc_" + save.id + "_" + (save.createdAt || 0);   // смертельний режим (save.js → hcBuried)
 
     // Версія 4: новий список предметів — старі ID замінюються новими (рідкість зберігається),
     // слоти «ring» → «ring1». Плюс володіння зброєю, навички, завдання.
@@ -524,9 +526,38 @@
 
   // file — об'єкт File з <input type="file" accept=".json">
   // Імпортований сейв отримує НОВИЙ слот, щоб не затерти існуючий
+  // ---------- «Цвинтар» смертельного режиму (v0.3.30) ----------
+  // Коли головний герой хардкор-гри гине востаннє (party.js → hardcoreResolve), у браузері лишається запис
+  // { key — save.hcKey, name — ім'я героя, party — імена напарників (живих і полеглих), createdAt }.
+  // Збереження цього героя, де він ще живий (напр. старий експорт JSON), більше не завантажується:
+  // збіг hcKey, або те саме ім'я головного героя і (та сама дата створення гри або ті самі імена напарників).
+  const GRAVE_KEY = "rpg-hc-graveyard";
+  function graveyard() {
+    try { const g = JSON.parse(localStorage.getItem(GRAVE_KEY)); return Array.isArray(g) ? g : []; } catch (e) { return []; }
+  }
+  function hcNames(save) {
+    return [...(save.party || []).map(m => m?.character?.name), ...(save.hcFallen || []).map(f => f?.name)].filter(Boolean);
+  }
+  function hcBury(save) {
+    const g = graveyard();
+    if (save.hcKey && g.some(r => r.key === save.hcKey)) return;
+    g.push({ key: save.hcKey || null, name: save.character?.name || "", party: hcNames(save), createdAt: save.createdAt || null, at: Date.now() });
+    try { localStorage.setItem(GRAVE_KEY, JSON.stringify(g.slice(-500))); } catch (e) { console.warn("[save] цвинтар:", e); }
+  }
+  // Запис цвинтаря, якщо цей живий хардкор-герой уже загинув в іншій копії гри (інакше null)
+  function hcBuried(save) {
+    if (!save?.hardcore || save.gameOver) return null;
+    const names = hcNames(save);
+    return graveyard().find(r => (save.hcKey && r.key === save.hcKey) ||
+      (r.name === save.character?.name && ((r.createdAt && r.createdAt === save.createdAt) ||
+        (names.length > 0 && names.every(n => (r.party || []).includes(n)))))) || null;
+  }
+  const BURIED_TEXT = "Цей герой уже загинув назавжди в смертельному режимі — його збереження не можна завантажити.";
+
   async function importSave(file) {
     const text = await file.text();
     const data = unpackSave(text);   // перевірка підпису; змінений файл → помилка
+    if (hcBuried(data)) throw new Error(BURIED_TEXT);
     stripNoExport(data);
     data.id = newSlotId();
     migrateSave(data);
@@ -554,7 +585,7 @@
     SAVE_VERSION, CURRENT_SLOT_KEY,
     saveGame, loadGame, listSaves, deleteSave,
     setCurrentSlot, getCurrentSlot, loadCurrentGame, newSlotId,
-    migrateSave, exportSave, importSave, pickJsonFile,
+    migrateSave, exportSave, importSave, pickJsonFile, hcBury, hcBuried, BURIED_TEXT,
     packSave, unpackSave
   });
 })(window.RPG);

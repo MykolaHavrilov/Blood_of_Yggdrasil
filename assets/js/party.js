@@ -271,6 +271,7 @@
       battleQueue: ["attack"]
     };
     if (save.hardcore) member.character.lives = RPG.HC_LIVES;   // смертельний режим: 3 життя й у напарника
+    member.character.hireLevels = RPG.heroLevels(member.character); // рахунок гри: рівні, прокачані після найму
     save.character.gold -= can.cost;
     partyState(save).push(member);
     const stored = save.story.board.cards.find(c => c.name === name);
@@ -338,7 +339,8 @@
         else { (save.deathBag ??= []).push({ ref, from: m.character.name, until: now + DEATH_BAG_MS }); r.toBag++; }
       }
       save.party.splice(i - 1, 1);
-      (save.hcFallen ??= []).push({ name: r.name, f: r.f, cls: r.cls, level: r.level, kills: r.kills, at: now });
+      const gained = Math.max(0, RPG.heroLevels(ms.character) - (ms.character.hireLevels ?? RPG.heroLevels(ms.character)));
+      (save.hcFallen ??= []).push({ name: r.name, f: r.f, cls: r.cls, level: r.level, kills: r.kills, gained, at: now });
       out.removed.push(r);
     }
     if ((save.character.lives ?? RPG.HC_LIVES) <= 0) {
@@ -349,8 +351,10 @@
         fallen: save.hcFallen || [],
         totalKills: save.totalKills || 0,
         best: save.bestLoc ? { ...save.bestLoc, name: RPG.getLocation(save.bestLoc.loc)?.name || save.bestLoc.loc } : null,
-        days: Math.max(1, Math.ceil((now - (save.createdAt || now)) / 86400000))
+        days: Math.max(1, Math.ceil((now - (save.createdAt || now)) / 86400000)),
+        score: RPG.hardcoreScore(save)
       };
+      RPG.hcBury?.(save);                     // у «цвинтар» браузера: старі копії цього героя більше не завантажаться (save.js)
     }
     return out;
   }

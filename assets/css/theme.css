@@ -472,3 +472,10 @@ a.map-world:hover, a.map-world:focus-visible { outline: none; border-color: var(
 .death-bag-row > .wf-button { flex: 0 0 auto; }
 .death-bag-btn { color: #f0a08a; }
 .game-over-sub { font-size: .88rem; color: var(--text-dim); }
+/* Рахунок гри (v0.3.30) */
+.score-box { gap: 4px; }
+.score-box h3 { margin: 6px 0 2px; }
+.score-hint { font-size: .78rem; color: var(--text-dim); }
+.score-total { border-top: 1px solid var(--link-border); font-size: 1.05rem; }
+.score-total strong { color: #ffd76a; }
+.score-more { min-height: 0; padding: 2px 8px; margin-left: 8px; font-size: .8rem; flex: 0 0 auto; }

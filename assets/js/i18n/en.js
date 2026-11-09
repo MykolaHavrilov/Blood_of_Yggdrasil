@@ -2810,9 +2810,78 @@ RPG.I18N.en = {
 "Полеглий напарник": "Fallen Companion",
 "Нового напарника можна найняти на Дошці оголошень біля Мерії.": "A new companion can be hired at the Notice Board by the Town Hall.",
 "☠ Підсумок гри": "☠ Game summary",
-"☠ Смертельний режим · персонаж загинув, гру завершено": "☠ Deadly mode · the hero has fallen, the game is over"
+"☠ Смертельний режим · персонаж загинув, гру завершено": "☠ Deadly mode · the hero has fallen, the game is over",
+"Рахунок гри": "Game score",
+"Рахунок": "Score",
+"Докладно": "Details",
+"Рівні головного героя": "Main hero levels",
+"Рівні, прокачані напарниками": "Levels gained by companions",
+"Найскладніша локація": "Hardest location",
+"Переможені вороги": "Enemies defeated",
+"(за їхніми рівнями)": "(by their levels)",
+"Данжі й експедиції": "Dungeons and expeditions",
+"Спорядження й ремесло": "Gear and crafting",
+"Разом": "Total",
+"Цей герой уже загинув назавжди в смертельному режимі — його збереження не можна завантажити.": "This hero has already died for good in deadly mode — their save cannot be loaded.",
+"☠ Смертельний режим · цей герой уже загинув назавжди — завантажити не можна": "☠ Deadly mode · this hero has already died for good — cannot be loaded"
 },
 "patterns": [
+[
+"^☠ Смертельний режим · персонаж загинув, гру завершено · рахунок: (.*?)$",
+"☠ Deadly mode · the hero has fallen, the game is over · score: $1",
+1,
+0,
+"☠ Смертельний режим · персонаж загинув, гру завершено · рахунок:"
+],
+[
+"☠ Смертельний режим · персонаж загинув, гру завершено · рахунок: (.*?)",
+"☠ Deadly mode · the hero has fallen, the game is over · score: $1",
+0,
+0,
+"☠ Смертельний режим · персонаж загинув, гру завершено · рахунок:"
+],
+[
+"^\\(місце (.*?) × (.*?)\\)$",
+"(rank $1 × $2)",
+1,
+0,
+"(місце"
+],
+[
+"\\(місце (.*?) × (.*?)\\)",
+"(rank $1 × $2)",
+0,
+0,
+"(місце"
+],
+[
+"^\\(данжів: (.*?), експедицій: (.*?)\\)$",
+"(dungeons: $1, expeditions: $2)",
+1,
+0,
+", експедицій:"
+],
+[
+"\\(данжів: (.*?), експедицій: (.*?)\\)",
+"(dungeons: $1, expeditions: $2)",
+0,
+0,
+", експедицій:"
+],
+[
+"^\\(рівні речей: (.*?) × (.*?), ремесло: (.*?)\\)$",
+"(item levels: $1 × $2, crafting: $3)",
+1,
+0,
+"(рівні речей:"
+],
+[
+"\\(рівні речей: (.*?) × (.*?), ремесло: (.*?)\\)",
+"(item levels: $1 × $2, crafting: $3)",
+0,
+0,
+"(рівні речей:"
+],
 [
 "^Смертельний: у кожного героя лише (.*?) життя\\. Головний герой загинув (.*?) рази — гра завершується\\. Напарник без життів назавжди йде з групи; його речі — в інвентар або в «мішок загиблого» на 30 хвилин\\.$",
 "Deadly: every hero has only $1 lives. If the main hero dies $2 times, the game ends. A companion with no lives left leaves the party for good; their gear goes to the inventory or to the \"fallen hero's bag\" for 30 minutes.",

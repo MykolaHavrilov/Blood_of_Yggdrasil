@@ -40,7 +40,11 @@
       btn.disabled = true;
       try {
         const save = RPG.createNewSave(name, undefined, gender());
-        if (hardcore()) { save.hardcore = true; save.character.lives = RPG.HC_LIVES; }
+        if (hardcore()) {
+          save.hardcore = true;
+          save.character.lives = RPG.HC_LIVES;
+          save.hcKey = "hc_" + save.id + "_" + Math.random().toString(36).slice(2, 10);   // мітка героя для «цвинтаря» (save.js)
+        }
         await RPG.saveGame(save);
         RPG.setCurrentSlot(save.id);
         location.href = "game.html";
@@ -82,7 +86,8 @@
         btn.append(el("span", "save-date",
           `${place} · збережено: ${fmtDate(s.savedAt)}${s.id === current ? " · поточна гра" : ""}`));
         if (s.hardcore) btn.append(el("span", "save-date save-hc", s.gameOver
-          ? "☠ Смертельний режим · персонаж загинув, гру завершено"
+          ? `☠ Смертельний режим · персонаж загинув, гру завершено · рахунок: ${fmtNum(s.gameOver.score?.total || 0)}`
+          : RPG.hcBuried(s) ? "☠ Смертельний режим · цей герой уже загинув назавжди — завантажити не можна"
           : `☠ Смертельний режим · життів: ${Math.max(0, s.character?.lives ?? RPG.HC_LIVES)} з ${RPG.HC_LIVES}`));
 
         const del = button("Видалити", "wf wf-danger save-del", async () => {

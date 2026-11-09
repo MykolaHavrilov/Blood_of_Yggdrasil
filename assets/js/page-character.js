@@ -298,6 +298,7 @@
       ];
       // Смертельний режим: скільки життів лишилось у цього героя
       if (ms.hardcore) infoRows.push(["Режим", "Смертельний"], ["Життів лишилось", `${RPG.livesOf(ms)} / ${RPG.HC_LIVES}`]);
+      if (ms.hardcore && !memberIndex) infoRows.push(["Рахунок гри", fmtNum(RPG.hardcoreScore(save).total)]);
       for (const [k, v] of infoRows) {
         const row = el("div", "stat-row");
         row.append(el("span", null, k), el("strong", null, String(v)));
@@ -309,6 +310,11 @@
           tags.append(RPG.roleTags(ch.classId));
           rr.append(el("span", null, "Роль"), tags);
           info.append(rr);
+        }
+        // Рахунок смертельного режиму: натиск — розклад по частинах (character.js → hardcoreScore)
+        if (k === "Рахунок гри") {
+          const b = button("Докладно", "wf wf-link score-more", () => RPG.ui.showScore(save));
+          row.lastChild.after(b);
         }
       }
 
