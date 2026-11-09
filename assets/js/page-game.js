@@ -2878,6 +2878,11 @@
         else RPG.leaveDungeon(save);
         if (result.win && dunNext.done && RPG.chronicleRecord) chron = RPG.chronicleRecord(save, dun.id, team, result);
       }
+      // Бестіарій (bestiary.js): перемоги над кожним ворогом — лише бої в локаціях і данжах (не експедиції)
+      if (result.win && RPG.bestiaryRecord) {
+        summary.push(...RPG.bestiaryLines(save, RPG.bestiaryRecord(save, result.enemies)));
+        RPG.bindBestiaryButtons(save);
+      }
       // Загальний лічильник ворогів групи й найскладніша пройдена локація (данж — лише пройдений до кінця)
       if (result.win) {
         if (!dun || dunNext?.done) RPG.noteVictory(save, locId, result.enemyIds, dun ? dun.name : null);
@@ -3048,6 +3053,7 @@
     logBox.addEventListener("click", openJournal);
     const placeJournal = $("journal-btn-place");
     if (placeJournal) placeJournal.hidden = !!combat;
+    document.querySelectorAll(".bestiary-btn-place").forEach(b => b.classList.toggle("is-off", !!combat));   // у бойовій — та, що біля «Почати бій»
 
     saveBtn.addEventListener("click", async () => {
       try {

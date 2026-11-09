@@ -229,6 +229,8 @@
     save.character.freePoints ??= 0;
     save.character.deaths ??= 0;
     save.character.regenAt ??= Date.now();
+    // Бестіарій (bestiary.js): у старих сейвах, де вже були перемоги, книга знайдеться після першої будь-якої перемоги
+    if (save.bestiary === undefined) { save.bestiary = {}; if ((save.character.kills || 0) > 0 && !save.books?.bestiary) save.bestiaryLegacy = true; }
     for (const m of save.party || []) if (m?.character && m.character.hireLevels == null && RPG.heroLevels) m.character.hireLevels = RPG.heroLevels(m.character);   // рахунок гри
     if (save.hardcore && !save.hcKey) save.hcKey = "hc_" + save.id + "_" + (save.createdAt || 0);   // смертельний режим (save.js → hcBuried)
 

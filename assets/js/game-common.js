@@ -267,6 +267,7 @@
       if (!save) { showNoGame(); return null; }
       if (RPG.hcBuried?.(save)) { showBuriedPage(); return null; }   // смертельний режим: цей герой уже загинув в іншій копії
       RPG.currentSave = save;                        // для сповіщень → журнал бою
+      setTimeout(() => RPG.bindBestiaryButtons?.(save), 0);   // кнопки «📖 Бестіарій» (bestiary.js)
       // старий сейв: зайва річ з лівої руки — в інвентар (для кожного героя групи)
       const fixed = RPG.partyMembers(save).map(ms => RPG.fixHands(ms)).some(Boolean);
       const arrived = RPG.finishTravel(save);          // дорога скінчилась, поки гра була закрита
@@ -943,6 +944,7 @@
   // Відкрити книгу з бібліотеки за id (data/books.js → LIBRARY)
   function openLibraryBook(save, id) {
     if (id === "chronicle") showChronicle(save);
+    else if (id === "bestiary") RPG.showBestiary?.(save);
     else if (id === "forge") showForgeBook(save);
     else if (id === "gods") showDataBook(save, RPG.GODS_BOOK, "world", "is-gods-book");
     else if (id === "runes") {

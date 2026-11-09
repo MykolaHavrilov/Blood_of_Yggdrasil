@@ -1136,7 +1136,8 @@
     return {
       win, draw, rounds: round, events,
       heroes: heroes.map(h => ({ hp: h.hp, mp: h.mp, dead: h.hp <= 0 })),
-      enemies: foes.map(f => ({ id: f.id, champion: f.champion, name: f.enemy.name, exp: f.enemy.exp })),
+      enemies: foes.map(f => ({ id: f.id, champion: f.champion, name: f.enemy.name, exp: f.enemy.exp,
+                                maxHp: f.enemy.stats.hp, maxMp: f.enemy.stats.mp || 0 })),   // (bestiary.js — здоров'я й мана в боях)
       enemyIds: foes.map(f => f.id),
       heroHp: heroes[0].hp, heroMp: heroes[0].mp,
       champion: foes.some(f => f.champion),

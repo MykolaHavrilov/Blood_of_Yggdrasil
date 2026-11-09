@@ -479,3 +479,36 @@ a.map-world:hover, a.map-world:focus-visible { outline: none; border-color: var(
 .score-total { border-top: 1px solid var(--link-border); font-size: 1.05rem; }
 .score-total strong { color: #ffd76a; }
 .score-more { min-height: 0; padding: 2px 8px; margin-left: 8px; font-size: .8rem; flex: 0 0 auto; }
+
+/* ---------- Книга «Бестіарій» (bestiary.js, v0.3.32) ---------- */
+.bestiary-btn.is-off { display: none !important; }
+.char-left > .bestiary-btn { align-self: stretch; }
+.bst-entry { margin: 0 0 1.1em; padding-bottom: .6em; border-bottom: 1px dashed rgba(90, 60, 30, .35); }
+.bst-entry.is-boss .chronicle-sub { color: #7a1f12; }
+.bst-head { display: flex; align-items: center; gap: .7em; break-inside: avoid; break-after: avoid; }
+.bst-bar, .bst-h, .bst-table tr { break-inside: avoid; }
+.bst-h { break-after: avoid; }
+.bst-img { flex: 0 0 auto; width: 5.2em; height: 5.2em; border-radius: 6px; background-color: rgba(60, 40, 20, .12);
+  box-shadow: inset 0 0 0 1px rgba(90, 60, 30, .35); }
+.bst-title { display: grid; gap: .1em; min-width: 0; }
+.bst-title .chronicle-sub { margin: 0; }
+.bst-sub { font-size: .82em; opacity: .8; }
+.bst-bar { position: relative; height: 1.25em; margin: .55em 0 .35em; border-radius: 4px;
+  background: rgba(60, 40, 20, .15); box-shadow: inset 0 0 0 1px rgba(90, 60, 30, .4); overflow: visible; }
+.bst-bar-fill { position: absolute; inset: 0 auto 0 0; border-radius: 4px; background: linear-gradient(90deg, #8a5a1c, #c99a3a); }
+.bst-tick { position: absolute; top: -2px; bottom: -2px; width: 2px; margin-left: -1px; background: rgba(60, 35, 15, .55); }
+.bst-tick.is-done { background: #5b2c0b; }
+.bst-tick:last-of-type { margin-left: -2px; }
+.bst-bar-label { position: absolute; inset: 0; display: grid; place-items: center; font-size: .72em; font-weight: 700;
+  color: #2b1a0a; text-shadow: 0 0 3px rgba(255, 240, 210, .9); }
+.bst-hpmp { margin: .3em 0; }
+.bst-locked { margin: .25em 0; font-size: .85em; opacity: .62; font-style: italic; }
+.bst-h { margin: .6em 0 .25em; font-size: .95em; }
+.bst-table { font-size: .82em; }
+.bst-item { display: inline-flex; align-items: center; gap: .35em; }
+.bst-item-icon { flex: 0 0 auto; width: 1.7em; height: 1.7em; }
+.bst-unknown { margin-top: .8em; }
+/* телефон: сторінка-пергамент */
+@media (max-width: 700px) {
+  .bst-img { width: 4.2em; height: 4.2em; }
+}

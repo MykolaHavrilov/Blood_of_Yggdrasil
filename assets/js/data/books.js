@@ -346,7 +346,9 @@
     { id: "gods", title: GODS_BOOK.title, note: "Довідник про богів Ірію, Асгарду й сили темряви. Куплений у Мерії.",
       has: save => !!save.books?.gods },
     { id: "runes", title: RUNE_BOOK.title, note: "Книга Сварога · друга. Знайдена серед трофеїв Володаря Темного лісу.",
-      has: save => !!save.books?.runes }
+      has: save => !!save.books?.runes },
+    { id: "bestiary", title: "Бестіарій", note: "Знайдена після першої перемоги над щуром. Описує ворогів, яких ви здолали самі (bestiary.js).",
+      has: save => !!save.books?.bestiary }
   ];
   const libraryBooks = save => LIBRARY.filter(b => b.has(save));
   // Позначити книгу як знайдену (save.books[id] = true)
