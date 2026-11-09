@@ -2,7 +2,7 @@
 
 ## Структура
 
-- Гра існує в **одній версії** — репозиторій GitHub `MykolaHavrilov/RPG-game_v2`, локальна версія — `H:\Game_NEW\game`
+- Гра існує в **одній версії** — репозиторій GitHub `MykolaHavrilov/Blood_of_Yggdrasil` (до 09.11.2026 — `RPG-game_v2`; GitHub перенаправляє стару адресу), локальна версія — `H:\Game_NEW\game`
   (звичайна тека, **не git-клон** і не пов'язана з GitHub).
   Та сама папка працює на Windows, Android, планшетах і телефонах.
 - Запуск: GitHub Pages (PWA, встановлюється як застосунок у Chrome/Edge на ПК і на Android),
