@@ -24,13 +24,13 @@
       <div class="panel stack">
         <h2>Ваш персонаж</h2>
         <figure class="pic" style="max-width:240px; margin:0 auto">
-          <span class="hero-sprite" role="img" aria-label="Персонаж" style="background-image:url('../assets/images/Heroes_start.webp'); background-size:301.5625% 200.78125%; background-position:0% 0%"></span>
+          <span class="hero-sprite" id="new-hero-img" role="img" aria-label="Персонаж" style="background-image:url('../assets/images/heroes/hero_peasant.webp'); background-size:100% 100%; background-position:0 0; background-repeat:no-repeat"></span>
         </figure>
         <label class="field">
           Ім'я персонажа
           <input type="text" name="name" maxlength="20" required placeholder="Введіть ім'я">
         </label>
-        <!-- Стать: поки змінює лише текст розмов і літопису (фігурка — пізніше) -->
+        <!-- Стать: картинка героя (hero_peasant / hero_peasant_f — page-menu.js → drawHero), текст розмов і літопису -->
         <fieldset class="gender-pick">
           <legend>Стать</legend>
           <label><input type="radio" name="gender" value="m" checked> Герой</label>

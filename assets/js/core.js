@@ -61,8 +61,8 @@ window.RPG = window.RPG || {};
   // ---------- Версія гри (головне меню, праворуч унизу) ----------
   // Піднімати при КОЖНОМУ оновленні гри: VERSION — третя цифра +1 (друга — кількість відкритих світів),
   // CACHE_VERSION — те саме число, що в sw.js → CACHE ("rpg-game-vN").
-  RPG.VERSION = "0.3.30";
-  RPG.CACHE_VERSION = 195;
+  RPG.VERSION = "0.3.31";
+  RPG.CACHE_VERSION = 196;
 
   RPG.LANGS = { uk: "Українська", en: "English" };
   RPG.lang = (function () {

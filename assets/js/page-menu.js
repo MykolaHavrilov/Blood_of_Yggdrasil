@@ -18,8 +18,16 @@
       RPG.CHRONICLE.intro(gender()).forEach(p => intro.append(el("p", "intro-p", p)));
       intro.hidden = false;
     }
+    // Картинка героя за статтю (data/classes.js → heroSpriteStyle: hero_peasant.webp / hero_peasant_f.webp)
+    const heroImg = $("new-hero-img");
+    function drawHero() {
+      if (!heroImg || !RPG.heroSpriteStyle) return;
+      heroImg.removeAttribute("style");
+      Object.assign(heroImg.style, RPG.heroSpriteStyle(RPG.DEFAULT_CLASS, gender()));
+    }
     drawIntro();
-    form.querySelectorAll("input[name=gender]").forEach(r => r.addEventListener("change", drawIntro));
+    drawHero();
+    form.querySelectorAll("input[name=gender]").forEach(r => r.addEventListener("change", () => { drawIntro(); drawHero(); }));
     // Режим: звичайний або смертельний (у кожного героя 3 життя; головний втратив усі — кінець гри)
     const hardcore = () => form.elements.mode?.value === "hardcore";
     const modeNote = $("mode-note");
