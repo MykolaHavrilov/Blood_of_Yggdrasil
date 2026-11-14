@@ -2,7 +2,7 @@
 // HTML / JS / CSS: спершу мережа (щоб оновлення гри підтягувались одразу),
 // а без інтернету — з кешу. Картинки: спершу кеш.
 // Після великих змін можна збільшити номер версії — старий кеш видалиться.
-const CACHE = "rpg-game-v198";
+const CACHE = "rpg-game-v199";
 const PRECACHE = [
   "./",
   "./assets/css/game.css",
@@ -117,6 +117,12 @@ const PRECACHE = [
   "./assets/images/items/icon_key_alf_grove.webp",
   "./assets/images/items/icon_key_alf_lake.webp",
   "./assets/images/items/icon_key_alf_towers.webp",
+  "./assets/images/items/icon_key_van_barrow.webp",
+  "./assets/images/items/icon_key_van_kvasir.webp",
+  "./assets/images/items/icon_key_van_marsh.webp",
+  "./assets/images/items/icon_key_van_ran.webp",
+  "./assets/images/items/icon_key_van_shore.webp",
+  "./assets/images/items/icon_key_van_temple.webp",
   "./assets/images/items/icon_axe_t1.webp",
   "./assets/images/items/icon_axe_t2.webp",
   "./assets/images/items/icon_axe_t3.webp",

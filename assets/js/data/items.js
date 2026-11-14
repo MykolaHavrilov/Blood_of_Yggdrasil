@@ -1099,35 +1099,35 @@ const ITEMS = {
     type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Ключ з оленячого рогу, оповитий фіолетовим димом. Відчиняє данж «Курган Белі» (Поле Белі). Одна спроба — один ключ."
   },
-  // Ключі данжів Ванагейму (світ 4) — свої іконки ще не намальовані: поки що беруть альвгеймські (iconFile)
+  // Ключі данжів Ванагейму (світ 4)
   key_van_shore: {
     name: "Ключ «Корабель мерців»",
-    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true, iconFile: "key_alf_lake",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Іржавий корабельний ключ, обліплений мушлями. Відчиняє данж «Корабель мерців» (Берег Ноатуну). Одна спроба — один ключ."
   },
   key_van_marsh: {
     name: "Ключ «Хатина на кістках»",
-    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true, iconFile: "key_alf_gardens",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Ключ, вирізаний із китової кістки, з рунами вьольв. Відчиняє данж «Хатина на кістках» (Туманні мочари). Одна спроба — один ключ."
   },
   key_van_kvasir: {
     name: "Ключ «Медовий льох»",
-    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true, iconFile: "key_alf_grove",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Липкий мідний ключ, що пахне медом і кров'ю. Відчиняє данж «Медовий льох» (Ліс Квасіра). Одна спроба — один ключ."
   },
   key_van_barrow: {
     name: "Ключ «Серце вогнища»",
-    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true, iconFile: "key_alf_towers",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Золотий ключ, досі гарячий від попелу. Відчиняє данж «Серце вогнища» (Курган Гулльвейг). Одна спроба — один ключ."
   },
   key_van_temple: {
     name: "Ключ «Внутрішнє святилище»",
-    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true, iconFile: "key_alf_freyr",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Білий ключ, обвитий живою квіткою, що не в'яне. Відчиняє данж «Внутрішнє святилище» (Храм ванів). Одна спроба — один ключ."
   },
   key_van_ran: {
     name: "Ключ «Чертог Ран»",
-    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true, iconFile: "key_alf_beli",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Ключ із чорного корала, обплутаний уривком сіті. Відчиняє данж «Чертог Ран» (Бухта Ран). Одна спроба — один ключ."
   },
 
@@ -1310,6 +1310,7 @@ const ICON_FILES = new Set(["sword", "dagger", "axe", "bow", "staff", "shield", 
  "heavenly_spark", "coal", "gem", "glass", "oak_wood", "ash_wood", "flax", "leather_strap", "flint", "lapis", "onyx",
  "copper_ore", "copper_ingot", "silver_ore", "silver_ingot", "iron_ore", "iron_ingot", "gold_ore", "gold_ingot",
  "key_alf_grove", "key_alf_lake", "key_alf_gardens", "key_alf_towers", "key_alf_freyr", "key_alf_beli",
+ "key_van_shore", "key_van_marsh", "key_van_kvasir", "key_van_barrow", "key_van_temple", "key_van_ran",
  // матеріали тірів 4–7 (спрайт-лист new_assets/new_assets/items/Items_mats_t4-7.png)
  "steel_ingot", "platinum_ore", "platinum_ingot", "yew_wood", "seal_leather", "amber", "pearl", "darksteel_ingot", "ironwood", "lizard_leather", "rock_crystal", "rune_gem",
  "celestial_ore", "celestial_ingot", "sun_gold_ingot", "white_ash", "eagle_feather", "bifrost_shard", "ygg_heartwood", "ygg_bark", "ygg_root", "ygg_sap", "mimir_water", "star_spark",
