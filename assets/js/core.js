@@ -61,11 +61,12 @@ window.RPG = window.RPG || {};
   // ---------- Версія гри (головне меню, праворуч унизу) ----------
   // Піднімати при КОЖНОМУ оновленні гри: VERSION — третя цифра +1 (друга — кількість відкритих світів),
   // CACHE_VERSION — те саме число, що в sw.js → CACHE ("rpg-game-vN").
-  RPG.VERSION = "0.4.1";
-  RPG.CACHE_VERSION = 199;
+  RPG.VERSION = "0.4.4";
+  RPG.CACHE_VERSION = 202;
 
   RPG.LANGS = { uk: "Українська", en: "English" };
-  RPG.lang = (function () {
+  // Мову вже обрав lang.js (він же підключив словник); тут — запасний шлях, якщо його на сторінці немає
+  RPG.lang = RPG.LANGS[RPG.lang] ? RPG.lang : (function () {
     const s = RPG.getSettings().lang;
     if (s && RPG.LANGS[s]) return s;
     const nav = (navigator.languages && navigator.languages[0]) || navigator.language || "uk";

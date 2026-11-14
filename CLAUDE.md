@@ -11,6 +11,71 @@
   без окремих файлів чи гілок під платформи.
 - Стара двоплатформна версія лежить у `H:\Game_NEW\вихідні данні` лише як архів — її не змінювати.
 
+## Карта проєкту
+
+Усе складається в один об'єкт `window.RPG`; порядок підключення скриптів — у `pages/*.html` (найповніший — `pages/game.html`).
+Докладно про дані й формати — `assets/js/README_DATA.md`.
+
+**Корінь:** `index.html` — головне меню; `pages/*.html` — екрани; `sw.js` + `manifest.webmanifest` + `assets/js/pwa.js` — офлайн і встановлення.
+
+**`assets/js/` — логіка (без DOM, перевіряється тестами):**
+
+| Файл | Що робить | Залежить від |
+|---|---|---|
+| `lang.js` | обирає мову й підключає словник перекладу лише для не української; єдиний скрипт без `defer` | — |
+| `core.js` | `RPG`, версія, налаштування, `el()` — перший із `defer`-скриптів | — |
+| `save.js` | сейви (IndexedDB / localStorage), експорт, імпорт, `migrateSave` | дані |
+| `character.js` | герой: рівні, інвентар, скрині, екіпірування, торгівля, Храм, дім | `data/items`, `classes`, `stats.js` |
+| `stats.js` | атрибути та їхній вплив на характеристики | `data/classes` |
+| `party.js` | група до 6 героїв, `memberSave` (вигляд сейву для одного героя) | `character.js` |
+| `battle.js` | симуляція автобою (`simulatePartyBattle`) | `data/skills`, `enemies`, `monstergear.js` |
+| `rarity.js`, `gearscore.js`, `monstergear.js` | рідкість речей, оцінка GS, спорядження ворогів | `data/items` |
+| `dungeon.js`, `expedition.js`, `travel.js` | данжі, експедиції, дорога по мапі | `data/enemies`, `routes`, `battle.js` |
+| `quests.js` | завдання гільдії та сюжетні квести | `character.js` |
+| `craft.js` | кузня: кування, переплавка, розбір | `data/recipes`, `books`, `runes` |
+| `journal.js`, `bestiary.js` | журнал бою, книга ворогів | — |
+| `i18n.js` + `i18n/en.js` | переклад (словник «українська фраза → англійська») | дані |
+| `audio.js` | музика й звуки (синтез, без файлів) | `core.js` |
+
+**`assets/js/` — екрани (DOM):**
+
+| Файл | Що робить |
+|---|---|
+| `ui.js` | спливаючі вікна з описом, бойові ефекти |
+| `game-common.js` | спільні помічники всіх екранів → `RPG.ui` |
+| `game-main.js`, `menu.js` | запуск екрана за `data-page`; логіка меню |
+| `page-game.js` | екран «Локація»: запуск, герой, швидкий доступ і **бій** (поле, черга дій, данж) |
+| `page-game-home.js` | Домівка, власний дім, кузня, Спальний район |
+| `page-game-places.js` | брами, Корінь Іггдрасиля, Храм, двір Відреченого, розмови з NPC, Шинок |
+| `page-game-shop.js` | купівля й продаж у торговця |
+| `page-game-city.js` | Дубова Застава: райони, Торговий район, Горно Сварога, Мерія |
+| `page-game-guild.js` | Гільдія авантюристів: завдання, шлях професії, Тренер |
+| `page-character.js`, `page-inventory.js`, `page-maps.js`, `page-menu.js` | «Персонаж», «Інвентар», «Мапа», нова гра / завантаження / налаштування |
+
+Частини `page-game-*.js` — це `RPG.gameParts.<назва>(G)`: їх викликає `pageGame()` у `page-game.js`.
+`G` — спільне екрана (`save`, `msg`, `place`, `locData`, `G.renderAll`, `G.renderPlace`, `G.fighting`); функцію з іншої частини кликати через `G`.
+
+**`assets/js/data/` — лише довідники:** `items`, `enemies` (вороги, локації, данжі), `classes`, `skills`, `levels`, `runes`, `recipes`,
+`books`, `artifacts`, `profsets`, `npcs`, `chronicle`, `worlds`, `routes` (згенерований — руками не правити).
+
+**`assets/`:** `css/` — `main.css` (основа), `game.css` (ігрові екрани), `theme.css` (оформлення); `images/` — `.webp` за теками
+(`items`, `enemies`, `heroes`, `skills`, `locations`, `map`, `npc`, `ui`, `book`); `fonts/`, `icons/`.
+
+## Інструменти (`H:\Game_NEW\tools`, поза текою гри)
+
+Потрібен лише Node.js. Запускати з `H:\Game_NEW`.
+
+- `node tools/check.js` — перевірка перед релізом: синтаксис, завантаження сторінок, посилання, версії, `PRECACHE`, картинки, ID у даних, переклад.
+- `node tools/test.js` — тести логіки (герой, інвентар, торгівля, бій, завдання, дорога, сейви). Запускати після кожної зміни логіки.
+- `node tools/release.js` — попередній перегляд релізу; `--apply` — виконати: перевірка + тести, `PRECACHE`, версії в `core.js` і `sw.js`,
+  архів у `backup\`, якщо змін більше 100 рядків. На GitHub нічого не відправляє.
+- `node tools/add-image.js <файл або тека> --as item|enemy|hero|skill|npc|location|map|ui` — нова картинка: конвертує у `.webp`
+  потрібного розміру, кладе в теку, реєструє в даних (`ICON_FILES`, `ENEMY_FILES`, `HERO_SPRITE_FILES`) і дописує в `PRECACHE`.
+  `--dry` — лише показати; `--replace` — замінити наявну. Конвертує Edge / Chrome без вікна.
+- `node tools/serve.js` — локальний сервер `http://localhost:8765/` (як GitHub Pages, із service worker).
+
+Нова поведінка в логіці — додати тест у `tools/test.js`. Новий файл коду — підключити в потрібних `pages/*.html`; у `PRECACHE` його додасть реліз.
+
 ## Правила оновлень
 
 - Картинки — тільки `.webp` (розширення задані в `data/classes.js`, `data/items.js`, `data/enemies.js`).
