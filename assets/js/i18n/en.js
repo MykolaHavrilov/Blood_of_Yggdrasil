@@ -1145,7 +1145,7 @@ RPG.I18N.en = {
 "Шлях відкриється після перемоги над фінальним босом Ванагейму.": "The way opens after victory over the final boss of Vanaheim.",
 "Сутінкові копальні": "Twilight Mines",
 "Водоспад Андварі": "Andvari's Waterfall",
-"Місто свартальвів": "City of the Svartálfar",
+"Чорні квартали": "The Black Quarters",
 "Чертог Альвіса": "Hall of Alvíss",
 "Кузні Брокка й Ейтрі": "Forges of Brokkr and Eitri",
 "Рунічні глибини": "Runic Depths",
