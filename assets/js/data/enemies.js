@@ -2792,11 +2792,10 @@ const ENEMIES = {
       sawmill: { minLevel: 25, image: "sawmill_alf", yields: ["yew_wood"],
                  description: "Тисовий гай альвів, де колись різали дерево на луки. Здичавілі альви досі стережуть кожен стовбур." }
     },
-    // Ванагейм: фони шахти й лісопилки поки що альвгеймські (свої — mine_van / sawmill_van — ще не в грі)
     van: {
-      mine:    { minLevel: 30, image: "mine_alf", yields: ["iron_ore", "platinum_ore"],
+      mine:    { minLevel: 30, image: "mine_van", yields: ["iron_ore", "platinum_ore"],
                  description: "Копальні ванів у прибережних скелях Ноатуну. Залізо й біла платина лежать тут поруч із морем — і з тими, кого море викинуло на берег." },
-      sawmill: { minLevel: 30, image: "sawmill_alf", yields: ["yew_wood"],
+      sawmill: { minLevel: 30, image: "sawmill_van", yields: ["yew_wood"],
                  description: "Вирубка в Лісі Квасіра, де вани брали темний тис на щогли й луки. Тролі й зачаровані звірі вважають ці дерева своїми." }
     }
   };

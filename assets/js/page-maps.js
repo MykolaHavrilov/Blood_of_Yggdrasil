@@ -26,7 +26,7 @@
   // Будівлі Шахти й Лісопилки (assets/images/map/bld_<id>.webp) — у центрі SITE_ZONES, ширина в % мапи.
   // Значок (кирка / пила) лишається маленьким у кутку: туди лише експедиція.
   const SITE_BLD_W = 6.8;      // ~68% від першої версії (10)
-  const SITE_BUILDINGS = new Set(["mine_start", "sawmill_start", "mine_dark", "sawmill_dark", "mine_alf", "sawmill_alf"]);
+  const SITE_BUILDINGS = new Set(["mine_start", "sawmill_start", "mine_dark", "sawmill_dark", "mine_alf", "sawmill_alf", "mine_van", "sawmill_van"]);
   // Порядок місць у списку під мапою
   const REGION_ORDER = {
     start: ["home", "temple", "village_start", "tavern", "south_gate", "forest_path", "forest_cave"],
