@@ -144,12 +144,15 @@
   // Герої: Темний ліс і Печера — Селяни рівня боса в синіх/фіолетових речах; Альвгейм — різні професії
   // в повному професійному сеті (броня + зброя). Соло — < 1, бо бої 1–2 перед босом виснажують героя.
   const ALF_POWER = { 1: 0.57, 2: 1.06, 3: 1.37, 4: 1.52, 5: 1.56, 6: 1.63 };
+  const VAN_POWER = { 1: 0.57, 2: 1.05, 3: 1.36, 4: 1.52, 5: 1.54, 6: 1.63 };   // Ванагейм (світ 4)
   const GROUP_POWER = {
     cave_secret: { 1: 0.82, 2: 1.3,  3: 1.7,  4: 1.9,  5: 2.1,  6: 2.15 },
     web_nest:    { 1: 0.48, 2: 0.71, 3: 0.88, 4: 0.92, 5: 0.93, 6: 0.94 },
     dark_throne: { 1: 0.54, 2: 0.78, 3: 0.96, 4: 1.04, 5: 1.07, 6: 1.08 },
     alf_moth_nest: ALF_POWER, alf_lake_depths: ALF_POWER, alf_rot_garden: ALF_POWER,
-    alf_dawn_spire: ALF_POWER, alf_freyr_throne: ALF_POWER, alf_beli_barrow: ALF_POWER
+    alf_dawn_spire: ALF_POWER, alf_freyr_throne: ALF_POWER, alf_beli_barrow: ALF_POWER,
+    van_ghost_ship: VAN_POWER, van_volva_hut: VAN_POWER, van_mead_cellar: VAN_POWER,
+    van_pyre_heart: VAN_POWER, van_inner_shrine: VAN_POWER, van_ran_hall: VAN_POWER
   };
   function groupPower(dungeonId, size) {
     const row = (RPG.DUNGEON_GROUP_POWER || GROUP_POWER)[dungeonId];

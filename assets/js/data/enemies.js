@@ -2007,6 +2007,491 @@ const ENEMIES = {
         { id: "platinum_ore", chance: 0.25, qty: [1, 3] },
         { id: "pearl", chance: 0.15, qty: [1, 2] }
       ]
+    },
+
+    // ---------- ВАНАГЕЙМ (світ 4) — вороги 31–35 рівня ----------
+    // Зі світу 4 спорядження з ворогів не падає (worlds.js → CRAFT_ONLY_FROM) — лише матеріали 4 виду, зілля, ключі й артефакти.
+    // Баланс — як в Альвгеймі: герой із професією у повному сеті свого рівня перемагає ≈80%, босів — ≈45%.
+    van_draugr_sailor: {
+      name: "Драугр-мореплавець",
+      humanoid: true,
+      weapons: ["sword", "axe"],
+      undead: true,
+      range: 1, move: { name: "Іржава сокира", mult: 1.55, chance: 0.25 },
+      verb: "рубає",
+      level: 31,
+      role: "melee",
+      stats: { hp: 4760, mp: 0, attack: 854, defense: 79, magicDefense: 94, speed: 38, crit: 27, dodge: 22 },
+      exp: 2883,
+      gold: [71, 136],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "seal_leather", chance: 0.04, qty: [1, 1] },
+        { id: "iron_ore", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    van_shore_crab: {
+      name: "Береговий краб",
+      range: 1, move: { name: "Удар клешнею", mult: 1.5, chance: 0.25 },
+      verb: "щипає клешнею",
+      level: 31,
+      role: "tank",
+      stats: { hp: 7939, mp: 0, attack: 685, defense: 143, magicDefense: 118, speed: 23, crit: 17, blockPhys: 17 },
+      exp: 2883,
+      gold: [71, 136],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "seal_leather", chance: 0.04, qty: [1, 1] },
+        { id: "iron_ore", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    van_gull_harpy: {
+      name: "Чайка-гарпія",
+      range: 2, move: { name: "Пікірування", mult: 1.5, chance: 0.25 },
+      verb: "б'є кігтями",
+      level: 31,
+      role: "ranged",
+      stats: { hp: 4852, mp: 0, attack: 996, defense: 62, magicDefense: 82, speed: 34, crit: 29, dodge: 23 },
+      exp: 2883,
+      gold: [71, 136],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "seal_leather", chance: 0.04, qty: [1, 1] },
+        { id: "iron_ore", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    van_boss_draugr_captain: {
+      name: "Капітан драугрів",
+      undead: true,
+      range: 1, move: { name: "Абордажна сокира", mult: 1.7, chance: 0.25 },
+      verb: "рубає сокирою",
+      level: 32,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "tank",
+      stats: { hp: 14632, mp: 1333, attack: 491, magic: 375, defense: 185, magicDefense: 129, speed: 26, crit: 17, dodge: 12, blockPhys: 17, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Могильний туман", mp: 60, mult: 2.3 },
+        { kind: "stun", name: "Удар якорем", mp: 45, mult: 1.1 },
+        { kind: "heal", name: "Кров утоплених", mp: 70, healPct: 0.1 }
+      ],
+      exp: 15360,
+      gold: [365, 704],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "steel_ingot", chance: 0.25, qty: [1, 3] },
+        { id: "platinum_ingot", chance: 0.25, qty: [1, 3] },
+        { id: "gem", chance: 0.25, qty: [1, 3] },
+        { id: "seal_leather", chance: 0.3, qty: [1, 3] }
+      ]
+    },
+    van_volva_witch: {
+      name: "Відьма-вьольва",
+      humanoid: true,
+      weapons: ["staff"],
+      range: 3, move: { name: "Удар посохом", mult: 1.45, chance: 0.25 },
+      verb: "б'є посохом",
+      level: 32,
+      role: "caster",
+      stats: { hp: 4725, mp: 1037, attack: 461, magic: 611, defense: 72, magicDefense: 139, speed: 29, crit: 17, blockMag: 17 },
+      spell: { name: "Прокляття сейду", mp: 26, mult: 1.45, chance: 0.4 },
+      exp: 3072,
+      gold: [74, 141],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "yew_wood", chance: 0.03, qty: [1, 1] },
+        { id: "amber", chance: 0.015, qty: [1, 1] }
+      ]
+    },
+    van_toad_shapeshifter: {
+      name: "Жаба-перевертень",
+      range: 1, move: { name: "Липкий язик", mult: 1.5, chance: 0.25 },
+      verb: "б'є язиком",
+      level: 31,
+      role: "tank",
+      stats: { hp: 8851, mp: 0, attack: 764, defense: 143, magicDefense: 118, speed: 23, crit: 17, blockPhys: 17 },
+      exp: 2883,
+      gold: [71, 136],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "yew_wood", chance: 0.03, qty: [1, 1] },
+        { id: "amber", chance: 0.015, qty: [1, 1] }
+      ]
+    },
+    van_marsh_light: {
+      name: "Болотяний блудний вогонь",
+      range: 2, move: { name: "Болотяний спалах", mult: 1.4, chance: 0.25 },
+      verb: "обпікає",
+      level: 31,
+      role: "caster",
+      stats: { hp: 5474, mp: 1201, attack: 534, magic: 708, defense: 71, magicDefense: 137, speed: 28, crit: 17, blockMag: 17 },
+      spell: { name: "Блудний вогонь", mp: 24, mult: 1.4, chance: 0.4 },
+      exp: 2883,
+      gold: [71, 136],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "yew_wood", chance: 0.03, qty: [1, 1] },
+        { id: "amber", chance: 0.015, qty: [1, 1] }
+      ]
+    },
+    van_boss_the_old_volva: {
+      name: "Стара вьольва",
+      range: 3, move: { name: "Кістяний посох", mult: 1.55, chance: 0.25 },
+      verb: "б'є посохом",
+      level: 33,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 11310, mp: 1776, attack: 424, magic: 500, defense: 92, magicDefense: 154, speed: 32, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Пророцтво загибелі", mp: 60, mult: 2.4 },
+        { kind: "stun", name: "Сейдові пута", mp: 45, mult: 1.0 },
+        { kind: "heal", name: "Зілля з мочарів", mp: 70, healPct: 0.12 }
+      ],
+      exp: 16335,
+      gold: [376, 726],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "steel_ingot", chance: 0.25, qty: [1, 3] },
+        { id: "platinum_ingot", chance: 0.25, qty: [1, 3] },
+        { id: "gem", chance: 0.25, qty: [1, 3] },
+        { id: "yew_wood", chance: 0.3, qty: [1, 3] }
+      ]
+    },
+    van_enchanted_beast: {
+      name: "Зачарований звір",
+      range: 1, move: { name: "Скажений стрибок", mult: 1.55, chance: 0.25 },
+      verb: "рве іклами",
+      level: 32,
+      role: "melee",
+      stats: { hp: 5244, mp: 0, attack: 941, defense: 80, magicDefense: 95, speed: 39, crit: 27, dodge: 22 },
+      exp: 3072,
+      gold: [74, 141],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "yew_wood", chance: 0.04, qty: [1, 1] },
+        { id: "amber", chance: 0.02, qty: [1, 1] }
+      ]
+    },
+    van_eavesdropping_shade: {
+      name: "Підслуховувач-тінь",
+      range: 2, move: { name: "Дотик тіні", mult: 1.4, chance: 0.25 },
+      verb: "б'є тінню",
+      level: 32,
+      role: "caster",
+      stats: { hp: 5766, mp: 1266, attack: 562, magic: 745, defense: 72, magicDefense: 139, speed: 29, crit: 17, blockMag: 17 },
+      spell: { name: "Украдене слово", mp: 26, mult: 1.45, chance: 0.4 },
+      exp: 3072,
+      gold: [74, 141],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "yew_wood", chance: 0.04, qty: [1, 1] },
+        { id: "amber", chance: 0.02, qty: [1, 1] }
+      ]
+    },
+    van_forest_troll: {
+      name: "Лісовий троль",
+      range: 1, move: { name: "Удар стовбуром", mult: 1.6, chance: 0.25 },
+      verb: "б'є кийком",
+      level: 33,
+      role: "tank",
+      stats: { hp: 9057, mp: 0, attack: 782, defense: 148, magicDefense: 122, speed: 24, crit: 17, blockPhys: 17 },
+      exp: 3267,
+      gold: [76, 145],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "yew_wood", chance: 0.04, qty: [1, 1] },
+        { id: "amber", chance: 0.02, qty: [1, 1] }
+      ]
+    },
+    van_boss_fjalar_and_galar: {
+      name: "Фьялар і Галар",
+      range: 1, move: { name: "Два ножі", mult: 1.75, chance: 0.25 },
+      verb: "ріжуть ножами",
+      level: 33,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "melee",
+      stats: { hp: 9370, mp: 1521, attack: 659, magic: 427, defense: 107, magicDefense: 107, speed: 43, crit: 26, dodge: 24, blockPhys: 18, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Отруєний мед", mp: 60, mult: 2.3 },
+        { kind: "stun", name: "Удар жорном", mp: 45, mult: 1.2 },
+        { kind: "heal", name: "Ковток меду поезії", mp: 70, healPct: 0.1 }
+      ],
+      exp: 16335,
+      gold: [376, 726],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "steel_ingot", chance: 0.25, qty: [1, 3] },
+        { id: "platinum_ingot", chance: 0.25, qty: [1, 3] },
+        { id: "gem", chance: 0.25, qty: [1, 3] },
+        { id: "amber", chance: 0.3, qty: [1, 3] }
+      ]
+    },
+    van_gold_spirit: {
+      name: "Золотий дух",
+      undead: true,
+      range: 2, move: { name: "Золотий спалах", mult: 1.4, chance: 0.25 },
+      verb: "обпікає",
+      level: 33,
+      role: "caster",
+      stats: { hp: 5626, mp: 1235, attack: 549, magic: 728, defense: 73, magicDefense: 141, speed: 29, crit: 17, blockMag: 17 },
+      spell: { name: "Жага золота", mp: 26, mult: 1.45, chance: 0.4 },
+      exp: 3267,
+      gold: [76, 145],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "coal", chance: 0.04, qty: [1, 1] },
+        { id: "platinum_ore", chance: 0.02, qty: [1, 1] }
+      ]
+    },
+    van_burnt_cultist: {
+      name: "Обпалений культист",
+      humanoid: true,
+      weapons: ["dagger", "axe"],
+      range: 1, move: { name: "Палаючий кинджал", mult: 1.55, chance: 0.25 },
+      verb: "ріже",
+      level: 33,
+      role: "melee",
+      stats: { hp: 4708, mp: 0, attack: 846, defense: 81, magicDefense: 97, speed: 39, crit: 27, dodge: 22 },
+      exp: 3267,
+      gold: [76, 145],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "coal", chance: 0.04, qty: [1, 1] },
+        { id: "platinum_ore", chance: 0.02, qty: [1, 1] }
+      ]
+    },
+    van_barrow_guard: {
+      name: "Сторожа кургану",
+      humanoid: true,
+      weapons: ["sword", "axe"],
+      undead: true,
+      range: 1, move: { name: "Удар щитом", mult: 1.55, chance: 0.25 },
+      verb: "б'є",
+      level: 33,
+      role: "tank",
+      stats: { hp: 7898, mp: 0, attack: 682, defense: 148, magicDefense: 122, speed: 24, crit: 17, blockPhys: 17 },
+      exp: 3267,
+      gold: [76, 145],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "coal", chance: 0.04, qty: [1, 1] },
+        { id: "platinum_ore", chance: 0.02, qty: [1, 1] }
+      ]
+    },
+    van_boss_gullveig_the_thrice_burned: {
+      name: "Гулльвейг Тричі Спалена",
+      range: 3, move: { name: "Золотий посох", mult: 1.6, chance: 0.25 },
+      verb: "б'є посохом",
+      level: 34,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 12407, mp: 1948, attack: 465, magic: 548, defense: 93, magicDefense: 156, speed: 32, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Полум'я трьох вогнищ", mp: 60, mult: 2.5 },
+        { kind: "stun", name: "Золота лихоманка", mp: 45, mult: 1.0 },
+        { kind: "heal", name: "Третє відродження", mp: 70, healPct: 0.12 }
+      ],
+      exp: 17340,
+      gold: [388, 748],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "steel_ingot", chance: 0.25, qty: [1, 3] },
+        { id: "platinum_ingot", chance: 0.25, qty: [1, 3] },
+        { id: "gem", chance: 0.25, qty: [1, 3] },
+        { id: "gold_ingot", chance: 0.3, qty: [1, 3] }
+      ]
+    },
+    van_vanir_priest: {
+      name: "Жрець-ван",
+      humanoid: true,
+      weapons: ["staff"],
+      range: 2, move: { name: "Удар жезлом", mult: 1.5, chance: 0.25 },
+      verb: "б'є жезлом",
+      level: 34,
+      role: "healer",
+      stats: { hp: 5666, mp: 1778, attack: 444, magic: 655, defense: 74, magicDefense: 138, speed: 31, crit: 11, blockMag: 17 },
+      spell: { name: "Гнів ванів", mp: 28, mult: 1.45, chance: 0.4 },
+      exp: 3468,
+      gold: [78, 150],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "amber", chance: 0.03, qty: [1, 1] },
+        { id: "pearl", chance: 0.01, qty: [1, 1] }
+      ]
+    },
+    van_freyjas_forest_cat: {
+      name: "Лісовий кіт Фреї",
+      range: 1, move: { name: "Стрибок із гілля", mult: 1.6, chance: 0.25 },
+      verb: "рве кігтями",
+      level: 33,
+      role: "melee",
+      stats: { hp: 5115, mp: 0, attack: 919, defense: 81, magicDefense: 97, speed: 39, crit: 27, dodge: 22 },
+      exp: 3267,
+      gold: [76, 145],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "amber", chance: 0.03, qty: [1, 1] },
+        { id: "pearl", chance: 0.01, qty: [1, 1] }
+      ]
+    },
+    van_seidr_guardian: {
+      name: "Сейдовий вартовий",
+      humanoid: true,
+      weapons: ["sword"],
+      range: 1, move: { name: "Рунний клинок", mult: 1.55, chance: 0.25 },
+      verb: "рубає",
+      level: 34,
+      role: "tank",
+      stats: { hp: 8318, mp: 0, attack: 718, defense: 150, magicDefense: 123, speed: 24, crit: 17, blockPhys: 17 },
+      exp: 3468,
+      gold: [78, 150],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "amber", chance: 0.03, qty: [1, 1] },
+        { id: "pearl", chance: 0.01, qty: [1, 1] }
+      ]
+    },
+    van_boss_high_priestess_of_the_vanir: {
+      name: "Верховна жриця ванів",
+      range: 3, move: { name: "Жезл Фреї", mult: 1.6, chance: 0.25 },
+      verb: "б'є жезлом",
+      level: 35,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 12310, mp: 1933, attack: 462, magic: 544, defense: 95, magicDefense: 159, speed: 32, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Сейд ванів", mp: 60, mult: 2.5 },
+        { kind: "stun", name: "Сльози Фреї", mp: 45, mult: 1.1 },
+        { kind: "heal", name: "Благословення Ньйорда", mp: 70, healPct: 0.12 }
+      ],
+      exp: 18375,
+      gold: [399, 770],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "steel_ingot", chance: 0.25, qty: [1, 3] },
+        { id: "platinum_ingot", chance: 0.25, qty: [1, 3] },
+        { id: "gem", chance: 0.25, qty: [1, 3] },
+        { id: "amber", chance: 0.3, qty: [1, 3] }
+      ]
+    },
+    van_wave_daughter: {
+      name: "Донька-хвиля",
+      range: 2, move: { name: "Удар хвилі", mult: 1.45, chance: 0.25 },
+      verb: "накриває хвилею",
+      level: 34,
+      role: "healer",
+      stats: { hp: 6581, mp: 2065, attack: 516, magic: 761, defense: 74, magicDefense: 138, speed: 31, crit: 11, blockMag: 17 },
+      spell: { name: "Солона хвиля", mp: 28, mult: 1.45, chance: 0.4 },
+      exp: 3468,
+      gold: [78, 150],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "seal_leather", chance: 0.04, qty: [1, 1] },
+        { id: "pearl", chance: 0.025, qty: [1, 1] }
+      ]
+    },
+    van_drowned_warrior: {
+      name: "Утоплений воїн",
+      humanoid: true,
+      weapons: ["sword", "axe"],
+      undead: true,
+      range: 1, move: { name: "Удар з глибини", mult: 1.55, chance: 0.25 },
+      verb: "б'є",
+      level: 34,
+      role: "melee",
+      stats: { hp: 5153, mp: 0, attack: 925, defense: 83, magicDefense: 98, speed: 39, crit: 27, dodge: 22 },
+      exp: 3468,
+      gold: [78, 150],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "seal_leather", chance: 0.04, qty: [1, 1] },
+        { id: "pearl", chance: 0.025, qty: [1, 1] }
+      ]
+    },
+    van_deep_eel: {
+      name: "Глибинний вугор",
+      range: 2, move: { name: "Розряд", mult: 1.5, chance: 0.25 },
+      verb: "б'є струмом",
+      level: 34,
+      role: "ranged",
+      stats: { hp: 5182, mp: 0, attack: 1063, defense: 65, magicDefense: 86, speed: 35, crit: 29, dodge: 23 },
+      exp: 3468,
+      gold: [78, 150],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "seal_leather", chance: 0.04, qty: [1, 1] },
+        { id: "pearl", chance: 0.025, qty: [1, 1] }
+      ]
+    },
+    van_boss_ran_mistress_of_the_drowned: {
+      name: "Ран, володарка утоплених",
+      range: 3, move: { name: "Сіть Ран", mult: 1.7, chance: 0.25 },
+      verb: "б'є сіттю",
+      level: 35,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 12388, mp: 1945, attack: 465, magic: 547, defense: 95, magicDefense: 159, speed: 32, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Дев'ята хвиля", mp: 60, mult: 2.7 },
+        { kind: "stun", name: "Сіть утоплених", mp: 45, mult: 1.3 },
+        { kind: "heal", name: "Данина моря", mp: 70, healPct: 0.1 }
+      ],
+      exp: 23888,
+      gold: [519, 1001],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "steel_ingot", chance: 0.25, qty: [1, 3] },
+        { id: "platinum_ingot", chance: 0.25, qty: [1, 3] },
+        { id: "gem", chance: 0.25, qty: [1, 3] },
+        { id: "pearl", chance: 0.3, qty: [1, 3] }
+      ]
     }
   };
 
@@ -2213,7 +2698,62 @@ const ENEMIES = {
       description: "Давнє поле бою під фіолетовим небом, кістки й скелі, схожі на оленячі роги. Тут Фрейр колись убив велетня Белі — і тут Хелла підняла його з мертвих.",
       enemies: ["alf_dead_giant", "alf_stag_spirit", "alf_rot_warrior", "alf_boss_beli"],
       dungeon: "alf_beli_barrow",
+      edge: "rocks",
+      // Розколотий курган Белі: після першої перемоги над велетнем — шлях у Ванагейм (світ 4)
+      portal: { to: "van_gate", world: 4, title: "Гілка Іггдрасиля",
+                text: "У розколі кургану Белі з-під землі виходить гілка Світового дерева, мокра від морської води. Після загибелі велетня вона більше не спить — крізь неї чути прибій Ванагейму.",
+                button: "Пройти гілкою у Ванагейм" }
+    },
+
+    // ---------- ВАНАГЕЙМ (region: "van", світ 4) — за гілкою Іггдрасиля на Полі Белі ----------
+    // Відкривається після першої перемоги над Белі (save.bossKills.alf_boss_beli). Мапа — assets/images/map/map_vanaheim.webp.
+    // Кожна локація — данж зі своїм босом; дорога одна: берег → мочари → ліс → курган → храм → бухта.
+    van_gate: {
+      name: "Розбитий драккар", type: "portal", region: "van", typeLabel: "Гілка Іггдрасиля",   // підпис на мапі (page-maps.js)
+      description: "Гілка Світового дерева виходить із піску біля розбитого драккара на південному березі Ванагейму. Звідси стежка веде вздовж моря до Ноатуну, а гілкою можна повернутися в Альвгейм.",
+      portal: { to: "alf_beli", title: "Шлях назад", text: "Гілка веде вниз, на Поле Белі.", button: "Повернутися в Альвгейм" }
+    },
+    van_shore: {
+      name: "Берег Ноатуну", type: "combat", region: "van", minLevel: 30,
+      description: "Корабельна гавань Ньйорда: причали, щогли й сіті на вітрі. Кораблі давно не виходять у море — на їхніх палубах господарюють драугри, а на піску клацають клешнями краби.",
+      enemies: ["van_draugr_sailor", "van_shore_crab", "van_gull_harpy", "van_boss_draugr_captain"],
+      dungeon: "van_ghost_ship",
+      edge: "water"
+    },
+    van_marsh: {
+      name: "Туманні мочари", type: "combat", region: "van", minLevel: 31,
+      description: "Хатини вьольв на палях серед туману й очерету. Тут ворожать на кістках і варять зілля, а блудні вогні заводять подорожніх у трясовину.",
+      enemies: ["van_volva_witch", "van_toad_shapeshifter", "van_marsh_light", "van_boss_the_old_volva"],
+      dungeon: "van_volva_hut",
+      edge: ["water", "trees", "water", "trees"]
+    },
+    van_kvasir: {
+      name: "Ліс Квасіра", type: "combat", region: "van", minLevel: 32,
+      description: "Старий ліс, де кожне дерево пам'ятає слова наймудрішого з ванів. Тут його вбили двоє двергів — і досі тіні підслуховують кожну розмову.",
+      enemies: ["van_enchanted_beast", "van_eavesdropping_shade", "van_forest_troll", "van_boss_fjalar_and_galar"],
+      dungeon: "van_mead_cellar",
+      edge: "trees"
+    },
+    van_barrow: {
+      name: "Курган Гулльвейг", type: "combat", region: "van", minLevel: 33,
+      description: "Обвуглений пагорб, де аси тричі палили чаклунку Гулльвейг — і тричі вона виходила з вогню. Попіл тут досі теплий, а в ньому блищить золото.",
+      enemies: ["van_gold_spirit", "van_burnt_cultist", "van_barrow_guard", "van_boss_gullveig_the_thrice_burned"],
+      dungeon: "van_pyre_heart",
       edge: "rocks"
+    },
+    van_temple: {
+      name: "Храм ванів", type: "combat", region: "van", minLevel: 33,
+      description: "Білий храм серед квітучих садів, присвячений Ньйорду, Фрейру й Фреї. Жерці досі служать тут — але чужинців зустрічають сейдом і кігтями священних котів.",
+      enemies: ["van_vanir_priest", "van_freyjas_forest_cat", "van_seidr_guardian", "van_boss_high_priestess_of_the_vanir"],
+      dungeon: "van_inner_shrine",
+      edge: ["walls", "trees", "walls", "trees"]
+    },
+    van_ran: {
+      name: "Бухта Ран", type: "combat", region: "van", minLevel: 34,
+      description: "Чорна бухта під скелями, де море викидає на берег уламки кораблів. Велетка Ран ловить моряків у свою сіть — і ніхто з утоплених не повертається додому.",
+      enemies: ["van_wave_daughter", "van_drowned_warrior", "van_deep_eel", "van_boss_ran_mistress_of_the_drowned"],
+      dungeon: "van_ran_hall",
+      edge: "water"
     }
   };
   const DEFAULT_LOCATION = "home";
@@ -2251,6 +2791,13 @@ const ENEMIES = {
                  description: "Копальні альвів у світлих горах Альвгейму. Золото й платина тут виходять просто на поверхню, але тлін Хелли дістався й сюди." },
       sawmill: { minLevel: 25, image: "sawmill_alf", yields: ["yew_wood"],
                  description: "Тисовий гай альвів, де колись різали дерево на луки. Здичавілі альви досі стережуть кожен стовбур." }
+    },
+    // Ванагейм: фони шахти й лісопилки поки що альвгеймські (свої — mine_van / sawmill_van — ще не в грі)
+    van: {
+      mine:    { minLevel: 30, image: "mine_alf", yields: ["iron_ore", "platinum_ore"],
+                 description: "Копальні ванів у прибережних скелях Ноатуну. Залізо й біла платина лежать тут поруч із морем — і з тими, кого море викинуло на берег." },
+      sawmill: { minLevel: 30, image: "sawmill_alf", yields: ["yew_wood"],
+                 description: "Вирубка в Лісі Квасіра, де вани брали темний тис на щогли й луки. Тролі й зачаровані звірі вважають ці дерева своїми." }
     }
   };
   const SITE_NAMES = { mine: "Шахта", sawmill: "Лісопилка" };
@@ -2329,6 +2876,44 @@ const ENEMIES = {
       minLevel: 30,   // фінальний бій світу 3 — з 30 рівня
       edge: "rocks",
       description: "Курган посеред поля розколовся, і з нього виходить Белі — велетень, якого Фрейр колись убив рогом оленя. Хелла дала йому друге життя."
+    },
+    // Данжі Ванагейму (світ 4)
+    van_ghost_ship: {
+      name: "Корабель мерців", explore: "Обстеження берега", location: "van_shore",
+      key: "key_van_shore", keyChance: 0.01, boss: "van_boss_draugr_captain", pool: ["van_draugr_sailor", "van_shore_crab", "van_gull_harpy"],
+      edge: "water",
+      description: "Найбільший драккар у гавані стоїть із піднятим вітрилом, хоч вітру немає. На його кормі чекає Капітан драугрів — і його команда ще не списана на берег."
+    },
+    van_volva_hut: {
+      name: "Хатина на кістках", explore: "Обстеження мочарів", location: "van_marsh",
+      key: "key_van_marsh", keyChance: 0.01, boss: "van_boss_the_old_volva", pool: ["van_volva_witch", "van_toad_shapeshifter", "van_marsh_light"],
+      edge: "water",
+      description: "У серці мочарів стоїть хатина на палях із китових ребер. Стара вьольва бачила ваш прихід ще до того, як ви народилися, — і вже зварила для вас зілля."
+    },
+    van_mead_cellar: {
+      name: "Медовий льох", explore: "Обстеження лісу", location: "van_kvasir",
+      key: "key_van_kvasir", keyChance: 0.01, boss: "van_boss_fjalar_and_galar", pool: ["van_enchanted_beast", "van_eavesdropping_shade", "van_forest_troll"],
+      edge: "trees",
+      description: "Під корінням найстарішого дуба — льох із трьома казанами. Дверги Фьялар і Галар досі стережуть мед, зварений із крові Квасіра, і свідків не лишають."
+    },
+    van_pyre_heart: {
+      name: "Серце вогнища", explore: "Обстеження кургану", location: "van_barrow",
+      key: "key_van_barrow", keyChance: 0.01, boss: "van_boss_gullveig_the_thrice_burned", pool: ["van_gold_spirit", "van_burnt_cultist", "van_barrow_guard"],
+      edge: "rocks",
+      description: "У глибині кургану досі тліє вогнище, на якому аси тричі палили чаклунку. З попелу підводиться Гулльвейг — і вогонь їй більше не страшний."
+    },
+    van_inner_shrine: {
+      name: "Внутрішнє святилище", explore: "Обстеження храму", location: "van_temple",
+      key: "key_van_temple", keyChance: 0.01, boss: "van_boss_high_priestess_of_the_vanir", pool: ["van_vanir_priest", "van_freyjas_forest_cat", "van_seidr_guardian"],
+      edge: "walls",
+      description: "За завісою з квітів — зала з трьома вівтарями, куди не ступав жоден чужинець. Верховна жриця ванів не пробачає тим, хто порушив тишу святилища."
+    },
+    van_ran_hall: {
+      name: "Чертог Ран", explore: "Обстеження бухти", location: "van_ran",
+      key: "key_van_ran", keyChance: 0.01, boss: "van_boss_ran_mistress_of_the_drowned", pool: ["van_wave_daughter", "van_drowned_warrior", "van_deep_eel"],
+      minLevel: 35,   // фінальний бій світу 4 — з 35 рівня
+      edge: "water",
+      description: "У відплив море розступається й відкриває сходи до підводного чертога, освітленого золотом утоплених. Там, серед сітей, чекає Ран — володарка всіх, кого забрало море."
     }
   };
 
@@ -2421,7 +3006,14 @@ const ENEMIES = {
     "alf_wisp", "alf_moth", "alf_feral_archer", "alf_boss_moths", "alf_nixie", "alf_reflection",
     "alf_crystal_toad", "alf_boss_necken", "alf_thornbush", "alf_poison_bloom", "alf_gardener", "alf_boss_gardener",
     "alf_elf_mage", "alf_light_sentinel", "alf_herald_owl", "alf_boss_high_mage", "alf_wild_boar", "alf_elf_knight",
-    "alf_huntsman", "alf_boss_gullinbursti", "alf_dead_giant", "alf_stag_spirit", "alf_rot_warrior", "alf_boss_beli"
+    "alf_huntsman", "alf_boss_gullinbursti", "alf_dead_giant", "alf_stag_spirit", "alf_rot_warrior", "alf_boss_beli",
+    // Ванагейм (світ 4)
+    "van_draugr_sailor", "van_shore_crab", "van_gull_harpy", "van_boss_draugr_captain",
+    "van_volva_witch", "van_toad_shapeshifter", "van_marsh_light", "van_boss_the_old_volva",
+    "van_enchanted_beast", "van_eavesdropping_shade", "van_forest_troll", "van_boss_fjalar_and_galar",
+    "van_gold_spirit", "van_burnt_cultist", "van_barrow_guard", "van_boss_gullveig_the_thrice_burned",
+    "van_vanir_priest", "van_freyjas_forest_cat", "van_seidr_guardian", "van_boss_high_priestess_of_the_vanir",
+    "van_wave_daughter", "van_drowned_warrior", "van_deep_eel", "van_boss_ran_mistress_of_the_drowned"
   ]);
   // Заглушка, поки картинки немає: темний силует з очима
   const ENEMY_PLACEHOLDER = "data:image/svg+xml," + encodeURIComponent(
@@ -2459,6 +3051,11 @@ const ENEMIES = {
     return !!(save && RPG.isGateOpen?.(save) && save.books?.runes);
   }
 
+  // Ванагейм (світ 4): відкритий Альвгейм + перша перемога над Белі (save.bossKills — page-game.js → нагорода)
+  function isVanaheimOpen(save) {
+    return !!(isAlfheimOpen(save) && save.bossKills?.alf_boss_beli);
+  }
+
   function canEnterLocation(id, heroLevel = 1, save = null) {
     const loc = LOCATIONS[id];
     if (!loc) return { ok: false, reason: "Такої локації немає." };
@@ -2468,6 +3065,9 @@ const ENEMIES = {
     }
     if (loc.region === "alf" && save && !isAlfheimOpen(save)) {
       return { ok: false, reason: "Шлях в Альвгейм відкриється після першої перемоги над Володарем Темного лісу (корінь Іггдрасиля в Серці Темного лісу)." };
+    }
+    if (loc.region === "van" && save && !isVanaheimOpen(save)) {
+      return { ok: false, reason: "Шлях у Ванагейм відкриється після першої перемоги над Белі (гілка Іггдрасиля на Полі Белі, Альвгейм)." };
     }
     if (loc.minLevel && heroLevel < loc.minLevel) {
       return { ok: false, reason: `${loc.name}: вхід з ${loc.minLevel} рівня персонажа.` };
@@ -2545,7 +3145,7 @@ const ENEMIES = {
 
   Object.assign(RPG, {
     MONSTER_MOVES, RANGE_NAMES, enemyRange, enemyMove,
-    ENEMIES, LOCATIONS, DUNGEONS, DEFAULT_LOCATION, RESPAWN_LOCATION, GUILD_SHOP, isAlfheimOpen, DARK_LOC_MAT,
+    ENEMIES, LOCATIONS, DUNGEONS, DEFAULT_LOCATION, RESPAWN_LOCATION, GUILD_SHOP, isAlfheimOpen, isVanaheimOpen, DARK_LOC_MAT,
     CHAMPION, rollChampion, rollChampionDrop, championBounty,
     getEnemy, enemyExp, enemySpriteStyle, getLocation, isCombatLocation, canEnterLocation, pickEnemy, rollLoot, isCraftOnlyEnemy
   });

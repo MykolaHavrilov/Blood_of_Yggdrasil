@@ -15,7 +15,8 @@
   const SITE_ZONES = {
     start: { mine_start: { x: 82, y: 20, w: 7, h: 11 }, sawmill_start: { x: 8, y: 32, w: 7, h: 11 } },
     dark:  { mine_dark:  { x: 15, y: 86, w: 7, h: 11 }, sawmill_dark:  { x: 45, y: 45, w: 7, h: 11 } },
-    alf:   { mine_alf:   { x: 75, y: 9,  w: 7, h: 11 }, sawmill_alf:   { x: 38, y: 86, w: 7, h: 11 } }
+    alf:   { mine_alf:   { x: 75, y: 9,  w: 7, h: 11 }, sawmill_alf:   { x: 38, y: 86, w: 7, h: 11 } },
+    van:   { mine_van:   { x: 52, y: 37, w: 7, h: 11 }, sawmill_van:   { x: 91, y: 63, w: 7, h: 11 } }
   };
   const SITE_ICON = {
     mine: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7 Q12 1 20 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M12 4 L12 22" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>`,
@@ -31,7 +32,8 @@
     start: ["home", "temple", "village_start", "tavern", "south_gate", "forest_path", "forest_cave"],
     city: ["south", "center", "trade", "rest", "north"],
     dark: ["dark_gate", "dk_edge", "dk_marsh", "dk_grave", "dk_webs", "dk_ravine", "dk_ruins", "dk_heart"],
-    alf: ["alf_gate", "alf_grove", "alf_lake", "alf_gardens", "alf_towers", "alf_freyr", "alf_beli"]
+    alf: ["alf_gate", "alf_grove", "alf_lake", "alf_gardens", "alf_towers", "alf_freyr", "alf_beli"],
+    van: ["van_gate", "van_shore", "van_marsh", "van_kvasir", "van_barrow", "van_temple", "van_ran"]
   };
   // Зони кліку (x, y — центр; w, h — розмір у % мапи). Стартова мапа — за картинками будівель (map_layout.js):
   // Дубова Застава на ній — це вхід south_gate («Південний район»).
@@ -61,10 +63,21 @@
     alf_freyr:   { x: 53.0, y: 28.0, w: 13.0, h: 14.0 },
     alf_beli:    { x: 22.0, y: 14.0, w: 14.0, h: 14.0 }
   };
+  const VAN_ZONES = {                        // під картинку map_vanaheim.webp (галявини світу 4)
+    van_gate:    { x: 6.0,  y: 92.0, w: 10.0, h: 14.0 },
+    van_shore:   { x: 15.0, y: 76.0, w: 13.0, h: 14.0 },
+    van_marsh:   { x: 41.0, y: 65.0, w: 13.0, h: 14.0 },
+    van_kvasir:  { x: 68.5, y: 68.5, w: 14.0, h: 14.0 },
+    van_barrow:  { x: 85.5, y: 38.0, w: 13.0, h: 14.0 },
+    van_temple:  { x: 57.5, y: 24.0, w: 14.0, h: 14.0 },
+    van_ran:     { x: 21.5, y: 20.0, w: 13.0, h: 14.0 }
+  };
   // Картинки локацій поверх галявин (assets/images/map/bld_<id>.webp): x, y — центр, w — ширина в % мапи
   const REGION_BUILDINGS = {
     alf: { alf_grove: { x: 16.5, y: 74.5, w: 11 }, alf_lake: { x: 42, y: 61.5, w: 11 }, alf_gardens: { x: 72, y: 69.5, w: 11 },
-           alf_towers: { x: 86, y: 33.5, w: 10 }, alf_freyr: { x: 53, y: 25.5, w: 11 }, alf_beli: { x: 22, y: 11.5, w: 11 } }
+           alf_towers: { x: 86, y: 33.5, w: 10 }, alf_freyr: { x: 53, y: 25.5, w: 11 }, alf_beli: { x: 22, y: 11.5, w: 11 } },
+    van: { van_shore: { x: 15, y: 73.5, w: 11 }, van_marsh: { x: 41, y: 62.5, w: 11 }, van_kvasir: { x: 68.5, y: 66, w: 11 },
+           van_barrow: { x: 85.5, y: 35.5, w: 11 }, van_temple: { x: 57.5, y: 21.5, w: 11 }, van_ran: { x: 21.5, y: 17.5, w: 11 } }
   };
   function startZones() {
     const b = (RPG.MAP_LAYOUT && RPG.MAP_LAYOUT.buildings) || {};
@@ -102,7 +115,7 @@
     const region = t0 ? t0.region : view;
     const away = !t0 && region !== here.region;   // інший світ: героя тут немає, дорога — через брами
     const R = RPG.MAP_REGIONS[region];
-    const ZONES = Object.assign({}, region === "city" ? CITY_ZONES : region === "dark" ? DARK_ZONES : region === "alf" ? ALF_ZONES : startZones(), SITE_ZONES[region] || {});
+    const ZONES = Object.assign({}, region === "city" ? CITY_ZONES : region === "dark" ? DARK_ZONES : region === "alf" ? ALF_ZONES : region === "van" ? VAN_ZONES : startZones(), SITE_ZONES[region] || {});
     const districts = RPG.LOCATIONS.city.districts || [];
     const ids = REGION_ORDER[region].filter(id => ZONES[id] && R.spots[id]).concat(Object.keys(SITE_ZONES[region] || {}).filter(id => RPG.LOCATIONS[id]));
     let selected = t0 ? t0.to : away ? (ids.find(id => !isSite(id)) || ids[0]) : here.spot;
@@ -118,7 +131,7 @@
         return { name: d.name, desc: `${d.building}. ${d.description}`, district: d, typeLabel: d.building };
       }
       const loc = RPG.LOCATIONS[id];
-      return { name: loc.name, desc: loc.description, loc, typeLabel: TYPE_LABEL[loc.type] + (loc.minLevel ? ` · від ${loc.minLevel} рів.` : "") };
+      return { name: loc.name, desc: loc.description, loc, typeLabel: (loc.typeLabel || TYPE_LABEL[loc.type]) + (loc.minLevel ? ` · від ${loc.minLevel} рів.` : "") };
     }
 
     // here | open | closed | road (поки герой у дорозі)

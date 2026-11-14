@@ -601,7 +601,7 @@ function loseLife(ms) {
 //       + SCORE.craftLevel × (загальна майстерність коваля − 1) + SCORE.craftCat × (рівень кожного виду − 1).
 // Лічильники в сейві — save.score: { kills, dungeons, dunPts, exps, expPts } (рахуються в будь-якій грі).
 const SCORE = { heroLevel: 100, mercLevel: 50, locRank: 100, bossMult: 5, dungeon: 20, expedition: 10, itemLevel: 5, craftLevel: 100, craftCat: 50 };
-const REGION_WORLD = { start: 1, city: 1, dark: 2, alf: 3 };
+const REGION_WORLD = { start: 1, city: 1, dark: 2, alf: 3, van: 4 };
 function worldOfLoc(locId) {
   const r = RPG.LOCATIONS?.[locId]?.region || "start";
   return RPG.worldOfRegion?.(r) || REGION_WORLD[r] || 1;

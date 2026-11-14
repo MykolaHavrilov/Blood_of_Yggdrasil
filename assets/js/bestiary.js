@@ -30,7 +30,7 @@
   // Назви світів, якщо data/worlds.js на сторінці немає (той самий порядок, що в WORLDS)
   const WORLD_NAMES = ["Гардарика", "Темний ліс", "Альвгейм", "Ванагейм", "Свартальвгейм", "Йотунгейм", "Муспельгейм", "Асгард", "Ніфльгейм і Хельгейм"];
   const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
-  const REGION_WORLD = { start: 1, city: 1, dark: 2, alf: 3 };
+  const REGION_WORLD = { start: 1, city: 1, dark: 2, alf: 3, van: 4 };
   const ROLE_NAMES = { tank: "Танк", melee: "Дамагер ближнього бою", ranged: "Дамагер дальнього бою", caster: "Маг", healer: "Хілер" };
 
   const worldOfRegion = r => RPG.worldOfRegion?.(r)?.n || REGION_WORLD[r] || 1;

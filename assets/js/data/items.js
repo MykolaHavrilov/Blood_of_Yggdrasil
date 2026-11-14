@@ -1099,6 +1099,37 @@ const ITEMS = {
     type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Ключ з оленячого рогу, оповитий фіолетовим димом. Відчиняє данж «Курган Белі» (Поле Белі). Одна спроба — один ключ."
   },
+  // Ключі данжів Ванагейму (світ 4) — свої іконки ще не намальовані: поки що беруть альвгеймські (iconFile)
+  key_van_shore: {
+    name: "Ключ «Корабель мерців»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true, iconFile: "key_alf_lake",
+    description: "Іржавий корабельний ключ, обліплений мушлями. Відчиняє данж «Корабель мерців» (Берег Ноатуну). Одна спроба — один ключ."
+  },
+  key_van_marsh: {
+    name: "Ключ «Хатина на кістках»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true, iconFile: "key_alf_gardens",
+    description: "Ключ, вирізаний із китової кістки, з рунами вьольв. Відчиняє данж «Хатина на кістках» (Туманні мочари). Одна спроба — один ключ."
+  },
+  key_van_kvasir: {
+    name: "Ключ «Медовий льох»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true, iconFile: "key_alf_grove",
+    description: "Липкий мідний ключ, що пахне медом і кров'ю. Відчиняє данж «Медовий льох» (Ліс Квасіра). Одна спроба — один ключ."
+  },
+  key_van_barrow: {
+    name: "Ключ «Серце вогнища»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true, iconFile: "key_alf_towers",
+    description: "Золотий ключ, досі гарячий від попелу. Відчиняє данж «Серце вогнища» (Курган Гулльвейг). Одна спроба — один ключ."
+  },
+  key_van_temple: {
+    name: "Ключ «Внутрішнє святилище»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true, iconFile: "key_alf_freyr",
+    description: "Білий ключ, обвитий живою квіткою, що не в'яне. Відчиняє данж «Внутрішнє святилище» (Храм ванів). Одна спроба — один ключ."
+  },
+  key_van_ran: {
+    name: "Ключ «Чертог Ран»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true, iconFile: "key_alf_beli",
+    description: "Ключ із чорного корала, обплутаний уривком сіті. Відчиняє данж «Чертог Ран» (Бухта Ран). Одна спроба — один ключ."
+  },
 
   // ---------- Предмет адміністратора (для тестування прогресу) ----------
   // Діє на ВСЮ групу, поки лежить в інвентарі (character.js → godsOrb): +800% досвіду (бої й квести),
