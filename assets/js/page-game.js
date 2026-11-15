@@ -21,7 +21,7 @@
     const distParam = params.get("district");
     let enterError = null;
     let target = null;
-    if (save.location.map === "city" && distParam && distParam !== (save.location.district || "south")) target = distParam;
+    if (RPG.LOCATIONS[save.location.map]?.type === "city" && distParam && distParam !== RPG.whereIs(save).spot) target = distParam;
     else if (locParam && RPG.LOCATIONS[locParam] && save.location.map !== locParam && locParam !== "city") target = locParam;
     if (target) {
       if (save.fieldLoot) await showFieldLoot(save);
@@ -45,7 +45,9 @@
     $("location-desc").textContent = locData.description;
     // Фон локації (assets/images/locations/loc_<id>.webp) — за портретами та в банері.
     // Якщо картинки ще немає, лишається фон теми.
-    document.body.style.setProperty("--loc-img", locImage(locId));
+    // у місті район може мати свій фон (districts[…].image → locations/loc_<image>.webp), напр. Затоплена штольня у Свартгарді
+    const distImg = locData.type === "city" ? (locData.districts || []).find(d => d.id === RPG.whereIs(save).spot)?.image : null;
+    document.body.style.setProperty("--loc-img", distImg ? `url("${RPG.asset("assets/images/locations/loc_" + distImg + ".webp")}")` : locImage(locId));
     document.body.dataset.loc = locId;
 
     const combat = RPG.isCombatLocation(locId);
@@ -94,6 +96,8 @@
       if (!RPG.audio) return;
       const dun = dungeonOn() ? RPG.activeDungeon(save) : null;
       if (combat) RPG.audio.scene({ screen: "combat", location: locId, region: locData.region, boss: !!(dun && dun.stage === dun.stages) });
+      else if (locData.type === "city" && locId !== "city") RPG.audio.scene({ screen: "map", region: "svart" });            // Свартгард — тема свого світу
+      else if (locData.type === "citygate" && locData.city && locData.city !== "city") RPG.audio.scene({ screen: "map", region: locData.region });
       else if (locData.type === "city") RPG.audio.scene({ screen: "city", district: save.location.district || "south" });
       else if (locData.type === "citygate") RPG.audio.scene({ screen: "city", district: "south" });
       else RPG.audio.scene({ screen: "map", region: locData.region || "start" });

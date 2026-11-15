@@ -2,7 +2,7 @@
 // HTML / JS / CSS: спершу мережа (щоб оновлення гри підтягувались одразу),
 // а без інтернету — з кешу. Картинки: спершу кеш.
 // Після великих змін можна збільшити номер версії — старий кеш видалиться.
-const CACHE = "rpg-game-v206";
+const CACHE = "rpg-game-v207";
 const PRECACHE = [
   "./",
   "./assets/css/game.css",
@@ -419,9 +419,11 @@ const PRECACHE = [
   "./assets/images/locations/loc_svart_mokkur.webp",
   "./assets/images/locations/loc_svart_quarters.webp",
   "./assets/images/locations/loc_svart_runes.webp",
+  "./assets/images/locations/loc_svartgard.webp",
   "./assets/images/map/bld_mine_van.webp",
   "./assets/images/map/bld_sawmill_van.webp",
   "./assets/images/map/map_worlds.webp",
+  "./assets/images/map/svartgard_map.webp",
   "./assets/images/map_world.webp",
   "./assets/images/npc/npc_captain.webp",
   "./assets/images/npc/npc_kuzma.webp",

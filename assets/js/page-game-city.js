@@ -23,7 +23,7 @@
     // Центральний район — з 6 рівня; Дошка оголошень біля Мерії — після особливого завдання «Час дослідити»
     const districtLocked = d => !RPG.isDistrictOpen(save, d);
     // Район, де зараз герой (переходи між районами — дорогою по мапі Дубової Застави)
-    const cityDistrict = save.location.district || "south";
+    const cityDistrict = RPG.whereIs(save).spot;
 
     function renderCity() {
       place.append(noteP(locData.description));
@@ -62,6 +62,19 @@
         else if (d.id === "north") renderNpc(box, "captain");
         else if (d.id === "center") renderTownHall(box);
         else if (d.id === "rest") renderRestDistrict(box);
+        else if (d.id === "forges") renderToolShop(box, { shop: "svartgard" });   // Свартгард: знаряддя двергів
+        // Вихід із міста в цьому районі (Свартгард: штольня до Бухти Ран, брама до копалень)
+        if (d.exit && !districtLocked(d)) {
+          box.append(button(d.exit.button, "wf wf-secondary", async () => {
+            if (RPG.isTraveling(save)) { showMsg(msg, "Ви в дорозі — дочекайтеся прибуття.", true); return; }
+            delete save.travel;
+            delete save.formationAt;
+            save.location.map = d.exit.to;
+            delete save.location.district;
+            await RPG.saveGame(save);
+            location.href = "game.html";
+          }));
+        }
         place.append(box);
       }
       const row = el("div", "row");
@@ -166,12 +179,14 @@
       dlg.showModal();
     }
 
-    function renderToolShop(box) {
+    // opts.shop — крамниця поза Дубовою Заставою ("svartgard"): лише знаряддя з таким shop у FORGE_TOOLS; без нього — Кузьма (решта знарядь і книга)
+    function renderToolShop(box, opts = {}) {
+      const far = opts.shop || "";
       const h = RPG.forgeHouse(save);
       const wrap = el("div", "stack tool-shop");
       wrap.append(el("p", "status shop-gold", `Ваше золото: ${fmtNum(save.character.gold)}`));
       // Книга «Небесна кузня. Настанова» — перша наука коваля (data/books.js)
-      if (RPG.FORGE_BOOK) {
+      if (RPG.FORGE_BOOK && !far) {
         const B = RPG.FORGE_BOOK, has = RPG.hasForgeBook(save);
         const r = el("div", "shop-row tool-row fbook-row");
         const info = el("div", "tool-info");
@@ -197,11 +212,18 @@
         r.append(btns);
         wrap.append(r);
       }
-      wrap.append(el("h3", null, "Знаряддя для кузні"));
-      const toolsLeft = Object.entries(RPG.FORGE_TOOLS).filter(([id]) => !h?.forge?.tools?.[id]);
-      if (!h) wrap.append(el("p", "tool-hint", "Спершу збудуйте кузню при своєму домі в Спальному районі — Кузьма поставить знаряддя туди."));
-      else if (!toolsLeft.length) wrap.append(el("p", "tool-hint", `Усі знаряддя вже стоять у кузні «${h.name}».`));
-      else wrap.append(el("p", "tool-hint", `Куплене Кузьма поставить у кузню дому «${h.name}».`));
+      wrap.append(el("h3", null, far ? "Знаряддя двергів для кузні" : "Знаряддя для кузні"));
+      const toolsLeft = Object.entries(RPG.FORGE_TOOLS).filter(([id, t]) => (t.shop || "") === far && !h?.forge?.tools?.[id]);
+      if (far) {
+        if (!h) wrap.append(el("p", "tool-hint", "Спершу збудуйте кузню при своєму домі в Спальному районі Дубової Застави — дверги доправлять знаряддя туди."));
+        else if (!toolsLeft.length) wrap.append(el("p", "tool-hint", `Усі знаряддя двергів уже стоять у кузні «${h.name}».`));
+        else wrap.append(el("p", "tool-hint", `Куплене дверги доправлять у кузню дому «${h.name}».`));
+      } else {
+        if (!h) wrap.append(el("p", "tool-hint", "Спершу збудуйте кузню при своєму домі в Спальному районі — Кузьма поставить знаряддя туди."));
+        else if (!toolsLeft.length) wrap.append(el("p", "tool-hint", `Усі знаряддя вже стоять у кузні «${h.name}».`));
+        else wrap.append(el("p", "tool-hint", `Куплене Кузьма поставить у кузню дому «${h.name}».`));
+        wrap.append(el("p", "tool-hint", "Рунне горно двергів, Небесне ковадло й Різець Іггдрасиля продають лише в Кузнях «Свартгарда» (Свартальвгейм)."));
+      }
       // уже куплені знаряддя з переліку зникають
       for (const [id, t] of toolsLeft) {
         const r = el("div", "shop-row tool-row");
@@ -213,7 +235,8 @@
           const res = RPG.buyForgeTool(save, id);
           if (!res.ok) { showMsg(msg, res.reason, true); return; }
           await RPG.saveGame(save);
-          showMsg(msg, `Куплено: ${res.name}. Кузьма поставив у кузню «${res.house}». −${fmtNum(res.price)} золота.`);
+          showMsg(msg, far ? `Куплено: ${res.name}. Дверги доправили в кузню «${res.house}». −${fmtNum(res.price)} золота.`
+            : `Куплено: ${res.name}. Кузьма поставив у кузню «${res.house}». −${fmtNum(res.price)} золота.`);
           renderAll();
         });
         b.disabled = !h || save.character.gold < t.price;

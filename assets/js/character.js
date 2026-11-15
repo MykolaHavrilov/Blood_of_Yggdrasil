@@ -601,7 +601,7 @@ function loseLife(ms) {
 //       + SCORE.craftLevel × (загальна майстерність коваля − 1) + SCORE.craftCat × (рівень кожного виду − 1).
 // Лічильники в сейві — save.score: { kills, dungeons, dunPts, exps, expPts } (рахуються в будь-якій грі).
 const SCORE = { heroLevel: 100, mercLevel: 50, locRank: 100, bossMult: 5, dungeon: 20, expedition: 10, itemLevel: 5, craftLevel: 100, craftCat: 50 };
-const REGION_WORLD = { start: 1, city: 1, dark: 2, alf: 3, van: 4, svart: 5 };
+const REGION_WORLD = { start: 1, city: 1, dark: 2, alf: 3, van: 4, svartgard: 5, svart: 5 };
 function worldOfLoc(locId) {
   const r = RPG.LOCATIONS?.[locId]?.region || "start";
   return RPG.worldOfRegion?.(r) || REGION_WORLD[r] || 1;
@@ -1530,7 +1530,7 @@ function autoPotion(save, cfg = RPG.getAutoPotion(), members = null) {
 function currentShop(save) {
   const loc = RPG.getLocation(save.location.map);
   if (loc.type === "tavern") return loc.shop || [];
-  if (loc.type === "city") return RPG.GUILD_SHOP || [];
+  if (loc.type === "city") return save.location.map === "city" ? (RPG.GUILD_SHOP || []) : null;   // торговець Гільдії — лише в Дубовій Заставі
   return null;
 }
 
@@ -1623,6 +1623,7 @@ function sortToCraftChests(save) {
 // і одразу ставить у кузню. Ремесло доступне героям, які вже мають професію (ранг 2+).
 // Стан: house.forge = { tools: { furnace: true, ... } }
 const FORGE_PRICE = 50000;
+// shop: "svartgard" — продається лише в Кузнях «Свартгарда» (місто світу 5), решту продає Кузьма в Дубовій Заставі.
 // need: true — без цього не кують нічого; for — для яких рецептів потрібне; bonus — +% до шансу успіху
 const FORGE_TOOLS = {
   furnace:     { name: "Горно",                    price: 5000, need: true, text: "Вогонь для металу й переплавки руди." },
@@ -1636,9 +1637,9 @@ const FORGE_TOOLS = {
   crucible:    { name: "Тигель і ювелірні щипці",  price: 3000, for: "кільця, амулети, сережки", text: "Для прикрас." },
   iron_anvil:  { name: "Залізне ковадло",          price: 5000, bonus: 3, text: "Краще ковадло: +3% до успіху кування." },
   vanir_quench:{ name: "Гартівна ванна ванів",      price: 15000, for: "сталь ванів (тір 4) і сталеві злитки", text: "Ванна з морською водою Ноатуну: у ній ванські ковалі гартують сталь." },
-  rune_forge:  { name: "Рунне горно двергів",       price: 40000, for: "двергська сталь (тір 5) і її злитки", text: "Горно з рунами Брокка й Ейтрі — жар, у якому чорніє сталь." },
-  sky_anvil:   { name: "Небесне ковадло",           price: 90000, for: "небесний метал і сонячне золото (тір 6)", text: "Ковадло, що впало з Асгарду: лише на ньому кується небесний метал." },
-  ygg_chisel:  { name: "Різець Іггдрасиля",         price: 200000, for: "речі з серцевини Іггдрасиля (тір 7)", text: "Різець із зуба Нідгьоґа — єдине, що бере серцевину Світового Дерева." }
+  rune_forge:  { name: "Рунне горно двергів",       price: 40000, shop: "svartgard", for: "двергська сталь (тір 5) і її злитки", text: "Горно з рунами Брокка й Ейтрі — жар, у якому чорніє сталь." },
+  sky_anvil:   { name: "Небесне ковадло",           price: 90000, shop: "svartgard", for: "небесний метал і сонячне золото (тір 6)", text: "Ковадло, що впало з Асгарду: лише на ньому кується небесний метал." },
+  ygg_chisel:  { name: "Різець Іггдрасиля",         price: 200000, shop: "svartgard", for: "речі з серцевини Іггдрасиля (тір 7)", text: "Різець із зуба Нідгьоґа — єдине, що бере серцевину Світового Дерева." }
 };
 // Ремесло — для героїв з професією (головний герой)
 function hasCraftAccess(save) {
@@ -1658,6 +1659,8 @@ function buildForge(save, key) {
 function buyForgeTool(save, toolId) {
   const t = FORGE_TOOLS[toolId];
   if (!t) return { ok: false, reason: "Такого знаряддя немає." };
+  if (t.shop && save.location.map !== t.shop) return { ok: false, reason: "Це знаряддя продають лише в Кузнях «Свартгарда» (Свартальвгейм)." };
+  if (!t.shop && save.location.map === "svartgard") return { ok: false, reason: "Це знаряддя продає коваль Кузьма в Дубовій Заставі." };
   if (!hasCraftAccess(save)) return { ok: false, reason: "Кузьма продає знаряддя лише тим, хто вже має професію." };
   const h = forgeHouse(save);
   if (!h) return { ok: false, reason: "Спершу збудуйте кузню при своєму домі (Спальний район)." };

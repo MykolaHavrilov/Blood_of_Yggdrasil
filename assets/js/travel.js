@@ -8,7 +8,8 @@
 //   dark  — Темний ліс (за Центральною брамою, через капітана варти).
 //   alf   — Альвгейм (світ 3), за коренем Іггдрасиля в Серці Темного лісу.
 //   van   — Ванагейм (світ 4), за гілкою Іггдрасиля на Полі Белі (alf_beli ↔ van_gate).
-//   svart — Свартальвгейм (світ 5), за Затопленою штольнею в Бухті Ран (van_ran ↔ svart_gate).
+//   svartgard — Свартгард, місто світу 5: 7 районів; вхід Затопленою штольнею з Бухти Ран (van_ran ↔ район flooded).
+//   svart — Свартальвгейм (світ 5), за Брамою Сутінкових копалень Свартгарда (район mines_gate ↔ svart_gate).
 // Між регіонами переходять лише через брами (миттєво): south_gate ↔ Дубова Застава, Північний район ↔ dark_gate,
 // Серце Темного лісу (dk_heart) ↔ Корінь Іггдрасиля в Альвгеймі (alf_gate).
 //
@@ -34,11 +35,21 @@
     return RPG.LOCATIONS[locId]?.region || "start";
   }
 
+  // Місто-регіон (Дубова Застава — "city", Свартгард — "svartgard"): ID його локації або null.
+  // У місті герой стоїть не в локації, а в районі (save.location.district); між районами — CITY_TRAVEL_SEC.
+  function cityOf(region) {
+    for (const [id, loc] of Object.entries(RPG.LOCATIONS)) if (loc.type === "city" && loc.region === region) return id;
+    return null;
+  }
+  const cityDistricts = region => RPG.LOCATIONS[cityOf(region)]?.districts || [];
+  const defaultDistrict = cityId => RPG.LOCATIONS[cityId]?.defaultDistrict || "south";
+
   // Де зараз герой: { region, spot } (у Дубовій Заставі spot — район)
   function whereIs(save) {
     const map = save.location.map;
     const region = regionOf(map);
-    if (region === "city") return { region, spot: save.location.district || "south" };
+    const city = cityOf(region);
+    if (city) return { region, spot: save.location.district || defaultDistrict(city) };
     return { region, spot: map };
   }
 
@@ -55,14 +66,14 @@
   function travelSeconds(cells, region, save = null) {
     const orb = save && RPG.godsOrb ? RPG.godsOrb(save) : null;
     if (orb?.travelSec) return orb.travelSec;
-    if (region === "city") return CITY_TRAVEL_SEC;
+    if (cityOf(region)) return CITY_TRAVEL_SEC;
     return cells * RPG.TRAVEL_SEC_PER_CELL;
   }
 
   // Чи можна йти в точку регіону: { ok, reason }
   function canGo(save, region, to) {
-    if (region === "city") {
-      const d = (RPG.LOCATIONS.city.districts || []).find(x => x.id === to);
+    if (cityOf(region)) {
+      const d = cityDistricts(region).find(x => x.id === to);
       if (!d) return { ok: false, reason: "Такого району немає." };
       if (!RPG.isDistrictOpen(save, d)) return { ok: false, reason: RPG.districtLockText(d) };
       return { ok: true };
@@ -73,9 +84,9 @@
 
   // ---------- Далека дорога між світами ----------
   // Регіони підряд (як вони з'єднані) і брами між сусідніми: [точка виходу з першого, точка входу в другий]
-  const REGION_CHAIN = ["start", "city", "dark", "alf", "van", "svart"];
+  const REGION_CHAIN = ["start", "city", "dark", "alf", "van", "svartgard", "svart"];
   const GATES = { "start>city": ["south_gate", "south"], "city>dark": ["north", "dark_gate"], "dark>alf": ["dk_heart", "alf_gate"],
-                  "alf>van": ["alf_beli", "van_gate"], "van>svart": ["van_ran", "svart_gate"] };
+                  "alf>van": ["alf_beli", "van_gate"], "van>svartgard": ["van_ran", "flooded"], "svartgard>svart": ["mines_gate", "svart_gate"] };
   function gateBetween(a, b) {
     if (GATES[`${a}>${b}`]) return GATES[`${a}>${b}`];
     const g = GATES[`${b}>${a}`];
@@ -83,7 +94,7 @@
   }
   const regionName = r => RPG.MAP_REGIONS[r]?.name || r;
   function spotName(region, id) {
-    if (region === "city") return (RPG.LOCATIONS.city.districts || []).find(d => d.id === id)?.name || id;
+    if (cityOf(region)) return cityDistricts(region).find(d => d.id === id)?.name || id;
     return RPG.LOCATIONS[id]?.name || id;
   }
   // Чи відкритий регіон (вкладка світу на мапі): Гардарика й Застава — завжди, Темний ліс — коли відчинено браму,
@@ -93,6 +104,7 @@
     if (region === "dark") return !!RPG.isGateOpen?.(save);
     if (region === "alf") return RPG.canEnterLocation("alf_gate", save.character.level, save).ok;
     if (region === "van") return RPG.canEnterLocation("van_gate", save.character.level, save).ok;
+    if (region === "svartgard") return RPG.canEnterLocation("svartgard", save.character.level, save).ok;
     if (region === "svart") return RPG.canEnterLocation("svart_gate", save.character.level, save).ok;
     return false;
   }
@@ -101,7 +113,7 @@
     if (b === "dark" && a === "city" && !RPG.isGateOpen?.(save)) return { ok: false, reason: "Центральна брама зачинена — спершу поговоріть з капітаном варти (Дубова Застава, Північний район)." };
     if (b === "alf" && !isRegionOpen(save, "alf")) return { ok: false, reason: "Шлях в Альвгейм відкриється після першої перемоги над Володарем Темного лісу (корінь Іггдрасиля в Серці Темного лісу)." };
     if (b === "van" && !isRegionOpen(save, "van")) return { ok: false, reason: "Шлях у Ванагейм відкриється після першої перемоги над Белі (гілка Іггдрасиля на Полі Белі, Альвгейм)." };
-    if (b === "svart" && !isRegionOpen(save, "svart")) return { ok: false, reason: "Шлях у Свартальвгейм відкриється після першої перемоги над Ран (Затоплена штольня в Бухті Ран, Ванагейм)." };
+    if ((b === "svart" || b === "svartgard") && !isRegionOpen(save, b)) return { ok: false, reason: "Шлях у Свартальвгейм відкриється після першої перемоги над Ран (Затоплена штольня в Бухті Ран, Ванагейм)." };
     return { ok: true };
   }
 
@@ -143,7 +155,8 @@
 
   // Поставити героя в точку регіону (прохід крізь браму)
   function placeAt(save, region, spot) {
-    if (region === "city") { save.location.map = "city"; save.location.district = spot; }
+    const city = cityOf(region);
+    if (city) { save.location.map = city; save.location.district = spot; }
     else save.location.map = spot;
   }
 
@@ -233,12 +246,13 @@
     if (now < t.end) return moved ? { arrived: false, leg: true, region: t.region } : null;
     delete save.travel;
     delete save.formationAt;              // нове прибуття — розстановку героїв обирають знову (game.js)
-    if (t.region === "city") {
-      save.location.map = "city";
+    const gate = RPG.LOCATIONS[t.to];
+    if (cityOf(t.region)) {
+      save.location.map = cityOf(t.region);
       save.location.district = t.to;
-    } else if (t.to === "south_gate") {
-      save.location.map = "city";           // Дубова Застава на стартовій мапі — одразу в Південний район
-      save.location.district = "south";
+    } else if (gate?.type === "citygate") {
+      save.location.map = gate.city || "city";           // брама міста на мапі світу — одразу в район за нею (Південний район Застави, Брама копалень Свартгарда)
+      save.location.district = gate.district || defaultDistrict(save.location.map);
     } else {
       save.location.map = t.to;
     }
@@ -246,9 +260,9 @@
   }
 
   // Переходи крізь брами (миттєві)
-  function enterCity(save, district = "south") {
+  function enterCity(save, district = "south", cityId = "city") {
     delete save.travel;
-    save.location.map = "city";
+    save.location.map = cityId;
     save.location.district = district;
   }
   function leaveCityToStart(save) {
@@ -271,7 +285,7 @@
   }
 
   Object.assign(RPG, {
-    TRAVEL_PAGES, CITY_TRAVEL_SEC, regionOf, whereIs, route, travelSeconds, canGo, startTravel, isTraveling,
+    TRAVEL_PAGES, CITY_TRAVEL_SEC, regionOf, cityOf, whereIs, route, travelSeconds, canGo, startTravel, isTraveling,
     travelState, finishTravel, enterCity, leaveCityToStart, fmtLeft,
     REGION_CHAIN, isRegionOpen, planTrip, spotName, regionName, adminTeleport
   });

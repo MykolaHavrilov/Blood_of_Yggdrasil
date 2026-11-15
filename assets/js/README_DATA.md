@@ -858,7 +858,8 @@ await RPG.saveGame(save);
 ## Світ 5 — Свартальвгейм і Нідавеллір (`region: "svart"`, v0.5.0; `data/enemies.js`, `data/routes.js → MAP_REGIONS.svart`)
 
 - Відкривається після першої перемоги над Ран (`save.bossKills.van_boss_ran_mistress_of_the_drowned`, `isSvartalfheimOpen`):
-  у Бухті Ран з'являється картка «Затоплена штольня» (`LOCATIONS.van_ran.portal`) → `svart_gate`. Брама для далекої дороги — `travel.js → GATES["van>svart"]`.
+  у Бухті Ран з'являється картка «Затоплена штольня» (`LOCATIONS.van_ran.portal`) → місто Свартгард, район `flooded`; зі Свартгарда у світ 5 —
+  Брама Сутінкових копалень (район `mines_gate` → `svart_gate`). Брами для далекої дороги — `travel.js → GATES["van>svartgard"]` і `["svartgard>svart"]`.
 - 7 бойових локацій по одній стежці: `svart_mines` → `svart_falls` → `svart_quarters` (Чорні квартали) → `svart_alvis` → `svart_forges` → `svart_runes` → `svart_mokkur`.
   У кожній 3 вороги й бос (рівні 35–40), данж із ключем `key_<id локації>`; фінал — Мьоккуркальві (данж «Глиняне серце», з 40 рівня).
 - Здобич — лише ремесло (світ ≥ `CRAFT_ONLY_FROM`): зілля, матеріали 5 виду (шкіра ящура, залізне дерево, гірський кришталь, рунний самоцвіт), з босів — сталеві й двергські злитки.
@@ -869,8 +870,16 @@ await RPG.saveGame(save);
 - Фони боїв `locations/loc_svart_*.webp` (8 шт.) та іконки ключів `items/icon_key_svart_*.webp` (7 шт.) — свої, з v0.5.1;
   промти — `H:\Game_NEW\Свартальвгейм - фони боїв та іконки ключів (промти).txt`. Фони `loc_svart_runes` і `loc_svart_mokkur` — зі слідами переробки, варто перемалювати.
   Глави літопису немає (як і у Ванагейму).
-- **Місто Свартгард** (7 районів, задум — `H:\Game_NEW\WORLDS_4-7.md`) ще не додано: вхід у світ поки — Затоплена штольня. Картинки міста готові в `new_assets`.
-- На GitHub світ 5 не відправлено (рішення користувача 2026-11-14: спершу перевірка на ПК і заміна заглушок).
+- **Місто Свартгард** (v0.5.3; `LOCATIONS.svartgard`, `type: "city"`, `region: "svartgard"`) — друге місто-локація, як Дубова Застава:
+  своя мапа (`map/svartgard_map.webp`, `MAP_REGIONS.svartgard`, зони `SVARTGARD_ZONES`), герой ходить між 7 районами (`save.location.district`, 3 с).
+  - Працюють: `flooded` (вхід із Бухти Ран, свій фон `loc_svart_gate`; кнопка назад у Ванагейм), `forges` (Кузні «Свартгарда» — знаряддя двергів),
+    `mines_gate` (вихід до `svart_gate` на мапі світу 5). Закриті («відкриється згодом»): `artisans`, `brokk`, `palace`, `thrones` — вмісту ще немає.
+  - Знаряддя `rune_forge`, `sky_anvil`, `ygg_chisel` (`character.js → FORGE_TOOLS`, `shop: "svartgard"`) продають лише тут; Кузьма їх більше не продає.
+  - `svart_gate` — тепер брама міста на мапі світу (`type: "citygate"`, `city`, `district`): дійшовши до неї, герой входить у район `mines_gate`.
+  - Код міста узагальнено: `travel.js → cityOf(region)` (ID міста для регіону); правила районів — `character.js → isDistrictOpen` (за ID району),
+    вміст районів — `page-game-city.js → renderCity`. У районі можна задати `exit: { to, button }` (вихід з міста) та `image` (свій фон).
+  - Задум решти (NPC палацу, королі, дім, квести, Небесна кузня) — `H:\Game_NEW\WORLDS_4-7.md`.
+- На GitHub світ 5 відправлено 2026-11-15 разом із v0.5.2 (після заміни заглушок своїми фонами й іконками ключів).
 
 ## Значки професій (v0.5.1; `data/classes.js → CLASS_COLORS, classEmblemUrl`, `game-common.js → classEmblem`)
 

@@ -41,6 +41,7 @@
       delete save.travel;
       delete save.formationAt;
       save.location.map = pt.to;
+      if (pt.district) save.location.district = pt.district;   // портал у місто — одразу в його район
       await RPG.saveGame(save);
       location.href = "game.html";
     }
@@ -64,6 +65,17 @@
 
     // Стартова мапа: Південні ворота Дубової Застави
     function renderCityGate() {
+      if (locData.city && locData.city !== "city") {            // брама іншого міста (Свартгард)
+        place.append(noteP(locData.description), noteP("Тут не б'ються. За брамою — Свартгард, підземне місто свартальвів і двергів."));
+        const row = el("div", "row");
+        row.append(button("Увійти у Свартгард", "wf wf-button", async () => {
+          RPG.enterCity(save, locData.district, locData.city);
+          await RPG.saveGame(save);
+          location.reload();
+        }), link(`Мапа: ${RPG.MAP_REGIONS[locData.region]?.name || "світ"}`, "maps.html"));
+        place.append(row);
+        return;
+      }
       place.append(noteP("Тут не б'ються. Крізь ворота — Південний район Дубової Застави з Гільдією авантюристів."));
       const row = el("div", "row");
       row.append(button("Увійти в Дубову Заставу", "wf wf-button", async () => {

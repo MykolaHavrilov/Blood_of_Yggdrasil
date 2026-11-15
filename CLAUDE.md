@@ -74,6 +74,8 @@
   `--dry` — лише показати; `--replace` — замінити наявну. Конвертує Edge / Chrome без вікна.
 - `node tools/cut-sheet.js <лист.png> --grid 7x2 --names … --out assets/images/ui --prefix cls_` — розрізати лист значків на окремі `.webp`;
   `--mask --tint classes` — білі силуети фарбуються кольорами професій (так зроблено значки професій `ui/cls_<id>.webp`).
+- `node tools/sync-github.js` — показати, що перенесеться в клон для GitHub (`H:\Game_NEW\_github`); `--apply` — перенести. Сам не комітить і не пушить;
+  зберігає відомі розбіжності з GitHub (шлях спрайт-листів `assets/img/items`, «29 рун», картинки з метаданими C2PA).
 - `node tools/balance.js <початок ID ворогів> --rarity epic` — баланс: відсоток перемог героя в повному спорядженні свого рівня над кожним ворогом (напр. `svart_`).
 - `node tools/serve.js` — локальний сервер `http://localhost:8765/` (як GitHub Pages, із service worker).
 

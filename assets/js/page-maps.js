@@ -32,6 +32,7 @@
   const REGION_ORDER = {
     start: ["home", "temple", "village_start", "tavern", "south_gate", "forest_path", "forest_cave"],
     city: ["south", "center", "trade", "rest", "north"],
+    svartgard: ["flooded", "forges", "artisans", "palace", "brokk", "thrones", "mines_gate"],
     dark: ["dark_gate", "dk_edge", "dk_marsh", "dk_grave", "dk_webs", "dk_ravine", "dk_ruins", "dk_heart"],
     alf: ["alf_gate", "alf_grove", "alf_lake", "alf_gardens", "alf_towers", "alf_freyr", "alf_beli"],
     van: ["van_gate", "van_shore", "van_marsh", "van_kvasir", "van_barrow", "van_temple", "van_ran"],
@@ -45,6 +46,15 @@
     north:  { x: 50.0, y: 20.0, w: 56, h: 30 },
     trade:  { x: 16.5, y: 50.0, w: 32, h: 36 },
     rest:   { x: 83.0, y: 51.0, w: 32, h: 36 }
+  };
+  const SVARTGARD_ZONES = {                  // під картинку svartgard_map.webp (7 острівців-районів)
+    flooded:     { x: 49, y: 83, w: 30, h: 26 },
+    artisans:    { x: 81, y: 63, w: 30, h: 26 },
+    forges:      { x: 18, y: 62, w: 30, h: 26 },
+    brokk:       { x: 17, y: 28, w: 30, h: 26 },
+    mines_gate:  { x: 49, y: 14, w: 30, h: 26 },
+    palace:      { x: 50, y: 45, w: 30, h: 26 },
+    thrones:     { x: 81, y: 28, w: 30, h: 26 }
   };
   const DARK_ZONES = {                       // під картинку map_dark_forest.webp
     dark_gate: { x: 48.5, y: 78.0, w: 14.0, h: 18.0 },
@@ -129,8 +139,9 @@
     const region = t0 ? t0.region : view;
     const away = !t0 && region !== here.region;   // інший світ: героя тут немає, дорога — через брами
     const R = RPG.MAP_REGIONS[region];
-    const ZONES = Object.assign({}, region === "city" ? CITY_ZONES : region === "dark" ? DARK_ZONES : region === "alf" ? ALF_ZONES : region === "van" ? VAN_ZONES : region === "svart" ? SVART_ZONES : startZones(), SITE_ZONES[region] || {});
-    const districts = RPG.LOCATIONS.city.districts || [];
+    const ZONES = Object.assign({}, region === "city" ? CITY_ZONES : region === "svartgard" ? SVARTGARD_ZONES : region === "dark" ? DARK_ZONES : region === "alf" ? ALF_ZONES : region === "van" ? VAN_ZONES : region === "svart" ? SVART_ZONES : startZones(), SITE_ZONES[region] || {});
+    const cityId = RPG.cityOf(region);                       // мапа міста (Дубова Застава, Свартгард): місця — райони
+    const districts = cityId ? RPG.LOCATIONS[cityId].districts || [] : [];
     const ids = REGION_ORDER[region].filter(id => ZONES[id] && R.spots[id]).concat(Object.keys(SITE_ZONES[region] || {}).filter(id => RPG.LOCATIONS[id]));
     let selected = t0 ? t0.to : away ? (ids.find(id => !isSite(id)) || ids[0]) : here.spot;
     let tipPinned = false;   // опис місця на мапі — лише після натискання гравця (спершу видно тільки фігурку й ім'я героя)
@@ -140,7 +151,7 @@
 
     // Опис місця регіону: { name, desc, loc? (LOCATIONS), district? }
     function place(id) {
-      if (region === "city") {
+      if (cityId) {
         const d = districts.find(x => x.id === id);
         return { name: d.name, desc: `${d.building}. ${d.description}`, district: d, typeLabel: d.building };
       }
@@ -259,7 +270,7 @@
     let tip = null, hero = null, timerTag = null;
     for (const id of ids) {
       const pos = ZONES[id], p = place(id);
-      const spot = button("", "map-spot" + (region === "city" ? " map-district" : "") + (isSite(id) ? " map-site" : ""));
+      const spot = button("", "map-spot" + (cityId ? " map-district" : "") + (isSite(id) ? " map-site" : ""));
       spot.dataset.loc = id;
       if (isSite(id)) spot.innerHTML = `<span class="site-badge">${SITE_ICON[RPG.LOCATIONS[id].type]}</span>`;
       Object.assign(spot.style, { left: pos.x + "%", top: pos.y + "%", width: pos.w + "%", height: pos.h + "%" });
@@ -407,7 +418,7 @@
       const p = place(selected), st = placeState(selected);
       details.innerHTML = "";
       const banner = el("div", "place-banner info-anchor");
-      banner.style.setProperty("--loc-img", locImage(region === "city" ? "city" : selected));
+      banner.style.setProperty("--loc-img", locImage(cityId || selected));
       banner.append(el("h2", null, p.name));
       details.append(banner);
       details.append(noteP(p.desc));
@@ -604,9 +615,11 @@
   function globeHero(save, worlds) {
     const tr = RPG.travelState(save);
     const region = tr ? tr.region : RPG.whereIs(save).region;
-    if (region === "city") {                       // Дубова Застава — біля її брами на мапі Гардарики
-      const w = worlds.find(x => x.region === "start");
-      return w?.at?.south_gate ? { n: w.n, x: w.at.south_gate[0], y: w.at.south_gate[1], spot: "south_gate" } : null;
+    const CITY_AT = { city: ["start", "south_gate"], svartgard: ["svart", "svart_gate"] };   // місто — біля своєї брами на мапі світу
+    if (CITY_AT[region]) {
+      const [wr, gate] = CITY_AT[region];
+      const w = worlds.find(x => x.region === wr);
+      return w?.at?.[gate] ? { n: w.n, x: w.at[gate][0], y: w.at[gate][1], spot: gate } : null;
     }
     const w = worlds.find(x => x.region === region);
     if (!w?.at) return null;

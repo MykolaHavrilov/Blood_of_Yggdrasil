@@ -121,6 +121,7 @@
   const CRAFT_ONLY_FROM = 4;
   function worldOfRegion(region) {
     if (region === "city") return 1;                       // Дубова Застава — Мідгард
+    if (region === "svartgard") return 5;                  // Свартгард — місто Свартальвгейму
     return WORLDS.find(w => w.region === region)?.n || 0;
   }
   function isCraftOnlyRegion(region) { return worldOfRegion(region) >= CRAFT_ONLY_FROM; }
