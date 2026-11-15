@@ -310,7 +310,8 @@
     const list = el("ul", "key-pocket");
     for (const k of keys) {
       const li = el("li", "key-row" + (k.count >= RPG.KEY_MAX ? " is-full" : ""));
-      li.append(el("strong", "key-name", k.name), el("b", "key-count", `${k.count}/${RPG.KEY_MAX}`));
+      // іконка ключа (data/items.js → ICON_FILES); якщо картинки ще немає — маленька заглушка з назвою
+      li.append(smallIcon(k.id, "mini-icon key-icon"), el("strong", "key-name", k.name), el("b", "key-count", `${k.count}/${RPG.KEY_MAX}`));
       list.append(li);
     }
     return showNotice("Кишеня для ключів", [list], "is-keys");
@@ -1343,7 +1344,10 @@
       const face = el("span", "party-face");
       Object.assign(face.style, RPG.heroSpriteStyle(ms.character.classId, RPG.heroGender(ms)));
       const info = el("div", "party-info");
-      info.append(el("strong", null, `${ms.character.name} · рів. ${ms.character.level}${dead ? (RPG.heroGender(ms) === "f" ? " · полегла" : " · полеглий") : ""}`));
+      const who = el("strong");
+      who.append(classEmblem(ms.character.classId), " ",
+        el("span", null, `${ms.character.name} · рів. ${ms.character.level}${dead ? (RPG.heroGender(ms) === "f" ? " · полегла" : " · полеглий") : ""}`));
+      info.append(who);;
       const hp = miniBar("bar-hp", "HP", "party-hp-" + i), mp = miniBar("bar-mp", "MP", "party-mp-" + i);
       setBar(hp, ms.character.hp, st.hp);
       setBar(mp, ms.character.mp, st.mp);
@@ -1378,6 +1382,18 @@
     return { tabs };
   }
 
+  // Значок професії замість її назви: зброя правої й лівої руки кольором професії (data/classes.js → CLASS_COLORS,
+  // картинка assets/images/ui/cls_<id>.webp). Назва професії — у підказці (title) і для читачів екрана.
+  function classEmblem(classId, title = null) {
+    const s = el("span", "cls-emblem");
+    s.style.backgroundImage = `url("${RPG.classEmblemUrl(classId)}")`;
+    const name = title || RPG.getClass(classId).name;
+    s.title = name;
+    s.setAttribute("role", "img");
+    s.setAttribute("aria-label", name);
+    return s;
+  }
+
   // Оновлює блок героя: картинка, ім'я, HP / MP / EXP / LVL, відновлення
   function renderHeroBars(save) {
     const st = RPG.calcStats(save);
@@ -1385,7 +1401,7 @@
     const img = $("hero-img");
     if (img) { img._save = save; renderHeroDoll(img, save); }   // герой + зброя в руках (шари)
     const name = $("hero-name");
-    if (name) name.textContent = `${ch.name} — ${RPG.getClass(ch.classId).name}`;
+    if (name) name.replaceChildren(el("span", null, ch.name), " ", classEmblem(ch.classId));   // ім'я — окремим вузлом: так переклад (i18n.js) не чіпає значок
 
     setBar($("hero-hp"), ch.hp, st.hp);
     setBar($("hero-mp"), ch.mp, st.mp);
@@ -1419,7 +1435,9 @@
     const p = RPG.expProgress(save);
     const cls = RPG.getClass(ch.classId);
     const box = el("div", "info-body exp-info");
-    box.append(el("p", null, `Рівень ${ch.level} · ${cls.name}`));
+    const lvlP = el("p");
+    lvlP.append(el("span", null, `Рівень ${ch.level} · ${cls.name}`), " ", classEmblem(ch.classId));
+    box.append(lvlP);
     if (p.max) {
       box.append(el("p", null, `Максимальний рівень (${p.cap}). Досвід: ${fmtNum(p.exp)}.`));
       if (p.cap < RPG.LEVEL_CAP_PROFESSION) box.append(el("p", "note", ch.classId === RPG.DEFAULT_CLASS
@@ -1668,5 +1686,6 @@
 
   RPG.pages = {};
   RPG.ui = { scoreBox, showScore, showBuriedPage, hardcoreCheck, showGameOver, showGameOverPage, showHardcoreLosses, gameOverContent, expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, showExpeditionBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, lockMark, lockButton, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
+  RPG.ui.classEmblem = classEmblem;
   RPG.ui.meetRenouncer = meetRenouncer;   // «Шлях відреченого»
 })(window.RPG);

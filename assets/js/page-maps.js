@@ -16,7 +16,8 @@
     start: { mine_start: { x: 82, y: 20, w: 7, h: 11 }, sawmill_start: { x: 8, y: 32, w: 7, h: 11 } },
     dark:  { mine_dark:  { x: 15, y: 86, w: 7, h: 11 }, sawmill_dark:  { x: 45, y: 45, w: 7, h: 11 } },
     alf:   { mine_alf:   { x: 75, y: 9,  w: 7, h: 11 }, sawmill_alf:   { x: 38, y: 86, w: 7, h: 11 } },
-    van:   { mine_van:   { x: 52, y: 37, w: 7, h: 11 }, sawmill_van:   { x: 91, y: 63, w: 7, h: 11 } }
+    van:   { mine_van:   { x: 52, y: 37, w: 7, h: 11 }, sawmill_van:   { x: 91, y: 63, w: 7, h: 11 } },
+    svart: { mine_svart: { x: 61, y: 62, w: 7, h: 11 }, sawmill_svart: { x: 91, y: 68, w: 7, h: 11 } }
   };
   const SITE_ICON = {
     mine: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7 Q12 1 20 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M12 4 L12 22" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>`,
@@ -26,14 +27,15 @@
   // Будівлі Шахти й Лісопилки (assets/images/map/bld_<id>.webp) — у центрі SITE_ZONES, ширина в % мапи.
   // Значок (кирка / пила) лишається маленьким у кутку: туди лише експедиція.
   const SITE_BLD_W = 6.8;      // ~68% від першої версії (10)
-  const SITE_BUILDINGS = new Set(["mine_start", "sawmill_start", "mine_dark", "sawmill_dark", "mine_alf", "sawmill_alf", "mine_van", "sawmill_van"]);
+  const SITE_BUILDINGS = new Set(["mine_start", "sawmill_start", "mine_dark", "sawmill_dark", "mine_alf", "sawmill_alf", "mine_van", "sawmill_van", "mine_svart", "sawmill_svart"]);
   // Порядок місць у списку під мапою
   const REGION_ORDER = {
     start: ["home", "temple", "village_start", "tavern", "south_gate", "forest_path", "forest_cave"],
     city: ["south", "center", "trade", "rest", "north"],
     dark: ["dark_gate", "dk_edge", "dk_marsh", "dk_grave", "dk_webs", "dk_ravine", "dk_ruins", "dk_heart"],
     alf: ["alf_gate", "alf_grove", "alf_lake", "alf_gardens", "alf_towers", "alf_freyr", "alf_beli"],
-    van: ["van_gate", "van_shore", "van_marsh", "van_kvasir", "van_barrow", "van_temple", "van_ran"]
+    van: ["van_gate", "van_shore", "van_marsh", "van_kvasir", "van_barrow", "van_temple", "van_ran"],
+    svart: ["svart_gate", "svart_mines", "svart_falls", "svart_quarters", "svart_alvis", "svart_forges", "svart_runes", "svart_mokkur"]
   };
   // Зони кліку (x, y — центр; w, h — розмір у % мапи). Стартова мапа — за картинками будівель (map_layout.js):
   // Дубова Застава на ній — це вхід south_gate («Південний район»).
@@ -72,12 +74,24 @@
     van_temple:  { x: 57.5, y: 24.0, w: 14.0, h: 14.0 },
     van_ran:     { x: 21.5, y: 20.0, w: 13.0, h: 14.0 }
   };
+  const SVART_ZONES = {                      // під картинку map_svartalfheim.webp (галявини світу 5)
+    svart_gate:      { x: 50, y: 91, w: 10.0, h: 14.0 },
+    svart_mines:     { x: 50.5, y: 75, w: 13.0, h: 14.0 },
+    svart_falls:     { x: 18.3, y: 61.5, w: 13.0, h: 14.0 },
+    svart_quarters:  { x: 38.5, y: 40.5, w: 13.0, h: 14.0 },
+    svart_alvis:     { x: 14.5, y: 20, w: 13.0, h: 14.0 },
+    svart_forges:    { x: 48, y: 16.5, w: 13.0, h: 14.0 },
+    svart_runes:     { x: 78.5, y: 42.5, w: 13.0, h: 14.0 },
+    svart_mokkur:    { x: 86.5, y: 14, w: 13.0, h: 14.0 }
+  };
   // Картинки локацій поверх галявин (assets/images/map/bld_<id>.webp): x, y — центр, w — ширина в % мапи
   const REGION_BUILDINGS = {
     alf: { alf_grove: { x: 16.5, y: 74.5, w: 11 }, alf_lake: { x: 42, y: 61.5, w: 11 }, alf_gardens: { x: 72, y: 69.5, w: 11 },
            alf_towers: { x: 86, y: 33.5, w: 10 }, alf_freyr: { x: 53, y: 25.5, w: 11 }, alf_beli: { x: 22, y: 11.5, w: 11 } },
     van: { van_shore: { x: 15, y: 73.5, w: 11 }, van_marsh: { x: 41, y: 62.5, w: 11 }, van_kvasir: { x: 68.5, y: 66, w: 11 },
-           van_barrow: { x: 85.5, y: 35.5, w: 11 }, van_temple: { x: 57.5, y: 21.5, w: 11 }, van_ran: { x: 21.5, y: 17.5, w: 11 } }
+           van_barrow: { x: 85.5, y: 35.5, w: 11 }, van_temple: { x: 57.5, y: 21.5, w: 11 }, van_ran: { x: 21.5, y: 17.5, w: 11 } },
+    svart: { svart_mines: { x: 50.5, y: 72.5, w: 11 }, svart_falls: { x: 18.3, y: 59, w: 11 }, svart_quarters: { x: 38.5, y: 38, w: 11 }, svart_alvis: { x: 14.5, y: 17.5, w: 11 }, 
+             svart_forges: { x: 48, y: 14, w: 11 }, svart_runes: { x: 78.5, y: 40, w: 11 }, svart_mokkur: { x: 86.5, y: 11.5, w: 11 } }
   };
   function startZones() {
     const b = (RPG.MAP_LAYOUT && RPG.MAP_LAYOUT.buildings) || {};
@@ -115,7 +129,7 @@
     const region = t0 ? t0.region : view;
     const away = !t0 && region !== here.region;   // інший світ: героя тут немає, дорога — через брами
     const R = RPG.MAP_REGIONS[region];
-    const ZONES = Object.assign({}, region === "city" ? CITY_ZONES : region === "dark" ? DARK_ZONES : region === "alf" ? ALF_ZONES : region === "van" ? VAN_ZONES : startZones(), SITE_ZONES[region] || {});
+    const ZONES = Object.assign({}, region === "city" ? CITY_ZONES : region === "dark" ? DARK_ZONES : region === "alf" ? ALF_ZONES : region === "van" ? VAN_ZONES : region === "svart" ? SVART_ZONES : startZones(), SITE_ZONES[region] || {});
     const districts = RPG.LOCATIONS.city.districts || [];
     const ids = REGION_ORDER[region].filter(id => ZONES[id] && R.spots[id]).concat(Object.keys(SITE_ZONES[region] || {}).filter(id => RPG.LOCATIONS[id]));
     let selected = t0 ? t0.to : away ? (ids.find(id => !isSite(id)) || ids[0]) : here.spot;
@@ -510,7 +524,9 @@
             if (cb.checked) { if (chosen.size >= size) { cb.checked = false; return; } chosen.add(m.id); } else chosen.delete(m.id);
             draw();
           });
-          row.append(cb, el("span", null, `${m.ms.character.name} — ${RPG.getClass(m.ms.character.classId).name}, рів. ${m.ms.character.level}` + (w ? ` (${w})` : "")));
+          const whoEl = el("span");
+          whoEl.append(m.ms.character.name + " ", RPG.ui.classEmblem(m.ms.character.classId), `, рів. ${m.ms.character.level}` + (w ? ` (${w})` : ""));
+          row.append(cb, whoEl);
           list.append(row);
         }
         dlg.append(list);

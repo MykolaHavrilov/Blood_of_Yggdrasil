@@ -101,7 +101,7 @@
       const heroImg = $("hero-img");
       if (heroImg) renderHeroDoll(heroImg, ms);
       const heroName = $("hero-name");
-      if (heroName) heroName.textContent = `${ms.character.name} — ${RPG.getClass(ms.character.classId).name}`;
+      if (heroName) heroName.replaceChildren(el("span", null, ms.character.name), " ", RPG.ui.classEmblem(ms.character.classId));
 
       gridOf(ms.inventory, RPG.invSize(ms), "inv", $("item-grid"));
       const conf = RPG.chestConf(viewChest);

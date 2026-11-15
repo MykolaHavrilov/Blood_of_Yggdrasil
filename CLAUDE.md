@@ -72,6 +72,9 @@
 - `node tools/add-image.js <файл або тека> --as item|enemy|hero|skill|npc|location|map|ui` — нова картинка: конвертує у `.webp`
   потрібного розміру, кладе в теку, реєструє в даних (`ICON_FILES`, `ENEMY_FILES`, `HERO_SPRITE_FILES`) і дописує в `PRECACHE`.
   `--dry` — лише показати; `--replace` — замінити наявну. Конвертує Edge / Chrome без вікна.
+- `node tools/cut-sheet.js <лист.png> --grid 7x2 --names … --out assets/images/ui --prefix cls_` — розрізати лист значків на окремі `.webp`;
+  `--mask --tint classes` — білі силуети фарбуються кольорами професій (так зроблено значки професій `ui/cls_<id>.webp`).
+- `node tools/balance.js <початок ID ворогів> --rarity epic` — баланс: відсоток перемог героя в повному спорядженні свого рівня над кожним ворогом (напр. `svart_`).
 - `node tools/serve.js` — локальний сервер `http://localhost:8765/` (як GitHub Pages, із service worker).
 
 Нова поведінка в логіці — додати тест у `tools/test.js`. Новий файл коду — підключити в потрібних `pages/*.html`; у `PRECACHE` його додасть реліз.

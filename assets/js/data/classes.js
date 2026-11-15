@@ -330,7 +330,21 @@
   // Ролі професії: ["tank", ...] (Селянин — порожньо)
   const classRoles = id => CLASSES[id]?.roles || [];
 
-  Object.assign(RPG, { DEFAULT_CLASS, CLASSES, ROLES, classRoles, PROFESSION_LEVEL, getClass, heroDoll, heroFistStyle, heroSpriteStyle, heroSpriteId,
+  // ---------- Колір і значок професії ----------
+  // Значок — зброя правої й лівої руки професії, зафарбована її кольором: assets/images/ui/cls_<id>.webp (96×96).
+  // Колір запечено в картинку. Змінили колір тут — перефарбувати значки (з H:\Game_NEW):
+  //   node tools/cut-sheet.js new_assets\new_assets\ui\class_emblems.png --grid 7x2 --out assets/images/ui --prefix cls_ --mask --tint classes --replace
+  //     --names peasant,warrior,knight,berserker,rogue,hunter,mage_fire,mage_water,mage_wind,mage_earth,paladin,priest,monk,shaman
+  const CLASS_COLORS = {
+    peasant: "#b9a26a", warrior: "#d23b2e", knight: "#5b8fd6", berserker: "#8c1d2f", rogue: "#8b5fd0", hunter: "#3fa34d",
+    mage_fire: "#ff7a1a", mage_water: "#22a7f0", mage_wind: "#9fe8dc", mage_earth: "#a8782f",
+    paladin: "#f2c230", priest: "#f3ecd2", monk: "#1fa68a", shaman: "#7bd934"
+  };
+  for (const [id, color] of Object.entries(CLASS_COLORS)) if (CLASSES[id]) CLASSES[id].color = color;
+  // Адреса картинки значка (невідома професія — значок Селянина)
+  const classEmblemUrl = id => RPG.asset(`assets/images/ui/cls_${CLASSES[id] ? id : DEFAULT_CLASS}.webp`);
+
+  Object.assign(RPG, { DEFAULT_CLASS, CLASSES, ROLES, classRoles, classEmblemUrl, PROFESSION_LEVEL, getClass, heroDoll, heroFistStyle, heroSpriteStyle, heroSpriteId,
                        availableClassChanges, pickProfession,
                        investedAttrPoints, professionLack, eligibleProfessions, classAllowsWeapon, classAllowsOffHand });
 })(window.RPG);

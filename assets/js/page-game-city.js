@@ -289,9 +289,11 @@
       RPG.partyMembers(save).forEach((ms, i) => {
         const r = el("div", "shop-row");
         const dead = RPG.isMemberDead(ms);
-        r.append(el("span", "shop-name", `${ms.character.name} — ${RPG.getClass(ms.character.classId).name}, рівень ${ms.character.level}` +
+        const whoEl = el("span", "shop-name");
+        whoEl.append(ms.character.name + " ", RPG.ui.classEmblem(ms.character.classId), `, рівень ${ms.character.level}` +
           (i === 0 ? (RPG.heroGender(ms) === "f" ? " · головна героїня" : " · головний герой") : "") +
-          (dead ? (RPG.heroGender(ms) === "f" ? " · полегла" : " · полеглий") : "")));
+          (dead ? (RPG.heroGender(ms) === "f" ? " · полегла" : " · полеглий") : ""));
+        r.append(whoEl);
         if (i > 0) {
           r.append(button("Відпустити", "wf wf-secondary", async () => {
             if (!confirm(`Відпустити ${ms.character.name}? ${RPG.gw(ms, "Його", "Її")} речі перейдуть у спільний інвентар, внесок не повертається.`)) return;
@@ -324,7 +326,8 @@
         Object.assign(face.style, RPG.heroSpriteStyle(c.classId, c.gender));
         const cls = c.classId === RPG.DEFAULT_CLASS && c.gender === "f" ? "Селянка" : RPG.getClass(c.classId).name;
         const price = RPG.hireCost(save, c);
-        const name = el("span", "shop-name", `«Шукаю групу. ${c.name}, ${cls}, ${c.level} рівень.»`);
+        const name = el("span", "shop-name");
+        name.append(`«Шукаю групу. ${c.name}, `, RPG.ui.classEmblem(c.classId, cls), `, ${c.level} рівень.»`);
         if (c.gear) name.append(el("small", "board-price rt-" + c.gear, `Спорядження: ${RPG.gearText(c.gear)} свого рівня (зі зброєю).`));
         if (price.prof) name.append(el("small", "board-price", `Внесок: ${fmtNum(price.base)} + ${fmtNum(price.prof)} за професію` +
           (price.levels ? ` + ${fmtNum(price.levels * price.perLevel)} за ${price.levels} рів. понад ${RPG.HIRE_FREE_LEVELS}-й` : "") + "."));

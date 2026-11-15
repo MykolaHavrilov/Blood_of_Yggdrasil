@@ -1130,6 +1130,42 @@ const ITEMS = {
     type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Ключ із чорного корала, обплутаний уривком сіті. Відчиняє данж «Чертог Ран» (Бухта Ран). Одна спроба — один ключ."
   },
+  // Ключі данжів Свартальвгейму (світ 5) — своїх іконок ще немає: у клітинці видно назву
+  key_svart_mines: {
+    name: "Ключ «Кокон Матки»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Сірий шахтарський ключ, обмотаний білою павутиною. Відчиняє данж «Кокон Матки» (Сутінкові копальні). Одна спроба — один ключ."
+  },
+  key_svart_falls: {
+    name: "Ключ «Скарбниця Андварі»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Мокрий золотий ключ із перснем замість вушка. Відчиняє данж «Скарбниця Андварі» (Водоспад Андварі). Одна спроба — один ключ."
+  },
+  key_svart_quarters: {
+    name: "Ключ «Обсидіановий шпиль»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Тонкий ключ із чорного обсидіану, вкритий інеєм. Відчиняє данж «Обсидіановий шпиль» (Чорні квартали). Одна спроба — один ключ."
+  },
+  key_svart_alvis: {
+    name: "Ключ «Скам'яніла зала»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Ключ, наполовину бронзовий, наполовину кам'яний. Відчиняє данж «Скам'яніла зала» (Чертог Альвіса). Одна спроба — один ключ."
+  },
+  key_svart_forges: {
+    name: "Ключ «Запечатане горно»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Важкий кований ключ із розірваною ланкою ланцюга. Відчиняє данж «Запечатане горно» (Кузні Брокка й Ейтрі). Одна спроба — один ключ."
+  },
+  key_svart_runes: {
+    name: "Ключ «Колодязь рун»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Кришталевий ключ, усередині якого світяться руни. Відчиняє данж «Колодязь рун» (Рунічні глибини). Одна спроба — один ключ."
+  },
+  key_svart_mokkur: {
+    name: "Ключ «Глиняне серце»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Грубий ключ із випаленої глини з тріщиною, що світиться зсередини. Відчиняє данж «Глиняне серце» (Кузня Мьоккуркальві). Одна спроба — один ключ."
+  },
 
   // ---------- Предмет адміністратора (для тестування прогресу) ----------
   // Діє на ВСЮ групу, поки лежить в інвентарі (character.js → godsOrb): +800% досвіду (бої й квести),
@@ -1322,6 +1358,8 @@ const ICON_FILES = new Set(["sword", "dagger", "axe", "bow", "staff", "shield", 
  "blueprint_head", "blueprint_chest", "blueprint_legs", "blueprint_hands", "blueprint_feet", "blueprint_main", "blueprint_off",
  "orb_veles", "orb_gods"]
   .forEach(id => ICON_FILES.add(id));
+// Іконки, додані скриптом tools/add-image.js (окремі файли assets/images/items/icon_<id>.webp)
+["key_svart_alvis", "key_svart_falls", "key_svart_forges", "key_svart_mines", "key_svart_mokkur", "key_svart_quarters", "key_svart_runes"].forEach(id => ICON_FILES.add(id));
 const ICON_FILE_BASE = RPG.asset("assets/images/items/icon_");
 
 // Стиль іконки предмета (окремий файл або клітинка спрайт-листа); null — іконки немає (буде заглушка)

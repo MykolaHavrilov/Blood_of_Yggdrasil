@@ -717,11 +717,13 @@ main > a.location { display: flex; margin-bottom: 10px; }
 .loot-filter-name { font-weight: 700; }
 .loot-filter-power input, .loot-filter-row input { width: 20px; height: 20px; accent-color: var(--gold); flex: 0 0 auto; }
 @media (hover: none) { .loot-filter-btn { width: 44px; height: 44px; } }
-.key-pocket { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 6px; min-width: min(420px, 80vw); }
+.key-pocket { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 6px; min-width: min(400px, 76vw); }   /* 400: вікно 440 − поля 36 — без горизонтальної смуги */
 .key-row { display: flex; align-items: center; justify-content: space-between; gap: 12px;
   padding: 8px 10px; border: 1px solid rgba(201, 163, 90, .35); border-radius: 6px; }
 .key-count { white-space: nowrap; color: var(--gold); }
 .key-row.is-full .key-count { color: #ffb04d; }
+.key-row .key-icon { width: 40px; height: 40px; flex: none; }
+.key-row .key-name { flex: 1; min-width: 0; }
 
 /* ---------- Поле бою 15 × 30 (game.js → renderField, вікно розстановки) ----------
    ПК — 15 рядків × 30 стовпців, телефон (≤ 700 px) — 30 × 15. Розмір сітки й пропорції

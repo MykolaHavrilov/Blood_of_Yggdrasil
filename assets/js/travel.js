@@ -8,6 +8,7 @@
 //   dark  — Темний ліс (за Центральною брамою, через капітана варти).
 //   alf   — Альвгейм (світ 3), за коренем Іггдрасиля в Серці Темного лісу.
 //   van   — Ванагейм (світ 4), за гілкою Іггдрасиля на Полі Белі (alf_beli ↔ van_gate).
+//   svart — Свартальвгейм (світ 5), за Затопленою штольнею в Бухті Ран (van_ran ↔ svart_gate).
 // Між регіонами переходять лише через брами (миттєво): south_gate ↔ Дубова Застава, Північний район ↔ dark_gate,
 // Серце Темного лісу (dk_heart) ↔ Корінь Іггдрасиля в Альвгеймі (alf_gate).
 //
@@ -72,9 +73,9 @@
 
   // ---------- Далека дорога між світами ----------
   // Регіони підряд (як вони з'єднані) і брами між сусідніми: [точка виходу з першого, точка входу в другий]
-  const REGION_CHAIN = ["start", "city", "dark", "alf", "van"];
+  const REGION_CHAIN = ["start", "city", "dark", "alf", "van", "svart"];
   const GATES = { "start>city": ["south_gate", "south"], "city>dark": ["north", "dark_gate"], "dark>alf": ["dk_heart", "alf_gate"],
-                  "alf>van": ["alf_beli", "van_gate"] };
+                  "alf>van": ["alf_beli", "van_gate"], "van>svart": ["van_ran", "svart_gate"] };
   function gateBetween(a, b) {
     if (GATES[`${a}>${b}`]) return GATES[`${a}>${b}`];
     const g = GATES[`${b}>${a}`];
@@ -92,6 +93,7 @@
     if (region === "dark") return !!RPG.isGateOpen?.(save);
     if (region === "alf") return RPG.canEnterLocation("alf_gate", save.character.level, save).ok;
     if (region === "van") return RPG.canEnterLocation("van_gate", save.character.level, save).ok;
+    if (region === "svart") return RPG.canEnterLocation("svart_gate", save.character.level, save).ok;
     return false;
   }
   // Брама між регіонами: чи пропустять
@@ -99,6 +101,7 @@
     if (b === "dark" && a === "city" && !RPG.isGateOpen?.(save)) return { ok: false, reason: "Центральна брама зачинена — спершу поговоріть з капітаном варти (Дубова Застава, Північний район)." };
     if (b === "alf" && !isRegionOpen(save, "alf")) return { ok: false, reason: "Шлях в Альвгейм відкриється після першої перемоги над Володарем Темного лісу (корінь Іггдрасиля в Серці Темного лісу)." };
     if (b === "van" && !isRegionOpen(save, "van")) return { ok: false, reason: "Шлях у Ванагейм відкриється після першої перемоги над Белі (гілка Іггдрасиля на Полі Белі, Альвгейм)." };
+    if (b === "svart" && !isRegionOpen(save, "svart")) return { ok: false, reason: "Шлях у Свартальвгейм відкриється після першої перемоги над Ран (Затоплена штольня в Бухті Ран, Ванагейм)." };
     return { ok: true };
   }
 

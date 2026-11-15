@@ -2492,6 +2492,561 @@ const ENEMIES = {
         { id: "gem", chance: 0.25, qty: [1, 3] },
         { id: "pearl", chance: 0.3, qty: [1, 3] }
       ]
+    },
+    // ---------- СВАРТАЛЬВГЕЙМ І НІДАВЕЛЛІР (світ 5) — вороги 35–40 рівня ----------
+    // Спорядження з ворогів не падає (worlds.js → CRAFT_ONLY_FROM) — лише матеріали 5 виду, зілля й ключі.
+    // Баланс підібрано симуляцією (tools/balance.js, листопад 2026): герой із професією в повному епічному спорядженні свого рівня
+    // перемагає звичайного ворога ≈70%, боса — ≈35% (той самий герой у Ванагеймі: 77% і 32%).
+    svart_cave_spider: {
+      name: "Печерний павук",
+      range: 1, move: { name: "Отруйний укус", mult: 1.55, chance: 0.25 },
+      verb: "кусає",
+      level: 35,
+      role: "melee",
+      stats: { hp: 7109, mp: 0, attack: 1201, defense: 84, magicDefense: 100, speed: 40, crit: 27, dodge: 22 },
+      exp: 3675,
+      gold: [81, 154],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.04, qty: [1, 1] },
+        { id: "iron_ore", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    svart_stone_worm: {
+      name: "Кам'яний черв",
+      range: 1, move: { name: "Удар з-під землі", mult: 1.5, chance: 0.25 },
+      verb: "таранить",
+      level: 35,
+      role: "tank",
+      stats: { hp: 10178, mp: 0, attack: 956, defense: 153, magicDefense: 126, speed: 24, crit: 17, blockPhys: 17 },
+      exp: 3675,
+      gold: [81, 154],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.04, qty: [1, 1] },
+        { id: "iron_ore", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    svart_blood_bat: {
+      name: "Кажан-кровопивця",
+      range: 2, move: { name: "Пікірування", mult: 1.5, chance: 0.25 },
+      verb: "впивається іклами в",
+      level: 35,
+      role: "ranged",
+      stats: { hp: 6364, mp: 0, attack: 1312, defense: 66, magicDefense: 87, speed: 35, crit: 29, dodge: 23 },
+      exp: 3675,
+      gold: [81, 154],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.04, qty: [1, 1] },
+        { id: "iron_ore", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    svart_boss_cave_spider_matriarch: {
+      name: "Матка печерних павуків",
+      range: 1, move: { name: "Удар жвалами", mult: 1.7, chance: 0.25 },
+      verb: "рве жвалами",
+      level: 36,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "melee",
+      stats: { hp: 10254, mp: 1662, attack: 783, magic: 508, defense: 112, magicDefense: 112, speed: 44, crit: 26, dodge: 24, blockPhys: 18, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Плювок отрути", mp: 60, mult: 2.3 },
+        { kind: "stun", name: "Липка павутина", mp: 45, mult: 1.2 },
+        { kind: "heal", name: "Пожирання кокона", mp: 70, healPct: 0.1 }
+      ],
+      exp: 19440,
+      gold: [410, 792],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.25, qty: [1, 2] },
+        { id: "steel_ingot", chance: 0.25, qty: [1, 3] },
+        { id: "rock_crystal", chance: 0.25, qty: [1, 3] },
+        { id: "lizard_leather", chance: 0.3, qty: [1, 3] }
+      ]
+    },
+    svart_cursed_pike: {
+      name: "Проклята щука",
+      range: 2, move: { name: "Кидок із води", mult: 1.5, chance: 0.25 },
+      verb: "хапає зубами",
+      level: 35,
+      role: "ranged",
+      stats: { hp: 6099, mp: 0, attack: 1316, defense: 66, magicDefense: 87, speed: 35, crit: 29, dodge: 23 },
+      exp: 3675,
+      gold: [81, 154],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.04, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.015, qty: [1, 1] }
+      ]
+    },
+    svart_water_troll: {
+      name: "Водяний троль",
+      range: 1, move: { name: "Удар каменюкою", mult: 1.5, chance: 0.25 },
+      verb: "гатить",
+      level: 36,
+      role: "tank",
+      stats: { hp: 11222, mp: 0, attack: 894, defense: 155, magicDefense: 128, speed: 25, crit: 17, blockPhys: 17 },
+      exp: 3888,
+      gold: [83, 158],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.04, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.015, qty: [1, 1] }
+      ]
+    },
+    svart_greedy_kobold: {
+      name: "Жадібний кобольд",
+      humanoid: true,
+      weapons: ["dagger"],
+      range: 1, move: { name: "Підлий удар", mult: 1.55, chance: 0.25 },
+      verb: "штрикає",
+      level: 36,
+      role: "melee",
+      stats: { hp: 6458, mp: 0, attack: 1083, defense: 85, magicDefense: 102, speed: 40, crit: 27, dodge: 22 },
+      exp: 3888,
+      gold: [83, 158],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.04, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.015, qty: [1, 1] }
+      ]
+    },
+    svart_boss_andvari: {
+      name: "Андварі",
+      range: 3, move: { name: "Удар проклятим перснем", mult: 1.55, chance: 0.25 },
+      verb: "б'є перснем",
+      level: 37,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 10747, mp: 2061, attack: 398, magic: 468, defense: 98, magicDefense: 164, speed: 33, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Прокляття золота", mp: 60, mult: 2.4 },
+        { kind: "stun", name: "Золоті пута", mp: 45, mult: 1 },
+        { kind: "heal", name: "Подоба щуки", mp: 70, healPct: 0.12 }
+      ],
+      exp: 20535,
+      gold: [422, 814],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.25, qty: [1, 2] },
+        { id: "steel_ingot", chance: 0.25, qty: [1, 3] },
+        { id: "rock_crystal", chance: 0.25, qty: [1, 3] }
+      ]
+    },
+    svart_shadow_assassin: {
+      name: "Тіньовий вбивця",
+      humanoid: true,
+      weapons: ["dagger"],
+      range: 1, move: { name: "Удар у спину", mult: 1.55, chance: 0.25 },
+      verb: "б'є кинджалом",
+      level: 36,
+      role: "melee",
+      stats: { hp: 6380, mp: 0, attack: 1097, defense: 85, magicDefense: 102, speed: 40, crit: 27, dodge: 22 },
+      exp: 3888,
+      gold: [83, 158],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "ironwood", chance: 0.03, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.015, qty: [1, 1] }
+      ]
+    },
+    svart_venom_archer: {
+      name: "Отруйна лучниця",
+      humanoid: true,
+      weapons: ["bow"],
+      range: 3, move: { name: "Отруйна стріла", mult: 1.5, chance: 0.25 },
+      verb: "стріляє в",
+      level: 37,
+      role: "ranged",
+      stats: { hp: 5576, mp: 0, attack: 1126, defense: 68, magicDefense: 90, speed: 36, crit: 29, dodge: 23 },
+      exp: 4107,
+      gold: [85, 163],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "ironwood", chance: 0.03, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.015, qty: [1, 1] }
+      ]
+    },
+    svart_shadow_mage: {
+      name: "Маг тіней",
+      humanoid: true,
+      weapons: ["staff"],
+      range: 3, move: { name: "Удар посохом", mult: 1.5, chance: 0.25 },
+      verb: "б'є посохом",
+      level: 37,
+      role: "caster",
+      stats: { hp: 5458, mp: 1373, attack: 572, magic: 758, defense: 78, magicDefense: 150, speed: 30, crit: 17, blockMag: 17 },
+      spell: { name: "Стріла мороку", mp: 28, mult: 1.45, chance: 0.4 },
+      exp: 4107,
+      gold: [85, 163],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "ironwood", chance: 0.03, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.015, qty: [1, 1] }
+      ]
+    },
+    svart_boss_prince_of_the_dark_elves: {
+      name: "Князь свартальвів",
+      range: 1, move: { name: "Танець клинків", mult: 1.7, chance: 0.25 },
+      verb: "рубає клинками",
+      level: 38,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "melee",
+      stats: { hp: 10866, mp: 1763, attack: 714, magic: 463, defense: 116, magicDefense: 116, speed: 45, crit: 26, dodge: 24, blockPhys: 18, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Чорне полум'я", mp: 60, mult: 2.4 },
+        { kind: "stun", name: "Тіньові пута", mp: 45, mult: 1.2 },
+        { kind: "heal", name: "Темне причастя", mp: 70, healPct: 0.1 }
+      ],
+      exp: 21660,
+      gold: [433, 836],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.25, qty: [1, 2] },
+        { id: "steel_ingot", chance: 0.25, qty: [1, 3] },
+        { id: "rock_crystal", chance: 0.25, qty: [1, 3] },
+        { id: "ironwood", chance: 0.3, qty: [1, 3] }
+      ]
+    },
+    svart_stone_sentinel: {
+      name: "Кам'яний вартовий",
+      range: 1, move: { name: "Кам'яний кулак", mult: 1.5, chance: 0.25 },
+      verb: "б'є кулаком",
+      level: 37,
+      role: "tank",
+      stats: { hp: 10436, mp: 0, attack: 991, defense: 157, magicDefense: 130, speed: 25, crit: 17, blockPhys: 17 },
+      exp: 4107,
+      gold: [85, 163],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.03, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.015, qty: [1, 1] }
+      ]
+    },
+    svart_traitor_dwarf: {
+      name: "Карлик-зрадник",
+      humanoid: true,
+      weapons: ["axe"],
+      range: 1, move: { name: "Удар сокирою", mult: 1.55, chance: 0.25 },
+      verb: "рубає",
+      level: 37,
+      role: "melee",
+      stats: { hp: 6606, mp: 0, attack: 1179, defense: 87, magicDefense: 103, speed: 40, crit: 27, dodge: 22 },
+      exp: 4107,
+      gold: [85, 163],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.03, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.015, qty: [1, 1] }
+      ]
+    },
+    svart_rune_warden: {
+      name: "Рунний вартовий",
+      range: 2, move: { name: "Удар руною", mult: 1.5, chance: 0.25 },
+      verb: "б'є руною",
+      level: 38,
+      role: "caster",
+      stats: { hp: 5976, mp: 1415, attack: 640, magic: 848, defense: 79, magicDefense: 153, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Сліпуча руна", mp: 28, mult: 1.45, chance: 0.4 },
+      exp: 4332,
+      gold: [87, 167],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.03, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.015, qty: [1, 1] }
+      ]
+    },
+    svart_boss_alvis_the_all_knowing: {
+      name: "Альвіс Всезнаючий",
+      range: 3, move: { name: "Удар посохом мудреця", mult: 1.55, chance: 0.25 },
+      verb: "б'є посохом",
+      level: 38,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 11094, mp: 2123, attack: 453, magic: 534, defense: 99, magicDefense: 167, speed: 33, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Слово-блискавка", mp: 60, mult: 2.5 },
+        { kind: "stun", name: "Загадка без відповіді", mp: 45, mult: 1 },
+        { kind: "heal", name: "Знання всіх світів", mp: 70, healPct: 0.12 }
+      ],
+      exp: 21660,
+      gold: [433, 836],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.25, qty: [1, 2] },
+        { id: "steel_ingot", chance: 0.25, qty: [1, 3] },
+        { id: "rock_crystal", chance: 0.25, qty: [1, 3] },
+        { id: "rune_gem", chance: 0.3, qty: [1, 3] }
+      ]
+    },
+    svart_living_anvil: {
+      name: "Ожиле ковадло",
+      range: 1, move: { name: "Падіння ковадла", mult: 1.5, chance: 0.25 },
+      verb: "чавить",
+      level: 38,
+      role: "tank",
+      stats: { hp: 11424, mp: 0, attack: 972, defense: 160, magicDefense: 132, speed: 25, crit: 17, blockPhys: 17 },
+      exp: 4332,
+      gold: [87, 167],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "coal", chance: 0.04, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.02, qty: [1, 1] }
+      ]
+    },
+    svart_fire_salamander: {
+      name: "Вогняна саламандра",
+      range: 2, move: { name: "Удар хвостом", mult: 1.5, chance: 0.25 },
+      verb: "б'є хвостом",
+      level: 38,
+      role: "caster",
+      stats: { hp: 6167, mp: 1415, attack: 669, magic: 887, defense: 79, magicDefense: 153, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Плювок полум'ям", mp: 28, mult: 1.45, chance: 0.4 },
+      exp: 4332,
+      gold: [87, 167],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "coal", chance: 0.04, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.02, qty: [1, 1] }
+      ]
+    },
+    svart_forged_boar: {
+      name: "Кований вепр",
+      range: 1, move: { name: "Залізні ікла", mult: 1.55, chance: 0.25 },
+      verb: "б'є іклами",
+      level: 38,
+      role: "melee",
+      stats: { hp: 7554, mp: 0, attack: 1262, defense: 88, magicDefense: 105, speed: 41, crit: 27, dodge: 22 },
+      exp: 4332,
+      gold: [87, 167],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "coal", chance: 0.04, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.02, qty: [1, 1] }
+      ]
+    },
+    svart_boss_hels_forged_guardian: {
+      name: "Кований страж Хелли",
+      range: 1, move: { name: "Удар молотом", mult: 1.7, chance: 0.25 },
+      verb: "б'є молотом",
+      level: 39,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "tank",
+      stats: { hp: 14856, mp: 1639, attack: 543, magic: 415, defense: 207, magicDefense: 144, speed: 28, crit: 17, dodge: 12, blockPhys: 17, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Розплавлений метал", mp: 60, mult: 2.4 },
+        { kind: "stun", name: "Удар ковадла", mp: 45, mult: 1.1 },
+        { kind: "heal", name: "Перековування", mp: 70, healPct: 0.1 }
+      ],
+      exp: 22815,
+      gold: [445, 858],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.25, qty: [1, 2] },
+        { id: "steel_ingot", chance: 0.25, qty: [1, 3] },
+        { id: "rock_crystal", chance: 0.25, qty: [1, 3] }
+      ]
+    },
+    svart_rune_spirit: {
+      name: "Рунний дух",
+      range: 2, move: { name: "Дотик руни", mult: 1.5, chance: 0.25 },
+      verb: "торкається",
+      level: 38,
+      role: "caster",
+      stats: { hp: 5988, mp: 1415, attack: 638, magic: 846, defense: 79, magicDefense: 153, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Руна болю", mp: 28, mult: 1.45, chance: 0.4 },
+      exp: 4332,
+      gold: [87, 167],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.03, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.02, qty: [1, 1] }
+      ]
+    },
+    svart_masters_ghost: {
+      name: "Привид майстра",
+      undead: true,
+      range: 2, move: { name: "Примарний молот", mult: 1.5, chance: 0.25 },
+      verb: "б'є примарним молотом",
+      level: 39,
+      role: "healer",
+      stats: { hp: 6507, mp: 2228, attack: 507, magic: 747, defense: 80, magicDefense: 149, speed: 33, crit: 11, blockMag: 17 },
+      spell: { name: "Прокляття ремесла", mp: 30, mult: 1.45, chance: 0.4 },
+      exp: 4563,
+      gold: [90, 172],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.03, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.02, qty: [1, 1] }
+      ]
+    },
+    svart_crystal_golem: {
+      name: "Кришталевий голем",
+      range: 1, move: { name: "Кришталевий кулак", mult: 1.5, chance: 0.25 },
+      verb: "б'є кулаком",
+      level: 39,
+      role: "tank",
+      stats: { hp: 10765, mp: 0, attack: 929, defense: 163, magicDefense: 134, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 4563,
+      gold: [90, 172],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.03, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.02, qty: [1, 1] }
+      ]
+    },
+    svart_boss_keeper_of_the_runes: {
+      name: "Хранитель рун",
+      range: 3, move: { name: "Удар рунічним жезлом", mult: 1.55, chance: 0.25 },
+      verb: "б'є жезлом",
+      level: 40,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 14121, mp: 2253, attack: 476, magic: 561, defense: 103, magicDefense: 172, speed: 34, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Руна загибелі", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Руна мовчання", mp: 45, mult: 1.1 },
+        { kind: "heal", name: "Руна відновлення", mp: 70, healPct: 0.12 }
+      ],
+      exp: 24000,
+      gold: [456, 880],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.25, qty: [1, 2] },
+        { id: "steel_ingot", chance: 0.25, qty: [1, 3] },
+        { id: "rock_crystal", chance: 0.25, qty: [1, 3] },
+        { id: "rune_gem", chance: 0.3, qty: [1, 3] }
+      ]
+    },
+    svart_clay_golem: {
+      name: "Глиняний голем",
+      range: 1, move: { name: "Глиняний кулак", mult: 1.5, chance: 0.25 },
+      verb: "б'є кулаком",
+      level: 39,
+      role: "tank",
+      stats: { hp: 11812, mp: 0, attack: 968, defense: 163, magicDefense: 134, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 4563,
+      gold: [90, 172],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "ironwood", chance: 0.04, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.02, qty: [1, 1] }
+      ]
+    },
+    svart_iron_draugr: {
+      name: "Залізний драугр",
+      humanoid: true,
+      weapons: ["sword", "axe"],
+      undead: true,
+      range: 1, move: { name: "Іржавий клинок", mult: 1.55, chance: 0.25 },
+      verb: "рубає",
+      level: 40,
+      role: "melee",
+      stats: { hp: 7886, mp: 0, attack: 1389, defense: 91, magicDefense: 108, speed: 41, crit: 27, dodge: 22 },
+      exp: 4800,
+      gold: [92, 176],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "ironwood", chance: 0.04, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.02, qty: [1, 1] }
+      ]
+    },
+    svart_overseer_dwarf: {
+      name: "Карлик-наглядач",
+      humanoid: true,
+      weapons: ["dagger"],
+      range: 2, move: { name: "Удар батогом", mult: 1.5, chance: 0.25 },
+      verb: "шмагає",
+      level: 40,
+      role: "ranged",
+      stats: { hp: 7289, mp: 0, attack: 1496, defense: 72, magicDefense: 95, speed: 37, crit: 29, dodge: 23 },
+      exp: 4800,
+      gold: [92, 176],
+      loot: [
+        { id: "potion_hp_large", chance: 0.12, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.08, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.02, qty: [1, 1] },
+        { id: "ironwood", chance: 0.04, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.02, qty: [1, 1] }
+      ]
+    },
+    svart_boss_mokkurkalfi: {
+      name: "Мьоккуркальві",
+      range: 1, move: { name: "Кулак велетня", mult: 1.75, chance: 0.25 },
+      verb: "гатить кулаком",
+      level: 40,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "tank",
+      stats: { hp: 20224, mp: 1689, attack: 653, magic: 499, defense: 210, magicDefense: 146, speed: 29, crit: 17, dodge: 12, blockPhys: 17, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Глиняна лавина", mp: 60, mult: 2.7 },
+        { kind: "stun", name: "Важкий крок", mp: 45, mult: 1.3 },
+        { kind: "heal", name: "Серце кобили", mp: 70, healPct: 0.1 }
+      ],
+      exp: 31200,
+      gold: [593, 1144],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.25, qty: [1, 2] },
+        { id: "steel_ingot", chance: 0.25, qty: [1, 3] },
+        { id: "rock_crystal", chance: 0.25, qty: [1, 3] },
+        { id: "ironwood", chance: 0.3, qty: [1, 3] }
+      ]
     }
   };
 
@@ -2753,7 +3308,71 @@ const ENEMIES = {
       description: "Чорна бухта під скелями, де море викидає на берег уламки кораблів. Велетка Ран ловить моряків у свою сіть — і ніхто з утоплених не повертається додому.",
       enemies: ["van_wave_daughter", "van_drowned_warrior", "van_deep_eel", "van_boss_ran_mistress_of_the_drowned"],
       dungeon: "van_ran_hall",
+      edge: "water",
+      // Затоплена штольня над бухтою: після першої перемоги над Ран — шлях у Свартальвгейм (світ 5)
+      portal: { to: "svart_gate", world: 5, title: "Затоплена штольня",
+                text: "У скелі над бухтою, куди не дістають хвилі, відкрився вхід у стару штольню. Поки Ран тримала тут свою сіть, його не було видно; тепер із темряви тягне димом ковальських горнів — це шлях у Свартальвгейм.",
+                button: "Спуститися у Свартальвгейм" }
+    },
+
+    // ---------- СВАРТАЛЬВГЕЙМ (region: "svart", світ 5) — за Затопленою штольнею в Бухті Ран ----------
+    // Відкривається після першої перемоги над Ран (save.bossKills.van_boss_ran_mistress_of_the_drowned). Мапа — assets/images/map/map_svartalfheim.webp.
+    // Дорога одна: копальні → водоспад → Чорні квартали → чертог Альвіса → кузні → глибини → кузня Мьоккуркальві.
+    // Місто Свартгард (задум — H:\Game_NEW\WORLDS_4-7.md) ще не додано: поки вхід у світ — Затоплена штольня.
+    // Фонів боїв і іконок ключів ще немає — гра показує тло теми й назву ключа (промти — «Свартальвгейм - фони боїв та іконки ключів (промти).txt»).
+    svart_gate: {
+      name: "Затоплена штольня", type: "portal", region: "svart", typeLabel: "Штольня з Ванагейму",   // підпис на мапі (page-maps.js)
+      description: "Стара штольня, якою дверги колись возили руду до моря. Тепер вона залита водою по коліна й веде з Бухти Ран просто під корені гір — у Свартальвгейм. Попереду, за Сутінковими копальнями, жевріють вогні підземного царства, а штольнею можна повернутися до моря.",
+      portal: { to: "van_ran", title: "Шлях назад", text: "Штольня веде вгору, до Бухти Ран.", button: "Повернутися у Ванагейм" }
+    },
+    svart_mines: {
+      name: "Сутінкові копальні", type: "combat", region: "svart", minLevel: 34,
+      description: "Покинуті штольні двергів, де вже сто років не чути кайла. Рейки ведуть у темряву, вагонетки стоять там, де їх кинули, а між кріпленнями висять кокони завбільшки з людину.",
+      enemies: ["svart_cave_spider", "svart_stone_worm", "svart_blood_bat", "svart_boss_cave_spider_matriarch"],
+      dungeon: "svart_matriarch_cocoon",
+      edge: "walls"
+    },
+    svart_falls: {
+      name: "Водоспад Андварі", type: "combat", region: "svart", minLevel: 35,
+      description: "Підземний водоспад падає з темряви в чорне озеро, на дні якого блищить золото. Це скарб карлика Андварі — і прокляття, яке він наклав на кожну монету, досі чинне.",
+      enemies: ["svart_cursed_pike", "svart_water_troll", "svart_greedy_kobold", "svart_boss_andvari"],
+      dungeon: "svart_andvari_hoard",
       edge: "water"
+    },
+    svart_quarters: {
+      name: "Чорні квартали", type: "combat", region: "svart", minLevel: 36,
+      description: "Частина Свартгарда, яку Хелла забрала собі. Горна тут згасли, на ковадлах лежить іній, а у вікнах шпилів горить недобре фіолетове світло. Свартальви, що лишилися, служать уже не своїм королям.",
+      enemies: ["svart_shadow_assassin", "svart_venom_archer", "svart_shadow_mage", "svart_boss_prince_of_the_dark_elves"],
+      dungeon: "svart_obsidian_spire",
+      edge: "walls"
+    },
+    svart_alvis: {
+      name: "Чертог Альвіса", type: "combat", region: "svart", minLevel: 36,
+      description: "Зала, повна двергів, що скам'яніли посеред розмови. Карлик Альвіс знав імена всіх речей у дев'яти світах — і так довго ними хвалився, що схід сонця застав його зненацька. Один промінь досі падає крізь тріщину в склепінні.",
+      enemies: ["svart_stone_sentinel", "svart_traitor_dwarf", "svart_rune_warden", "svart_boss_alvis_the_all_knowing"],
+      dungeon: "svart_stone_hall",
+      edge: "walls"
+    },
+    svart_forges: {
+      name: "Кузні Брокка й Ейтрі", type: "combat", region: "svart", minLevel: 37,
+      description: "Тут брати Брокк і Ейтрі викували Мйольнір, Драупнір і золотого вепра. Міхи ще дихають, метал ще тече каналами — але самих братів немає, а біля запечатаних дверей стоїть страж, якого вони не кували.",
+      enemies: ["svart_living_anvil", "svart_fire_salamander", "svart_forged_boar", "svart_boss_hels_forged_guardian"],
+      dungeon: "svart_sealed_forge",
+      edge: "walls"
+    },
+    svart_runes: {
+      name: "Рунічні глибини", type: "combat", region: "svart", minLevel: 38,
+      description: "Уступ над прірвою без дна. Її стіни списані рунами згори донизу: дверги записували тут усе, що знали про ремесло, і кожен майстер перед смертю додавав свій рядок. Руни досі світяться — і досі читають самі себе.",
+      enemies: ["svart_rune_spirit", "svart_masters_ghost", "svart_crystal_golem", "svart_boss_keeper_of_the_runes"],
+      dungeon: "svart_rune_well",
+      edge: "rocks"
+    },
+    svart_mokkur: {
+      name: "Кузня Мьоккуркальві", type: "combat", region: "svart", minLevel: 39,
+      description: "Край велетенської печі, де кипить залізо й глина. Колись йотуни зліпили тут глиняного велетня Мьоккуркальві й дали йому серце кобили — і він здригнувся від страху, щойно побачив Тора. Хелла ліпить його заново. Цього разу серце буде інше.",
+      enemies: ["svart_clay_golem", "svart_iron_draugr", "svart_overseer_dwarf", "svart_boss_mokkurkalfi"],
+      dungeon: "svart_clay_heart",
+      edge: "rocks"
     }
   };
   const DEFAULT_LOCATION = "home";
@@ -2797,6 +3416,12 @@ const ENEMIES = {
                  description: "Копальні ванів у прибережних скелях Ноатуну. Залізо й біла платина лежать тут поруч із морем — і з тими, кого море викинуло на берег." },
       sawmill: { minLevel: 30, image: "sawmill_van", yields: ["yew_wood"],
                  description: "Вирубка в Лісі Квасіра, де вани брали темний тис на щогли й луки. Тролі й зачаровані звірі вважають ці дерева своїми." }
+    },
+    svart: {
+      mine:    { minLevel: 35, image: "mine_svart", yields: ["iron_ore", "rock_crystal"],
+                 description: "Копальні двергів під Сутінковими штольнями. Залізо тут лежить поруч із гірським кришталем — і з тими, хто не встиг вийти, коли згасли ліхтарі." },
+      sawmill: { minLevel: 35, image: "sawmill_svart", yields: ["ironwood"],
+                 description: "Гай залізного дерева серед велетенських печерних грибів. Його стовбури тверді, як кований метал, а в тіні грибних шапок полюють ті, кому не потрібне світло." }
     }
   };
   const SITE_NAMES = { mine: "Шахта", sawmill: "Лісопилка" };
@@ -2913,6 +3538,50 @@ const ENEMIES = {
       minLevel: 35,   // фінальний бій світу 4 — з 35 рівня
       edge: "water",
       description: "У відплив море розступається й відкриває сходи до підводного чертога, освітленого золотом утоплених. Там, серед сітей, чекає Ран — володарка всіх, кого забрало море."
+    },
+    // Данжі Свартальвгейму (світ 5)
+    svart_matriarch_cocoon: {
+      name: "Кокон Матки", explore: "Обстеження копалень", location: "svart_mines",
+      key: "key_svart_mines", keyChance: 0.01, boss: "svart_boss_cave_spider_matriarch", pool: ["svart_cave_spider", "svart_stone_worm", "svart_blood_bat"],
+      edge: "walls",
+      description: "Найглибша штольня затягнута павутинням від підлоги до склепіння. У її кінці, над купою порожніх обладунків, висить кокон, у якому ворушиться Матка печерних павуків."
+    },
+    svart_andvari_hoard: {
+      name: "Скарбниця Андварі", explore: "Обстеження водоспаду", location: "svart_falls",
+      key: "key_svart_falls", keyChance: 0.01, boss: "svart_boss_andvari", pool: ["svart_cursed_pike", "svart_water_troll", "svart_greedy_kobold"],
+      edge: "water",
+      description: "За стіною води — грот, завалений золотом по коліна. Андварі стереже його в подобі щуки й у подобі карлика, і жодна монета ще не покинула цю печеру без його прокляття."
+    },
+    svart_obsidian_spire: {
+      name: "Обсидіановий шпиль", explore: "Обстеження кварталів", location: "svart_quarters",
+      key: "key_svart_quarters", keyChance: 0.01, boss: "svart_boss_prince_of_the_dark_elves", pool: ["svart_shadow_assassin", "svart_venom_archer", "svart_shadow_mage"],
+      edge: "walls",
+      description: "Найвищий шпиль Чорних кварталів витесаний з одного шматка обсидіану. На його вершині Князь свартальвів присягнув Хеллі — і відтоді не спускався до свого народу."
+    },
+    svart_stone_hall: {
+      name: "Скам'яніла зала", explore: "Обстеження чертогу", location: "svart_alvis",
+      key: "key_svart_alvis", keyChance: 0.01, boss: "svart_boss_alvis_the_all_knowing", pool: ["svart_stone_sentinel", "svart_traitor_dwarf", "svart_rune_warden"],
+      edge: "walls",
+      description: "У глибині чертогу, куди не дістає світло, камінь знову став плоттю. Альвіс Всезнаючий чекає на того, хто відповість на його питання, — а тих, хто не відповів, додає до своїх статуй."
+    },
+    svart_sealed_forge: {
+      name: "Запечатане горно", explore: "Обстеження кузень", location: "svart_forges",
+      key: "key_svart_forges", keyChance: 0.01, boss: "svart_boss_hels_forged_guardian", pool: ["svart_living_anvil", "svart_fire_salamander", "svart_forged_boar"],
+      edge: "walls",
+      description: "За дверима з рунами — горно, яке не гасло від створення світів. Хелла поставила біля нього власного стража, викуваного з уламків зброї полеглих, і замкнула братів усередині."
+    },
+    svart_rune_well: {
+      name: "Колодязь рун", explore: "Обстеження глибин", location: "svart_runes",
+      key: "key_svart_runes", keyChance: 0.01, boss: "svart_boss_keeper_of_the_runes", pool: ["svart_rune_spirit", "svart_masters_ghost", "svart_crystal_golem"],
+      edge: "rocks",
+      description: "На дні прірви руни сходяться в одне коло. Хранитель стежить, щоб жодна з них не була прочитана чужинцем, — і вже забув, кому колись служив."
+    },
+    svart_clay_heart: {
+      name: "Глиняне серце", explore: "Обстеження кузні", location: "svart_mokkur",
+      key: "key_svart_mokkur", keyChance: 0.01, boss: "svart_boss_mokkurkalfi", pool: ["svart_clay_golem", "svart_iron_draugr", "svart_overseer_dwarf"],
+      minLevel: 40,   // фінальний бій світу 5 — з 40 рівня
+      edge: "rocks",
+      description: "У грудях недоліпленого велетня — порожнина, де має битися серце. Карлики-наглядачі вже несуть туди те, що наказала Хелла. Якщо Мьоккуркальві встане, спинити його буде нікому."
     }
   };
 
@@ -3012,7 +3681,15 @@ const ENEMIES = {
     "van_enchanted_beast", "van_eavesdropping_shade", "van_forest_troll", "van_boss_fjalar_and_galar",
     "van_gold_spirit", "van_burnt_cultist", "van_barrow_guard", "van_boss_gullveig_the_thrice_burned",
     "van_vanir_priest", "van_freyjas_forest_cat", "van_seidr_guardian", "van_boss_high_priestess_of_the_vanir",
-    "van_wave_daughter", "van_drowned_warrior", "van_deep_eel", "van_boss_ran_mistress_of_the_drowned"
+    "van_wave_daughter", "van_drowned_warrior", "van_deep_eel", "van_boss_ran_mistress_of_the_drowned",
+    // Свартальвгейм (світ 5)
+    "svart_cave_spider", "svart_stone_worm", "svart_blood_bat", "svart_boss_cave_spider_matriarch",
+    "svart_cursed_pike", "svart_water_troll", "svart_greedy_kobold", "svart_boss_andvari",
+    "svart_shadow_assassin", "svart_venom_archer", "svart_shadow_mage", "svart_boss_prince_of_the_dark_elves",
+    "svart_stone_sentinel", "svart_traitor_dwarf", "svart_rune_warden", "svart_boss_alvis_the_all_knowing",
+    "svart_living_anvil", "svart_fire_salamander", "svart_forged_boar", "svart_boss_hels_forged_guardian",
+    "svart_rune_spirit", "svart_masters_ghost", "svart_crystal_golem", "svart_boss_keeper_of_the_runes",
+    "svart_clay_golem", "svart_iron_draugr", "svart_overseer_dwarf", "svart_boss_mokkurkalfi"
   ]);
   // Заглушка, поки картинки немає: темний силует з очима
   const ENEMY_PLACEHOLDER = "data:image/svg+xml," + encodeURIComponent(
@@ -3055,6 +3732,11 @@ const ENEMIES = {
     return !!(isAlfheimOpen(save) && save.bossKills?.alf_boss_beli);
   }
 
+  // Свартальвгейм (світ 5): відкритий Ванагейм + перша перемога над Ран
+  function isSvartalfheimOpen(save) {
+    return !!(isVanaheimOpen(save) && save.bossKills?.van_boss_ran_mistress_of_the_drowned);
+  }
+
   function canEnterLocation(id, heroLevel = 1, save = null) {
     const loc = LOCATIONS[id];
     if (!loc) return { ok: false, reason: "Такої локації немає." };
@@ -3067,6 +3749,9 @@ const ENEMIES = {
     }
     if (loc.region === "van" && save && !isVanaheimOpen(save)) {
       return { ok: false, reason: "Шлях у Ванагейм відкриється після першої перемоги над Белі (гілка Іггдрасиля на Полі Белі, Альвгейм)." };
+    }
+    if (loc.region === "svart" && save && !isSvartalfheimOpen(save)) {
+      return { ok: false, reason: "Шлях у Свартальвгейм відкриється після першої перемоги над Ран (Затоплена штольня в Бухті Ран, Ванагейм)." };
     }
     if (loc.minLevel && heroLevel < loc.minLevel) {
       return { ok: false, reason: `${loc.name}: вхід з ${loc.minLevel} рівня персонажа.` };
@@ -3144,7 +3829,7 @@ const ENEMIES = {
 
   Object.assign(RPG, {
     MONSTER_MOVES, RANGE_NAMES, enemyRange, enemyMove,
-    ENEMIES, LOCATIONS, DUNGEONS, DEFAULT_LOCATION, RESPAWN_LOCATION, GUILD_SHOP, isAlfheimOpen, isVanaheimOpen, DARK_LOC_MAT,
+    ENEMIES, LOCATIONS, DUNGEONS, DEFAULT_LOCATION, RESPAWN_LOCATION, GUILD_SHOP, isAlfheimOpen, isVanaheimOpen, isSvartalfheimOpen, DARK_LOC_MAT,
     CHAMPION, rollChampion, rollChampionDrop, championBounty,
     getEnemy, enemyExp, enemySpriteStyle, getLocation, isCombatLocation, canEnterLocation, pickEnemy, rollLoot, isCraftOnlyEnemy
   });

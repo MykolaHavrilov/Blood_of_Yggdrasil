@@ -90,7 +90,9 @@
           RPG.setCurrentSlot(s.id);
           location.href = "game.html";
         });
-        btn.append(el("strong", null, `${s.character?.name || "Герой"} — ${cls}, рівень ${s.character?.level || 1}`));
+        const whoEl = el("strong");
+        whoEl.append((s.character?.name || "Герой") + " ", RPG.ui.classEmblem(s.character?.classId, cls), `, рівень ${s.character?.level || 1}`);
+        btn.append(whoEl);
         btn.append(el("span", "save-date",
           `${place} · збережено: ${fmtDate(s.savedAt)}${s.id === current ? " · поточна гра" : ""}`));
         if (s.hardcore) btn.append(el("span", "save-date save-hc", s.gameOver

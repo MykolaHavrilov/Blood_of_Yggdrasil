@@ -794,3 +794,13 @@ a, button, input, label, select, [tabindex] { touch-action: manipulation; -webki
 .tip-socket-icon { width: 22px; height: 22px; }
 .tip-socket-empty { width: 12px; height: 12px; margin: 0 5px; transform: rotate(45deg); border: 1.5px dashed #c9a35a; flex: none; }
 .tip-socket-free { opacity: .7; font-style: italic; }
+
+/* Значок професії замість її назви: зброя двох рук кольором професії (game-common.js → classEmblem) */
+.cls-emblem {
+  display: inline-block;
+  width: max(1.6em, 22px);
+  height: max(1.6em, 22px);
+  vertical-align: -0.38em;
+  background: center / contain no-repeat;
+  flex: none;
+}
