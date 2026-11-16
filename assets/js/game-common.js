@@ -926,10 +926,16 @@
         if (want !== "universal") frag.append(el("p", "fbook-group", pan === "norse" ? "Скандинавські знаки Футарка — дар Асгарду" : "Слов'янські знаки — дар Ірію"));
         for (const [key, r] of list) {
           const card = el("section", "fbook-rune");
-          const icon = el("span", "fbook-rune-icon");
-          Object.assign(icon.style, RPG.itemIconStyle(RPG.runeItemId(key)) || {});
-          icon.setAttribute("role", "img");
-          icon.setAttribute("aria-label", `Знак ${r.name}`);
+          // ціла руна й під нею — зламана (data/runes.js → іконки icon_rune_<знак>[_broken].webp)
+          const icon = el("span", "fbook-rune-icons");
+          for (const [g, label] of [["common", `Знак ${r.name}`], ["broken", `Зламана руна ${r.name}`]]) {
+            const ic = el("span", "fbook-rune-icon" + (g === "broken" ? " is-broken" : ""));
+            Object.assign(ic.style, RPG.itemIconStyle(RPG.runeItemId(key, g)) || {});
+            ic.setAttribute("role", "img");
+            ic.setAttribute("aria-label", label);
+            ic.title = label;
+            icon.append(ic);
+          }
           const body = el("div", "fbook-rune-body");
           body.append(el("strong", "fbook-rune-name", r.name), el("small", "fbook-mats", r.meaning), el("span", "fbook-rune-fx", r.effect));
           const vals = el("span", "fbook-rune-vals");

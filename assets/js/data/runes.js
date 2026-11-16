@@ -102,15 +102,17 @@
       const value = g.val >= 0 ? r.vals[g.val] : null;
       ITEMS[runeItemId(key, grade)] = {
         name: `${g.prefix} ${r.name}`, type: "rune", rune: key, runeKind: r.kind, pantheon: r.pantheon,
-        grade, gradeOf: runeItemId(key), iconFile: runeItemId(key), price: g.price, stackable: true, maxStack: 1000, noShop: true,
+        grade, gradeOf: runeItemId(key), iconFile: runeItemId(key, grade === "broken" ? "broken" : "common"), price: g.price, stackable: true, maxStack: 1000, noShop: true,
         description: `${RUNE_KIND_NAME[r.kind]} · ${PANTHEON_NAME[r.pantheon]}. «${r.meaning}». ` +
           (value ? `${r.effect}: ${value}. ` : "Зламана: не дає нічого — годиться лише як паливо для Горна Сварога. ") +
           `Вкладається ${RUNE_KIND_WHERE[r.kind]}.`
       };
     }
   }
-  // Іконки: знак з книги на камені (assets/images/items/icon_rune_<знак>.webp) — одна на всі рідкості, рідкість видно з рамки
-  for (const key of Object.keys(RUNES)) RPG.ITEM_ICON_FILES?.add(runeItemId(key));
+  // Іконки (v0.6.9): камінь із вирізаним знаком — icon_rune_<знак>.webp (одна на звичайну, магічну, епічну й легендарну — рідкість видно з рамки)
+  // і зламана — icon_rune_<знак>_broken.webp (розколотий камінь, знак згас). Скандинавські — сірий річковий камінь, слов'янські — сланцева плитка
+  // з крапками в кутах; колір знака — вид руни (зброя — червоний, броня — блакитний, універсальні — золотий). Промти — «Руни - іконки цілі та зламані (промти).txt».
+  for (const key of Object.keys(RUNES)) { RPG.ITEM_ICON_FILES?.add(runeItemId(key)); RPG.ITEM_ICON_FILES?.add(runeItemId(key, "broken")); }
   // Звичайні руни (по одній на кожен знак)
   const RUNE_IDS = Object.keys(RUNES).map(k => runeItemId(k));
 
