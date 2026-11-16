@@ -3,6 +3,10 @@ window.RPG = window.RPG || {};
 RPG.I18N = RPG.I18N || {};
 RPG.I18N.en = {
 "phrases": {
+"професія відсутня": "no profession",
+"1 професія": "1st profession",
+"2 професія": "2nd profession",
+"3 професія": "3rd profession",
 "Шаман потойбіччя": "Shaman of the Beyond",
 "Один з тих, хто колись відрікся від усіх шляхів. Побачивши, скільки горя принесла війна, повернувся до своїх коренів — але вже заплямований магією мертвих, тож лікувати не може. Кров, прокляття й тінь предків.": "One of those who once renounced every path. Having seen how much grief the war brought, he returned to his roots — but already stained by the magic of the dead, so he can no longer heal. Blood, curses and the shadow of the ancestors.",
 "Зв'язані кров'ю": "Bound by Blood",
@@ -3372,6 +3376,13 @@ RPG.I18N.en = {
 "Земля велетнів: крижані перевали, Залізний ліс Ангрбоди, кам'яна пустка й брама Утгарда — а за краєм світу з чорного моря піднімає голову Світовий Змій": "The land of the giants: icy passes, Angrboða's Iron Wood, the stone waste and the gate of Útgarðr — and beyond the edge of the world the World Serpent raises his head from the black sea"
 },
 "patterns": [
+[
+"^(.*?) · (професія відсутня|[0-9]+ професія)$",
+"$1 · $2",
+1,
+0,
+"професія"
+],
 ["^Кожна руна однієї рідкості — своя клітинка: до (.*?) шт\\., зламаних — до (.*?)\\. Що понад це — пропадає при отриманні\\.$","Each rune of one rarity has its own cell: up to $1, broken ones up to $2. Anything above that is lost on receipt.",1,0,"Кожна руна однієї рідкості"],
 ["^Отримано: Мішечок для рун\\. У нього перекладено рун: ([^(]*?)\\.$","Received: Rune Pouch. Runes moved into it: $1.",1,0,"У нього перекладено рун"],
 ["^Отримано: Мішечок для рун\\. У нього перекладено рун: (.*?) \\(не вмістилося й пропало: (.*?)\\)\\.$","Received: Rune Pouch. Runes moved into it: $1 (did not fit and were lost: $2).",1,0,"У нього перекладено рун"],

@@ -1432,7 +1432,7 @@
   function classEmblem(classId, title = null) {
     const s = el("span", "cls-emblem");
     s.style.backgroundImage = `url("${RPG.classEmblemUrl(classId)}")`;
-    const name = title || RPG.getClass(classId).name;
+    const name = `${title || RPG.getClass(classId).name} · ${RPG.classRankLabel(classId)}`;   // «Воїн · 1 професія»
     s.title = name;
     s.setAttribute("role", "img");
     s.setAttribute("aria-label", name);
@@ -1481,7 +1481,8 @@
     const cls = RPG.getClass(ch.classId);
     const box = el("div", "info-body exp-info");
     const lvlP = el("p");
-    lvlP.append(el("span", null, `Рівень ${ch.level} · ${cls.name}`), " ", classEmblem(ch.classId));
+    lvlP.append(el("span", null, `Рівень ${ch.level} · ${cls.name}`), " · ", el("span", null, RPG.classRankLabel(ch.classId)),
+                " ", classEmblem(ch.classId));
     box.append(lvlP);
     if (p.max) {
       box.append(el("p", null, `Максимальний рівень (${p.cap}). Досвід: ${fmtNum(p.exp)}.`));

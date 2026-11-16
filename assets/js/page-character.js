@@ -301,7 +301,9 @@
       if (ms.hardcore && !memberIndex) infoRows.push(["Рахунок гри", fmtNum(RPG.hardcoreScore(save).total)]);
       for (const [k, v] of infoRows) {
         const row = el("div", "stat-row");
-        row.append(el("span", null, k), el("strong", null, String(v)));
+        const val = el("strong", null, String(v));
+        if (k === "Професія") val.append(" · ", el("span", null, RPG.classRankLabel(ch.classId)));   // «Селянин · професія відсутня»
+        row.append(el("span", null, k), val);
         info.append(row);
         // Під професією — її роль у групі (танк / дамагер / хілер)
         if (k === "Професія" && RPG.classRoles(ch.classId).length) {

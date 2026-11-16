@@ -7,7 +7,7 @@
 // levelAttrs — СТАЛІ бонуси атрибутів за КОЖЕН новий рівень у цій професії
 //              (додаються автоматично, окрім 3 вільних очок на вибір)
 // changeBonus — разовий бонус атрибутів, коли персонаж ПЕРЕХОДИТЬ на цю професію.
-//              Вищі професії мають більші levelAttrs і changeBonus.
+//              У сумі — +10 очок атрибутів для кожної професії.
 //              Бонуси, здобуті в попередніх професіях, лишаються назавжди.
 // levelTable — яку таблицю досвіду використовує (levels.js)
 // tier       — ранг професії: 1 — стартова, 2 — перша зміна і т.д.
@@ -72,51 +72,51 @@
     warrior: prof("Воїн", "Надійний боєць з мечем або сокирою.",
       { hp: 280, mp: 50, attack: 34, magic: 8, defense: 18, magicDefense: 9, speed: 12, crit: 7 },
       { hp: 18, mp: 3, attack: 3, magic: 0.5, defense: 1.6, magicDefense: 0.8, speed: 0.5, crit: 0.25 },
-      { str: 2, agi: 1, vit: 2 }, { str: 4, vit: 4 }, { attrs: { str: 10, vit: 5, agi: 5 }, weapons: ["sword", "axe"], offHand: MELEE_OFF }),
+      { str: 2, agi: 1, vit: 2 }, { str: 5, vit: 5 }, { attrs: { str: 10, vit: 5, agi: 5 }, weapons: ["sword", "axe"], offHand: MELEE_OFF }),
     knight: prof("Лицар", "Важка броня, меч і щит — живий мур між друзями й ворогом.",
       { hp: 320, mp: 45, attack: 30, magic: 8, defense: 24, magicDefense: 12, speed: 10, crit: 6 },
       { hp: 22, mp: 3, attack: 2.5, magic: 0.5, defense: 2.2, magicDefense: 1, speed: 0.4, crit: 0.2 },
-      { str: 2, vit: 3 }, { vit: 6, str: 3 }, { attrs: { str: 10, vit: 10 }, weapons: ["sword"], offHand: MELEE_OFF }),
+      { str: 2, vit: 3 }, { vit: 7, str: 3 }, { attrs: { str: 10, vit: 10 }, weapons: ["sword"], offHand: MELEE_OFF }),
     berserker: prof("Берсерк", "Шалений рубака: сокира в кожній руці й жодної думки про захист.",
       { hp: 290, mp: 40, attack: 40, magic: 6, defense: 14, magicDefense: 7, speed: 13, crit: 9 },
       { hp: 18, mp: 2, attack: 3.6, magic: 0.3, defense: 1.2, magicDefense: 0.6, speed: 0.6, crit: 0.35 },
-      { str: 3, agi: 1, vit: 1 }, { str: 6, agi: 2 }, { attrs: { str: 10, agi: 10 }, weapons: ["axe"], offHand: ["axe", "shield"] }),
+      { str: 3, agi: 1, vit: 1 }, { str: 7, agi: 3 }, { attrs: { str: 10, agi: 10 }, weapons: ["axe"], offHand: ["axe", "shield"] }),
     rogue: prof("Розбійник", "Кинджал, тінь і удар у найвразливіше місце.",
       { hp: 240, mp: 55, attack: 34, magic: 10, defense: 13, magicDefense: 9, speed: 16, crit: 12 },
       { hp: 14, mp: 4, attack: 3, magic: 0.6, defense: 1, magicDefense: 0.8, speed: 0.8, crit: 0.45 },
-      { agi: 3, str: 1, int: 1 }, { agi: 6, int: 2 }, { attrs: { agi: 8, str: 10, vit: 4 }, weapons: ["dagger"], offHand: MELEE_OFF }),
+      { agi: 3, str: 1, int: 1 }, { agi: 7, int: 3 }, { attrs: { agi: 8, str: 10, vit: 4 }, weapons: ["dagger"], offHand: MELEE_OFF }),
     hunter: prof("Мисливець", "Лучник, що влучає здалеку, поки ворог ще біжить.",
       { hp: 240, mp: 55, attack: 36, magic: 10, defense: 13, magicDefense: 9, speed: 15, crit: 10 },
       { hp: 14, mp: 4, attack: 3.3, magic: 0.6, defense: 1, magicDefense: 0.8, speed: 0.7, crit: 0.4 },
-      { agi: 3, str: 1, vit: 1 }, { agi: 5, str: 3 }, { attrs: { agi: 10, str: 5, vit: 5 }, weapons: ["bow"], offHand: ["quiver"] }),
+      { agi: 3, str: 1, vit: 1 }, { agi: 6, str: 4 }, { attrs: { agi: 10, str: 5, vit: 5 }, weapons: ["bow"], offHand: ["quiver"] }),
     mage_fire: prof("Маг вогню", "Школа Вогню: найбільша шкода й підпал.",
       { hp: 220, mp: 130, attack: 12, magic: 40, defense: 11, magicDefense: 18, speed: 12, crit: 8 },
       { hp: 12, mp: 11, attack: 0.8, magic: 4, defense: 0.9, magicDefense: 1.6, speed: 0.5, crit: 0.3 },
-      { int: 3, str: 1, spi: 1 }, { int: 6, str: 2 }, MAGE_NEED),
+      { int: 3, str: 1, spi: 1 }, { int: 7, str: 3 }, MAGE_NEED),
     mage_water: prof("Маг води", "Школа Води: холод, лікування і щити.",
       { hp: 230, mp: 150, attack: 12, magic: 34, defense: 12, magicDefense: 22, speed: 12, crit: 7 },
       { hp: 13, mp: 13, attack: 0.8, magic: 3.4, defense: 1, magicDefense: 2, speed: 0.5, crit: 0.25 },
-      { int: 3, spi: 2 }, { int: 5, spi: 3 }, MAGE_NEED),
+      { int: 3, spi: 2 }, { int: 6, spi: 4 }, MAGE_NEED),
     mage_wind: prof("Маг вітру", "Школа Вітру: швидкі серії ударів і ухильність.",
       { hp: 210, mp: 130, attack: 12, magic: 35, defense: 10, magicDefense: 17, speed: 16, crit: 9 },
       { hp: 11, mp: 11, attack: 0.8, magic: 3.5, defense: 0.8, magicDefense: 1.5, speed: 0.8, crit: 0.35 },
-      { int: 3, agi: 2 }, { int: 5, agi: 3 }, MAGE_NEED),
+      { int: 3, agi: 2 }, { int: 6, agi: 4 }, MAGE_NEED),
     mage_earth: prof("Маг землі", "Школа Землі: камінь, міцність і руйнування броні.",
       { hp: 260, mp: 125, attack: 14, magic: 34, defense: 15, magicDefense: 18, speed: 11, crit: 6 },
       { hp: 15, mp: 10, attack: 0.9, magic: 3.4, defense: 1.3, magicDefense: 1.6, speed: 0.4, crit: 0.25 },
-      { int: 3, vit: 2 }, { int: 5, vit: 3 }, MAGE_NEED),
+      { int: 3, vit: 2 }, { int: 6, vit: 4 }, MAGE_NEED),
     paladin: prof("Паладин", "Воїн світла: меч, святі удари й лікування.",
       { hp: 300, mp: 80, attack: 30, magic: 22, defense: 20, magicDefense: 16, speed: 10, crit: 6 },
       { hp: 20, mp: 6, attack: 2.4, magic: 2, defense: 1.8, magicDefense: 1.4, speed: 0.4, crit: 0.2 },
-      { vit: 2, spi: 2, str: 1 }, { vit: 4, spi: 4 }, { attrs: { vit: 10, str: 5, spi: 5 }, weapons: ["sword"], offHand: MELEE_OFF }),
+      { vit: 2, spi: 2, str: 1 }, { vit: 5, spi: 5 }, { attrs: { vit: 10, str: 5, spi: 5 }, weapons: ["sword"], offHand: MELEE_OFF }),
     priest: prof("Жрець", "Служитель Храму: світло, молитви й багато мани.",
       { hp: 230, mp: 140, attack: 12, magic: 32, defense: 12, magicDefense: 22, speed: 11, crit: 6 },
       { hp: 13, mp: 12, attack: 0.8, magic: 3.2, defense: 1, magicDefense: 2, speed: 0.5, crit: 0.25 },
-      { spi: 3, int: 2 }, { spi: 5, int: 3 }, { attrs: { int: 10, spi: 10 }, weapons: ["staff"], offHand: MAGE_OFF }),
+      { spi: 3, int: 2 }, { spi: 6, int: 4 }, { attrs: { int: 10, spi: 10 }, weapons: ["staff"], offHand: MAGE_OFF }),
     monk: prof("Монах", "Посох як продовження тіла: швидкі удари й самозцілення.",
       { hp: 270, mp: 70, attack: 32, magic: 14, defense: 16, magicDefense: 14, speed: 15, crit: 9 },
       { hp: 17, mp: 5, attack: 3, magic: 1, defense: 1.4, magicDefense: 1.2, speed: 0.7, crit: 0.35 },
-      { spi: 2, agi: 2, str: 1 }, { spi: 4, agi: 4 }, { attrs: { agi: 6, spi: 4, int: 4, str: 6 }, weapons: ["staff"], offHand: MELEE_OFF }),
+      { spi: 2, agi: 2, str: 1 }, { spi: 5, agi: 5 }, { attrs: { agi: 6, spi: 4, int: 4, str: 6 }, weapons: ["staff"], offHand: MELEE_OFF }),
 
     // ---------- Секретна професія ----------
     // Для Селянина без професії: квест «Шлях відреченого» з 20 рівня, 18 доручень, обряд — на 30 рівні (quests.js → SHAMAN).
@@ -131,7 +131,7 @@
       baseStats: { hp: 310, mp: 120, attack: 26, magic: 26, defense: 17, magicDefense: 20, speed: 12, crit: 7 },
       growth:    { hp: 17, mp: 9, attack: 2.4, magic: 2.4, defense: 1.3, magicDefense: 1.6, speed: 0.55, crit: 0.3 },
       levelAttrs: { int: 3, agi: 1, vit: 1 },
-      changeBonus: { int: 8, agi: 4, vit: 4 }
+      changeBonus: { int: 6, agi: 2, vit: 2 }
     }
   };
 
@@ -330,6 +330,14 @@
   // Ролі професії: ["tank", ...] (Селянин — порожньо)
   const classRoles = id => CLASSES[id]?.roles || [];
 
+  // ---------- Номер професії для показу гравцю ----------
+  // У коді ранги лишаються tier 1, 2, 3…; гравцю показується на одиницю менше:
+  // tier 1 (Селянин) — «професія відсутня», tier 2 — «1 професія», tier 3 — «2 професія» і т.д.
+  function classRankLabel(id) {
+    const n = (getClass(id).tier || 1) - 1;
+    return n > 0 ? `${n} професія` : "професія відсутня";
+  }
+
   // ---------- Колір і значок професії ----------
   // Значок — зброя правої й лівої руки професії, зафарбована її кольором: assets/images/ui/cls_<id>.webp (96×96).
   // Колір запечено в картинку. Змінили колір тут — перефарбувати значки (з H:\Game_NEW):
@@ -344,7 +352,7 @@
   // Адреса картинки значка (невідома професія — значок Селянина)
   const classEmblemUrl = id => RPG.asset(`assets/images/ui/cls_${CLASSES[id] ? id : DEFAULT_CLASS}.webp`);
 
-  Object.assign(RPG, { DEFAULT_CLASS, CLASSES, ROLES, classRoles, classEmblemUrl, PROFESSION_LEVEL, getClass, heroDoll, heroFistStyle, heroSpriteStyle, heroSpriteId,
+  Object.assign(RPG, { DEFAULT_CLASS, CLASSES, ROLES, classRoles, classRankLabel, classEmblemUrl, PROFESSION_LEVEL, getClass, heroDoll, heroFistStyle, heroSpriteStyle, heroSpriteId,
                        availableClassChanges, pickProfession,
                        investedAttrPoints, professionLack, eligibleProfessions, classAllowsWeapon, classAllowsOffHand });
 })(window.RPG);
