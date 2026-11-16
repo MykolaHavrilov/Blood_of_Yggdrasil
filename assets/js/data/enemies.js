@@ -3047,6 +3047,646 @@ const ENEMIES = {
         { id: "rock_crystal", chance: 0.25, qty: [1, 3] },
         { id: "ironwood", chance: 0.3, qty: [1, 3] }
       ]
+    },
+    // ---------- ЙОТУНГЕЙМ (світ 6) — вороги 40–45 рівня ----------
+    // Спорядження з ворогів не падає (worlds.js → CRAFT_ONLY_FROM) — лише матеріали 5 виду, біла вовча шкура, зілля й ключі.
+    // Баланс підібрано симуляцією (tools/balance.js, листопад 2026): герой із професією в повному епічному спорядженні свого рівня
+    // перемагає звичайного ворога ≈65%, боса — ≈30% (світ 5: 70% і 35%).
+    jot_mountain_troll: {
+      name: "Гірський троль",
+      range: 1, move: { name: "Удар брилою", mult: 1.5, chance: 0.25 },
+      verb: "гатить брилою",
+      level: 40,
+      role: "tank",
+      stats: { hp: 14976, mp: 0, attack: 1227, defense: 182, magicDefense: 150, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 4800,
+      gold: [92, 176],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.06, qty: [1, 1] },
+        { id: "iron_ore", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    jot_snow_wolf: {
+      name: "Сніговий вовк",
+      range: 1, move: { name: "Хватка заметілі", mult: 1.55, chance: 0.25 },
+      verb: "рве іклами",
+      level: 40,
+      role: "melee",
+      stats: { hp: 8915, mp: 0, attack: 1570, defense: 97, magicDefense: 115, speed: 41, crit: 27, dodge: 22 },
+      exp: 4800,
+      gold: [92, 176],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "white_pelt", chance: 0.08, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.02, qty: [1, 1] }
+      ]
+    },
+    jot_frost_scout: {
+      name: "Інеїстий розвідник",
+      humanoid: true,
+      weapons: ["bow"],
+      range: 3, move: { name: "Крижаний спис", mult: 1.5, chance: 0.25 },
+      verb: "метає спис у",
+      level: 41,
+      role: "ranged",
+      stats: { hp: 7578, mp: 0, attack: 1556, defense: 76, magicDefense: 101, speed: 37, crit: 29, dodge: 23 },
+      exp: 5043,
+      gold: [94, 180],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "iron_ore", chance: 0.05, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    jot_boss_troll_chieftain: {
+      name: "Троль-ватажок",
+      range: 1, move: { name: "Удар палицею", mult: 1.7, chance: 0.25 },
+      verb: "гатить палицею",
+      level: 41,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "tank",
+      stats: { hp: 20245, mp: 1721, attack: 740, magic: 566, defense: 250, magicDefense: 174, speed: 28, crit: 17, dodge: 12, blockPhys: 17, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Лавина з вершини", mp: 60, mult: 2.5 },
+        { kind: "stun", name: "Рев ватажка", mp: 45, mult: 1.2 },
+        { kind: "heal", name: "Троляча шкура", mp: 70, healPct: 0.1 }
+      ],
+      exp: 25215,
+      gold: [467, 902],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "white_pelt", chance: 0.3, qty: [1, 2] },
+        { id: "rock_crystal", chance: 0.35, qty: [1, 3] },
+        { id: "rune_gem", chance: 0.2, qty: [1, 2] }
+      ]
+    },
+    jot_giant_hunter: {
+      name: "Йотун-мисливець",
+      humanoid: true,
+      weapons: ["bow"],
+      range: 3, move: { name: "Важка стріла", mult: 1.5, chance: 0.25 },
+      verb: "стріляє в",
+      level: 41,
+      role: "ranged",
+      stats: { hp: 7578, mp: 0, attack: 1556, defense: 76, magicDefense: 101, speed: 37, crit: 29, dodge: 23 },
+      exp: 5043,
+      gold: [94, 180],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.06, qty: [1, 1] },
+        { id: "white_pelt", chance: 0.04, qty: [1, 1] }
+      ]
+    },
+    jot_snow_lynx: {
+      name: "Снігова рись",
+      range: 1, move: { name: "Стрибок зі скелі", mult: 1.55, chance: 0.25 },
+      verb: "дере кігтями",
+      level: 41,
+      role: "melee",
+      stats: { hp: 9124, mp: 0, attack: 1607, defense: 100, magicDefense: 119, speed: 41, crit: 27, dodge: 22 },
+      exp: 5043,
+      gold: [94, 180],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "white_pelt", chance: 0.08, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    jot_ski_archer: {
+      name: "Лучник на лижах",
+      humanoid: true,
+      weapons: ["bow"],
+      range: 3, move: { name: "Постріл на ходу", mult: 1.5, chance: 0.25 },
+      verb: "стріляє в",
+      level: 41,
+      role: "ranged",
+      stats: { hp: 7578, mp: 0, attack: 1556, defense: 76, magicDefense: 101, speed: 37, crit: 29, dodge: 23 },
+      exp: 5043,
+      gold: [94, 180],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ironwood", chance: 0.05, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    jot_boss_thjazi_in_eagle_form: {
+      name: "Тьяцці в подобі орла",
+      range: 1, move: { name: "Орлині пазурі", mult: 1.7, chance: 0.25 },
+      verb: "шматує пазурями",
+      level: 42,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "melee",
+      stats: { hp: 14778, mp: 1851, attack: 971, magic: 630, defense: 145, magicDefense: 145, speed: 45, crit: 26, dodge: 24, blockPhys: 18, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Буревій крил", mp: 60, mult: 2.4 },
+        { kind: "stun", name: "Політ із бранцем", mp: 45, mult: 1.2 },
+        { kind: "heal", name: "Яблука Ідунн", mp: 70, healPct: 0.1 }
+      ],
+      exp: 26460,
+      gold: [479, 924],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "white_pelt", chance: 0.3, qty: [1, 2] },
+        { id: "lizard_leather", chance: 0.35, qty: [1, 3] },
+        { id: "rune_gem", chance: 0.2, qty: [1, 2] }
+      ]
+    },
+    jot_ironwood_wolf: {
+      name: "Вовк Ярнвіду",
+      range: 1, move: { name: "Залізні ікла", mult: 1.55, chance: 0.25 },
+      verb: "рве іклами",
+      level: 41,
+      role: "melee",
+      stats: { hp: 9124, mp: 0, attack: 1607, defense: 100, magicDefense: 119, speed: 41, crit: 27, dodge: 22 },
+      exp: 5043,
+      gold: [94, 180],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "white_pelt", chance: 0.08, qty: [1, 1] },
+        { id: "ironwood", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    jot_troll_witch: {
+      name: "Тролиця-відьма",
+      humanoid: true,
+      weapons: ["staff"],
+      range: 3, move: { name: "Удар клюкою", mult: 1.5, chance: 0.25 },
+      verb: "б'є клюкою",
+      level: 42,
+      role: "caster",
+      stats: { hp: 6835, mp: 1415, attack: 741, magic: 983, defense: 89, magicDefense: 173, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Вовче прокляття", mp: 28, mult: 1.45, chance: 0.4 },
+      exp: 5292,
+      gold: [97, 185],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ironwood", chance: 0.06, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.025, qty: [1, 1] }
+      ]
+    },
+    jot_wolf_man: {
+      name: "Вовкулака Залізного лісу",
+      range: 1, move: { name: "Шалений стрибок", mult: 1.55, chance: 0.25 },
+      verb: "шматує",
+      level: 42,
+      role: "melee",
+      stats: { hp: 9532, mp: 0, attack: 1679, defense: 105, magicDefense: 125, speed: 41, crit: 27, dodge: 22 },
+      exp: 5292,
+      gold: [97, 185],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "white_pelt", chance: 0.08, qty: [1, 1] },
+        { id: "ironwood", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    jot_boss_angrboda: {
+      name: "Ангрбода",
+      range: 3, move: { name: "Удар залізним гіллям", mult: 1.55, chance: 0.25 },
+      verb: "б'є гіллям",
+      level: 42,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 17101, mp: 2366, attack: 576, magic: 679, defense: 117, magicDefense: 196, speed: 34, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Мати вовків", mp: 60, mult: 2.5 },
+        { kind: "stun", name: "Залізне коріння", mp: 45, mult: 1.1 },
+        { kind: "heal", name: "Сейд Ярнвіду", mp: 70, healPct: 0.12 }
+      ],
+      exp: 26460,
+      gold: [479, 924],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "white_pelt", chance: 0.3, qty: [1, 2] },
+        { id: "ironwood", chance: 0.35, qty: [1, 3] },
+        { id: "rune_gem", chance: 0.2, qty: [1, 2] }
+      ]
+    },
+    jot_giant_warrior: {
+      name: "Йотун-воїн",
+      humanoid: true,
+      weapons: ["axe"],
+      range: 1, move: { name: "Розмах сокирою", mult: 1.55, chance: 0.25 },
+      verb: "рубає",
+      level: 42,
+      role: "melee",
+      stats: { hp: 8147, mp: 0, attack: 1435, defense: 98, magicDefense: 116, speed: 41, crit: 27, dodge: 22 },
+      exp: 5292,
+      gold: [97, 185],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "iron_ore", chance: 0.06, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.02, qty: [1, 1] }
+      ]
+    },
+    jot_troll_guard: {
+      name: "Троль-охоронець",
+      humanoid: true,
+      weapons: ["sword"],
+      range: 1, move: { name: "Удар щитом", mult: 1.5, chance: 0.25 },
+      verb: "б'є",
+      level: 42,
+      role: "tank",
+      stats: { hp: 13002, mp: 0, attack: 1066, defense: 180, magicDefense: 148, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 5292,
+      gold: [97, 185],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "iron_ore", chance: 0.05, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    jot_giant_skald: {
+      name: "Скальд велетнів",
+      humanoid: true,
+      weapons: ["staff"],
+      range: 2, move: { name: "Удар арфою", mult: 1.5, chance: 0.25 },
+      verb: "б'є арфою",
+      level: 42,
+      role: "healer",
+      stats: { hp: 7209, mp: 2228, attack: 563, magic: 828, defense: 88, magicDefense: 164, speed: 33, crit: 11, blockMag: 17 },
+      spell: { name: "Пісня глуму", mp: 30, mult: 1.45, chance: 0.4 },
+      exp: 5292,
+      gold: [97, 185],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.05, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    jot_boss_thrym_king_of_the_thurses: {
+      name: "Трим, король турсів",
+      range: 1, move: { name: "Удар золотим скіпетром", mult: 1.7, chance: 0.25 },
+      verb: "б'є скіпетром",
+      level: 43,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "tank",
+      stats: { hp: 22736, mp: 1721, attack: 831, magic: 635, defense: 274, magicDefense: 191, speed: 28, crit: 17, dodge: 12, blockPhys: 17, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Гнів короля турсів", mp: 60, mult: 2.5 },
+        { kind: "stun", name: "Схований молот", mp: 45, mult: 1.2 },
+        { kind: "heal", name: "Чаша меду", mp: 70, healPct: 0.1 }
+      ],
+      exp: 27735,
+      gold: [490, 946],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "white_pelt", chance: 0.3, qty: [1, 2] },
+        { id: "rune_gem", chance: 0.35, qty: [1, 3] },
+        { id: "rock_crystal", chance: 0.25, qty: [1, 2] }
+      ]
+    },
+    jot_stone_giant: {
+      name: "Кам'яний велетень",
+      range: 2, move: { name: "Кидок валуна", mult: 1.5, chance: 0.25 },
+      verb: "жбурляє каменем у",
+      level: 42,
+      role: "ranged",
+      stats: { hp: 8920, mp: 0, attack: 1831, defense: 83, magicDefense: 110, speed: 37, crit: 29, dodge: 23 },
+      exp: 5292,
+      gold: [97, 185],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.06, qty: [1, 1] },
+        { id: "iron_ore", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    jot_rock_troll: {
+      name: "Скельний троль",
+      range: 1, move: { name: "Кам'яний кулак", mult: 1.55, chance: 0.25 },
+      verb: "гатить кулаком",
+      level: 43,
+      role: "melee",
+      stats: { hp: 9806, mp: 0, attack: 1727, defense: 106, magicDefense: 125, speed: 41, crit: 27, dodge: 22 },
+      exp: 5547,
+      gold: [99, 189],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "iron_ore", chance: 0.06, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    jot_living_boulder: {
+      name: "Ожилий валун",
+      range: 1, move: { name: "Накат", mult: 1.5, chance: 0.25 },
+      verb: "котиться на",
+      level: 43,
+      role: "tank",
+      stats: { hp: 15566, mp: 0, attack: 1276, defense: 200, magicDefense: 165, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 5547,
+      gold: [99, 189],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.06, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.02, qty: [1, 1] }
+      ]
+    },
+    jot_boss_hrungnir: {
+      name: "Грунгнір",
+      range: 1, move: { name: "Кремінне точило", mult: 1.7, chance: 0.25 },
+      verb: "жбурляє точило в",
+      level: 44,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "tank",
+      stats: { hp: 21243, mp: 1721, attack: 776, magic: 593, defense: 270, magicDefense: 188, speed: 28, crit: 17, dodge: 12, blockPhys: 17, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Серце з каменю", mp: 60, mult: 2.5 },
+        { kind: "stun", name: "Удар точилом", mp: 45, mult: 1.2 },
+        { kind: "heal", name: "Глиняний побратим", mp: 70, healPct: 0.1 }
+      ],
+      exp: 29040,
+      gold: [502, 968],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "white_pelt", chance: 0.3, qty: [1, 2] },
+        { id: "rock_crystal", chance: 0.35, qty: [1, 3] },
+        { id: "rune_gem", chance: 0.2, qty: [1, 2] }
+      ]
+    },
+    jot_logi: {
+      name: "Логі",
+      range: 2, move: { name: "Язик полум'я", mult: 1.5, chance: 0.25 },
+      verb: "обпікає",
+      level: 43,
+      role: "caster",
+      stats: { hp: 7924, mp: 1415, attack: 859, magic: 1140, defense: 97, magicDefense: 187, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Всепожирне полум'я", mp: 28, mult: 1.45, chance: 0.4 },
+      exp: 5547,
+      gold: [99, 189],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.05, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    jot_hugi: {
+      name: "Гуґі",
+      range: 1, move: { name: "Швидкий, як думка", mult: 1.55, chance: 0.25 },
+      verb: "б'є",
+      level: 44,
+      role: "melee",
+      stats: { hp: 9606, mp: 0, attack: 1692, defense: 108, magicDefense: 128, speed: 41, crit: 27, dodge: 22 },
+      exp: 5808,
+      gold: [101, 194],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.05, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.025, qty: [1, 1] }
+      ]
+    },
+    jot_elli: {
+      name: "Еллі",
+      humanoid: true,
+      weapons: ["staff"],
+      range: 3, move: { name: "Обійми старості", mult: 1.5, chance: 0.25 },
+      verb: "стискає",
+      level: 44,
+      role: "caster",
+      stats: { hp: 7035, mp: 1415, attack: 763, magic: 1012, defense: 95, magicDefense: 183, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Тягар літ", mp: 28, mult: 1.45, chance: 0.4 },
+      exp: 5808,
+      gold: [101, 194],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.05, qty: [1, 1] },
+        { id: "ironwood", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    jot_boss_utgarda_loki: {
+      name: "Утгарда-Локі",
+      range: 3, move: { name: "Удар ілюзії", mult: 1.55, chance: 0.25 },
+      verb: "вражає мороком",
+      level: 44,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 17066, mp: 2366, attack: 575, magic: 678, defense: 121, magicDefense: 203, speed: 34, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Ріг, що п'є море", mp: 60, mult: 2.5 },
+        { kind: "stun", name: "Кіт, що є Змієм", mp: 45, mult: 1.1 },
+        { kind: "heal", name: "Морок і омана", mp: 70, healPct: 0.12 }
+      ],
+      exp: 29040,
+      gold: [502, 968],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "white_pelt", chance: 0.3, qty: [1, 2] },
+        { id: "rune_gem", chance: 0.35, qty: [1, 3] },
+        { id: "rock_crystal", chance: 0.25, qty: [1, 2] }
+      ]
+    },
+    jot_sea_troll: {
+      name: "Морський троль",
+      range: 1, move: { name: "Удар веслом", mult: 1.5, chance: 0.25 },
+      verb: "гатить веслом",
+      level: 44,
+      role: "tank",
+      stats: { hp: 15542, mp: 0, attack: 1274, defense: 206, magicDefense: 169, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 5808,
+      gold: [101, 194],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.06, qty: [1, 1] },
+        { id: "iron_ore", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    jot_giant_walrus: {
+      name: "Морж-велетень",
+      range: 1, move: { name: "Удар іклами", mult: 1.55, chance: 0.25 },
+      verb: "б'є іклами",
+      level: 44,
+      role: "melee",
+      stats: { hp: 9606, mp: 0, attack: 1692, defense: 108, magicDefense: 128, speed: 41, crit: 27, dodge: 22 },
+      exp: 5808,
+      gold: [101, 194],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "white_pelt", chance: 0.07, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.04, qty: [1, 1] }
+      ]
+    },
+    jot_draugr_fisher: {
+      name: "Драугр-рибалка",
+      humanoid: true,
+      weapons: ["dagger"],
+      undead: true,
+      range: 2, move: { name: "Кидок гарпуна", mult: 1.5, chance: 0.25 },
+      verb: "кидає гарпун у",
+      level: 44,
+      role: "ranged",
+      stats: { hp: 8603, mp: 0, attack: 1766, defense: 84, magicDefense: 111, speed: 37, crit: 29, dodge: 23 },
+      exp: 5808,
+      gold: [101, 194],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.05, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.025, qty: [1, 1] }
+      ]
+    },
+    jot_boss_hymir: {
+      name: "Гюмір",
+      range: 1, move: { name: "Крижаний кулак", mult: 1.7, chance: 0.25 },
+      verb: "гатить кулаком",
+      level: 45,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "melee",
+      stats: { hp: 14446, mp: 1851, attack: 949, magic: 616, defense: 151, magicDefense: 151, speed: 45, crit: 26, dodge: 24, blockPhys: 18, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Погляд, що трощить колони", mp: 60, mult: 2.5 },
+        { kind: "stun", name: "Удар казаном", mp: 45, mult: 1.2 },
+        { kind: "heal", name: "Улов із глибини", mp: 70, healPct: 0.1 }
+      ],
+      exp: 30375,
+      gold: [513, 990],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "white_pelt", chance: 0.3, qty: [1, 2] },
+        { id: "lizard_leather", chance: 0.35, qty: [1, 3] },
+        { id: "rune_gem", chance: 0.2, qty: [1, 2] }
+      ]
+    },
+    jot_serpent_spawn: {
+      name: "Зміїне породження",
+      range: 1, move: { name: "Отруйний укус", mult: 1.55, chance: 0.25 },
+      verb: "кусає",
+      level: 44,
+      role: "melee",
+      stats: { hp: 9606, mp: 0, attack: 1692, defense: 108, magicDefense: 128, speed: 41, crit: 27, dodge: 22 },
+      exp: 5808,
+      gold: [101, 194],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.06, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.025, qty: [1, 1] }
+      ]
+    },
+    jot_venom_jellyfish: {
+      name: "Отруйна медуза",
+      range: 2, move: { name: "Жалкі щупальця", mult: 1.5, chance: 0.25 },
+      verb: "жалить",
+      level: 45,
+      role: "caster",
+      stats: { hp: 8595, mp: 1415, attack: 932, magic: 1236, defense: 105, magicDefense: 204, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Хмара отрути", mp: 28, mult: 1.45, chance: 0.4 },
+      exp: 6075,
+      gold: [103, 198],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.05, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    jot_serpent_cultist: {
+      name: "Культист Змія",
+      humanoid: true,
+      weapons: ["staff"],
+      range: 2, move: { name: "Удар жезлом", mult: 1.5, chance: 0.25 },
+      verb: "б'є жезлом",
+      level: 45,
+      role: "healer",
+      stats: { hp: 7254, mp: 2228, attack: 565, magic: 833, defense: 94, magicDefense: 174, speed: 33, crit: 11, blockMag: 17 },
+      spell: { name: "Шепіт глибини", mp: 30, mult: 1.45, chance: 0.4 },
+      exp: 6075,
+      gold: [103, 198],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.05, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    jot_boss_jormungandr: {
+      name: "Йормунганд",
+      range: 3, move: { name: "Удар хвоста", mult: 1.75, chance: 0.25 },
+      verb: "б'є хвостом",
+      level: 45,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 16198, mp: 2366, attack: 546, magic: 644, defense: 120, magicDefense: 201, speed: 34, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Отрута Світового Змія", mp: 60, mult: 2.7 },
+        { kind: "stun", name: "Кільця, що оперізують світ", mp: 45, mult: 1.3 },
+        { kind: "heal", name: "Скинута шкіра", mp: 70, healPct: 0.12 }
+      ],
+      exp: 39488,
+      gold: [667, 1287],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.45, qty: [1, 2] },
+        { id: "white_pelt", chance: 0.3, qty: [1, 2] },
+        { id: "lizard_leather", chance: 0.35, qty: [1, 3] },
+        { id: "rune_gem", chance: 0.2, qty: [1, 2] },
+        { id: "ironwood", chance: 0.3, qty: [1, 3] }
+      ]
     }
   };
 
@@ -3398,7 +4038,77 @@ const ENEMIES = {
       description: "Край велетенської печі, де кипить залізо й глина. Колись йотуни зліпили тут глиняного велетня Мьоккуркальві й дали йому серце кобили — і він здригнувся від страху, щойно побачив Тора. Хелла ліпить його заново. Цього разу серце буде інше.",
       enemies: ["svart_clay_golem", "svart_iron_draugr", "svart_overseer_dwarf", "svart_boss_mokkurkalfi"],
       dungeon: "svart_clay_heart",
+      edge: "rocks",
+      // Витяжна шахта двергів: після першої перемоги над Мьоккуркальві — шлях у Йотунгейм (світ 6)
+      portal: { to: "jot_gate", world: 6, title: "Витяжна шахта",
+                text: "Коли глиняний велетень упав, у склепінні кузні тріснула стара кладка — і відкрилася витяжна шахта двергів. Звідти дме крижаний вітер і пахне снігом: шахта веде нагору, у Йотунгейм, землю велетнів.",
+                button: "Піднятися в Йотунгейм" }
+    },
+
+    // ---------- ЙОТУНГЕЙМ (region: "jot", світ 6) — за Витяжною шахтою в Кузні Мьоккуркальві ----------
+    // Відкривається після першої перемоги над Мьоккуркальві (save.bossKills.svart_boss_mokkurkalfi). Мапа — assets/images/map/map_jotunheim.webp.
+    // Дорога одна: перевали → Тримгейм → Залізний ліс → двір Трима → пустка → Утгард → чертог Гюміра → берег Змія.
+    // Ключі Чертогу Гюміра й Берега Змія — без іконок (у клітинці видно назву).
+    jot_gate: {
+      name: "Витяжна шахта", type: "portal", region: "jot", typeLabel: "Шахта двергів",   // підпис на мапі (page-maps.js)
+      description: "Стара витяжна шахта двергів виходить на поверхню серед засніжених скель Йотунгейму. Знизу, з Кузні Мьоккуркальві, ще тягне теплом горнів, а тут дме крижаний вітер велетнів. Звідси стежка веде на Крижані перевали.",
+      portal: { to: "svart_mokkur", title: "Шлях назад", text: "Шахта веде вниз, у Кузню Мьоккуркальві.", button: "Спуститися у Свартальвгейм" }
+    },
+    jot_passes: {
+      name: "Крижані перевали", type: "combat", region: "jot", minLevel: 40,
+      description: "Вузькі стежки над прірвами, де вітер зриває сніг зі скель. Тут починаються володіння велетнів — і першими чужинців зустрічають гірські тролі та вовки, білі, як заметіль.",
+      enemies: ["jot_mountain_troll", "jot_snow_wolf", "jot_frost_scout", "jot_boss_troll_chieftain"],
+      dungeon: "jot_troll_cave",
       edge: "rocks"
+    },
+    jot_thrymheim: {
+      name: "Тримгейм", type: "combat", region: "jot", minLevel: 40,
+      description: "Орлина скеля над хмарами, де колись жив велетень Тьяцці. Мисливці-йотуни досі полюють тут на лижах, а сам господар, кажуть, повертається додому в подобі велетенського орла.",
+      enemies: ["jot_giant_hunter", "jot_snow_lynx", "jot_ski_archer", "jot_boss_thjazi_in_eagle_form"],
+      dungeon: "jot_eagle_nest",
+      edge: "rocks"
+    },
+    jot_ironwood: {
+      name: "Залізний ліс", type: "combat", region: "jot", minLevel: 41,
+      description: "Ярнвід — ліс чорних дерев із залізним листям. Тут живе велетка Ангрбода, мати вовків, і з-за кожного стовбура за мандрівником стежать жовті очі її дітей.",
+      enemies: ["jot_ironwood_wolf", "jot_troll_witch", "jot_wolf_man", "jot_boss_angrboda"],
+      dungeon: "jot_angrboda_lair",
+      edge: "trees"
+    },
+    jot_thrym: {
+      name: "Двір Трима", type: "combat", region: "jot", minLevel: 41,
+      description: "Коло різьблених каменів і довгі лави для бенкету. Тут король турсів Трим колись сховав Мйольнір і вимагав за нього Фрейю — а дочекався Тора під весільним покривалом. Відтоді Трим не довіряє гостям.",
+      enemies: ["jot_giant_warrior", "jot_troll_guard", "jot_giant_skald", "jot_boss_thrym_king_of_the_thurses"],
+      dungeon: "jot_thrym_hoard",
+      edge: "walls"
+    },
+    jot_waste: {
+      name: "Кам'яна пустка", type: "combat", region: "jot", minLevel: 42,
+      description: "Рівнина валунів, серед яких лежить кам'яна голова велетня, більша за хату. Тут Тор бився з Грунгніром, у якого серце й голова з каменю, — і уламки його кремінного точила досі розкидані по пустці.",
+      enemies: ["jot_stone_giant", "jot_rock_troll", "jot_living_boulder", "jot_boss_hrungnir"],
+      dungeon: "jot_stone_heart",
+      edge: "rocks"
+    },
+    jot_utgard: {
+      name: "Утгард", type: "combat", region: "jot", minLevel: 43,
+      description: "Брама, вирубана в скелі між двома кам'яними обличчями. За нею — чертог Утгарда-Локі, де ніщо не є тим, чим здається: тут Тор пив з рогу, що сягав моря, а Тьяльві біг наввипередки з думкою.",
+      enemies: ["jot_logi", "jot_hugi", "jot_elli", "jot_boss_utgarda_loki"],
+      dungeon: "jot_hall_of_illusions",
+      edge: "walls"
+    },
+    jot_hymir: {
+      name: "Чертог Гюміра", type: "combat", region: "jot", minLevel: 43,
+      description: "Замерзла затока, де з криги стирчать китові ребра й лежить перекинутий човен. Тут велетень Гюмір рибалив із Тором — і досі ловить на бичачу голову те, що краще не витягати з глибини.",
+      enemies: ["jot_sea_troll", "jot_giant_walrus", "jot_draugr_fisher", "jot_boss_hymir"],
+      dungeon: "jot_hymir_cauldron",
+      edge: "water"
+    },
+    jot_serpent: {
+      name: "Берег Світового Змія", type: "combat", region: "jot", minLevel: 44,
+      description: "Край світу, де чорне море б'ється об скелі, а з хвиль виринають луски завбільшки зі щит. Йормунганд, що оперізує Мідгард, піднімає голову — і Хелла вже нашіптує йому, що час Рагнарьоку близько.",
+      enemies: ["jot_serpent_spawn", "jot_venom_jellyfish", "jot_serpent_cultist", "jot_boss_jormungandr"],
+      dungeon: "jot_serpent_ring",
+      edge: "water"
     }
   };
   const DEFAULT_LOCATION = "home";
@@ -3448,6 +4158,12 @@ const ENEMIES = {
                  description: "Копальні двергів під Сутінковими штольнями. Залізо тут лежить поруч із гірським кришталем — і з тими, хто не встиг вийти, коли згасли ліхтарі." },
       sawmill: { minLevel: 35, image: "sawmill_svart", yields: ["ironwood"],
                  description: "Гай залізного дерева серед велетенських печерних грибів. Його стовбури тверді, як кований метал, а в тіні грибних шапок полюють ті, кому не потрібне світло." }
+    },
+    jot: {
+      mine:    { minLevel: 40, image: "mine_jot", yields: ["iron_ore", "rock_crystal"],
+                 description: "Копальня велетнів у схилі льодовика. Залізна руда тут лежить брилами, які йотуни вивертали голими руками, а між ними блищить гірський кришталь." },
+      sawmill: { minLevel: 40, image: "sawmill_jot", yields: ["ironwood"],
+                 description: "Вирубка на краю Залізного лісу. Стовбури тут тверді, як ковадло, а вовки Ангрбоди вважають кожне повалене дерево своїм." }
     }
   };
   const SITE_NAMES = { mine: "Шахта", sawmill: "Лісопилка" };
@@ -3608,6 +4324,56 @@ const ENEMIES = {
       minLevel: 40,   // фінальний бій світу 5 — з 40 рівня
       edge: "rocks",
       description: "У грудях недоліпленого велетня — порожнина, де має битися серце. Карлики-наглядачі вже несуть туди те, що наказала Хелла. Якщо Мьоккуркальві встане, спинити його буде нікому."
+    },
+    // Данжі Йотунгейму (світ 6)
+    jot_troll_cave: {
+      name: "Троляча печера", explore: "Обстеження перевалів", location: "jot_passes",
+      key: "key_jot_passes", keyChance: 0.01, boss: "jot_boss_troll_chieftain", pool: ["jot_mountain_troll", "jot_snow_wolf", "jot_frost_scout"],
+      edge: "rocks",
+      description: "Під перевалом — печера, де тролі складають кістки тих, хто не дійшов до Йотунгейму. У найглибшій залі, на купі награбованого, сидить їхній ватажок."
+    },
+    jot_eagle_nest: {
+      name: "Орлине гніздо", explore: "Обстеження скелі", location: "jot_thrymheim",
+      key: "key_jot_thrymheim", keyChance: 0.01, boss: "jot_boss_thjazi_in_eagle_form", pool: ["jot_giant_hunter", "jot_snow_lynx", "jot_ski_archer"],
+      edge: "rocks",
+      description: "На вершині орлиної скелі — гніздо з поламаних щогл і списів. Сюди Тьяцці приніс Ідунн з її яблуками — і сюди він повертається щоразу, коли хтось сміє полювати на його землі."
+    },
+    jot_angrboda_lair: {
+      name: "Лігво Ангрбоди", explore: "Обстеження лісу", location: "jot_ironwood",
+      key: "key_jot_ironwood", keyChance: 0.01, boss: "jot_boss_angrboda", pool: ["jot_ironwood_wolf", "jot_troll_witch", "jot_wolf_man"],
+      edge: "trees",
+      description: "У самому серці Ярнвіду, де залізні дерева сплелися в склепіння, — лігво Ангрбоди. Тут вона виростила Фенріра, Йормунганда й Хеллу — і тут чекає онуків."
+    },
+    jot_thrym_hoard: {
+      name: "Скарбниця Трима", explore: "Обстеження двору", location: "jot_thrym",
+      key: "key_jot_thrym", keyChance: 0.01, boss: "jot_boss_thrym_king_of_the_thurses", pool: ["jot_giant_warrior", "jot_troll_guard", "jot_giant_skald"],
+      edge: "walls",
+      description: "Під двором — скарбниця, де Трим ховав Мйольнір на вісім верст під землею. Молота там давно немає, але король турсів досі стереже порожнє місце."
+    },
+    jot_stone_heart: {
+      name: "Кам'яне серце", explore: "Обстеження пустки", location: "jot_waste",
+      key: "key_jot_waste", keyChance: 0.01, boss: "jot_boss_hrungnir", pool: ["jot_stone_giant", "jot_rock_troll", "jot_living_boulder"],
+      edge: "rocks",
+      description: "У грудях поваленого велетня — порожнина, де б'ється кам'яне серце на три кути. Грунгнір устав знову, і цього разу Тора поруч немає."
+    },
+    jot_hall_of_illusions: {
+      name: "Чертог ілюзій", explore: "Обстеження Утгарда", location: "jot_utgard",
+      key: "key_jot_utgard", keyChance: 0.01, boss: "jot_boss_utgarda_loki", pool: ["jot_logi", "jot_hugi", "jot_elli"],
+      edge: "walls",
+      description: "За брамою Утгарда — чертог, де стіни рухаються, а гості змагаються з тим, чого не можна перемогти. Утгарда-Локі сміється з кожного, хто повірив власним очам."
+    },
+    jot_hymir_cauldron: {
+      name: "Казан Гюміра", explore: "Обстеження затоки", location: "jot_hymir",
+      key: "key_jot_hymir", keyChance: 0.01, boss: "jot_boss_hymir", pool: ["jot_sea_troll", "jot_giant_walrus", "jot_draugr_fisher"],
+      edge: "water",
+      description: "У крижаній печері над затокою висить казан на милю завглибшки — той, по який колись приходив Тор. Гюмір не віддасть його вдруге."
+    },
+    jot_serpent_ring: {
+      name: "Кільце Змія", explore: "Обстеження берега", location: "jot_serpent",
+      key: "key_jot_serpent", keyChance: 0.01, boss: "jot_boss_jormungandr", pool: ["jot_serpent_spawn", "jot_venom_jellyfish", "jot_serpent_cultist"],
+      minLevel: 45,   // фінальний бій світу 6 — з 45 рівня
+      edge: "water",
+      description: "Там, де Змій кусає власний хвіст, кільце його тіла замикає море. Хелла кличе Йормунганда на берег — і якщо він вийде, Мідгард не встоїть."
     }
   };
 
@@ -3715,7 +4481,16 @@ const ENEMIES = {
     "svart_stone_sentinel", "svart_traitor_dwarf", "svart_rune_warden", "svart_boss_alvis_the_all_knowing",
     "svart_living_anvil", "svart_fire_salamander", "svart_forged_boar", "svart_boss_hels_forged_guardian",
     "svart_rune_spirit", "svart_masters_ghost", "svart_crystal_golem", "svart_boss_keeper_of_the_runes",
-    "svart_clay_golem", "svart_iron_draugr", "svart_overseer_dwarf", "svart_boss_mokkurkalfi"
+    "svart_clay_golem", "svart_iron_draugr", "svart_overseer_dwarf", "svart_boss_mokkurkalfi",
+    // Йотунгейм (світ 6)
+    "jot_mountain_troll", "jot_snow_wolf", "jot_frost_scout", "jot_boss_troll_chieftain",
+    "jot_giant_hunter", "jot_snow_lynx", "jot_ski_archer", "jot_boss_thjazi_in_eagle_form",
+    "jot_ironwood_wolf", "jot_troll_witch", "jot_wolf_man", "jot_boss_angrboda",
+    "jot_giant_warrior", "jot_troll_guard", "jot_giant_skald", "jot_boss_thrym_king_of_the_thurses",
+    "jot_stone_giant", "jot_rock_troll", "jot_living_boulder", "jot_boss_hrungnir",
+    "jot_logi", "jot_hugi", "jot_elli", "jot_boss_utgarda_loki",
+    "jot_sea_troll", "jot_giant_walrus", "jot_draugr_fisher", "jot_boss_hymir",
+    "jot_serpent_spawn", "jot_venom_jellyfish", "jot_serpent_cultist", "jot_boss_jormungandr"
   ]);
   // Заглушка, поки картинки немає: темний силует з очима
   const ENEMY_PLACEHOLDER = "data:image/svg+xml," + encodeURIComponent(
@@ -3763,6 +4538,11 @@ const ENEMIES = {
     return !!(isVanaheimOpen(save) && save.bossKills?.van_boss_ran_mistress_of_the_drowned);
   }
 
+  // Йотунгейм (світ 6): відкритий Свартальвгейм + перша перемога над Мьоккуркальві
+  function isJotunheimOpen(save) {
+    return !!(isSvartalfheimOpen(save) && save.bossKills?.svart_boss_mokkurkalfi);
+  }
+
   function canEnterLocation(id, heroLevel = 1, save = null) {
     const loc = LOCATIONS[id];
     if (!loc) return { ok: false, reason: "Такої локації немає." };
@@ -3778,6 +4558,9 @@ const ENEMIES = {
     }
     if ((loc.region === "svart" || loc.region === "svartgard") && save && !isSvartalfheimOpen(save)) {
       return { ok: false, reason: "Шлях у Свартальвгейм відкриється після першої перемоги над Ран (Затоплена штольня в Бухті Ран, Ванагейм)." };
+    }
+    if (loc.region === "jot" && save && !isJotunheimOpen(save)) {
+      return { ok: false, reason: "Шлях у Йотунгейм відкриється після першої перемоги над Мьоккуркальві (Витяжна шахта в Кузні Мьоккуркальві, Свартальвгейм)." };
     }
     if (loc.minLevel && heroLevel < loc.minLevel) {
       return { ok: false, reason: `${loc.name}: вхід з ${loc.minLevel} рівня персонажа.` };
@@ -3855,7 +4638,7 @@ const ENEMIES = {
 
   Object.assign(RPG, {
     MONSTER_MOVES, RANGE_NAMES, enemyRange, enemyMove,
-    ENEMIES, LOCATIONS, DUNGEONS, DEFAULT_LOCATION, RESPAWN_LOCATION, GUILD_SHOP, isAlfheimOpen, isVanaheimOpen, isSvartalfheimOpen, DARK_LOC_MAT,
+    ENEMIES, LOCATIONS, DUNGEONS, DEFAULT_LOCATION, RESPAWN_LOCATION, GUILD_SHOP, isAlfheimOpen, isVanaheimOpen, isSvartalfheimOpen, isJotunheimOpen, DARK_LOC_MAT,
     CHAMPION, rollChampion, rollChampionDrop, championBounty,
     getEnemy, enemyExp, enemySpriteStyle, getLocation, isCombatLocation, canEnterLocation, pickEnemy, rollLoot, isCraftOnlyEnemy
   });

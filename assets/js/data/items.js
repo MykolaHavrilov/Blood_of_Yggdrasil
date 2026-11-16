@@ -1166,6 +1166,47 @@ const ITEMS = {
     type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Грубий ключ із випаленої глини з тріщиною, що світиться зсередини. Відчиняє данж «Глиняне серце» (Кузня Мьоккуркальві). Одна спроба — один ключ."
   },
+  // Ключі данжів Йотунгейму (світ 6): Чертог Гюміра й Берег Змія — без іконок (у клітинці видно назву)
+  key_jot_passes: {
+    name: "Ключ «Троляча печера»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Грубий ключ, витесаний з цілого сірого каменю, з іклом троля замість вушка, обмотаним смугою хутра. Відчиняє данж «Троляча печера» (Крижані перевали). Одна спроба — один ключ."
+  },
+  key_jot_thrymheim: {
+    name: "Ключ «Орлине гніздо»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Бронзовий ключ з розгорнутим орлиним крилом замість вушка й пазуром замість борідки. Відчиняє данж «Орлине гніздо» (Тримгейм). Одна спроба — один ключ."
+  },
+  key_jot_ironwood: {
+    name: "Ключ «Лігво Ангрбоди»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Іржавий залізний ключ, схожий на скручену гілку, з вовчою головою, очі якої світяться бурштином. Відчиняє данж «Лігво Ангрбоди» (Залізний ліс). Одна спроба — один ключ."
+  },
+  key_jot_thrym: {
+    name: "Ключ «Скарбниця Трима»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Масивний золотий ключ із маленькою короною та великим синім інеїстим самоцвітом — зроблений під руку велетня. Відчиняє данж «Скарбниця Трима» (Двір Трима). Одна спроба — один ключ."
+  },
+  key_jot_waste: {
+    name: "Ключ «Кам'яне серце»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Ключ із сірого кременю з трикутним кам'яним серцем замість вушка; з гострих країв сиплеться дрібний щебінь. Відчиняє данж «Кам'яне серце» (Кам'яна пустка). Одна спроба — один ключ."
+  },
+  key_jot_utgard: {
+    name: "Ключ «Чертог ілюзій»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Срібний ключ, що двоїться в очах і наполовину тане в зеленому мареві; вушко — усміхнена маска. Відчиняє данж «Чертог ілюзій» (Утгард). Одна спроба — один ключ."
+  },
+  key_jot_hymir: {
+    name: "Ключ «Казан Гюміра»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Важкий залізний ключ із круглим казанком на ланцюжку замість вушка й рибальським гачком замість борідки. Відчиняє данж «Казан Гюміра» (Чертог Гюміра). Одна спроба — один ключ."
+  },
+  key_jot_serpent: {
+    name: "Ключ «Кільце Змія»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Ключ у вигляді зелено-чорного морського змія, що кусає власний хвіст; на борідці — крапля отрути. Відчиняє данж «Кільце Змія» (Берег Світового Змія). Одна спроба — один ключ."
+  },
 
   // ---------- Предмет адміністратора (для тестування прогресу) ----------
   // Діє на ВСЮ групу, поки лежить в інвентарі (character.js → godsOrb): +800% досвіду (бої й квести),
@@ -1360,6 +1401,7 @@ const ICON_FILES = new Set(["sword", "dagger", "axe", "bow", "staff", "shield", 
   .forEach(id => ICON_FILES.add(id));
 // Іконки, додані скриптом tools/add-image.js (окремі файли assets/images/items/icon_<id>.webp)
 ["key_svart_alvis", "key_svart_falls", "key_svart_forges", "key_svart_mines", "key_svart_mokkur", "key_svart_quarters", "key_svart_runes"].forEach(id => ICON_FILES.add(id));
+["key_jot_passes", "key_jot_thrymheim", "key_jot_ironwood", "key_jot_thrym", "key_jot_waste", "key_jot_utgard"].forEach(id => ICON_FILES.add(id));
 const ICON_FILE_BASE = RPG.asset("assets/images/items/icon_");
 
 // Стиль іконки предмета (окремий файл або клітинка спрайт-листа); null — іконки немає (буде заглушка)

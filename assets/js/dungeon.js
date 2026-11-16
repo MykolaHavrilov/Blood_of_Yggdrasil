@@ -146,6 +146,7 @@
   const ALF_POWER = { 1: 0.57, 2: 1.06, 3: 1.37, 4: 1.52, 5: 1.56, 6: 1.63 };
   const VAN_POWER = { 1: 0.57, 2: 1.05, 3: 1.36, 4: 1.52, 5: 1.54, 6: 1.63 };   // Ванагейм (світ 4)
   const SVART_POWER = VAN_POWER;                                               // Свартальвгейм (світ 5) — поки як у Ванагеймі
+  const JOT_POWER = VAN_POWER;                                                 // Йотунгейм (світ 6) — поки як у Ванагеймі
   const GROUP_POWER = {
     cave_secret: { 1: 0.82, 2: 1.3,  3: 1.7,  4: 1.9,  5: 2.1,  6: 2.15 },
     web_nest:    { 1: 0.48, 2: 0.71, 3: 0.88, 4: 0.92, 5: 0.93, 6: 0.94 },
@@ -155,7 +156,9 @@
     van_ghost_ship: VAN_POWER, van_volva_hut: VAN_POWER, van_mead_cellar: VAN_POWER,
     van_pyre_heart: VAN_POWER, van_inner_shrine: VAN_POWER, van_ran_hall: VAN_POWER,
     svart_matriarch_cocoon: SVART_POWER, svart_andvari_hoard: SVART_POWER, svart_obsidian_spire: SVART_POWER, svart_stone_hall: SVART_POWER, 
-    svart_sealed_forge: SVART_POWER, svart_rune_well: SVART_POWER, svart_clay_heart: SVART_POWER
+    svart_sealed_forge: SVART_POWER, svart_rune_well: SVART_POWER, svart_clay_heart: SVART_POWER,
+    jot_troll_cave: JOT_POWER, jot_eagle_nest: JOT_POWER, jot_angrboda_lair: JOT_POWER, jot_thrym_hoard: JOT_POWER,
+    jot_stone_heart: JOT_POWER, jot_hall_of_illusions: JOT_POWER, jot_hymir_cauldron: JOT_POWER, jot_serpent_ring: JOT_POWER
   };
   function groupPower(dungeonId, size) {
     const row = (RPG.DUNGEON_GROUP_POWER || GROUP_POWER)[dungeonId];

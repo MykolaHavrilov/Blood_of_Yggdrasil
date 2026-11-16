@@ -10,6 +10,7 @@
 //   van   — Ванагейм (світ 4), за гілкою Іггдрасиля на Полі Белі (alf_beli ↔ van_gate).
 //   svartgard — Свартгард, місто світу 5: 7 районів; вхід Затопленою штольнею з Бухти Ран (van_ran ↔ район flooded).
 //   svart — Свартальвгейм (світ 5), за Брамою Сутінкових копалень Свартгарда (район mines_gate ↔ svart_gate).
+//   jot   — Йотунгейм (світ 6), за Витяжною шахтою в Кузні Мьоккуркальві (svart_mokkur ↔ jot_gate).
 // Між регіонами переходять лише через брами (миттєво): south_gate ↔ Дубова Застава, Північний район ↔ dark_gate,
 // Серце Темного лісу (dk_heart) ↔ Корінь Іггдрасиля в Альвгеймі (alf_gate).
 //
@@ -84,9 +85,10 @@
 
   // ---------- Далека дорога між світами ----------
   // Регіони підряд (як вони з'єднані) і брами між сусідніми: [точка виходу з першого, точка входу в другий]
-  const REGION_CHAIN = ["start", "city", "dark", "alf", "van", "svartgard", "svart"];
+  const REGION_CHAIN = ["start", "city", "dark", "alf", "van", "svartgard", "svart", "jot"];
   const GATES = { "start>city": ["south_gate", "south"], "city>dark": ["north", "dark_gate"], "dark>alf": ["dk_heart", "alf_gate"],
-                  "alf>van": ["alf_beli", "van_gate"], "van>svartgard": ["van_ran", "flooded"], "svartgard>svart": ["mines_gate", "svart_gate"] };
+                  "alf>van": ["alf_beli", "van_gate"], "van>svartgard": ["van_ran", "flooded"], "svartgard>svart": ["mines_gate", "svart_gate"],
+                  "svart>jot": ["svart_mokkur", "jot_gate"] };
   function gateBetween(a, b) {
     if (GATES[`${a}>${b}`]) return GATES[`${a}>${b}`];
     const g = GATES[`${b}>${a}`];
@@ -106,6 +108,7 @@
     if (region === "van") return RPG.canEnterLocation("van_gate", save.character.level, save).ok;
     if (region === "svartgard") return RPG.canEnterLocation("svartgard", save.character.level, save).ok;
     if (region === "svart") return RPG.canEnterLocation("svart_gate", save.character.level, save).ok;
+    if (region === "jot") return RPG.canEnterLocation("jot_gate", save.character.level, save).ok;
     return false;
   }
   // Брама між регіонами: чи пропустять
@@ -114,6 +117,7 @@
     if (b === "alf" && !isRegionOpen(save, "alf")) return { ok: false, reason: "Шлях в Альвгейм відкриється після першої перемоги над Володарем Темного лісу (корінь Іггдрасиля в Серці Темного лісу)." };
     if (b === "van" && !isRegionOpen(save, "van")) return { ok: false, reason: "Шлях у Ванагейм відкриється після першої перемоги над Белі (гілка Іггдрасиля на Полі Белі, Альвгейм)." };
     if ((b === "svart" || b === "svartgard") && !isRegionOpen(save, b)) return { ok: false, reason: "Шлях у Свартальвгейм відкриється після першої перемоги над Ран (Затоплена штольня в Бухті Ран, Ванагейм)." };
+    if (b === "jot" && !isRegionOpen(save, "jot")) return { ok: false, reason: "Шлях у Йотунгейм відкриється після першої перемоги над Мьоккуркальві (Витяжна шахта в Кузні Мьоккуркальві, Свартальвгейм)." };
     return { ok: true };
   }
 
