@@ -9,7 +9,7 @@
 // Значення з книги: vals — [звичайна, магічна, епічна, легендарна]; зламана — ×0 (не дає нічого, лише паливо для Горна Сварога).
 //   kind: weapon — лише у зброю, armor — лише в броню, universal — у будь-що (зокрема персні й амулети).
 //   stat — ключ ефекту для майбутнього battle.js / stats.js (поки ні на що не впливає).
-// Підключається ПІСЛЯ data/items.js, ДО character.js (Іфрит продає звичайні руни для тестів).
+// Підключається ПІСЛЯ data/items.js, ДО character.js. Випадіння рун з ворогів — RUNE_DROP / rollRunes (унизу файлу).
 // ============================================================
 
 (function (RPG) {
@@ -111,7 +111,7 @@
   }
   // Іконки: знак з книги на камені (assets/images/items/icon_rune_<знак>.webp) — одна на всі рідкості, рідкість видно з рамки
   for (const key of Object.keys(RUNES)) RPG.ITEM_ICON_FILES?.add(runeItemId(key));
-  // Звичайні руни (по одній на кожен знак) — для тестового Іфрита
+  // Звичайні руни (по одній на кожен знак)
   const RUNE_IDS = Object.keys(RUNES).map(k => runeItemId(k));
 
   // ---------- Горно Сварога (Гільдія ремісників, Торговий район) ----------
@@ -324,6 +324,49 @@
     return e;
   }
 
+  // ---------- Випадіння рун (рішення користувача 2026-11-16; книга «Руни Небесної Кузні» → «Де шукати руни») ----------
+  // Окремо від loot ворога, у всіх світах однаково (і в світах «лише ремесла» — руна не спорядження):
+  //   звичайний ворог — зламана руна з шансом broken;
+  //   чемпіон — замість цього з шансом champion руна championGrades (звичайна / магічна);
+  //   будь-який бос (у данжі чи ні) — завжди одна руна boss (епічна / магічна);
+  //   фінальний бос світу (data/worlds.js → gate.boss наступного світу) — ще й легендарна з шансом legendary.
+  // В експедиціях шанси зламаної й чемпіонської — ×expeditionMult. Знак — випадковий за вагою виду (kindWeight).
+  const RUNE_DROP = {
+    broken: 0.05,
+    champion: 0.5, championGrades: [["common", 0.75], ["magic", 0.25]],
+    boss: [["epic", 0.2], ["magic", 0.8]],
+    legendary: 0.1,
+    expeditionMult: 0.5,
+    kindWeight: { weapon: 2, armor: 2, universal: 1 }
+  };
+  function randomRuneKey() {
+    const keys = Object.keys(RUNES), w = keys.map(k => RUNE_DROP.kindWeight[RUNES[k].kind] ?? 1);
+    let x = Math.random() * w.reduce((a, b) => a + b, 0);
+    for (let i = 0; i < keys.length; i++) { x -= w[i]; if (x < 0) return keys[i]; }
+    return keys[keys.length - 1];
+  }
+  function pickGrade(rows) {
+    let x = Math.random();
+    for (const [g, p] of rows) { if (x < p) return g; x -= p; }
+    return rows[rows.length - 1][0];
+  }
+  const isFinalBoss = id => !!RPG.WORLDS?.some(w => w.gate?.boss === id);
+  // Руни за перемогу над ворогом: масив id предметів-рун (найчастіше порожній). o.champion, o.expedition
+  function rollRunes(enemyId, o = {}) {
+    const e = RPG.ENEMIES?.[enemyId];
+    if (!e) return [];
+    const m = o.expedition ? RUNE_DROP.expeditionMult : 1, out = [];
+    if (e.boss) {
+      out.push(runeItemId(randomRuneKey(), pickGrade(RUNE_DROP.boss)));
+      if (isFinalBoss(enemyId) && Math.random() < RUNE_DROP.legendary) out.push(runeItemId(randomRuneKey(), "legendary"));
+    } else if (o.champion) {
+      if (Math.random() < RUNE_DROP.champion * m) out.push(runeItemId(randomRuneKey(), pickGrade(RUNE_DROP.championGrades)));
+    } else if (Math.random() < RUNE_DROP.broken * m) {
+      out.push(runeItemId(randomRuneKey(), "broken"));
+    }
+    return out;
+  }
+
   Object.assign(RPG, { RUNE_LIMIT, heroRuneCount, runeLimitEquip, RUNES, RUNE_GRADES, RUNE_GRADE_ORDER, RUNE_KIND_NAME, runeItemId, RUNE_IDS, RUNE_FORGE, runeForgeOdds, runeForge,
-    RUNE_FITS, runeFits, runeEffectText, insertRune, removeRune, crackedRunes, runeNums, runeTotals, runeAttrs, teamRuneEco });
+    RUNE_FITS, runeFits, runeEffectText, insertRune, removeRune, crackedRunes, runeNums, runeTotals, runeAttrs, teamRuneEco, RUNE_DROP, rollRunes, isFinalBoss });
 })(window.RPG);

@@ -1704,36 +1704,6 @@ function forgeMissing(house) {
   return Object.entries(FORGE_TOOLS).filter(([id, t]) => t.need && !tools[id]).map(([id]) => id);
 }
 
-// ============================================================
-// ТЕСТ: Іфрит — тимчасовий торговець ресурсами ремесла (Гільдія авантюристів, вкладка «Іфрит (тест)»).
-// Не належить до лору. Щоб прибрати: видалити цей блок (IFRIT, ifritPrice, buyFromIfrit) — вкладка зникне сама.
-// Ціни — з таблиці «Небесна_кузня_крафт_v2.xlsx», аркуш «Іфрит (тест)».
-// ============================================================
-const IFRIT = {
-  stock: ["coal", "oak_wood", "ash_wood", "flax", "leather_strap", "glass", "copper_ore", "flint",
-          "lapis", "silver_ore", "iron_ore", "gold_ore", "onyx", "gem", "white_pelt",
-          // тіри 4–7 (поки не всі падають з ворогів — для перевірки кування)
-          "platinum_ore", "yew_wood", "seal_leather", "amber", "pearl",
-          "ironwood", "lizard_leather", "rock_crystal", "rune_gem",
-          "celestial_ore", "white_ash", "eagle_feather", "bifrost_shard",
-          "ygg_heartwood", "ygg_bark", "ygg_root", "ygg_sap", "mimir_water", "star_spark"]
-};
-// Звичайні руни (data/runes.js) — теж у Іфрита, поки руни не падають з ворогів
-if (RPG.RUNE_IDS) IFRIT.stock.push(...RPG.RUNE_IDS);
-function ifritPrice(id) { return ITEMS[id]?.price || 0; }
-function buyFromIfrit(save, id, qty = 1) {
-  if (save.location.map !== "city") return { ok: false, reason: "Іфрит — у Гільдії авантюристів Дубової Застави." };
-  if (!IFRIT.stock.includes(id)) return { ok: false, reason: "Іфрит цього не продає." };
-  qty = Math.floor(Number(qty));
-  if (!(qty >= 1 && qty <= BUY_MAX)) return { ok: false, reason: `Вкажіть кількість від 1 до ${BUY_MAX}.` };
-  const unit = ifritPrice(id), price = unit * qty;
-  if (save.character.gold < price) return { ok: false, reason: `Не вистачає золота (потрібно ${price}).` };
-  if (fitQty(save, id, qty) < qty) return { ok: false, reason: fullText(save, id, qty) };
-  save.character.gold -= price;
-  addItem(save, id, qty);
-  return { ok: true, price, qty, unit };
-}
-
 function tradePrice(id) {
   return Math.ceil((ITEMS[id]?.price || 0) * TRADE_PRICE_MULT);
 }
@@ -1875,7 +1845,6 @@ Object.assign(RPG, {
   isItemLocked, lockedByDefault, toggleItemLock, LOCKED_REASON, sellAllCandidates, sellAll,
   ADMIN_ARMOR_SETS, adminWeaponTypes, adminGearIds, adminGiveGear, INV_SIZE, invFree, fitQty, invSize, BELT_SLOTS, POUCH_DROP, beltOf, beltBonus, putOnBelt, takeFromBelt, rollPouchDrop,
   TRADE_MIN_LEVEL, TRADE_PRICE_MULT, tradeStock, tradePrice, buyFromTrade, isDistrictOpen, districtLockText,
-  IFRIT, ifritPrice, buyFromIfrit,                // ТЕСТ: прибрати разом з блоком IFRIT
   HOUSES, HOUSE_NAME_MAX, houseOf, houseHere, buyHouse, enterHouse,
   FORGE_PRICE, FORGE_TOOLS, hasCraftAccess, forgeHouse, buildForge, buyForgeTool, forgeMissing, hasForgeBook, buyForgeBook, hasGodsBook, buyGodsBook,
   WAREHOUSE_PRICE, CRAFT_CHESTS, CRAFT_CHEST_ALLOW_TEXT, parseCraftChest, chestAllows, chestsHere, buildWarehouse, buyCraftChest, sortToCraftChests,

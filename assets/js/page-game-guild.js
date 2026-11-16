@@ -23,7 +23,6 @@
     function renderGuild(box) {
       const tabs = el("div", "row npc-tabs");
       const guildTabs = [["admin", "Адміністратор Артеміда"], ["trader", "Торговець Тадеуш"], ["trainer", "Тренер Брут"]];
-      if (RPG.IFRIT) guildTabs.push(["ifrit", "Іфрит (тест)"]);      // ТЕСТ: прибрати разом з блоком IFRIT у character.js
       for (const [id, name] of guildTabs) {
         tabs.append(button(name, "wf " + (guildNpc === id ? "wf-button" : "wf-link"), () => { guildNpc = id; renderPlace(); }));
       }
@@ -32,9 +31,8 @@
       // Шапка з портретом (assets/images/npc/<файл>.webp; поки картинки немає — лише ім'я)
       const GUILD_NPC = { admin: ["npc_guild_admin", "Артеміда, адміністратор гільдії"],
                           trader: ["npc_guild_trader", "Тадеуш, торговець гільдії"],
-                          trainer: ["npc_trainer", "Брут, тренер гільдії"],
-                          ifrit: ["npc_ifrit", "Іфрит — тестовий торговець ресурсами"] };
-      if (!GUILD_NPC[guildNpc] || (guildNpc === "ifrit" && !RPG.IFRIT)) guildNpc = "admin";
+                          trainer: ["npc_trainer", "Брут, тренер гільдії"] };
+      if (!GUILD_NPC[guildNpc]) guildNpc = "admin";
       const [pic, who] = GUILD_NPC[guildNpc];
       const head = el("div", "npc-head");
       const img = new Image();
@@ -49,11 +47,6 @@
           `Тадеуш, торговець гільдії, продає зброю 1–2 виду, шкіряну броню (2 вид), малі й середні зілля (за ${Math.round(RPG.SHOP_SELL_RATE * 100)}% вартості), ` +
           `а купує будь-що за ${Math.round(RPG.SHOP_BUY_RATE * 100)}%.`));
         renderShop(npc, RPG.GUILD_SHOP || []);
-      } else if (guildNpc === "ifrit") {
-        // ТЕСТ: Іфрит не належить до лору — продає ресурси, які ще не падають і не добуваються
-        npc.append(el("p", "ifrit-note", "Тестовий персонаж (не з лору гри). Продає ресурси ремесла, які поки ніде не падають і не добуваються. " +
-          `За одну покупку — до ${fmtNum(RPG.BUY_MAX)} шт.`));
-        renderShop(npc, RPG.IFRIT.stock, { priceOf: RPG.ifritPrice, buy: RPG.buyFromIfrit, stock: true });
       } else renderTrainer(npc);
       box.append(npc);
     }

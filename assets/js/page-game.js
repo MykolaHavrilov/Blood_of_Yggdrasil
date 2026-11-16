@@ -1005,6 +1005,7 @@
         for (const e of result.enemies) {
           const lootOrb = RPG.godsOrb(save);              // Сфера Богів: +10 пунктів до шансу кожного предмета (20% → 30%)
           const loot = RPG.rollLoot(e.id, lootOrb ? lootOrb.lootPct / 100 : 0);
+          for (const r of RPG.rollRunes?.(e.id, { champion: e.champion }) || []) loot.items.push({ id: r, qty: 1 });   // руни (data/runes.js → RUNE_DROP)
           if (runeEco.gold && loot.gold) loot.gold = Math.round(loot.gold * (1 + runeEco.gold / 100));
           if (runeEco.lootRarity) loot.rarityUp = runeEco.lootRarity;
           RPG.applyReward(save, 0, loot);                // золото й речі — у спільний інвентар

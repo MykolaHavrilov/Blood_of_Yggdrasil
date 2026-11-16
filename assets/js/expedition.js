@@ -199,6 +199,7 @@
       for (const en of result.enemies) {
         const lootOrb = RPG.godsOrb?.(save);
         const loot = RPG.rollLoot(en.id, lootOrb ? lootOrb.lootPct / 100 : 0);
+        for (const r of RPG.rollRunes?.(en.id, { champion: en.champion, expedition: true }) || []) loot.items.push({ id: r, qty: 1 });   // руни — удвічі рідше
         let gold = loot.gold || 0;
         if (runeEco.gold && gold) gold = Math.round(gold * (1 + runeEco.gold / 100));
         bag.gold += gold;
