@@ -157,11 +157,10 @@
         row.append(go);
         if (picked.length) row.append(button("Вийняти все", "wf wf-secondary", () => { picked = []; note = null; draw(); }));
         dlg.append(row);
-        // руни з інвентаря
-        const stacks = [];
-        for (const e of save.inventory) if (RPG.ITEMS[e.id]?.type === "rune" && !stacks.includes(e.id)) stacks.push(e.id);
+        // руни героя (з мішечка для рун або з інвентаря — character.js → runeIds)
+        const stacks = RPG.runeIds(save);
         const list = el("div", "rune-forge-list");
-        if (!stacks.length) list.append(el("p", "house-soon", "В інвентарі немає рун."));
+        if (!stacks.length) list.append(el("p", "house-soon", save.runePouch ? "У мішечку немає рун." : "В інвентарі немає рун."));
         for (const id of stacks) {
           const n = left(id);
           const b = button("", "wf wf-slot rune-forge-pick" + (n ? "" : " is-empty"), () => {

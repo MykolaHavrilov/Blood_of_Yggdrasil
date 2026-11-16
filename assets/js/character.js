@@ -802,8 +802,89 @@ function addRefToList(list, ref, maxOf = null) {
   return true;
 }
 
-function countItem(save, id)          { return countInList(save.inventory, id); }
-function addItem(save, id, qty = 1)    { return addToList(save.inventory, id, qty); }
+// ---------- Мішечок для рун (рішення користувача 2026-11-16) ----------
+// Видає Артеміда (Гільдія авантюристів, Дубова Застава), коли герой говорить із нею й має руну в інвентарі.
+// Після цього ВСІ руни (будь-якої рідкості) лежать не в інвентарі, а в мішечку: save.runePouch = true, save.runes = { id: к-сть }.
+// Мішечок спільний для групи (як кишеня для ключів) і не займає клітинок; на кожну нову руну — нова клітинка (росте сам).
+// У клітинці — до RUNE_POUCH.max однієї руни й рідкості, зламаних — до maxBroken; що понад це — пропадає при отриманні.
+// countItem / addItem / removeItem / fitQty самі ведуть руни в мішечок — тож здобич, скрині, експедиції, Горно Сварога,
+// гнізда й розбір працюють без змін.
+const RUNE_POUCH = { max: 300, maxBroken: 600 };
+// Справжній спільний сейв (а не «вигляд» героя групи — party.js → memberSave)
+function rootSave(save) {
+  while (save && save.memberIndex && Object.getPrototypeOf(save) !== Object.prototype) save = Object.getPrototypeOf(save);
+  return save;
+}
+function inRunePouch(save, id) { return !!(save?.runePouch && ITEMS[id]?.type === "rune"); }
+function runeCap(id) { return ITEMS[id]?.grade === "broken" ? RUNE_POUCH.maxBroken : RUNE_POUCH.max; }
+function runeAmount(save, id) { return Math.max(0, Math.floor(save?.runes?.[id] || 0)); }
+// Покласти руни в мішечок; повертає, скільки влізло (решта пропадає)
+function addToRunePouch(save, id, qty) {
+  const root = rootSave(save);
+  if (!root.runes || typeof root.runes !== "object") root.runes = {};
+  const add = Math.max(0, Math.min(Math.floor(qty), runeCap(id) - runeAmount(root, id)));
+  if (add) root.runes[id] = runeAmount(root, id) + add;
+  return add;
+}
+// Чи дасть Артеміда мішечок: ще немає, а руна в інвентарі є
+function canGetRunePouch(save) {
+  const root = rootSave(save);
+  return !root.runePouch && (root.inventory || []).some(e => ITEMS[e?.id]?.type === "rune");
+}
+// Отримати мішечок: усі руни з інвентаря переїжджають у нього. { ok, moved, lost } або { ok: false, reason }
+function grantRunePouch(save) {
+  const root = rootSave(save);
+  if (root.runePouch) return { ok: false, reason: "Мішечок для рун уже є." };
+  if (!canGetRunePouch(root)) return { ok: false, reason: "В інвентарі немає жодної руни." };
+  root.runePouch = true;
+  root.runes = {};
+  const r = moveRunesToPouch(root);
+  return { ok: true, ...r };
+}
+// Руни з інвентаря — у мішечок (отримання мішечка, старі й імпортовані сейви). { moved, lost }
+function moveRunesToPouch(save) {
+  let moved = 0, lost = 0;
+  const keep = [];
+  for (const e of save.inventory || []) {
+    if (ITEMS[e?.id]?.type !== "rune") { keep.push(e); continue; }
+    const q = e.qty || 1, add = addToRunePouch(save, e.id, q);
+    moved += add; lost += q - add;
+  }
+  save.inventory = keep;
+  return { moved, lost };
+}
+function migrateRunePouch(save) {
+  if (!save.runePouch) return;
+  if (!save.runes || typeof save.runes !== "object") save.runes = {};
+  for (const [id, n] of Object.entries(save.runes)) {
+    if (ITEMS[id]?.type !== "rune" || !(n > 0)) delete save.runes[id];
+    else save.runes[id] = Math.min(Math.floor(n), runeCap(id));
+  }
+  moveRunesToPouch(save);
+}
+// Вміст мішечка для вікна: [{ id, qty, cap }] — руна за руною (порядок книги рун), у межах руни — від зламаної до легендарної
+function runePouchList(save) {
+  const keys = Object.keys(RPG.RUNES || {}), grades = RPG.RUNE_GRADE_ORDER || [];
+  return Object.entries(rootSave(save)?.runes || {}).filter(([id, n]) => n > 0 && ITEMS[id])
+    .map(([id, n]) => ({ id, qty: n, cap: runeCap(id) }))
+    .sort((a, b) => keys.indexOf(ITEMS[a.id].rune) - keys.indexOf(ITEMS[b.id].rune) ||
+      grades.indexOf(ITEMS[a.id].grade) - grades.indexOf(ITEMS[b.id].grade));
+}
+
+// ID усіх рун, що є в героя (з мішечка або, поки мішечка немає, з інвентаря) — для Горна Сварога й гнізд
+function runeIds(save) {
+  if (save?.runePouch) return runePouchList(save).map(e => e.id);
+  return [...new Set((save?.inventory || []).filter(e => ITEMS[e?.id]?.type === "rune").map(e => e.id))];
+}
+
+function countItem(save, id) {
+  if (inRunePouch(save, id)) return runeAmount(save, id);
+  return countInList(save.inventory, id);
+}
+function addItem(save, id, qty = 1) {
+  if (inRunePouch(save, id)) { addToRunePouch(save, id, qty); return true; }
+  return addToList(save.inventory, id, qty);
+}
 
 // ---------- Місткість інвентаря ----------
 // 36 клітинок. Коли вільних немає — трофеї, яким нема місця, пропадають (стопки ще доповнюються),
@@ -863,6 +944,7 @@ function rollPouchDrop(enemyId) {
 function fitQty(save, id, qty) {
   const item = ITEMS[id];
   if (!item || qty <= 0) return 0;
+  if (inRunePouch(save, id)) return Math.max(0, Math.min(qty, runeCap(id) - runeAmount(save, id)));
   const free = invFree(save);
   if (RPG.hasRarity(id) || !item.stackable) return Math.min(qty, free);
   const max = item.maxStack || 99;
@@ -871,10 +953,19 @@ function fitQty(save, id, qty) {
   return Math.min(qty, room);
 }
 function fullText(save, id, qty) {
+  if (inRunePouch(save, id)) return `Мішечок для рун: «${ITEMS[id].name}» уже ${runeAmount(save, id)}/${runeCap(id)} — більше не вміщується.`;
   const n = fitQty(save, id, qty);
   return n ? `Інвентар майже повний: влізе лише ${n} шт.` : "Інвентар повний — звільніть місце (продайте речі або покладіть у скриню вдома).";
 }
-function removeItem(save, id, qty = 1) { return removeFromList(save.inventory, id, qty); }
+function removeItem(save, id, qty = 1) {
+  if (inRunePouch(save, id)) {
+    const root = rootSave(save), have = runeAmount(root, id);
+    if (have < qty) return false;
+    if (have === qty) delete root.runes[id]; else root.runes[id] = have - qty;
+    return true;
+  }
+  return removeFromList(save.inventory, id, qty);
+}
 
 // ---------- Скрині ----------
 // Скриня стоїть у локації, якщо в LOCATIONS (data/enemies.js) у неї є поле chest: "<id сховища>".
@@ -1843,6 +1934,7 @@ Object.assign(RPG, {
   autoPotion, AUTO_POTIONS, GODS_ORB, godsOrb, hasGodsOrb, grantGodsOrb, removeGodsOrb,
   ADMIN_SEAL, hasAdminSeal, grantAdminSeal, removeAdminSeal, adminSetLevel, adminSetClass,
   isItemLocked, lockedByDefault, toggleItemLock, LOCKED_REASON, sellAllCandidates, sellAll,
+  RUNE_POUCH, runeCap, runeAmount, canGetRunePouch, grantRunePouch, migrateRunePouch, runePouchList, runeIds,
   ADMIN_ARMOR_SETS, adminWeaponTypes, adminGearIds, adminGiveGear, INV_SIZE, invFree, fitQty, invSize, BELT_SLOTS, POUCH_DROP, beltOf, beltBonus, putOnBelt, takeFromBelt, rollPouchDrop,
   TRADE_MIN_LEVEL, TRADE_PRICE_MULT, tradeStock, tradePrice, buyFromTrade, isDistrictOpen, districtLockText,
   HOUSES, HOUSE_NAME_MAX, houseOf, houseHere, buyHouse, enterHouse,

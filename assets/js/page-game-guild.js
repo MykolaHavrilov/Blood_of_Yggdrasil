@@ -41,7 +41,7 @@
       img.src = RPG.asset(`assets/images/npc/${pic}.webp`);
       head.append(img, el("strong", "npc-name", who));
       npc.append(head);
-      if (guildNpc === "admin") renderQuestBoard(npc);
+      if (guildNpc === "admin") { giveRunePouch(); renderQuestBoard(npc); }
       else if (guildNpc === "trader") {
         npc.append(noteP(
           `Тадеуш, торговець гільдії, продає зброю 1–2 виду, шкіряну броню (2 вид), малі й середні зілля (за ${Math.round(RPG.SHOP_SELL_RATE * 100)}% вартості), ` +
@@ -49,6 +49,20 @@
         renderShop(npc, RPG.GUILD_SHOP || []);
       } else renderTrainer(npc);
       box.append(npc);
+    }
+
+    // --- Артеміда видає мішечок для рун (character.js → grantRunePouch): раз, коли в інвентарі є руна ---
+    function giveRunePouch() {
+      if (!RPG.canGetRunePouch?.(save)) return;
+      const r = RPG.grantRunePouch(save);
+      if (!r.ok) return;
+      RPG.saveGame(save).catch(e => console.error(e));
+      const P = RPG.RUNE_POUCH;
+      showNotice("Мішечок для рун", [
+        "Артеміда помічає руну, що визирає з вашої торби, і хитає головою: «Хто ж носить руни разом із зіллям і ганчір'ям? Потріскаються — і край. Тримайте: старий мішечок гільдії, у ньому кожна руна знайде своє місце».",
+        `Отримано: Мішечок для рун. У нього перекладено рун: ${fmtNum(r.moved)}` + (r.lost ? ` (не вмістилося й пропало: ${fmtNum(r.lost)})` : "") + ".",
+        `Відтепер усі руни потрапляють у мішечок, а не в інвентар. Він на сторінці «Інвентар» — кнопка «Мішечок для рун». У клітинці — до ${P.max} рун однієї руни й рідкості, зламаних — до ${P.maxBroken}; зайве пропадає.`
+      ]);
     }
 
     // --- Адміністратор гільдії: завдання ---

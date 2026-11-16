@@ -128,6 +128,8 @@
       renderDeathBagBtn();
       const pocketBtn = $("key-pocket-btn");
       if (pocketBtn) pocketBtn.onclick = () => showKeyPocket(save);
+      const runeBtn = $("rune-pouch-btn");           // мішечок для рун (видає Артеміда в Гільдії авантюристів)
+      if (runeBtn) { runeBtn.hidden = !save.runePouch; runeBtn.onclick = () => RPG.ui.showRunePouch(save); }
       const filterBtn = $("loot-filter-btn");
       renderFilterBtn(filterBtn, save);
       if (filterBtn) filterBtn.onclick = () => showLootFilter(save, () => renderFilterBtn(filterBtn, save));
@@ -626,7 +628,7 @@
             t.append(el("strong", rarityTextClass(rid).trim() || null, RPG.ITEMS[rid].name), el("small", null, RPG.runeEffectText(rid)));
             row.append(t, button("Вийняти", "wf wf-danger", async () => {
               const r = RPG.removeRune(ms, ref, i);
-              note = { text: r.ok ? `${RPG.ITEMS[r.id].name} тріснула — в інвентарі ${RPG.ITEMS[r.broken].name.toLowerCase()}.` : r.reason, error: !r.ok };
+              note = { text: r.ok ? `${RPG.ITEMS[r.id].name} тріснула — ${ms.runePouch ? "у мішечку для рун" : "в інвентарі"} ${RPG.ITEMS[r.broken].name.toLowerCase()}.` : r.reason, error: !r.ok };
               if (r.ok) await RPG.saveGame(save);
               draw();
             }));
@@ -643,13 +645,13 @@
           const keyOrder = Object.keys(RPG.RUNES);
           const fits = [];
           // зламані руни не діють — у списку їх немає (вони лише паливо для Горна Сварога)
-          for (const e of ms.inventory) if (RPG.runeFits(ref.id, e.id) && RPG.ITEMS[e.id].grade !== "broken" && !fits.includes(e.id)) fits.push(e.id);
+          for (const id of RPG.runeIds(ms)) if (RPG.runeFits(ref.id, id) && RPG.ITEMS[id].grade !== "broken" && !fits.includes(id)) fits.push(id);
           fits.sort((a, b) => {
             const A = RPG.ITEMS[a], B = RPG.ITEMS[b];
             return keyOrder.indexOf(A.rune) - keyOrder.indexOf(B.rune) ||
               RPG.RUNE_GRADE_ORDER.indexOf(A.grade) - RPG.RUNE_GRADE_ORDER.indexOf(B.grade);
           });
-          if (!fits.length) dlg.append(el("p", "house-soon", "В інвентарі немає рун, що лягають у цю річ."));
+          if (!fits.length) dlg.append(el("p", "house-soon", ms.runePouch ? "У мішечку немає рун, що лягають у цю річ." : "В інвентарі немає рун, що лягають у цю річ."));
           const box = el("div", "rune-pick-list");
           for (const rid of fits) {
             const it = RPG.ITEMS[rid];

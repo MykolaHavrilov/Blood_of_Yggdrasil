@@ -317,6 +317,31 @@
     return showNotice("Кишеня для ключів", [list], "is-keys");
   }
 
+  // ---------- Мішечок для рун (character.js → RUNE_POUCH): кожна руна однієї рідкості — своя клітинка ----------
+  // Руни розкладені самі: руна за руною (порядок книги рун), у межах руни — від зламаної до легендарної.
+  // Натиснути клітинку — під сіткою з'являється назва й дія руни (на телефоні підказка-title не видна).
+  function showRunePouch(save) {
+    const P = RPG.RUNE_POUCH, list = RPG.runePouchList(save);
+    const intro = `Кожна руна однієї рідкості — своя клітинка: до ${P.max} шт., зламаних — до ${P.maxBroken}. Що понад це — пропадає при отриманні.`;
+    if (!list.length) return showNotice("Мішечок для рун", [intro, "Мішечок порожній."], "is-runes");
+    const info = el("p", "rune-pouch-info", "Натисніть руну, щоб побачити, що вона дає.");
+    const grid = el("div", "rune-pouch");
+    let total = 0;
+    for (const e of list) {
+      total += e.qty;
+      const it = RPG.ITEMS[e.id];
+      const cell = button("", "wf wf-slot rune-pouch-cell g-" + it.grade + (e.qty >= e.cap ? " is-full" : ""), () => {
+        info.textContent = "";
+        info.append(el("strong", rarityTextClass(e.id).trim() || null, it.name), ` · ${e.qty}/${e.cap} — ${RPG.runeEffectText(e.id)}`);
+      });
+      fillItemCell(cell, e.id, 1);
+      cell.append(el("span", "rune-pouch-qty", `${e.qty}/${e.cap}`));
+      cell.title = `${it.name} — ${e.qty}/${e.cap}`;
+      grid.append(cell);
+    }
+    return showNotice("Мішечок для рун", [intro, grid, info, el("p", "rune-pouch-sum", `Клітинок: ${list.length} · рун: ${fmtNum(total)}`)], "is-runes");
+  }
+
   // ---------- Фільтр здобичі (rarity.js → lootFilter): автоматичне викидання речей за рідкістю ----------
   // Зміни зберігаються одразу. onChange — оновити вигляд кнопки-воронки.
   function showLootFilter(save, onChange) {
@@ -1699,7 +1724,7 @@
   // ============================================================
 
   RPG.pages = {};
-  RPG.ui = { scoreBox, showScore, showBuriedPage, hardcoreCheck, showGameOver, showGameOverPage, showHardcoreLosses, gameOverContent, expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, npcHead, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, showExpeditionBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, lockMark, lockButton, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
+  RPG.ui = { scoreBox, showScore, showBuriedPage, hardcoreCheck, showGameOver, showGameOverPage, showHardcoreLosses, gameOverContent, expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showRunePouch, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, npcHead, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, showExpeditionBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, lockMark, lockButton, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
   RPG.ui.classEmblem = classEmblem;
   RPG.ui.meetRenouncer = meetRenouncer;   // «Шлях відреченого»
 })(window.RPG);
