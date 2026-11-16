@@ -329,7 +329,8 @@
   //   звичайний ворог — зламана руна з шансом broken;
   //   чемпіон — замість цього з шансом champion руна championGrades (звичайна / магічна);
   //   будь-який бос (у данжі чи ні) — завжди одна руна boss (епічна / магічна);
-  //   фінальний бос світу (data/worlds.js → gate.boss наступного світу) — ще й легендарна з шансом legendary.
+  //   фінальний бос світу (1–9; data/worlds.js → gate.boss наступного світу, для 1-го й 9-го — EXTRA_FINAL_BOSSES) — ще й легендарна з шансом legendary.
+  //   Правила діють для будь-якого ворога будь-якого світу — нові світи (7–9) отримують руни без змін тут.
   // В експедиціях шанси зламаної й чемпіонської — ×expeditionMult. Знак — випадковий за вагою виду (kindWeight).
   const RUNE_DROP = {
     broken: 0.05,
@@ -350,7 +351,11 @@
     for (const [g, p] of rows) { if (x < p) return g; x -= p; }
     return rows[rows.length - 1][0];
   }
-  const isFinalBoss = id => !!RPG.WORLDS?.some(w => w.gate?.boss === id);
+  // Фінальний бос світу: той, хто відкриває наступний світ (data/worlds.js → gate.boss: світи 2–8), а також EXTRA_FINAL_BOSSES:
+  // світ 1 відкриває наступний без боса (капітан варти) — його єдиний бос Король слайм; світ 9 останній — Хелла, фінальна форма.
+  // Світи 7–9 ще не в грі: їхні ID босів — за спрайтами (new_assets/worlds_3-9_sprites.zip); при додаванні світу звірити.
+  const EXTRA_FINAL_BOSSES = ["slime_king", "nifl_boss_hel_final_form"];
+  const isFinalBoss = id => EXTRA_FINAL_BOSSES.includes(id) || !!RPG.WORLDS?.some(w => w.gate?.boss === id);
   // Руни за перемогу над ворогом: масив id предметів-рун (найчастіше порожній). o.champion, o.expedition
   function rollRunes(enemyId, o = {}) {
     const e = RPG.ENEMIES?.[enemyId];
