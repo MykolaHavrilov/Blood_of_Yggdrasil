@@ -106,7 +106,7 @@
       const S = RPG.SHAMAN;
       const info = RPG.shamanInfo(save);
       const card = el("div", "stack explore-card");
-      card.append(el("h3", null, "Відречений"));
+      card.append(RPG.ui.npcHead("npc_renouncer", "Відречений"));
       card.append(el("p", null, "У тіні за вівтарем, де не дістає світло свічок, стоїть чоловік у запиленому плащі. " +
         "Темні візерунки на його шкірі ледь помітно ворушаться, коли він говорить."));
       const act = (label, fn) => card.append(button(label, "wf wf-button", fn));

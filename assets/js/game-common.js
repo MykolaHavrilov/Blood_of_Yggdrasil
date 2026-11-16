@@ -426,6 +426,18 @@
     });
   }
 
+  // ---------- Шапка NPC з портретом (assets/images/npc/<portrait>.webp; без файлу — лише ім'я) ----------
+  function npcHead(portrait, name) {
+    const head = el("div", "npc-head");
+    const img = new Image();
+    img.className = "npc-portrait"; img.alt = "";
+    img.addEventListener("error", () => img.remove());
+    img.src = RPG.asset(`assets/images/npc/${portrait}.webp`);
+    head.append(img);
+    if (name) head.append(el("strong", "npc-name", name));
+    return head;
+  }
+
   // ---------- Журнал бою: нагорода за завдання (journal.js) ----------
   function journalReward(save, title, text) {
     if (RPG.journalAdd) RPG.journalAdd(save, { kind: "quest", lines: [["title", title, "win"], ["info", text]] });
@@ -436,6 +448,7 @@
     if (!RPG.velesGiveOrb(save)) return;
     await RPG.saveGame(save);
     return showNotice("Незнайомець", [
+      npcHead("npc_stranger"),
       "До вас підходить хтось у запиленому плащі з глибоким каптуром — обличчя не видно. Він ніби випадково зачіпає вас плечем " +
       "і щось тихо кладе вам у торбу. «Тобі воно потрібніше», — чуєте ви шепіт, а коли обертаєтеся, незнайомця вже й слід простиг.",
       "У торбі — важка куля з темного каменю, тепла на дотик. На одному боці — глибоке заглиблення у формі ромба.",
@@ -448,6 +461,7 @@
     if (!RPG.shamanMeet(save)) return;
     await RPG.saveGame(save);
     return showNotice("Незнайомець у запиленому плащі", [
+      npcHead("npc_renouncer"),
       "Знайома постать у запиленому плащі виринає з натовпу й зупиняється просто перед вами. Цього разу каптур відкинуто: " +
       "сиве, хоч і не старе обличчя, а по шиї й щоках — темні, ніби обвуглені, візерунки.",
       "«Скільки вже зим ти ходиш без шляху. Ні меча гільдії, ні посоха чародія, ні молитви. Я теж колись відрікся від усіх доріг, " +
@@ -1685,7 +1699,7 @@
   // ============================================================
 
   RPG.pages = {};
-  RPG.ui = { scoreBox, showScore, showBuriedPage, hardcoreCheck, showGameOver, showGameOverPage, showHardcoreLosses, gameOverContent, expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, showExpeditionBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, lockMark, lockButton, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
+  RPG.ui = { scoreBox, showScore, showBuriedPage, hardcoreCheck, showGameOver, showGameOverPage, showHardcoreLosses, gameOverContent, expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, npcHead, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, showExpeditionBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, lockMark, lockButton, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
   RPG.ui.classEmblem = classEmblem;
   RPG.ui.meetRenouncer = meetRenouncer;   // «Шлях відреченого»
 })(window.RPG);

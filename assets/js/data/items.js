@@ -1402,6 +1402,10 @@ const ICON_FILES = new Set(["sword", "dagger", "axe", "bow", "staff", "shield", 
 // Іконки, додані скриптом tools/add-image.js (окремі файли assets/images/items/icon_<id>.webp)
 ["key_svart_alvis", "key_svart_falls", "key_svart_forges", "key_svart_mines", "key_svart_mokkur", "key_svart_quarters", "key_svart_runes"].forEach(id => ICON_FILES.add(id));
 ["key_jot_passes", "key_jot_thrymheim", "key_jot_ironwood", "key_jot_thrym", "key_jot_waste", "key_jot_utgard", "key_jot_hymir", "key_jot_serpent"].forEach(id => ICON_FILES.add(id));
+// Броня й прикраси 1–3 виду, комплект слизу — нові окремі іконки (2026-11-16; промти — «Речі 1-3 тіру - іконки (промти).txt» у H:/Game_NEW), замість листів armor / accessory
+["linen", "leather", "iron"].forEach(m => ["head", "chest", "legs", "hands", "feet"].forEach(sl => ICON_FILES.add(`${m}_${sl}`)));
+["ring", "amulet", "earring"].forEach(k => [1, 2, 3].forEach(t => ICON_FILES.add(`${k}_t${t}`)));
+["slime_ring", "slime_amulet", "slime_earring"].forEach(id => ICON_FILES.add(id));
 const ICON_FILE_BASE = RPG.asset("assets/images/items/icon_");
 
 // Стиль іконки предмета (окремий файл або клітинка спрайт-листа); null — іконки немає (буде заглушка)
