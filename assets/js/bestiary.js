@@ -43,6 +43,8 @@
     const of = {};
     const put = (id, n) => { if (RPG.ENEMIES[id] && (!of[id] || n < of[id])) of[id] = n; };
     for (const loc of Object.values(RPG.LOCATIONS || {})) for (const id of loc.enemies || []) put(id, worldOfRegion(loc.region || "start"));
+    // Темна душа — Зрадник (dungeon.js → DARK_SOUL): одна сторінка на всі данжі — у главі світу, з якого вона з'являється
+    if (RPG.ENEMIES.dark_soul) put("dark_soul", RPG.DARK_SOUL?.fromWorld || 4);
     for (const d of Object.values(RPG.DUNGEONS || {})) {
       const n = worldOfRegion(RPG.LOCATIONS?.[d.location]?.region || "start");
       put(d.boss, n);
@@ -68,7 +70,8 @@
     const marks = [];
     for (const e of enemies || []) {
       if (!RPG.ENEMIES[e.id]) continue;
-      const r = (b[e.id] ??= { k: 0 });
+      const id = RPG.ENEMIES[e.id].bestiaryId || e.id;   // Темна душа з будь-якого данжу — одна сторінка
+      const r = (b[id] ??= { k: 0 });
       r.k++;
       if (e.champion) r.ch = (r.ch || 0) + 1;
       else if (e.maxHp) {
@@ -76,7 +79,7 @@
         const mp = e.maxMp || 0;
         r.mp = r.mp ? [Math.min(r.mp[0], mp), Math.max(r.mp[1], mp)] : [mp, mp];
       }
-      if (MARKS.includes(r.k)) marks.push({ id: e.id, k: r.k });
+      if (MARKS.includes(r.k)) marks.push({ id, k: r.k });
     }
     let found = false;
     if (!has(save) && (save.bestiaryLegacy || (enemies || []).some(e => /^rat\d*$/.test(e.id)))) {
@@ -232,9 +235,13 @@
     img.setAttribute("role", "img");
     img.setAttribute("aria-label", e.name);
     const title = E("div", "bst-title");
-    title.append(E("h3", "chronicle-sub", e.name), E("span", "bst-sub", `Рівень ${e.level}` + (e.boss ? " · бос" : "") + (r.ch ? ` · чемпіонів переможено: ${r.ch}` : "")));
+    title.append(E("h3", "chronicle-sub", e.name), E("span", "bst-sub", (e.bestiaryOnly ? "Рівень — як у боса данжу" : `Рівень ${e.level}`) + (e.boss ? " · бос" : "") + (r.ch ? ` · чемпіонів переможено: ${r.ch}` : "")));
     head.append(img, title);
     sec.append(head, bar(k));
+    if (e.bestiaryOnly) {
+      const ds = save.darkSouls || {};
+      sec.append(E("p", "chronicle-p", `Може з'явитися замість боса будь-якого данжу з ${worldName(RPG.DARK_SOUL?.fromWorld || 4)} і далі (шанс ${Math.round((RPG.DARK_SOUL?.chance || 0.1) * 100)}% при відкритті ключем). Удвічі сильніша за боса, досвіду — уп'ятеро більше. Перемог над Зрадниками: ${ds.kills || 0}, здобуто жарин Небесного горна: ${ds.embers || 0}.`));
+    }
     if (k >= 10) {
       const hp = r.hp || [e.stats.hp, e.stats.hp], mp = r.mp || [e.stats.mp || 0, e.stats.mp || 0];
       const span = ([a, b]) => a === b ? RPG.ui.fmtNum(a) : `${RPG.ui.fmtNum(a)}–${RPG.ui.fmtNum(b)}`;

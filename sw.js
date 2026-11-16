@@ -2,7 +2,7 @@
 // HTML / JS / CSS: спершу мережа (щоб оновлення гри підтягувались одразу),
 // а без інтернету — з кешу. Картинки: спершу кеш.
 // Після великих змін можна збільшити номер версії — старий кеш видалиться.
-const CACHE = "rpg-game-v215";
+const CACHE = "rpg-game-v216";
 const PRECACHE = [
   "./",
   "./assets/css/game.css",
@@ -395,6 +395,7 @@ const PRECACHE = [
   "./assets/images/enemies/van_vanir_priest.webp",
   "./assets/images/enemies/van_volva_witch.webp",
   "./assets/images/enemies/van_wave_daughter.webp",
+  "./assets/images/enemies/dark_soul.webp",
   "./assets/images/map/map_vanaheim.webp",
   "./assets/images/map/bld_van_shore.webp",
   "./assets/images/map/bld_van_marsh.webp",
@@ -541,6 +542,7 @@ const PRECACHE = [
   "./assets/images/items/icon_key_svart_mokkur.webp",
   "./assets/images/items/icon_key_svart_quarters.webp",
   "./assets/images/items/icon_key_svart_runes.webp",
+  "./assets/images/items/icon_heavenly_ember.webp",
   "./assets/js/audio.js",
   "./assets/js/battle.js",
   "./assets/js/bestiary.js",

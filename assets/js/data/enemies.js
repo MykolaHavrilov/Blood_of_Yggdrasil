@@ -4457,6 +4457,7 @@ const ENEMIES = {
 
   // Вороги з окремою картинкою assets/images/enemies/<id>.webp (додати ID, коли з'явиться файл)
   const ENEMY_FILES = new Set([
+    "dark_soul",   // додано tools/add-image.js
     "ancient_treant", "black_rider", "bog_leech", "cultist", "drowner", "forest_lord",
     "forest_spider", "ghost", "ghoul", "pack_leader", "rot_boar", "shadow_beast",
     "shadow_wolf", "skeleton_archer", "spider_queen", "stone_golem", "web_hunter", "web_weaver",
@@ -4504,7 +4505,8 @@ const ENEMIES = {
   function enemySpriteStyle(id) {
     const e = ENEMIES[id];
     if (e && e.sprite === undefined) {
-      const url = ENEMY_FILES.has(id) ? RPG.asset(`assets/images/enemies/${id}.webp`) : ENEMY_PLACEHOLDER;
+      const file = e.spriteFile || id;           // spriteFile — спільна картинка (Темна душа в усіх данжах)
+      const url = ENEMY_FILES.has(file) ? RPG.asset(`assets/images/enemies/${file}.webp`) : ENEMY_PLACEHOLDER;
       return { backgroundImage: `url("${url}")`, backgroundSize: "contain", backgroundPosition: "center bottom", backgroundRepeat: "no-repeat" };
     }
     const sh = ENEMY_SHEET;

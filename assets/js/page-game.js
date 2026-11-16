@@ -9,6 +9,13 @@
 
   // ЕКРАН ЛОКАЦІЇ (бій, Домівка, Храм, Шинок)
   // ============================================================
+  // Темна душа — Зрадник (dungeon.js → DARK_SOUL): попередження перед 3-м боєм і текст арени
+  const DARK_SOUL_LINES = [
+    "Замість боса з темряви виходить Темна душа — Зрадник: колишній Перунів посланець, що віддав свій меч Хеллі. Сварогові знаки на клинку ще жевріють, але тепер світять мертвим зеленим вогнем.",
+    "Вона вдвічі сильніша за боса цього данжу, а досвіду за неї — уп'ятеро більше. Перемога над нею не рахується як перемога над босом.",
+    "Зі зброї Зрадника може лишитися Жарина Небесного горна."
+  ];
+
   async function pageGame() {
     const save = await requireSave();
     if (!save) return;
@@ -37,6 +44,14 @@
     if (RPG.velesStrangerDue(save)) setTimeout(() => meetStranger(save).then(() => renderAll()), 300);
     else if (RPG.shamanDue(save)) setTimeout(() => RPG.ui.meetRenouncer(save).then(() => renderAll()), 300);
     if (save.fieldLoot && save.fieldLoot.loc !== save.location.map) setTimeout(() => showFieldLoot(save), 0);
+    // Жарини Небесного горна, що згасли, поки їх несли (character.js → tickEmbers)
+    RPG.tickEmbers?.(save);
+    if (save.emberGone) {
+      const n = save.emberGone;
+      delete save.emberGone;
+      RPG.saveGame(save).catch(e => console.error(e));
+      setTimeout(() => showNotice("Жарина згасла", [n > 1 ? `Згасло жарин Небесного горна: ${n}. Ви не встигли донести їх до горна Сварога чи до вівтаря в Храмі Перуна.` : "Жарина Небесного горна згасла: ви не встигли донести її до горна Сварога чи до вівтаря в Храмі Перуна."]), 200);
+    }
     const locId = save.location.map;
     const locData = RPG.getLocation(locId);
     // Власний дім показується з назвою, яку дав гравець
@@ -842,9 +857,10 @@
         const lines = [`Бій ${a.stage} з ${a.stages}: ${foesText()}.`,
           "Зілля й відновлення в данжі не діють — лікують лише навички."];
         if (a.stage < a.stages) lines.push("За цей бій нагороди немає — досвід і здобич дає лише бос.");
+        else if (a.darkSoul) lines.push(...DARK_SOUL_LINES);
         else lines.push("Це БОС! Кожен третій свій хід він застосовує особливу навичку. Перемога — нагорода за весь данж.");
         if (!fighters().length) lines.push("Усі герої групи полягли.");
-        setArena(a.stage < a.stages ? `Данж: бій ${a.stage} з ${a.stages}` : "Данж: бос!", lines, "ready");
+        setArena(a.stage < a.stages ? `Данж: бій ${a.stage} з ${a.stages}` : a.darkSoul ? "З'явилась темна душа!" : "Данж: бос!", lines, "ready");
         return;
       }
       const lvl = save.character.level;
@@ -996,7 +1012,7 @@
         // Перемоги над босами (перша — з датою): відкривають світи й межу рівня (character.js → levelCap).
         // Записуємо ДО досвіду — досвід за Белі вже йде під нову межу 50.
         const capWasOpen = RPG.levelCapOpen(save);
-        for (const e of result.enemies) if (RPG.ENEMIES[e.id]?.boss) (save.bossKills ??= {})[e.id] ??= Date.now();
+        for (const e of result.enemies) if (RPG.ENEMIES[e.id]?.boss && !RPG.ENEMIES[e.id].darkSoul) (save.bossKills ??= {})[e.id] ??= Date.now();   // Темна душа — не бос для світів
         if (!capWasOpen && RPG.levelCapOpen(save)) {
           summary.push(`⭐ Белі повалено! Межа рівня для героїв з професією відтепер — ${RPG.LEVEL_CAP_PROFESSION} (Селянин лишається до ${RPG.LEVEL_CAP_BASE}).`);
         }
@@ -1006,6 +1022,11 @@
           const lootOrb = RPG.godsOrb(save);              // Сфера Богів: +10 пунктів до шансу кожного предмета (20% → 30%)
           const loot = RPG.rollLoot(e.id, lootOrb ? lootOrb.lootPct / 100 : 0);
           for (const r of RPG.rollRunes?.(e.id, { champion: e.champion }) || []) loot.items.push({ id: r, qty: 1 });   // руни (data/runes.js → RUNE_DROP)
+          if (RPG.ENEMIES[e.id]?.darkSoul) {           // Темна душа: зброя ламається, може лишитися жарина (dungeon.js → darkSoulReward)
+            const ds = RPG.darkSoulReward(save);
+            if (ds.ember) loot.items.push({ id: RPG.EMBER.id, qty: 1 });
+            summary.push("🔥 " + ds.text);
+          }
           if (runeEco.gold && loot.gold) loot.gold = Math.round(loot.gold * (1 + runeEco.gold / 100));
           if (runeEco.lootRarity) loot.rarityUp = runeEco.lootRarity;
           RPG.applyReward(save, 0, loot);                // золото й речі — у спільний інвентар
@@ -1129,7 +1150,7 @@
       if (dun) {
         if (result.win) dunNext = RPG.advanceDungeon(save);
         else RPG.leaveDungeon(save);
-        if (result.win && dunNext.done && RPG.chronicleRecord) chron = RPG.chronicleRecord(save, dun.id, team, result);
+        if (result.win && dunNext.done && RPG.chronicleRecord && !dun.darkSoul) chron = RPG.chronicleRecord(save, dun.id, team, result);
       }
       // Бестіарій (bestiary.js): перемоги над кожним ворогом — лише бої в локаціях і данжах (не експедиції)
       if (result.win && RPG.bestiaryRecord) {
@@ -1261,6 +1282,7 @@
       nextEnemy();
       renderMode();
       const nextDun = dungeonOn() ? RPG.activeDungeon(save) : null;
+      if (nextDun?.darkSoul && nextDun.stage === nextDun.stages) showNotice("З'явилась темна душа", DARK_SOUL_LINES);   // попередження перед 3-м боєм
       addLogLine({ who: "info", text: nextDun
         ? `Далі — бій ${nextDun.stage} з ${nextDun.stages}: ${foesText()}.`
         : mode === "dungeon" ? `Щоб повторити данж, потрібен новий ключ. Бос: ${foesText()}.`

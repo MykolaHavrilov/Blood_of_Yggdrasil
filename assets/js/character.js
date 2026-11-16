@@ -871,6 +871,93 @@ function runePouchList(save) {
       grades.indexOf(ITEMS[a.id].grade) - grades.indexOf(ITEMS[b.id].grade));
 }
 
+// ---------- Жарина Небесного горна (рішення користувача 2026-11-14 / 2026-11-16) ----------
+// В інвентарі — одна стопка heavenly_ember; save.embers = [мітка часу, коли згасне, …] — по одній на жарину, за зростанням
+// (першою гасне найстарша). Жарина живе EMBER.lifeMs; гасне й зникає безслідно (tickEmbers).
+// Вівтар Храму Перуна (Гардарика): save.altar = { slots, embers: [скільки мс лишалось, …] } — там відлік стоїть.
+// Місць спершу altarSlots, далі — пожертва Храму altarPrices[i] за кожне наступне, до altarMax.
+const EMBER = { id: "heavenly_ember", lifeMs: 7 * 24 * 3600 * 1000, altarSlots: 3, altarMax: 9,
+  altarPrices: [5000, 10000, 20000, 40000, 80000, 160000] };
+function emberClock(save) {
+  const root = rootSave(save);
+  if (!Array.isArray(root.embers)) root.embers = [];
+  return root.embers;
+}
+// Таймери збігаються з кількістю в стопці (нові — повний строк, зайві — найстаріші геть)
+function syncEmbers(save) {
+  const root = rootSave(save), t = emberClock(root), n = countInList(root.inventory || [], EMBER.id);
+  t.sort((a, b) => a - b);
+  while (t.length > n) t.shift();
+  while (t.length < n) t.push(Date.now() + EMBER.lifeMs);
+  return t;
+}
+// Погасити прострочені жарини. Повертає, скільки згасло (і додає до save.emberGone — показати гравцеві)
+function tickEmbers(save, now = Date.now()) {
+  const root = rootSave(save);
+  if (!root || !Array.isArray(root.inventory)) return 0;
+  const t = syncEmbers(root);
+  let gone = 0;
+  while (t.length && t[0] <= now) { t.shift(); gone++; }
+  if (gone) {
+    removeFromList(root.inventory, EMBER.id, gone);
+    root.emberGone = (root.emberGone || 0) + gone;
+  }
+  return gone;
+}
+// Мс до згасання найстаршої жарини в інвентарі (або null)
+function emberNextOut(save, now = Date.now()) {
+  const t = syncEmbers(save);
+  return t.length ? Math.max(0, t[0] - now) : null;
+}
+function altarOf(save) {
+  const root = rootSave(save);
+  if (!root.altar || typeof root.altar !== "object") root.altar = { slots: EMBER.altarSlots, embers: [] };
+  if (!(root.altar.slots >= EMBER.altarSlots)) root.altar.slots = EMBER.altarSlots;
+  if (!Array.isArray(root.altar.embers)) root.altar.embers = [];
+  return root.altar;
+}
+const atTemple = save => save.location?.map === "temple";
+// Покласти n жарин на вівтар (найстаріші з інвентаря). { ok, n } або { ok: false, reason }
+function altarPut(save, n = 1) {
+  if (!atTemple(save)) return { ok: false, reason: "Вівтар Перуна — у Храмі." };
+  const root = rootSave(save), a = altarOf(root), t = syncEmbers(root);
+  const free = a.slots - a.embers.length;
+  if (!t.length) return { ok: false, reason: "В інвентарі немає жарин." };
+  if (free < 1) return { ok: false, reason: `На вівтарі немає вільного місця (${a.embers.length}/${a.slots}).` };
+  const k = Math.min(n, free, t.length), now = Date.now();
+  for (let i = 0; i < k; i++) a.embers.push(Math.max(0, t.shift() - now));
+  removeFromList(root.inventory, EMBER.id, k);
+  return { ok: true, n: k };
+}
+// Забрати n жарин з вівтаря (спершу ті, яким лишилось найбільше): відлік іде далі з того, що лишалось
+function altarTake(save, n = 1) {
+  if (!atTemple(save)) return { ok: false, reason: "Вівтар Перуна — у Храмі." };
+  const root = rootSave(save), a = altarOf(root);
+  if (!a.embers.length) return { ok: false, reason: "На вівтарі немає жарин." };
+  const k = Math.min(n, a.embers.length, fitQty(root, EMBER.id, n));
+  if (k < 1) return { ok: false, reason: fullText(root, EMBER.id, 1) };
+  a.embers.sort((x, y) => y - x);
+  const now = Date.now(), t = syncEmbers(root);
+  for (const left of a.embers.splice(0, k)) t.push(now + left);
+  t.sort((x, y) => x - y);
+  addToList(root.inventory, EMBER.id, k);
+  return { ok: true, n: k };
+}
+// Ціна наступного місця на вівтарі (або null — більше не можна)
+function altarSlotPrice(save) {
+  const a = altarOf(save);
+  return a.slots >= EMBER.altarMax ? null : EMBER.altarPrices[a.slots - EMBER.altarSlots] ?? null;
+}
+function altarBuySlot(save) {
+  if (!atTemple(save)) return { ok: false, reason: "Пожертву приймають у Храмі." };
+  const root = rootSave(save), price = altarSlotPrice(root);
+  if (price == null) return { ok: false, reason: `Більше ${EMBER.altarMax} місць на вівтарі не буває.` };
+  if (root.character.gold < price) return { ok: false, reason: `Пожертва — ${price} золота, а у вас менше.` };
+  root.character.gold -= price;
+  altarOf(root).slots++;
+  return { ok: true, price, slots: altarOf(root).slots };
+}
+
 // ID усіх рун, що є в героя (з мішечка або, поки мішечка немає, з інвентаря) — для Горна Сварога й гнізд
 function runeIds(save) {
   if (save?.runePouch) return runePouchList(save).map(e => e.id);
@@ -883,6 +970,12 @@ function countItem(save, id) {
 }
 function addItem(save, id, qty = 1) {
   if (inRunePouch(save, id)) { addToRunePouch(save, id, qty); return true; }
+  if (id === EMBER.id) {                          // нові жарини — повний строк життя
+    const t = syncEmbers(save), ok = addToList(save.inventory, id, qty);
+    for (let i = 0; i < qty; i++) t.push(Date.now() + EMBER.lifeMs);
+    t.sort((a, b) => a - b);
+    return ok;
+  }
   return addToList(save.inventory, id, qty);
 }
 
@@ -962,6 +1055,12 @@ function removeItem(save, id, qty = 1) {
     const root = rootSave(save), have = runeAmount(root, id);
     if (have < qty) return false;
     if (have === qty) delete root.runes[id]; else root.runes[id] = have - qty;
+    return true;
+  }
+  if (id === EMBER.id) {                          // забрали жарини — першими йдуть найстаріші
+    const t = syncEmbers(save);
+    if (!removeFromList(save.inventory, id, qty)) return false;
+    t.splice(0, qty);
     return true;
   }
   return removeFromList(save.inventory, id, qty);
@@ -1935,6 +2034,7 @@ Object.assign(RPG, {
   ADMIN_SEAL, hasAdminSeal, grantAdminSeal, removeAdminSeal, adminSetLevel, adminSetClass,
   isItemLocked, lockedByDefault, toggleItemLock, LOCKED_REASON, sellAllCandidates, sellAll,
   RUNE_POUCH, runeCap, runeAmount, canGetRunePouch, grantRunePouch, migrateRunePouch, runePouchList, runeIds,
+  EMBER, syncEmbers, tickEmbers, emberNextOut, altarOf, altarPut, altarTake, altarSlotPrice, altarBuySlot,
   ADMIN_ARMOR_SETS, adminWeaponTypes, adminGearIds, adminGiveGear, INV_SIZE, invFree, fitQty, invSize, BELT_SLOTS, POUCH_DROP, beltOf, beltBonus, putOnBelt, takeFromBelt, rollPouchDrop,
   TRADE_MIN_LEVEL, TRADE_PRICE_MULT, tradeStock, tradePrice, buyFromTrade, isDistrictOpen, districtLockText,
   HOUSES, HOUSE_NAME_MAX, houseOf, houseHere, buyHouse, enterHouse,

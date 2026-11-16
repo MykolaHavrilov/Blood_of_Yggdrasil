@@ -94,9 +94,55 @@
       const sh = RPG.shamanState(save).stage;
       if (sh >= 1 && sh <= 4) renderRenouncer(place);
       if (RPG.velesState(save).stage >= 4) renderCourtyard(place);
+      renderAltar(place);
       const row = el("div", "row");
       row.append(link("Мапа", "maps.html"));
       place.append(row);
+    }
+
+    // --- Вівтар Перуна: сховок для Жарин Небесного горна (character.js → EMBER, altarPut / altarTake / altarBuySlot) ---
+    // Показується, щойно герой мав справу з жаринами (є в інвентарі чи на вівтарі, або вже перемагав Темну душу).
+    const leftText = ms => {
+      const h = Math.max(0, Math.floor(ms / 3600000)), d = Math.floor(h / 24);
+      return d ? `${d} д ${h % 24} год` : h ? `${h} год` : `${Math.max(1, Math.ceil(ms / 60000))} хв`;
+    };
+    function renderAltar(box) {
+      RPG.tickEmbers(save);
+      const a = RPG.altarOf(save), inv = RPG.countItem(save, RPG.EMBER.id);
+      if (!inv && !a.embers.length && !save.darkSouls?.kills) return;
+      const card = el("div", "stack explore-card altar-card");
+      card.append(el("h3", null, "Вівтар Перуна"));
+      card.append(noteP("На вівтарі, у світлі Перунового вогню, Жарини Небесного горна не гаснуть: їхній відлік стоїть, доки ви їх не заберете. " +
+        "Забрана жарина згасне через стільки, скільки їй лишалось."));
+      card.append(el("p", "altar-count", `На вівтарі: ${a.embers.length}/${a.slots} місць` +
+        (a.embers.length ? ` — кожній лишається: ${[...a.embers].sort((x, y) => y - x).map(leftText).join(", ")}` : "") + "."));
+      const next = RPG.emberNextOut(save);
+      card.append(el("p", "altar-count", inv ? `В інвентарі: ${inv} — найстарша згасне через ${leftText(next)}.` : "В інвентарі жарин немає."));
+      const act = async (fn, okText) => {
+        const r = fn();
+        if (!r.ok) { showMsg(msg, r.reason, true); return; }
+        await RPG.saveGame(save);
+        showMsg(msg, okText(r));
+        renderAll();
+      };
+      const row = el("div", "row");
+      const free = a.slots - a.embers.length;
+      const b1 = button("Покласти одну", "wf wf-button", () => act(() => RPG.altarPut(save, 1), () => "Жарина лягла на вівтар — її відлік зупинився."));
+      const b2 = button("Покласти всі", "wf wf-button", () => act(() => RPG.altarPut(save, inv), r => `На вівтар покладено жарин: ${r.n}.`));
+      b1.disabled = b2.disabled = !inv || free < 1;
+      const b3 = button("Забрати одну", "wf wf-secondary", () => act(() => RPG.altarTake(save, 1), () => "Жарину забрано — відлік пішов далі."));
+      const b4 = button("Забрати всі", "wf wf-secondary", () => act(() => RPG.altarTake(save, a.embers.length), r => `З вівтаря забрано жарин: ${r.n}.`));
+      b3.disabled = b4.disabled = !a.embers.length;
+      row.append(b1, b2, b3, b4);
+      card.append(row);
+      const price = RPG.altarSlotPrice(save);
+      if (price != null) {
+        const buy = button(`Пожертва Храму: ще одне місце · ${fmtNum(price)} зол.`, "wf wf-link", () =>
+          act(() => RPG.altarBuySlot(save), r => `Сестра Ївга дякує за пожертву. Тепер на вівтарі ${r.slots} місць (−${fmtNum(r.price)} золота).`));
+        buy.disabled = save.character.gold < price;
+        card.append(buy);
+      } else card.append(el("p", "altar-count", `На вівтарі вже найбільше місць — ${RPG.EMBER.altarMax}.`));
+      box.append(card);
     }
 
     // --- Внутрішній двір Храму: статуя Велеса й джерело (квест «Долоні Велеса») ---

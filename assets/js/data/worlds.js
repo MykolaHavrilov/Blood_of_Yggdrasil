@@ -117,6 +117,7 @@
   // Альвгейм (3-й світ) — без змін. Діє сама собою для кожного світу, щойно йому дадуть region (enemies.js → rollLoot).
   const CRAFT_ONLY_FROM = 4;
   function worldOfRegion(region) {
+    region = region || "start";                            // локації без region — Гардарика (світ 1)
     if (region === "city") return 1;                       // Дубова Застава — Мідгард
     if (region === "svartgard") return 5;                  // Свартгард — місто Свартальвгейму
     return WORLDS.find(w => w.region === region)?.n || 0;

@@ -80,9 +80,59 @@
     for (const sid in save.chests || {}) save.chests[sid] = move(save.chests[sid]);
   }
 
+  // ---------- ТЕМНА ДУША — ЗРАДНИК (задум — H:\Game_NEW\WORLDS_4-7.md, рішення користувача 2026-11-10 / 2026-11-14) ----------
+  // Коли данж світу fromWorld і далі відкривають ключем, з шансом chance замість боса в 3-му бою — Темна душа
+  // (жереб — у save.dungeon.darkSoul, перезавантаження його не змінює). Вона — копія боса цього данжу:
+  // здоров'я, мана, атака, магія й обидва захисти ×statMult, досвід ×expMult; решта — як у боса.
+  // Перемога над нею НЕ рахується як перемога над босом (ні світи, ні літопис). Зброя Зрадника ламається одразу;
+  // жарина Небесного горна: перша душа — напевно, далі emberBase, після кожної душі без жарини +emberStep (до 100%),
+  // після жарини — знову emberBase. Лічильники — save.darkSouls = { kills, embers, misses }.
+  // Вороги: ENEMIES["dark_soul_<id данжу>"] (по одному на данж), спільна картинка й сторінка бестіарію — "dark_soul".
+  const DARK_SOUL = { chance: 0.1, fromWorld: 4, statMult: 2, expMult: 5, emberBase: 0.2, emberStep: 0.1,
+    statKeys: ["hp", "mp", "attack", "magic", "defense", "magicDefense"], name: "Темна душа — Зрадник" };
+  const darkSoulId = dungeonId => `dark_soul_${dungeonId}`;
+  function makeDarkSoul(boss) {
+    const stats = { ...boss.stats };
+    for (const k of DARK_SOUL.statKeys) if (stats[k]) stats[k] = Math.round(stats[k] * DARK_SOUL.statMult);
+    return {
+      ...boss, name: DARK_SOUL.name, stats, exp: Math.round(boss.exp * DARK_SOUL.expMult), loot: [],
+      boss: true, noChampion: true, undead: true, darkSoul: true, spriteFile: "dark_soul", bestiaryId: "dark_soul",
+      move: { ...(boss.move || {}), name: "Удар рунного меча" }, verb: "рубає рунним мечем",
+      skills: (boss.skills || []).map(s => ({ ...s, name: { magic: "Зелене полум'я Хелли", stun: "Удар понівеченого меча", heal: "Мертве світло рун" }[s.kind] || s.name }))
+    };
+  }
+  // світ данжу: worlds.js (на сторінці гри підключений раніше), інакше — запасна таблиця (інші сторінки його не мають або мають пізніше)
+  const REGION_WORLD = { start: 1, city: 1, dark: 2, alf: 3, van: 4, svartgard: 5, svart: 5, jot: 6 };
+  const worldOfDungeon = d => { const r = RPG.LOCATIONS?.[d.location]?.region || "start"; return RPG.worldOfRegion?.(r) || REGION_WORLD[r] || 0; };
+  for (const [dId, d] of Object.entries(RPG.DUNGEONS || {})) {
+    const boss = RPG.ENEMIES[d.boss];
+    if (!boss || worldOfDungeon(d) < DARK_SOUL.fromWorld) continue;
+    RPG.ENEMIES[darkSoulId(dId)] = makeDarkSoul(boss);
+    // сторінка бестіарію — одна на всіх (перший данж світу fromWorld)
+    if (!RPG.ENEMIES.dark_soul) RPG.ENEMIES.dark_soul = { ...RPG.ENEMIES[darkSoulId(dId)], bestiaryOnly: true };
+  }
+  function darkSoulPossible(dungeonId) { return !!RPG.ENEMIES[darkSoulId(dungeonId)]; }
+  const isDarkSoul = enemyId => !!RPG.ENEMIES[enemyId]?.darkSoul;
+  // Шанс жарини з наступної душі
+  function emberChance(save) {
+    const s = save.darkSouls || {};
+    if (!s.kills) return 1;
+    return Math.min(1, DARK_SOUL.emberBase + DARK_SOUL.emberStep * (s.misses || 0));
+  }
+  // Перемога над душею: { ember, text } — лічильники оновлюються; саму жарину кладе page-game.js у здобич
+  function darkSoulReward(save) {
+    const s = (save.darkSouls ??= { kills: 0, embers: 0, misses: 0 });
+    const ember = Math.random() < emberChance(save);
+    s.kills++;
+    if (ember) { s.embers++; s.misses = 0; } else s.misses = (s.misses || 0) + 1;
+    return { ember, text: ember
+      ? "Зброя Темної душі ламається зі смертю її власника та дає Жарину Небесного горна."
+      : "Жарина небесного горна, що випала зі зброї, згасла й розвіялась по вітру." };
+  }
+
   // ID ворогів для бою stage
   // n — живих героїв у бою: ворогів не менше, ніж героїв (бій 1 — n, бій 2 — не менше 3; бос — один, але сильніший за групу)
-  function stageFoes(d, stage, n = 1) {
+  function stageFoes(d, stage, n = 1, darkSoul = false) {
     n = Math.max(1, Math.min(6, n || 1));
     if (stage === 1) return Array.from({ length: n }, () => pick(d.pool));
     if (stage === 2) {
@@ -91,7 +141,7 @@
       while (list.length < size) list.push(pick(d.pool));
       return shuffle(list);
     }
-    return [d.boss];
+    return [darkSoul && RPG.ENEMIES[darkSoulId(d.id)] ? darkSoulId(d.id) : d.boss];
   }
   const fighters = save => (RPG.aliveMembers ? RPG.aliveMembers(save).length : 1);
 
@@ -104,8 +154,8 @@
       delete save.dungeon;
       return null;
     }
-    if (!Array.isArray(s.foes) || !s.foes.length) s.foes = stageFoes(d, s.stage, fighters(save));
-    return { ...d, stage: s.stage, stages: STAGES, foes: s.foes };
+    if (!Array.isArray(s.foes) || !s.foes.length) s.foes = stageFoes(d, s.stage, fighters(save), s.darkSoul);
+    return { ...d, stage: s.stage, stages: STAGES, foes: s.foes, darkSoul: !!s.darkSoul };
   }
 
   // Відчинити ворота: −1 ключ, бій 1
@@ -122,6 +172,7 @@
       return { ok: false, reason: `Потрібен ${RPG.ITEMS[d.key].name}. Його можна знайти під час «${d.explore}» (шанс ${Math.round(d.keyChance * 100)}% з кожного ворога).` };
     }
     save.dungeon = { id: d.id, stage: 1, foes: stageFoes(d, 1, fighters(save)) };
+    if (darkSoulPossible(d.id) && Math.random() < DARK_SOUL.chance) save.dungeon.darkSoul = true;   // жереб — одразу, у сейві
     return { ok: true };
   }
 
@@ -131,7 +182,7 @@
     if (!s) return { done: true, stage: 0 };
     if (s.stage >= STAGES) { delete save.dungeon; return { done: true, stage: STAGES }; }
     s.stage++;
-    s.foes = stageFoes(getDungeon(s.id), s.stage, fighters(save));
+    s.foes = stageFoes(getDungeon(s.id), s.stage, fighters(save), s.darkSoul);
     return { done: false, stage: s.stage };
   }
 
@@ -199,6 +250,7 @@
 
   Object.assign(RPG, {
     DUNGEON_STAGES: STAGES, KEY_MAX, keyAmount, addKeys, useKey, keyPocket, migrateKeys, DUNGEON_GROUP_POWER: GROUP_POWER, dungeonGroupPower: groupPower, DUNGEON_POOL_TEXT: dungeonStageText, getDungeon, locationDungeon, keyCount, activeDungeon, openDungeon,
-    advanceDungeon, leaveDungeon, dungeonSpecs, rollKeyDrops
+    advanceDungeon, leaveDungeon, dungeonSpecs, rollKeyDrops,
+    DARK_SOUL, darkSoulId, darkSoulPossible, isDarkSoul, emberChance, darkSoulReward
   });
 })(window.RPG);

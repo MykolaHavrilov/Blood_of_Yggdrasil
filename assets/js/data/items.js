@@ -1057,6 +1057,14 @@ const ITEMS = {
     description: "Ключ, обплетений павутинням. Відчиняє данж «Гніздо Королеви» (Ліс павутини). Одна спроба — один ключ."
   },
   // Квест «Долоні Велеса» (quests.js → VELES): незнайомець підкидає героєві на 12 рівні
+  // Жарина Небесного горна (dungeon.js → DARK_SOUL, character.js → EMBER): лише з Темної душі — Зрадника.
+  // В інвентарі — одна стопка; кожна жарина гасне за 7 днів (першою — найстарша), на вівтарі Храму Перуна не гасне. У скриню — ні.
+  heavenly_ember: {
+    name: "Жарина Небесного горна",
+    type: "quest", quest: true, price: 0, noShop: true, noChest: true, stackable: true, maxStack: 99,
+    description: "Шматочок вогню Небесної кузні, що тлів у зброї Темної душі — Зрадника. Без горна Сварога жарина гасне за 7 днів; " +
+      "на вівтарі Храму Перуна — не гасне. У скриню її не покласти: її полум'я розплавить усе, крім інвентаря героя й вівтаря."
+  },
   orb_veles: {
     name: "Дивна сфера",
     type: "quest", quest: true, price: 0, noShop: true,
@@ -1400,7 +1408,7 @@ const ICON_FILES = new Set(["sword", "dagger", "axe", "bow", "staff", "shield", 
  "orb_veles", "orb_gods"]
   .forEach(id => ICON_FILES.add(id));
 // Іконки, додані скриптом tools/add-image.js (окремі файли assets/images/items/icon_<id>.webp)
-["key_svart_alvis", "key_svart_falls", "key_svart_forges", "key_svart_mines", "key_svart_mokkur", "key_svart_quarters", "key_svart_runes"].forEach(id => ICON_FILES.add(id));
+["key_svart_alvis", "key_svart_falls", "key_svart_forges", "key_svart_mines", "key_svart_mokkur", "key_svart_quarters", "key_svart_runes", "heavenly_ember"].forEach(id => ICON_FILES.add(id));
 ["key_jot_passes", "key_jot_thrymheim", "key_jot_ironwood", "key_jot_thrym", "key_jot_waste", "key_jot_utgard", "key_jot_hymir", "key_jot_serpent"].forEach(id => ICON_FILES.add(id));
 // Броня й прикраси 1–3 виду, комплект слизу — нові окремі іконки (2026-11-16; промти — «Речі 1-3 тіру - іконки (промти).txt» у H:/Game_NEW), замість листів armor / accessory
 ["linen", "leather", "iron"].forEach(m => ["head", "chest", "legs", "hands", "feet"].forEach(sl => ICON_FILES.add(`${m}_${sl}`)));

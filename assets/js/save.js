@@ -209,6 +209,7 @@
     // Кишеня для ключів від данжів (dungeon.js): ключі з інвентаря/скринь переїжджають туди
     if (RPG.migrateKeys) RPG.migrateKeys(save); else save.keys ??= {};
     RPG.migrateRunePouch?.(save);                        // мішечок для рун: руни, що опинились в інвентарі, — у мішечок
+    RPG.tickEmbers?.(save);                              // жарини Небесного горна, що встигли згаснути (character.js → EMBER)
     save.location ??= { map: RPG.DEFAULT_LOCATION, page: "game" };
     const loc = RPG.LOCATIONS[save.location.map];
     if (!loc || loc.locked) save.location.map = RPG.DEFAULT_LOCATION;
