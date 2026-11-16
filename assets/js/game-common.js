@@ -1439,6 +1439,208 @@
     return s;
   }
 
+  // ---------- Древо професій (data/classes.js → CLASS_TREE) ----------
+  // Заглушка без картинок: зоряне тло — CSS, лінії — SVG, вузли — кружечки зі значками професій.
+  // «Усе древо» — Селянин у центрі, гілки колом за годинниковою стрілкою від 12 години;
+  // напрямок — згори вниз: Селянин, професії напрямку, під кожною — закриті вузли «2 професії».
+  // Координати — в одиницях поля (W × H); на сторінці — відсотки, тож схема однакова на ПК і телефоні.
+  // Картинки древа: assets/images/ui/class_tree_<all | 1…5>.webp (зоряна схема з порожніми кружечками й замками).
+  // Центри кружечків виміряно на картинках: [x, y, r] — частки ширини (x, r) і висоти (y) картинки, r — внутрішній край обідка.
+  // prof — у порядку CLASS_TREE (на «all» — усі напрямки поспіль, без прихованої), next — по CLASS_TREE_NEXT під кожною професією,
+  // ask — «?» прихованої професії (на картинці намальований полум'ям, без кружечка).
+  // Нова картинка — переміряти точки, інакше значки не влучать у кружечки.
+  const ROW = (y, r, xs) => xs.map(x => [x, y, r]);
+  const CLASS_TREE_ART = {
+    all: { img: "class_tree_all", W: 1200, H: 1200, root: [0.4979, 0.4856, 0.0754], ask: [0.3478, 0.2148, 0.034],
+      prof: [[0.4993, 0.2015, 0.038], [0.6339, 0.2346, 0.0385], [0.7462, 0.3186, 0.039], [0.7914, 0.4435, 0.0388], [0.7802, 0.5793, 0.0388],
+             [0.699, 0.6958, 0.0398], [0.5661, 0.7624, 0.039], [0.4129, 0.7605, 0.0389], [0.2873, 0.6954, 0.039], [0.2107, 0.5752, 0.039],
+             [0.2014, 0.4431, 0.0387], [0.249, 0.3166, 0.0389]],
+      next: [[0.4583, 0.0533], [0.5408, 0.0532], [0.6694, 0.0851], [0.7428, 0.1109], [0.8492, 0.1997], [0.8959, 0.2607], [0.9363, 0.3768],
+             [0.9514, 0.4547], [0.9402, 0.5673], [0.9188, 0.6415], [0.8621, 0.7417], [0.816, 0.8019], [0.6774, 0.8865], [0.5888, 0.9136],
+             [0.3917, 0.9127], [0.31, 0.8858], [0.1792, 0.8016], [0.1362, 0.7406], [0.0802, 0.6415], [0.0587, 0.5674], [0.0476, 0.4549],
+             [0.0633, 0.3759], [0.1033, 0.259], [0.1503, 0.1992], [0.2559, 0.1105], [0.3291, 0.085]].map(p => [...p, 0.021]) },
+    martial: { img: "class_tree_1", W: 900, H: 1200, root: [0.4988, 0.1938, 0.0854],
+      prof: ROW(0.4656, 0.078, [0.1532, 0.3842, 0.6145, 0.8444]),
+      next: ROW(0.6714, 0.041, [0.0826, 0.2026, 0.3265, 0.4406, 0.5608, 0.6738, 0.7956, 0.9132]) },
+    shadow: { img: "class_tree_2", W: 900, H: 1200, root: [0.4985, 0.1937, 0.0862],
+      prof: ROW(0.4673, 0.083, [0.2957, 0.7009]),
+      next: ROW(0.6806, 0.0514, [0.2093, 0.3771, 0.6194, 0.7863]) },
+    magic: { img: "class_tree_3", W: 900, H: 1200, root: [0.4985, 0.1936, 0.0861],
+      prof: ROW(0.4658, 0.0785, [0.1529, 0.3838, 0.6147, 0.8446]),
+      next: ROW(0.6714, 0.0413, [0.0826, 0.2024, 0.3264, 0.4404, 0.5606, 0.6732, 0.7966, 0.9136]) },
+    light: { img: "class_tree_4", W: 900, H: 1200, root: [0.4983, 0.1927, 0.0862],
+      prof: ROW(0.4662, 0.0832, [0.3165, 0.6821]),
+      next: ROW(0.6785, 0.0497, [0.2385, 0.3914, 0.6081, 0.7591]) },
+    hidden: { img: "class_tree_5", W: 900, H: 1200, root: [0.4987, 0.1939, 0.0868], ask: [0.4967, 0.475, 0.06],
+      prof: [],
+      next: ROW(0.7128, 0.049, [0.3737, 0.6215]) }
+  };
+
+  // Вузли за картинкою: координати з CLASS_TREE_ART у пікселях картинки; ліній немає — вони намальовані
+  function classTreeArtLayout(groupId) {
+    const A = CLASS_TREE_ART[groupId];
+    if (!A) return null;
+    const groups = groupId === "all" ? RPG.CLASS_TREE : RPG.CLASS_TREE.filter(g => g.id === groupId);
+    const node = (kind, id, group, [x, y, r]) => ({ kind, id, group, x: x * A.W, y: y * A.H, size: 2 * r * A.W });
+    const nodes = [node("root", RPG.DEFAULT_CLASS, null, A.root)];
+    let p = 0, n = 0;
+    for (const g of groups) for (const id of g.classes) {
+      const at = g.secret ? A.ask : A.prof[p++];
+      if (!at) return null;                                   // точок менше, ніж професій — показати схему без картинки
+      nodes.push(Object.assign(node("prof", id, g, at), { ask: !!g.secret }));
+      for (let k = 0; k < RPG.CLASS_TREE_NEXT; k++) {
+        if (!A.next[n]) return null;
+        nodes.push(node("next", id, g, A.next[n++]));
+      }
+    }
+    return { W: A.W, H: A.H, nodes, lines: [], labels: groupId !== "all", art: RPG.asset(`assets/images/ui/${A.img}.webp`) };
+  }
+
+  function classTreeLayout(groupId) {
+    const art = classTreeArtLayout(groupId);
+    if (art) return art;
+    const N = RPG.CLASS_TREE_NEXT;
+    const nodes = [], lines = [];
+    const spread = (k, step) => (k - (N - 1) / 2) * step;   // зсув k-го закритого вузла від осі гілки
+    if (groupId === "all") {
+      const W = 400, H = 400, C = 200;
+      const at = (r, deg) => [C + r * Math.sin(deg * Math.PI / 180), C - r * Math.cos(deg * Math.PI / 180)];
+      // Кутові «одиниці»: вузол — 1, між напрямками — 0,6, прихований напрямок — 1,2 з обох боків
+      const gapBefore = g => g.secret ? 1.2 : 0.6;
+      const slots = [];
+      let u = 0;
+      RPG.CLASS_TREE.forEach((g, gi) => {
+        if (gi) u += gapBefore(g);
+        for (const id of g.classes) { slots.push({ id, g, u }); u += 1; }
+      });
+      const total = u + gapBefore(RPG.CLASS_TREE.at(-1).secret ? RPG.CLASS_TREE.at(-1) : RPG.CLASS_TREE[0]);
+      const deg1 = 360 / total;
+      nodes.push({ kind: "root", id: RPG.DEFAULT_CLASS, x: C, y: C, size: 52 });
+      for (const s of slots) {
+        const a = s.u * deg1;
+        const [x, y] = at(116, a), [fx, fy] = at(146, a);
+        nodes.push({ kind: "prof", id: s.id, group: s.g, x, y, size: 32 });
+        lines.push({ from: [C, C], to: [x, y], secret: s.g.secret }, { from: [x, y], to: [fx, fy], locked: true });
+        for (let k = 0; k < N; k++) {
+          const [cx, cy] = at(172, a + spread(k, deg1 * 0.5));
+          nodes.push({ kind: "next", id: s.id, x: cx, y: cy, size: 20 });
+          lines.push({ from: [fx, fy], to: [cx, cy], locked: true });
+        }
+      }
+      return { W, H, nodes, lines, labels: false };
+    }
+    const g = RPG.CLASS_TREE.find(x => x.id === groupId) || RPG.CLASS_TREE[0];
+    const W = 300, H = 400, n = g.classes.length, col = W / n;
+    nodes.push({ kind: "root", id: RPG.DEFAULT_CLASS, x: W / 2, y: 52, size: 56 });
+    g.classes.forEach((id, i) => {
+      const x = (i + 0.5) * col;
+      nodes.push({ kind: "prof", id, group: g, x, y: 196, size: 44 });
+      lines.push({ from: [W / 2, 52], to: [x, 196], secret: g.secret }, { from: [x, 196], to: [x, 272], locked: true });
+      for (let k = 0; k < N; k++) {
+        const cx = x + spread(k, Math.min(72, col / 2));
+        nodes.push({ kind: "next", id, x: cx, y: 340, size: 28 });
+        lines.push({ from: [x, 272], to: [cx, 340], locked: true });
+      }
+    });
+    return { W, H, nodes, lines, labels: true };
+  }
+
+  // Опис вузла древа для панелі під схемою: [заголовок, рядки…]
+  function classTreeInfo(node, state) {
+    const cls = RPG.getClass(node.id);
+    if (node.kind === "next") return ["2 професія", `Продовження шляху «${cls.name}». У грі цієї професії ще немає — вузол закритий.`];
+    if (node.kind === "prof" && !state.known(node.id)) return ["Прихована професія", "Про цей шлях ще нічого не відомо. Кажуть, його знаходять ті, хто довго не обирає жодного іншого."];
+    const out = [`${cls.name} · ${RPG.classRankLabel(node.id)}`, cls.description];
+    const req = cls.requires;
+    if (req?.quest === "profession") {
+      out.push(`Як отримати: квест «Шлях професії» з ${req.level} рівня Селянина.`);
+      // Назви атрибутів — окремими вузлами, щоб переклад (i18n.js) знайшов кожну в словнику
+      const p = el("p");
+      p.append(el("span", null, "Вкладені очки атрибутів:"));
+      Object.entries(req.attrs || {}).forEach(([k, v], i) => p.append(i ? ", " : " ", el("span", null, RPG.ATTRS[k]), ` ${v}`));
+      out.push(p);
+    } else if (req?.quest === "shaman") {
+      out.push(`Як отримати: секретний квест «Шлях відреченого» — обряд на ${req.level} рівні Селянина.`);
+    } else if (!req) {
+      out.push("З цього починає кожен герой. Із 15 рівня Селянин може обрати одну з професій.");
+    }
+    return out;
+  }
+
+  // Вікно «Древо професій». save — герой, для якого показується древо (його професія підсвічена); groupId — "all" або id напрямку
+  function showClassTree(save, groupId = "all") {
+    const state = RPG.classTreeState(save);
+    for (const A of Object.values(CLASS_TREE_ART)) new Image().src = RPG.asset(`assets/images/ui/${A.img}.webp`);   // щоб при перемиканні не блимало
+    const had =new Set((save.character.classHistory || []).map(h => h.classId));
+    const { dlg, closeBtn } = noticeDialog("class-tree-dialog");
+    const tabs = el("div", "class-tree-tabs");
+    const field = el("div", "class-tree-field");
+    const info = el("div", "class-tree-info");
+    const showInfo = node => {
+      const [title, ...lines] = classTreeInfo(node, state);
+      info.replaceChildren(el("h4", null, title), ...lines.map(l => typeof l === "string" ? el("p", null, l) : l));
+    };
+    const SVG = "http://www.w3.org/2000/svg";
+    const draw = id => {
+      groupId = id;
+      tabs.replaceChildren();
+      const tab = (key, label) => {
+        const b = button(label, "wf " + (key === groupId ? "wf-button" : "wf-link"), () => draw(key));
+        if (key === groupId) b.setAttribute("aria-pressed", "true");
+        tabs.append(b);
+      };
+      tab("all", "Усе древо");
+      for (const g of RPG.CLASS_TREE) tab(g.id, g.secret && !g.classes.some(state.known) ? "?" : g.name);
+
+      const L = classTreeLayout(groupId);
+      field.className = "class-tree-field" + (groupId === "all" ? " is-all" : "") +
+        (RPG.CLASS_TREE.find(g => g.id === groupId)?.secret ? " is-secret" : "") + (L.art ? " has-art" : "");
+      field.style.aspectRatio = `${L.W} / ${L.H}`;
+      field.style.backgroundImage = L.art ? `url("${L.art}")` : "";    // картинка древа; без неї — зоряне тло з CSS
+      const svg = document.createElementNS(SVG, "svg");
+      svg.setAttribute("viewBox", `0 0 ${L.W} ${L.H}`);
+      svg.setAttribute("class", "class-tree-lines");
+      svg.setAttribute("aria-hidden", "true");
+      for (const ln of L.lines) {
+        const l = document.createElementNS(SVG, "line");
+        [["x1", ln.from[0]], ["y1", ln.from[1]], ["x2", ln.to[0]], ["y2", ln.to[1]]].forEach(([k, v]) => l.setAttribute(k, v.toFixed(1)));
+        l.setAttribute("class", ln.locked ? "is-locked" : ln.secret ? "is-secret" : "");
+        svg.append(l);
+      }
+      field.replaceChildren(svg);
+      const pct = (v, of) => `${(v / of) * 100}%`;
+      for (const node of L.nodes) {
+        const known = node.kind !== "prof" || state.known(node.id);
+        const b = el("button", `ct-node ct-${node.kind}`);
+        b.type = "button";
+        Object.assign(b.style, { left: pct(node.x, L.W), top: pct(node.y, L.H), width: pct(node.size, L.W) });
+        if (node.kind !== "next" && known) b.style.setProperty("--ct-color", RPG.getClass(node.id).color || "#b9a26a");
+        if (node.kind !== "next" && node.id === state.current) b.classList.add("is-current");
+        else if (node.kind !== "next" && had.has(node.id)) b.classList.add("is-passed");
+        // На картинці замки й «?» уже намальовані — поверх лише значок професії
+        if (node.kind === "next") { if (!L.art) b.append(el("span", "ct-lock", "🔒")); }
+        else if (!known) { b.classList.add("is-unknown"); if (!L.art) b.append(el("span", "ct-ask", "?")); }
+        else { if (node.ask) b.classList.add("is-revealed"); const e = el("span", "ct-emblem"); e.style.backgroundImage = `url("${RPG.classEmblemUrl(node.id)}")`; b.append(e); }
+        const title = classTreeInfo(node, state)[0];
+        b.title = title;
+        b.setAttribute("aria-label", title);
+        b.addEventListener("click", () => showInfo(node));
+        field.append(b);
+        if (L.labels && node.kind !== "next") {
+          const lab = el("span", "ct-label", known ? RPG.getClass(node.id).name : "?");
+          Object.assign(lab.style, { left: pct(node.x, L.W), top: pct(node.y + node.size / 2 + L.H * 0.012, L.H) });
+          field.append(lab);
+        }
+      }
+      showInfo(L.nodes.find(n => n.kind !== "next" && n.id === state.current) || L.nodes[0]);
+    };
+    dlg.append(closeBtn(), el("h3", null, "Древо професій"), tabs, field, info);
+    draw(groupId);
+    document.body.append(dlg);
+    dlg.showModal();
+    return dlg;
+  }
+
   // Оновлює блок героя: картинка, ім'я, HP / MP / EXP / LVL, відновлення
   function renderHeroBars(save) {
     const st = RPG.calcStats(save);
@@ -1731,7 +1933,7 @@
   // ============================================================
 
   RPG.pages = {};
-  RPG.ui = { scoreBox, showScore, showBuriedPage, hardcoreCheck, showGameOver, showGameOverPage, showHardcoreLosses, gameOverContent, expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showRunePouch, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, npcHead, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, showExpeditionBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, lockMark, lockButton, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
+  RPG.ui = { scoreBox, showScore, showBuriedPage, hardcoreCheck, showGameOver, showGameOverPage, showHardcoreLosses, gameOverContent, expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showRunePouch, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, npcHead, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, showExpeditionBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, lockMark, lockButton, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, classTreeLayout, showClassTree, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
   RPG.ui.classEmblem = classEmblem;
   RPG.ui.meetRenouncer = meetRenouncer;   // «Шлях відреченого»
 })(window.RPG);

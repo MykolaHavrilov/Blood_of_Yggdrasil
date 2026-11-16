@@ -369,6 +369,7 @@
         b.disabled = !info.complete;
         card.append(b);
       }
+      card.append(button("Древо професій", "wf wf-link class-tree-open", () => RPG.ui.showClassTree(ms)));   // game-common.js → showClassTree
       box.append(card);
       return true;
     }

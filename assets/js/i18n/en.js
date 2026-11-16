@@ -3,6 +3,17 @@ window.RPG = window.RPG || {};
 RPG.I18N = RPG.I18N || {};
 RPG.I18N.en = {
 "phrases": {
+"Древо професій": "Profession Tree",
+"Усе древо": "Whole tree",
+"Ратники": "Men-at-Arms",
+"Тіні": "Shadows",
+"Маги": "Mages",
+"Світло": "Light",
+"Прихована": "Hidden",
+"Прихована професія": "Hidden profession",
+"Про цей шлях ще нічого не відомо. Кажуть, його знаходять ті, хто довго не обирає жодного іншого.": "Nothing is known about this path yet. They say it is found by those who choose no other for a long time.",
+"З цього починає кожен герой. Із 15 рівня Селянин може обрати одну з професій.": "Every hero starts here. From level 15 a Peasant can choose one of the professions.",
+"Вкладені очки атрибутів:": "Invested attribute points:",
 "професія відсутня": "no profession",
 "1 професія": "1st profession",
 "2 професія": "2nd profession",
@@ -3376,6 +3387,9 @@ RPG.I18N.en = {
 "Земля велетнів: крижані перевали, Залізний ліс Ангрбоди, кам'яна пустка й брама Утгарда — а за краєм світу з чорного моря піднімає голову Світовий Змій": "The land of the giants: icy passes, Angrboða's Iron Wood, the stone waste and the gate of Útgarðr — and beyond the edge of the world the World Serpent raises his head from the black sea"
 },
 "patterns": [
+["^Продовження шляху «(.*?)». У грі цієї професії ще немає — вузол закритий.$","Continuation of the \"$1\" path. This profession is not in the game yet — the node is locked.",1,0,"Продовження шляху"],
+["^Як отримати: квест «Шлях професії» з (.*?) рівня Селянина.$","How to get: the \"Path of a Profession\" quest from Peasant level $1.",1,0,"Як отримати: квест «Шлях професії»"],
+["^Як отримати: секретний квест «Шлях відреченого» — обряд на (.*?) рівні Селянина.$","How to get: the secret \"Path of the Renouncer\" quest — the rite at Peasant level $1.",1,0,"Як отримати: секретний квест"],
 [
 "^(.*?) · (професія відсутня|[0-9]+ професія)$",
 "$1 · $2",

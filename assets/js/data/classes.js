@@ -338,6 +338,28 @@
     return n > 0 ? `${n} професія` : "професія відсутня";
   }
 
+  // ---------- Древо професій (вікно «Древо професій», game-common.js → showClassTree) ----------
+  // Напрямки — порядок кнопок і порядок гілок за годинниковою стрілкою на загальному древі.
+  // Під кожною «1 професією» — CLASS_TREE_NEXT закритих вузлів «2 професії» (таких професій у грі ще немає).
+  // secret — напрямок прихованої професії: доки герой про неї не дізнався, замість значка — «?».
+  const CLASS_TREE = [
+    { id: "martial", name: "Ратники",   classes: ["warrior", "knight", "berserker", "paladin"] },
+    { id: "shadow",  name: "Тіні",      classes: ["rogue", "hunter"] },
+    { id: "magic",   name: "Маги",      classes: ["mage_fire", "mage_water", "mage_wind", "mage_earth"] },
+    { id: "light",   name: "Світло",    classes: ["priest", "monk"] },
+    { id: "hidden",  name: "Прихована", classes: ["shaman"], secret: true }
+  ];
+  const CLASS_TREE_NEXT = 2;
+  // Що бачить герой на древі: { current — його професія, known(id) — чи показувати професію (а не «?») }
+  // Приховану видно, якщо герой нею став або Відречений уже заговорив з ним (save.story.shaman.stage ≥ 1).
+  function classTreeState(save) {
+    const ch = save.character;
+    const had = new Set([ch.classId, ...(ch.classHistory || []).map(h => h.classId)]);
+    const met = (save.story?.shaman?.stage || 0) >= 1;
+    const secret = new Set(CLASS_TREE.filter(g => g.secret).flatMap(g => g.classes));
+    return { current: ch.classId, known: id => !secret.has(id) || had.has(id) || met };
+  }
+
   // ---------- Колір і значок професії ----------
   // Значок — зброя правої й лівої руки професії, зафарбована її кольором: assets/images/ui/cls_<id>.webp (96×96).
   // Колір запечено в картинку. Змінили колір тут — перефарбувати значки (з H:\Game_NEW):
@@ -352,7 +374,7 @@
   // Адреса картинки значка (невідома професія — значок Селянина)
   const classEmblemUrl = id => RPG.asset(`assets/images/ui/cls_${CLASSES[id] ? id : DEFAULT_CLASS}.webp`);
 
-  Object.assign(RPG, { DEFAULT_CLASS, CLASSES, ROLES, classRoles, classRankLabel, classEmblemUrl, PROFESSION_LEVEL, getClass, heroDoll, heroFistStyle, heroSpriteStyle, heroSpriteId,
+  Object.assign(RPG, { DEFAULT_CLASS, CLASSES, ROLES, classRoles, classRankLabel, CLASS_TREE, CLASS_TREE_NEXT, classTreeState, classEmblemUrl, PROFESSION_LEVEL, getClass, heroDoll, heroFistStyle, heroSpriteStyle, heroSpriteId,
                        availableClassChanges, pickProfession,
                        investedAttrPoints, professionLack, eligibleProfessions, classAllowsWeapon, classAllowsOffHand });
 })(window.RPG);
