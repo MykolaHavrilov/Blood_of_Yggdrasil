@@ -895,7 +895,8 @@ await RPG.saveGame(save);
 - Шахта (залізна руда, гірський кришталь) і Лісопилка (залізне дерево) — з 40 рівня (`loc_mine_jot`, `loc_sawmill_jot`, `bld_mine_jot`, `bld_sawmill_jot`).
 - Мапа — `map/map_jotunheim.webp`, зони `JOT_ZONES`, будівлі `map/bld_jot_*.webp` (`REGION_BUILDINGS.jot`), маршрути вручну по стежці (`ROUTES.jot`);
   галявина (11.5, 54) — лише розвилка стежки (Тримгейм — на орлиній скелі вище).
-- Фони боїв `locations/loc_jot_*.webp` (8 + вхід) — свої. Іконки ключів — 6 із 8: `key_jot_hymir` і `key_jot_serpent` — без іконки (перегенерувати).
+- Фони боїв `locations/loc_jot_*.webp` (8 + вхід) — свої. Іконки ключів — усі 8 (`key_jot_hymir` і `key_jot_serpent` — з аркуша `6-9_world_keys.png`, 2026-11-16;
+  там же ключі світів 7–9 — вирізані в `H:\Game_NEW\new_assets\ready\items\keys_6-9\`).
   Промти — `H:\Game_NEW\Світ 6 - Йотунгейм - іконки ключів (промти).txt`, `… - фони боїв (промти).txt`.
 - Вовкулака цього світу зветься «Вовкулака Залізного лісу» (`jot_wolf_man`), щоб не плутати з вовкулакою Темного лісу. Глави літопису немає.
 

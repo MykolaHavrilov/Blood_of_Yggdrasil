@@ -1166,7 +1166,7 @@ const ITEMS = {
     type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Грубий ключ із випаленої глини з тріщиною, що світиться зсередини. Відчиняє данж «Глиняне серце» (Кузня Мьоккуркальві). Одна спроба — один ключ."
   },
-  // Ключі данжів Йотунгейму (світ 6): Чертог Гюміра й Берег Змія — без іконок (у клітинці видно назву)
+  // Ключі данжів Йотунгейму (світ 6)
   key_jot_passes: {
     name: "Ключ «Троляча печера»",
     type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
@@ -1401,7 +1401,7 @@ const ICON_FILES = new Set(["sword", "dagger", "axe", "bow", "staff", "shield", 
   .forEach(id => ICON_FILES.add(id));
 // Іконки, додані скриптом tools/add-image.js (окремі файли assets/images/items/icon_<id>.webp)
 ["key_svart_alvis", "key_svart_falls", "key_svart_forges", "key_svart_mines", "key_svart_mokkur", "key_svart_quarters", "key_svart_runes"].forEach(id => ICON_FILES.add(id));
-["key_jot_passes", "key_jot_thrymheim", "key_jot_ironwood", "key_jot_thrym", "key_jot_waste", "key_jot_utgard"].forEach(id => ICON_FILES.add(id));
+["key_jot_passes", "key_jot_thrymheim", "key_jot_ironwood", "key_jot_thrym", "key_jot_waste", "key_jot_utgard", "key_jot_hymir", "key_jot_serpent"].forEach(id => ICON_FILES.add(id));
 const ICON_FILE_BASE = RPG.asset("assets/images/items/icon_");
 
 // Стиль іконки предмета (окремий файл або клітинка спрайт-листа); null — іконки немає (буде заглушка)
