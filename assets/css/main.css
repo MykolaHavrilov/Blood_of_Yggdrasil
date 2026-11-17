@@ -218,6 +218,8 @@ header nav a[href$="index.html"]     { --ico: url("data:image/svg+xml,%3Csvg xml
   position: fixed; right: max(12px, env(safe-area-inset-right)); bottom: max(8px, env(safe-area-inset-bottom));
   margin: 0; font-size: .8rem; color: var(--text-dim); opacity: .75; pointer-events: none;
 }
+/* «Про автора»: та сама версія, але в потоці сторінки — унизу посередині */
+.game-version.is-inline { position: static; margin: 18px 0 6px; text-align: center; }
 
 .menu {
   display: flex;
@@ -430,6 +432,9 @@ dialog::backdrop { background: var(--overlay); }
   text-shadow: 0 0 2px #000, 0 1px 2px #000;
   pointer-events: none;
 }
+/* Гартування «+N» (Горно Сварога) — правий верхній кут клітинки */
+.item-up { position: absolute; right: 3px; top: 2px; z-index: 2; font-size: .7rem; font-weight: 800; line-height: 1;
+  color: #ffb347; text-shadow: 0 0 2px #000, 0 1px 2px #000, 0 0 6px rgba(255, 140, 40, .6); pointer-events: none; }
 /* GS героя — правий верхній кут картинки персонажа */
 .hero-gs {
   position: absolute;

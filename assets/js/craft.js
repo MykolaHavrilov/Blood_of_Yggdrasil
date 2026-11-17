@@ -11,7 +11,9 @@
 //
 // Якість матеріалів: середня рідкість витрачених стопок (звичайна 0, магічна 1, епічна 2, легендарна 3)
 // переносить частину звичайних результатів у кращі рідкості; Небесна іскра (за бажанням) додає +10% до легендарної і згоряє.
-// Кувати можна лише в домі з кузнею і всіма обов'язковими знаряддями, героєві з професією.
+// Кувати можна лише в домі з кузнею і всіма обов'язковими знаряддями, героєві з професією —
+// або в Горні Сварога (Свартгард, Кузня Брокка й Ейтрі): там усі знаряддя є, а вогонь Сварога додає +5% до легендарної.
+// Там же — гартування речей +1…+10 (temperItem; бонус до характеристик — rarity.js → TEMPER_*).
 // Підключається ПІСЛЯ character.js, data/items.js, data/recipes.js, rarity.js.
 // ============================================================
 
@@ -99,7 +101,7 @@
   // Якість переносить частину ЗВИЧАЙНИХ результатів у кращі рідкості (на низькій майстерності ефект малий):
   // за кожен бал якості — 15% звичайних у магічні, 8% у епічні, 2% у легендарні (при q = 3 — разом 75%).
   // Небесна іскра — ще до +10% (від усіх спроб) до легендарної, але не більше 60% звичайних, що лишились.
-  function applyQuality(tab, q, spark) {
+  function applyQuality(tab, q, spark, svarog = false) {
     const t = { ...tab };
     const base = t.common;
     const move = (to, amount) => { const a = Math.max(0, Math.min(t.common, amount)); t.common -= a; t[to] += a; };
@@ -107,7 +109,84 @@
     move("epic", base * 0.08 * q);
     move("legendary", base * 0.02 * q);
     if (spark) move("legendary", Math.min(SPARK_BONUS, t.common * 0.6));
+    if (svarog) move("legendary", Math.min(SVAROG.legendBonus, t.common * 0.6));   // вогонь Сварога
     return t;
+  }
+
+  // ---------- Горно Сварога (рішення користувача 2026-11-17) ----------
+  // Стоїть у Небесній кузні, яку Брокк і Ейтрі стережуть для Сварога (Свартгард → район «brokk»).
+  // Розпалюється ПЕРШОЮ Жариною Небесного горна — назавжди (save.svarogLit). Три дії: кування, Рунне горно, гартування.
+  const SVAROG = { city: "svartgard", district: "brokk", legendBonus: 0.05 };
+  function atSvarogForge(save) { return save?.location?.map === SVAROG.city && save?.location?.district === SVAROG.district; }
+  function svarogLit(save) { return !!RPG.rootSave(save)?.svarogLit; }
+  function lightSvarog(save) {
+    const root = RPG.rootSave(save);
+    if (root.svarogLit) return { ok: false, reason: "Горно Сварога вже горить." };
+    if (!atSvarogForge(save)) return { ok: false, reason: "Горно Сварога — у Небесній кузні Свартгарда." };
+    if (RPG.countItem(root, "heavenly_ember") < 1) return { ok: false, reason: "Потрібна Жарина Небесного горна — її лишає зброя Темної душі." };
+    RPG.removeItem(root, "heavenly_ember", 1);
+    root.svarogLit = Date.now();
+    return { ok: true };
+  }
+  // «Дім» для кування в Горні Сварога: усі знаряддя на місці
+  let svarogHouse = null;
+  function craftHouse(save) {
+    if (atSvarogForge(save) && svarogLit(save)) {
+      svarogHouse ??= { svarog: true, name: "Горно Сварога", forge: { tools: Object.fromEntries(Object.keys(RPG.FORGE_TOOLS).map(id => [id, true])) } };
+      return svarogHouse;
+    }
+    return RPG.houseHere(save);
+  }
+
+  // ---------- Гартування: +1…+10, невдача знищує річ ----------
+  // Шанс успіху на рівень +1…+10; ціна спроби — золото 10 000 + 500 × рівень героя × тір речі × рівень гартування
+  // і Небесні іскри — стільки, на який рівень гартується річ. На +3, +6, +10 одна випадкова характеристика речі
+  // (основна чи бонусна) отримує ще +15% до своєї основи; повторне влучання в ту саму складається (+30%, +45%).
+  const TEMPER_CHANCE = [0.99, 0.99, 0.99, 0.5, 0.5, 0.5, 0.4, 0.3, 0.2, 0.1];
+  const TEMPER_GOLD = { base: 10000, per: 500 };
+  function temperCost(save, ref) {
+    const to = RPG.temperLevel(ref) + 1;
+    const tier = RPG.ITEMS[RPG.refId(ref)]?.tier || 1;
+    const lvl = RPG.rootSave(save).character.level || 1;
+    return { to, gold: TEMPER_GOLD.base + TEMPER_GOLD.per * lvl * tier * to, sparks: to, chance: TEMPER_CHANCE[to - 1] ?? 0 };
+  }
+  // Стан речі в інвентарі для гартування: { ref, up, max, cost, can, reason } або null (річ не гартується)
+  function temperInfo(save, index) {
+    const ref = save.inventory?.[index];
+    if (!ref || typeof ref !== "object" || !RPG.canTemper(ref.id)) return null;
+    const up = RPG.temperLevel(ref), max = up >= RPG.TEMPER_MAX;
+    const cost = max ? null : temperCost(save, ref);
+    let reason = "";
+    if (!atSvarogForge(save) || !svarogLit(save)) reason = "Гартують лише в розпаленому Горні Сварога.";
+    else if (max) reason = `Річ уже загартована до +${RPG.TEMPER_MAX}.`;
+    else if (RPG.rootSave(save).character.gold < cost.gold) reason = "Не вистачає золота.";
+    else if (countMat(save, "heavenly_spark") < cost.sparks) reason = "Не вистачає Небесних іскор.";
+    return { ref, up, max, cost, can: !reason, reason };
+  }
+  // Гартувати річ з інвентаря. rng — для тестів. Успіх: { ok, success: true, ref, up, boost }; невдача: { ok, success: false, name }
+  function temperItem(save, index, rng = Math.random) {
+    const info = temperInfo(save, index);
+    if (!info) return { ok: false, reason: "Цю річ не загартувати: лише зброя, щити, броня й прикраси." };
+    if (!info.can) return { ok: false, reason: info.reason };
+    const { ref, cost } = info;
+    RPG.rootSave(save).character.gold -= cost.gold;
+    takeMat(save, "heavenly_spark", cost.sparks);
+    if (rng() >= cost.chance) {
+      const name = RPG.itemFullName(ref);
+      save.inventory.splice(index, 1);
+      return { ok: true, success: false, name, cost };
+    }
+    ref.up = cost.to;
+    let boost = null;
+    if (RPG.TEMPER_MILESTONES.includes(cost.to)) {
+      const keys = Object.entries(RPG.itemStats(ref)).filter(([, v]) => v > 0).map(([k]) => k);
+      if (keys.length) {
+        boost = keys[Math.floor(rng() * keys.length) % keys.length];
+        ref.upB ??= {};
+        ref.upB[boost] = (ref.upB[boost] || 0) + 1;
+      }
+    }
+    return { ok: true, success: true, ref, up: cost.to, boost, cost };
   }
 
   // ---------- Матеріали для кузні: інвентар + скрині для матеріалів складу цього дому ----------
@@ -183,8 +262,8 @@
   function forgeReady(save, toolsNeeded = []) {
     if (!RPG.hasCraftAccess(save)) return { ok: false, reason: "Кувати можна, коли головний герой має професію." };
     if (!RPG.hasForgeBook(save)) return { ok: false, reason: "Спершу придбайте в коваля Кузьми книгу «Небесна кузня. Настанова» — першу науку коваля." };
-    const house = RPG.houseHere(save);
-    if (!house) return { ok: false, reason: "Кувати можна лише у власному домі з кузнею." };
+    const house = craftHouse(save);
+    if (!house) return { ok: false, reason: "Кувати можна лише у власному домі з кузнею або в Горні Сварога." };
     if (!house.forge) return { ok: false, reason: "Спершу збудуйте кузню при домі." };
     const miss = RPG.forgeMissing(house);
     if (miss.length) return { ok: false, reason: `Бракує знарядь: ${miss.map(id => RPG.FORGE_TOOLS[id].name.toLowerCase()).join(", ")}.`, house };
@@ -200,7 +279,7 @@
     const cat = RPG.recipeGroupOf(itemId);
     const st = catState(save, cat) || { level: 1 };
     const g = RPG.RECIPE_GROUPS.find(x => x.id === cat);
-    const house = RPG.houseHere(save);
+    const house = craftHouse(save);
     const tierLevel = RPG.CRAFT_TIER_LEVEL[recipe.tier];
     const mats = recipe.mats.map(([id, need]) => ({ id, need, have: haveMaterial(save, id) }));
     const tools = recipe.tools.map(id => ({ id, have: !!house?.forge?.tools?.[id] }));
@@ -243,11 +322,11 @@
   // Шанси для показу перед куванням (з урахуванням вибраних матеріалів та іскри)
   function craftOdds(save, itemId, opts = {}) {
     const recipe = RPG.RECIPES[itemId];
-    const house = RPG.houseHere(save);
+    const house = craftHouse(save);
     const success = successChance(save, house);
     const pick = recipe ? pickMaterials(save, recipe.mats, 1, !!opts.preferRare) : null;
     const spark = !!opts.spark && countMat(save, "heavenly_spark") > 0;
-    return applyQuality(rarityTable(craftState(save).level, success), pick?.quality || 0, spark);
+    return applyQuality(rarityTable(craftState(save).level, success), pick?.quality || 0, spark, !!house?.svarog);
   }
 
   // Кувати річ. opts: { preferRare, spark }. Повертає { ok, reason } або { ok, ref, rarity, exp, levelUps }
@@ -424,7 +503,8 @@
     craftSuccessChance: successChance, craftRarityTable: rarityTable, craftOdds, haveMaterial, recipeInfo,
     craftForgeReady: forgeReady, craftItem, addCraftExp, smeltInfo, smelt,
     DISASSEMBLE_SHARE, DISASSEMBLE_EXP, disassembleInfo, disassemble, salvageRecipe,
-    craftCountMat: countMat,
+    craftCountMat: countMat, craftHouse,
+    SVAROG, atSvarogForge, svarogLit, lightSvarog, TEMPER_CHANCE, TEMPER_GOLD, temperCost, temperInfo, temperItem,
     craftCat: catState, craftCatMaxLevel: catMaxLevel, craftCatOpenTier: catOpenTier, addCraftCatExp: addCatExp
   });
 })(window.RPG);

@@ -235,6 +235,48 @@
     return r;
   }
 
+  // ---------- Гартування в Горні Сварога (рішення користувача 2026-11-17; дії — craft.js → temperItem) ----------
+  // ref.up = 1…10 (0 — не пишеться), ref.upB = { характеристика: скільки разів по +15% } — віхи +3, +6, +10.
+  // Приріст за рівень росте рівномірно від +2% (на +1) до +8% (на +10): разом на +10 — +50% до основи.
+  // Основа: зброя — атака / сила магії; броня й щит — захист; прикраси — магічний захист;
+  // предмет у другу руку — атака / магія, а без них — захист чи магічний захист.
+  const TEMPER_MAX = 10;
+  const TEMPER_STEP = Array.from({ length: TEMPER_MAX }, (_, i) => 2 + 6 * i / (TEMPER_MAX - 1));      // % за рівень i+1
+  const TEMPER_TOTAL = TEMPER_STEP.map((_, i) => TEMPER_STEP.slice(0, i + 1).reduce((a, b) => a + b, 0));
+  const TEMPER_MILESTONES = [3, 6, 10];
+  const TEMPER_MILESTONE_PCT = 15;
+  function temperLevel(ref) { return typeof ref === "object" && ref ? Math.max(0, Math.min(TEMPER_MAX, ref.up | 0)) : 0; }
+  function temperPct(level) { return level > 0 ? TEMPER_TOTAL[Math.min(TEMPER_MAX, level) - 1] : 0; }
+  function temperKeys(id) {
+    const item = RPG.ITEMS[id];
+    if (!item) return [];
+    const st = item.stats || {};
+    const has = keys => keys.filter(k => (st[k] || 0) > 0);
+    if (item.type === "weapon") return has(["attack", "magic"]);
+    if (item.type === "armor" || item.type === "shield") return ["defense"];
+    if (item.type === "accessory") return ["magicDefense"];
+    if (item.type === "offhand") { const k = has(["attack", "magic"]); return k.length ? k : has(["defense", "magicDefense"]); }
+    return [];
+  }
+  function canTemper(id) { return hasRarity(id) && temperKeys(id).length > 0; }
+  function addTemper(out, ref) {
+    const up = temperLevel(ref);
+    if (!up && !ref?.upB) return out;
+    const base = { ...out };
+    const p = temperPct(up) / 100;
+    for (const k of temperKeys(refId(ref))) {
+      if (!(k in out)) continue;
+      const v = base[k] * (1 + p);
+      out[k] = DECIMAL_KEYS.includes(k) ? Math.round(v * 10) / 10 : Math.round(v);
+    }
+    for (const [k, n] of Object.entries(ref.upB || {})) {
+      if (!base[k]) continue;
+      const add = base[k] * TEMPER_MILESTONE_PCT / 100 * n;
+      out[k] = DECIMAL_KEYS.includes(k) ? Math.round((out[k] + add) * 10) / 10 : Math.round(out[k] + add);
+    }
+    return out;
+  }
+
   // ---------- Підсумкові характеристики речі ----------
   // Повертає { stats } — усі бонуси речі з урахуванням рідкості
   function itemStats(ref) {
@@ -259,12 +301,13 @@
     if (r !== "broken" && typeof ref === "object") {
       for (const key in ref.aff || {}) addTo(out, key, ref.aff[key]);
     }
-    return out;
+    return typeof ref === "object" ? addTemper(out, ref) : out;
   }
 
   function itemName(ref) {
     const item = RPG.ITEMS[refId(ref)];
-    return item ? item.name : "???";
+    const up = temperLevel(ref);
+    return item ? item.name + (up ? ` +${up}` : "") : "???";
   }
 
   // «Залізний меч [Магічна]» — рідкість показуємо для зброї/броні
@@ -332,6 +375,7 @@
     lootFilter, isFilteredOut, lootFilterActive,
     RARITY_ORDER, RARITIES, DROP_WEIGHTS, LUCK, LEGEND_OVERCAP, CORE_KEYS,
     refId, hasRarity, rarityOf, makeItem, rollRarity, newLuck,
-    itemStats, itemName, itemFullName, itemIconRef, refSellPrice, normalizeRef, SOCKETS, rollSockets
+    itemStats, itemName, itemFullName,
+    TEMPER_MAX, TEMPER_STEP, TEMPER_TOTAL, TEMPER_MILESTONES, TEMPER_MILESTONE_PCT, temperLevel, temperPct, temperKeys, canTemper, itemIconRef, refSellPrice, normalizeRef, SOCKETS, rollSockets
   });
 })(window.RPG);

@@ -1311,6 +1311,15 @@ for (const [id, m] of Object.entries(CRAFT_MATERIALS)) {
   ITEMS[id] = { name: m.name, g: m.g, craftTier: m.craftTier, type: "material", price: m.price,
                 stackable: true, maxStack: MATERIAL_STACK, noShop: true, description: m.description };
 }
+// Прикраси (кільця, сережки, амулети): основа — магічний захист, решта — бонуси (рішення користувача 2026-11-17).
+// Значення — половина захисту нагрудника того ж тіру; його й посилює гартування в Горні Сварога (rarity.js → temperKeys).
+const JEWEL_MDEF = [0, 1, 5, 9, 15, 21, 28, 36];
+for (const it of Object.values(ITEMS)) {
+  if (it.type !== "accessory" || !it.tier) continue;
+  const { magicDefense = 0, ...rest } = it.stats || {};
+  it.stats = { magicDefense: Math.max(JEWEL_MDEF[it.tier] || 0, magicDefense), ...rest };   // основа — першою в описі
+}
+
 // Небесна іскра — лише легендарна, без інших рідкостей
 ITEMS.heavenly_spark = {
   name: "Небесна іскра", type: "material", grade: "legendary", noGrades: true, price: 1000,

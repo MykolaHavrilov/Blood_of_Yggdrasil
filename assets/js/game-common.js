@@ -1220,6 +1220,8 @@
     if (gs !== null) cell.append(el("span", "item-gs", String(gs)));
     const tier = tierMark(ref);
     if (tier) cell.append(tier);
+    const up = RPG.temperLevel ? RPG.temperLevel(ref) : 0;          // гартування в Горні Сварога: «+N» у правому верхньому куті
+    if (up) cell.append(el("span", "item-up", "+" + up));
     const sockets = socketMarks(ref);
     if (sockets) cell.append(sockets);
     return cell;

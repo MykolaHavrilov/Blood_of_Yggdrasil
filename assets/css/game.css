@@ -1323,7 +1323,7 @@ main > a.location { display: flex; margin-bottom: 10px; }
 .chronicle-dialog .fbook-rune-vals .rt-epic      { color: #7a2bb8; text-shadow: none; }
 .chronicle-dialog .fbook-rune-vals .rt-legendary { color: #b55e00; text-shadow: none; }
 
-/* ---------- Горно Сварога (Гільдія ремісників) ---------- */
+/* ---------- Рунне горно (Гільдія ремісників; і в Горні Сварога) ---------- */
 /* Рунне горно (page-game-city.js → showRuneForge): ліворуч горно згори з 6 гніздами, у центрі — що вийде; праворуч — шанси й руни */
 .notice-dialog.rune-forge-dialog { max-width: min(880px, calc(100vw - 24px)); max-height: calc(100vh - 24px); overflow-y: auto; }
 .rf-body { display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 1fr); gap: 16px; align-items: start; margin-top: 6px; }
@@ -1360,6 +1360,42 @@ main > a.location { display: flex; margin-bottom: 10px; }
 .rune-forge-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(56px, 1fr)); gap: 6px; margin-top: 6px; max-height: 40vh; overflow-y: auto; }
 .rune-forge-pick { aspect-ratio: 1; min-height: 0; padding: 0; position: relative; }
 .rune-forge-pick.is-empty { opacity: .35; }
+
+/* ---------- Горно Сварога (Свартгард, Кузня Брокка й Ейтрі): вибір дії й гартування ---------- */
+/* page-game-city.js → showSvarogChoice / showTemper. картинки ui/svarog_* і ui/temper_* (промт: «Горно Сварога - вікно (промти).txt») */
+.notice-dialog.svarog-dialog { max-width: min(760px, calc(100vw - 24px)); }
+.svarog-modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 8px; }
+.svarog-modes .wf.svarog-mode { min-height: 200px; padding: 16px 20px 30px; gap: 6px; justify-content: flex-start; white-space: normal; }
+.svarog-mode strong { font-family: var(--font-head); font-size: 1.15rem; color: var(--gold); }
+.svarog-mode small { font-size: .85rem; line-height: 1.3; color: var(--text-dim); }
+.svarog-mode-ic { width: 72px; height: 72px; border-radius: 12px; flex: none; box-shadow: 0 0 0 1px rgba(214, 167, 74, .55), 0 0 12px rgba(255, 150, 40, .35);
+  background: url("../images/ui/svarog_mode_craft.webp") center / cover no-repeat; }
+.svarog-mode.is-runes .svarog-mode-ic { background-image: url("../images/ui/svarog_mode_runes.webp"); }
+.svarog-mode.is-temper .svarog-mode-ic { background-image: url("../images/ui/svarog_mode_temper.webp"); }
+.wf.svarog-mode:disabled .svarog-mode-ic { filter: grayscale(.85) brightness(.7); }
+@media (max-width: 700px) { .svarog-modes { grid-template-columns: 1fr; } .svarog-modes .wf.svarog-mode { min-height: 0; } }
+/* горно: ковадло згори (svarog_temper_cold / _lit, 1024² → 640²); верх ковадла — коло в центрі, Ø ≈ 43% */
+.rf-wheel.temper-wheel { background-image: url("../images/ui/svarog_temper_cold.webp"); }
+.rf-wheel.temper-wheel::before { background-image: url("../images/ui/svarog_temper_lit.webp"); }
+.temper-wheel::after { content: ""; position: absolute; left: 50%; top: 50%; width: 70%; aspect-ratio: 1; transform: translate(-50%, -50%) scale(.4);
+  opacity: 0; pointer-events: none; background: center / contain no-repeat; z-index: 2; }
+.temper-wheel.is-up::after { background-image: url("../images/ui/temper_fx_up.webp"); animation: tw-fx .9s ease-out; }
+.temper-wheel.is-fail::after { background-image: url("../images/ui/temper_fx_fail.webp"); animation: tw-fx .9s ease-out; }
+.temper-wheel.is-fail { animation: tw-fail .45s ease-in-out 2; }
+@keyframes tw-fx { 15% { opacity: 1; } 60% { opacity: .9; } to { opacity: 0; transform: translate(-50%, -50%) scale(1.15); } }
+@keyframes tw-fail { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+.temper-center { left: 49.6%; top: 49.8%; width: 43%; z-index: 1; }
+.temper-center .rf-icon { width: 66%; height: 66%; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .7)); }
+.temper-badge { align-self: end; justify-self: center; transform: translateY(45%); min-width: 96px; padding: 7px 22px 8px; white-space: nowrap; text-align: center;
+  background: url("../images/ui/temper_badge.webp") center / 100% 100% no-repeat; color: var(--gold); font-weight: 700; font-size: .95rem;
+  text-shadow: 0 1px 2px #000; }
+.temper-empty { color: var(--text-dim); font-size: .85rem; text-align: center; }
+.temper-name { font-size: 1.1rem; }
+.forge-odds.is-risk { color: #ff8a6a; }
+.temper-cost, .temper-gain, .temper-mile { margin: 0; }
+.temper-mile { color: var(--gold); }
+.temper-picks { grid-template-columns: repeat(auto-fill, minmax(56px, 1fr)); max-height: 40vh; overflow-y: auto; }
+@media (prefers-reduced-motion: reduce) { .temper-wheel.is-up::after, .temper-wheel.is-fail::after, .temper-wheel.is-fail { animation: none; } }
 
 /* ---------- Вікно гнізд речі (вкласти / вийняти руну) ---------- */
 .socket-dialog { max-width: 560px; }

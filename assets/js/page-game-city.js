@@ -18,6 +18,7 @@
     const renderPlace = (...args) => G.renderPlace(...args);
     const renderAll = (...args) => G.renderAll(...args);
     const renderShop = (...args) => G.renderShop(...args);
+    const showForge = (...args) => G.showForge(...args);
 
     // ---------- Дубова Застава: райони та Гільдія авантюристів ----------
     // Центральний район — з 6 рівня; Дошка оголошень біля Мерії — після особливого завдання «Час дослідити»
@@ -63,6 +64,7 @@
         else if (d.id === "center") renderTownHall(box);
         else if (d.id === "rest") renderRestDistrict(box);
         else if (d.id === "forges") renderToolShop(box, { shop: "svartgard" });   // Свартгард: знаряддя двергів
+        else if (d.id === "brokk") renderSvarogForge(box);                          // Свартгард: Небесна кузня, Горно Сварога
         // Вихід із міста в цьому районі (Свартгард: штольня до Бухти Ран, брама до копалень)
         if (d.exit && !districtLocked(d)) {
           box.append(button(d.exit.button, "wf wf-secondary", async () => {
@@ -119,6 +121,145 @@
     // Центри 6 гнізд (за годинниковою стрілкою від 12-ї) і тигля — у % картини ui/rune_forge_*.webp (виміряно на ній)
     const RF_SOCKETS = [[50, 18.6], [76.9, 34.2], [76.9, 64.5], [50, 79.6], [23.1, 64.5], [23.1, 34.2]];
     const RF_CENTER = [50, 48.4];
+    // ---------- Небесна кузня: Горно Сварога (craft.js → SVAROG, temperItem) ----------
+    // Перша Жарина Небесного горна розпалює його назавжди; далі — вибір дії: кування, Рунне горно, гартування.
+    function renderSvarogForge(box) {
+      const row = el("div", "shop-row tool-row fbook-row svarog-row");
+      const info = el("div", "tool-info");
+      if (!RPG.svarogLit(save)) {
+        const embers = RPG.countItem(save, "heavenly_ember");
+        info.append(el("strong", null, "Горно Сварога"),
+          el("small", null, "Горно холодне: вогонь Сварога винесли зрадники. Поверніть одну Жарину Небесного горна — і воно розгориться назавжди." +
+            (embers ? ` Жарин у вас: ${embers}.` : " Жарину лишає зброя Темної душі — Зрадника.")));
+        const b = button("Розпалити жариною", "wf wf-button", async () => {
+          const r = RPG.lightSvarog(save);
+          if (!r.ok) { showMsg(msg, r.reason, true); return; }
+          await RPG.saveGame(save);
+          RPG.ui.showNotice("Горно Сварога розгорілося", ["Жарина лягла на холодний попіл — і горно загуло, як колись за Сварога. Брокк і Ейтрі мовчки зняли шапки.",
+            "Тепер тут можна кувати речі, переплавляти руни й гартувати спорядження до +10."]);
+          renderAll();
+        });
+        b.disabled = !embers;
+        row.append(info, b);
+      } else {
+        info.append(el("strong", null, "Горно Сварога"),
+          el("small", null, "Вогонь, у якому народжувалась зброя богів. Кування, Рунне горно й гартування речей до +10."));
+        row.append(info, button("До Горна Сварога", "wf wf-button", () => showSvarogChoice()));
+      }
+      box.append(row);
+    }
+    // Вибір дії на початку — три шляхи вогню
+    function showSvarogChoice() {
+      document.querySelector(".svarog-dialog")?.remove();
+      const { dlg, closeBtn } = noticeDialog("svarog-dialog", () => renderAll());
+      dlg.append(closeBtn("Закрити горно"), el("h3", null, "Горно Сварога"),
+        noteP("Брокк підкидає вугілля, Ейтрі тримає міх. «Що робитимемо?»"));
+      const grid = el("div", "svarog-modes");
+      const mode = (cls, title, text, fn, why = "") => {
+        const b = button("", "wf wf-link svarog-mode " + cls, () => { dlg.close(); dlg.remove(); fn(); });
+        b.append(el("span", "svarog-mode-ic"), el("strong", null, title), el("small", null, why || text));
+        if (why) b.disabled = true;
+        grid.append(b);
+      };
+      const ready = RPG.craftForgeReady(save);
+      mode("is-craft", "Кування", "Як у власній кузні, але знаряддя всі на місці, а вогонь Сварога додає +5% до легендарної.", () => showForge(),
+        ready.ok ? "" : ready.reason);
+      mode("is-runes", "Рунне горно", "Шість рун у вогонь — одна нова з попелу.", () => showRuneForge(),
+        save.books?.runes ? "" : "Потрібна книга Сварога «Руни Небесної Кузні».");
+      mode("is-temper", "Гартування", "Річ +1…+10: сильніша атака чи захист. Невдача — річ згорає.", () => showTemper());
+      dlg.append(grid);
+      document.body.append(dlg);
+      dlg.showModal();
+    }
+    // Гартування: ліворуч — горно з річчю, праворуч — шанс, ціна, що зміниться, і речі з інвентаря
+    function showTemper() {
+      document.querySelector(".temper-dialog")?.remove();
+      const { dlg, closeBtn } = noticeDialog("temper-dialog rune-forge-dialog", () => renderAll());
+      let pick = null, note = null, asking = false, flash = "";
+      const pct = x => `${Math.round(x * 100)}%`;
+      const list = () => save.inventory.map((ref, i) => ({ ref, i })).filter(x => RPG.temperInfo(save, x.i));
+      const draw = () => {
+        dlg.innerHTML = "";
+        dlg.append(closeBtn("Закрити горно"), el("h3", null, "Гартування"));
+        dlg.append(noteP("Гартування посилює основу речі: зброя — атаку й силу магії, броня й щит — захист, прикраси — магічний захист. " +
+          "На +3, +6 і +10 вогонь ще й посилює одну випадкову характеристику речі на 15%. Якщо горно не прийме метал — річ згорить. " +
+          "Гартують лише речі з інвентаря."));
+        if (note) dlg.append(el("p", "forge-result" + (note.error ? " is-error" : ""), note.text));
+        const items = list();
+        if (pick && !items.some(x => x.ref === pick)) pick = null;
+        const idx = pick ? save.inventory.indexOf(pick) : -1;
+        const info = idx >= 0 ? RPG.temperInfo(save, idx) : null;
+        const body = el("div", "rf-body temper-body");
+        // ліворуч — горно; у центрі — річ і «+N → +N+1»
+        const wheel = el("div", "rf-wheel temper-wheel" + (info ? " is-lit" : "") + (flash ? " is-" + flash : ""));
+        const center = el("div", "rf-center temper-center");
+        if (info) {
+          const ic = itemIcon(info.ref, "rf-icon");
+          if (ic) center.append(ic);
+          center.append(el("span", "temper-badge", info.max ? `+${info.up}` : info.up ? `+${info.up} → +${info.cost.to}` : `→ +${info.cost.to}`));
+        } else center.append(el("span", "temper-empty", "Оберіть річ"));
+        wheel.append(center);
+        body.append(wheel);
+        const side = el("div", "rf-side temper-side");
+        if (info) {
+          side.append(el("strong", "temper-name" + RPG.ui.rarityTextClass(info.ref), RPG.itemFullName(info.ref)));
+          if (!info.max) {
+            const c = info.cost;
+            const risk = c.chance < 0.9;
+            side.append(el("p", "forge-odds temper-chance" + (risk ? " is-risk" : " is-sure"),
+              `Шанс успіху: ${pct(c.chance)}` + (risk ? ` · річ згорить з шансом ${pct(1 - c.chance)}` : "")));
+            const sparks = RPG.craftCountMat(save, "heavenly_spark");
+            side.append(el("p", "temper-cost", `Ціна: ${fmtNum(c.gold)} золота (у вас ${fmtNum(save.character.gold)}) · Небесна іскра ×${c.sparks} (є ${fmtNum(sparks)})`));
+            // що зміниться
+            const now = RPG.itemStats(info.ref), next = RPG.itemStats({ ...info.ref, up: c.to });
+            const lines = RPG.temperKeys(info.ref.id).filter(k => now[k] != null)
+              .map(k => `${RPG.STAT_NAMES[k] || k}: ${RPG.ui.fmtStat(k, now[k])} → ${RPG.ui.fmtStat(k, next[k])}`);
+            side.append(el("p", "temper-gain", lines.join(" · ") + ` (разом +${Math.round(RPG.temperPct(c.to))}% до основи)`));
+            if (RPG.TEMPER_MILESTONES.includes(c.to)) side.append(el("p", "temper-mile", `+${c.to} — віха: одна випадкова характеристика речі отримає ще +15%.`));
+            const b = button(asking ? `Так, гартувати (${pct(c.chance)})` : "Гартувати", "wf " + (asking ? "wf-danger" : "wf-button"), async () => {
+              if (risk && !asking) {
+                asking = true;
+                note = { text: `Шанс ${pct(c.chance)}: з шансом ${pct(1 - c.chance)} ${RPG.itemFullName(info.ref)} згорить разом з усім гартуванням. Натисніть ще раз, щоб гартувати.`, error: true };
+                draw(); return;
+              }
+              asking = false;
+              const r = RPG.temperItem(save, idx);
+              if (!r.ok) { note = { text: r.reason, error: true }; draw(); return; }
+              await RPG.saveGame(save);
+              if (r.success) {
+                flash = "up";
+                note = { text: `Метал прийняв вогонь: ${RPG.itemFullName(r.ref)}!` + (r.boost ? ` Віха +${r.up}: ${String(RPG.STAT_NAMES[r.boost] || r.boost).replace(/,\s*%$/, "")} +15% до основи.` : "") };
+              } else {
+                flash = "fail"; pick = null;
+                note = { text: `Горно не прийняло метал: ${r.name} — лише попіл.`, error: true };
+              }
+              draw();
+              setTimeout(() => { flash = ""; dlg.querySelector(".temper-wheel")?.classList.remove("is-up", "is-fail"); }, 900);
+            });
+            b.disabled = !info.can;
+            if (!info.can) side.append(el("small", "forge-why", info.reason));
+            side.append(b);
+            if (asking) side.append(button("Скасувати", "wf wf-link", () => { asking = false; note = null; draw(); }));
+          } else side.append(el("p", "forge-odds is-sure", `Річ загартована до +${RPG.TEMPER_MAX} — більше вогонь не дасть.`));
+        } else side.append(el("p", "forge-odds", "Натисніть річ нижче, щоб покласти її в горно."));
+        side.append(el("p", "rf-list-title", "Речі в інвентарі:"));
+        if (!items.length) side.append(el("p", "house-soon", "В інвентарі немає зброї, щитів, броні чи прикрас. Вдягнені речі спершу зніміть."));
+        const grid = el("div", "slots rune-forge-picks temper-picks");
+        for (const { ref } of items) {
+          const cell = button("", slotClass(ref) + " rune-forge-pick" + (ref === pick ? " is-selected" : ""), () => { pick = ref; asking = false; note = null; draw(); });
+          fillItemCell(cell, ref);
+          cell.title = RPG.itemFullName(ref);
+          grid.append(cell);
+        }
+        side.append(grid);
+        body.append(side);
+        dlg.append(body);
+      };
+      document.body.append(dlg);
+      draw();
+      dlg.showModal();
+    }
+
     function showRuneForge() {
       document.querySelector(".rune-forge-dialog")?.remove();
       const F = RPG.RUNE_FORGE;

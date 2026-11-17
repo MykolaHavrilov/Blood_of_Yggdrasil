@@ -1912,12 +1912,15 @@ function buyFromTrade(save, id, qty = 1) {
 }
 
 // Чи відкритий район Дубової Застави: Центральний — з 6 рівня, Торговий — з 20 рівня
+// Район «Кузня Брокка й Ейтрі» (Свартгард): відкривається, щойно переможено Кованого стража Хелли — братів звільнено (WORLDS_4-7.md, п. 4)
+const BROKK_FREED_BY = "svart_boss_hels_forged_guardian";
 function isDistrictOpen(save, d) {
   if (!d.locked) return true;
   if (d.id === "center") return RPG.isCentralOpen(save);
   if (d.id === "trade") return save.character.level >= TRADE_MIN_LEVEL || hasCraftAccess(save);   // з професією — лише Гільдія ремісників
   if (d.id === "north") return RPG.canPassNorth ? RPG.canPassNorth(save) : getClass(save.character.classId).tier > 1;   // професія, Селянин з 16 рівня або «Знак відреченого»
   if (d.id === "rest") return !!RPG.isCoalDone?.(save);
+  if (d.id === "brokk") return !!rootSave(save).bossKills?.[BROKK_FREED_BY];   // братів звільнено — Кований страж Хелли переможений
   return false;
 }
 function districtLockText(d) {
@@ -1925,6 +1928,7 @@ function districtLockText(d) {
   if (d.id === "trade") return `Торговий район: Гільдія ремісників пускає героїв, що вже мають професію; Торгова гільдія — з ${TRADE_MIN_LEVEL} рівня.`;
   if (d.id === "north") return `Варта не пускає до брами слабких селян. Повертайтеся з ${RPG.NORTH_PEASANT_LEVEL || 16} рівня або з професією (квест «Шлях професії»).`;
   if (d.id === "rest") return "Спальний район відкривається після завдання Мерії «Збір вугілля» (Розпорядник Захар, Центральний район).";
+  if (d.id === "brokk") return "Двері запечатані рунами Хелли. Брокк і Ейтрі в полоні в локації «Кузні Брокка й Ейтрі» — переможіть Кованого стража Хелли в данжі «Запечатане горно», і брати повернуться.";
   return "Закрито — відкриється згодом.";
 }
 
@@ -2047,7 +2051,7 @@ Object.assign(RPG, {
   addExp, levelCap, levelCapOpen, LEVEL_CAP_BASE, LEVEL_CAP_PROFESSION, LEVEL_CAP_BOSS, removeExp, deathExpPenalty, DEATH_MAX_PCT, expProgress, applyDeath, markFallen, pray,
   HC_LIVES, livesOf, loseLife, noteVictory, noteKills, noteExpedition, hardcoreScore, heroLevels, locLevel, locRankOf, SCORE,
   getClassChanges, changeClass,
-  countInList, addToList, addRefToList, removeFromList, countItem, addItem, removeItem,
+  rootSave, countInList, addToList, addRefToList, removeFromList, countItem, addItem, removeItem,
   isAtHome, moveToChest, takeFromChest,
   CHEST_DEFAULTS, CHEST_STORAGES, DEFAULT_CHEST, chestConf, chestStackMax, chestList, chestHere, chestPlaces, chestFree,
   canEquip, fixHands, offTypeOf, offHandProblem, canDualWield, dualWieldInfo, equipSlotFor, equipItem, unequipItem, previewEquip, useItem,

@@ -179,9 +179,10 @@
         dlg.innerHTML = "";
         const close = closeBtn("Закрити кузню");
         const st = RPG.craftState(save);
-        const house = RPG.houseHere(save);
+        const house = RPG.craftHouse(save);       // власний дім або Горно Сварога (craft.js → craftHouse)
         const next = RPG.craftExpToNext(st.level);
-        dlg.append(close, el("h3", null, "Кузня"));
+        dlg.append(close, el("h3", null, house?.svarog ? "Горно Сварога — кування" : "Кузня"));
+        if (house?.svarog) dlg.append(el("p", "forge-why", "Знаряддя Брокка й Ейтрі — усі на місці; вогонь Сварога додає +5% до легендарної."));
         dlg.append(el("p", "forge-mastery", `Майстерність ${st.level} — ${craftRank(st.level)}` +
           (st.level < RPG.CRAFT_MAX_LEVEL ? ` · досвід ${fmtNum(st.exp)}/${fmtNum(next)}` : "") +
           ` · успіх ${pct(RPG.craftSuccessChance(save, house))}`));
@@ -295,7 +296,7 @@
           const oreTotal = info.byGrade.reduce((n, b) => n + RPG.craftCountMat(save, b.ore), 0);
           mats.append(el("span", "forge-mat" + (oreTotal >= info.s.oreQty ? " is-ok" : " is-short"), `${RPG.ITEMS[info.s.ore].name} ×${info.s.oreQty}: є ${fmtNum(oreTotal)}`));
           if (info.s.coal) mats.append(el("span", "forge-mat" + (info.coalHave >= info.s.coal ? " is-ok" : " is-short"), `Вугілля ×${info.s.coal}: є ${fmtNum(info.coalHave)}`));
-          for (const t of info.s.tools) mats.append(el("span", "forge-mat" + (RPG.houseHere(save)?.forge?.tools?.[t] ? " is-ok" : " is-short"), `знаряддя: ${RPG.FORGE_TOOLS[t].name}`));
+          for (const t of info.s.tools) mats.append(el("span", "forge-mat" + (RPG.craftHouse(save)?.forge?.tools?.[t] ? " is-ok" : " is-short"), `знаряддя: ${RPG.FORGE_TOOLS[t].name}`));
           row.append(mats);
           const btns = el("div", "row forge-smelt-btns");
           for (const n of [...new Set([1, 10, info.max])]) {
@@ -431,6 +432,6 @@
       box.append(card);
     }
 
-    return { renderHome, renderRestDistrict };
+    return { renderHome, renderRestDistrict, showForge };
   };
 })(window.RPG);
