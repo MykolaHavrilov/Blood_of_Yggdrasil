@@ -2,7 +2,7 @@
 // HTML / JS / CSS: спершу мережа (щоб оновлення гри підтягувались одразу),
 // а без інтернету — з кешу. Картинки: спершу кеш.
 // Після великих змін можна збільшити номер версії — старий кеш видалиться.
-const CACHE = "rpg-game-v229";
+const CACHE = "rpg-game-v230";
 const PRECACHE = [
   "./",
   "./assets/css/game.css",
@@ -613,7 +613,10 @@ const PRECACHE = [
 ];
 
 self.addEventListener("install", event => {
-  event.waitUntil(caches.open(CACHE).then(c => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
+  // cache: "reload" — брати файли з сервера, а не зі старого кешу браузера (GitHub Pages тримає їх 10 хв):
+  // інакше новий кеш міг отримати старий game.css до нових скриптів — і вікна «роз'їжджалися»
+  event.waitUntil(caches.open(CACHE).then(c => c.addAll(PRECACHE.map(u => new Request(u, { cache: "reload" }))))
+    .then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", event => {
@@ -639,8 +642,11 @@ self.addEventListener("fetch", event => {
     return;
   }
 
+  // Код і стилі — завжди звіряти з сервером (no-cache: 304 без завантаження, якщо файл не змінився),
+  // щоб скрипти й CSS однієї версії; сторінки (navigate) браузер і так перевіряє
+  const net = req.mode === "navigate" ? fetch(req) : fetch(req, { cache: "no-cache" });
   event.respondWith(
-    fetch(req)
+    net
       .then(res => {
         const copy = res.clone();
         caches.open(CACHE).then(c => c.put(req, copy));
