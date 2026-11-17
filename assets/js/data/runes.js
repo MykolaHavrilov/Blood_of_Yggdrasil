@@ -6,7 +6,7 @@
 //   rune_<key>            — звичайна
 //   rune_<key>_broken / _magic / _epic / _legendary
 // Поля предмета: type "rune", rune (ключ руни), grade (рідкість), gradeOf (id звичайної), runeKind, pantheon.
-// Значення з книги: vals — [звичайна, магічна, епічна, легендарна]; зламана — ×0 (не дає нічого, лише паливо для Горна Сварога).
+// Значення з книги: vals — [звичайна, магічна, епічна, легендарна]; зламана — ×0 (не дає нічого, лише паливо для Рунного горна).
 //   kind: weapon — лише у зброю, armor — лише в броню, universal — у будь-що (зокрема персні й амулети).
 //   stat — ключ ефекту для майбутнього battle.js / stats.js (поки ні на що не впливає).
 // Підключається ПІСЛЯ data/items.js, ДО character.js. Випадіння рун з ворогів — RUNE_DROP / rollRunes (унизу файлу).
@@ -104,7 +104,7 @@
         name: `${g.prefix} ${r.name}`, type: "rune", rune: key, runeKind: r.kind, pantheon: r.pantheon,
         grade, gradeOf: runeItemId(key), iconFile: runeItemId(key, grade === "broken" ? "broken" : "common"), price: g.price, stackable: true, maxStack: 1000, noShop: true,
         description: `${RUNE_KIND_NAME[r.kind]} · ${PANTHEON_NAME[r.pantheon]}. «${r.meaning}». ` +
-          (value ? `${r.effect}: ${value}. ` : "Зламана: не дає нічого — годиться лише як паливо для Горна Сварога. ") +
+          (value ? `${r.effect}: ${value}. ` : "Зламана: не дає нічого — годиться лише як паливо для Рунного горна. ") +
           `Вкладається ${RUNE_KIND_WHERE[r.kind]}.`
       };
     }
@@ -116,7 +116,7 @@
   // Звичайні руни (по одній на кожен знак)
   const RUNE_IDS = Object.keys(RUNES).map(k => runeItemId(k));
 
-  // ---------- Горно Сварога (Гільдія ремісників, Торговий район) ----------
+  // ---------- Рунне горно (Гільдія ремісників, Торговий район) ----------
   // 6 будь-яких рун (зламані теж) → 1 нова руна від звичайної до епічної (легендарна з горна не виходить).
   // Кожна руна дає 1/6 свого рядка ODDS. Вид нової: усі шість одного виду → той самий вид, інакше — будь-яка з 29.
   // За кожне розпалювання — данина fee золота.
@@ -138,7 +138,7 @@
   }
   // Розпалити горно: ids — 6 id рун з інвентаря (можна однакові). Повертає { ok, reason } або { ok, id, grade, price }
   function runeForge(save, ids) {
-    if (!save.books?.runes) return { ok: false, reason: "Горно Сварога відкривається тим, хто знайшов книгу «Руни Небесної Кузні»." };
+    if (!save.books?.runes) return { ok: false, reason: "Рунне горно відкривається тим, хто знайшов книгу «Руни Небесної Кузні»." };
     if (!Array.isArray(ids) || ids.length !== RUNE_FORGE.count) return { ok: false, reason: `Покладіть у горно ${RUNE_FORGE.count} рун.` };
     if (ids.some(id => RPG.ITEMS[id]?.type !== "rune")) return { ok: false, reason: "У горно кладуть лише руни." };
     const need = {};
@@ -174,7 +174,7 @@
     const it = RPG.ITEMS[runeId], r = it && RUNES[it.rune];
     if (!r) return "";
     const g = RUNE_GRADES[it.grade];
-    return g && g.val >= 0 ? `${r.effect}: ${r.vals[g.val]}` : "не діє — лише паливо для Горна Сварога";
+    return g && g.val >= 0 ? `${r.effect}: ${r.vals[g.val]}` : "не діє — лише паливо для Рунного горна";
   }
   // Вкласти руну з інвентаря (runeId) у гніздо slot речі ref (річ в інвентарі чи вдягнена). save — сейв героя (ms)
   // Ліміт рун одного знака на герої (у всіх вдягнених речах разом; руни в одній речі теж рахуються).
@@ -215,7 +215,7 @@
     if (!ref?.sockets || !Array.isArray(ref.runes) || !(slot >= 0 && slot < ref.sockets)) return { ok: false, reason: "Немає такого гнізда." };
     if (ref.runes[slot]) return { ok: false, reason: "Гніздо вже зайняте — спершу вийміть руну." };
     if (!runeFits(ref.id, runeId)) return { ok: false, reason: `${RPG.ITEMS[runeId]?.name || "Ця руна"} сюди не лягає.` };
-    if (RPG.ITEMS[runeId].grade === "broken") return { ok: false, reason: "Зламана руна не діє — її можна лише переплавити в Горні Сварога." };
+    if (RPG.ITEMS[runeId].grade === "broken") return { ok: false, reason: "Зламана руна не діє — її можна лише переплавити в Рунному горні." };
     if (RPG.countItem(save, runeId) < 1) return { ok: false, reason: "Такої руни немає в інвентарі." };
     const key = RPG.ITEMS[runeId].rune, limit = RUNE_LIMIT[key];
     if (limit && heroRuneCount(save, key, ref) + 1 > limit) {

@@ -807,7 +807,7 @@ function addRefToList(list, ref, maxOf = null) {
 // Після цього ВСІ руни (будь-якої рідкості) лежать не в інвентарі, а в мішечку: save.runePouch = true, save.runes = { id: к-сть }.
 // Мішечок спільний для групи (як кишеня для ключів) і не займає клітинок; на кожну нову руну — нова клітинка (росте сам).
 // У клітинці — до RUNE_POUCH.max однієї руни й рідкості, зламаних — до maxBroken; що понад це — пропадає при отриманні.
-// countItem / addItem / removeItem / fitQty самі ведуть руни в мішечок — тож здобич, скрині, експедиції, Горно Сварога,
+// countItem / addItem / removeItem / fitQty самі ведуть руни в мішечок — тож здобич, скрині, експедиції, Рунне горно,
 // гнізда й розбір працюють без змін.
 const RUNE_POUCH = { max: 300, maxBroken: 600 };
 // Справжній спільний сейв (а не «вигляд» героя групи — party.js → memberSave)
@@ -958,7 +958,7 @@ function altarBuySlot(save) {
   return { ok: true, price, slots: altarOf(root).slots };
 }
 
-// ID усіх рун, що є в героя (з мішечка або, поки мішечка немає, з інвентаря) — для Горна Сварога й гнізд
+// ID усіх рун, що є в героя (з мішечка або, поки мішечка немає, з інвентаря) — для Рунного горна й гнізд
 function runeIds(save) {
   if (save?.runePouch) return runePouchList(save).map(e => e.id);
   return [...new Set((save?.inventory || []).filter(e => ITEMS[e?.id]?.type === "rune").map(e => e.id))];

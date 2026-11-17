@@ -1,5 +1,5 @@
 // ============================================================
-// page-game-city.js — Екран локації: Дубова Застава — райони, Торговий район, Горно Сварога, знаряддя кузні, Мерія.
+// page-game-city.js — Екран локації: Дубова Застава — райони, Торговий район, Рунне горно, знаряддя кузні, Мерія.
 // Частина page-game.js: RPG.gameParts.city(G) викликається з pageGame() і повертає те, що потрібне іншим частинам.
 // G — спільне екрана локації: save, msg, place, locData і функції з page-game.js та інших частин
 // (G.renderAll, G.renderPlace, G.renderShop…); G.fighting — чи показується бій. Спільні помічники — RPG.ui (game-common.js).
@@ -100,14 +100,14 @@
         return;
       }
       renderNpc(box, "kuzma");
-      // Горно Сварога — всередині Гільдії ремісників (data/runes.js → RUNE_FORGE); з'являється лише після знахідки
+      // Рунне горно — всередині Гільдії ремісників (data/runes.js → RUNE_FORGE); з'являється лише після знахідки
       // другої книги Сварога «Руни Небесної Кузні» (save.books.runes)
       if (RPG.RUNE_FORGE && save.books?.runes) {
         const fr = el("div", "shop-row tool-row fbook-row rune-forge-row");
         const info = el("div", "tool-info");
-        info.append(el("strong", null, "Горно Сварога"),
+        info.append(el("strong", null, "Рунне горно"),
           el("small", null, `Шість рун у вогонь — одна нова з попелу. Данина за кожне розпалювання — ${fmtNum(RPG.RUNE_FORGE.fee)} золота.`));
-        fr.append(info, button("До Горна Сварога", "wf wf-button", () => showRuneForge()));
+        fr.append(info, button("До Рунного горна", "wf wf-button", () => showRuneForge()));
         box.append(fr);
       }
       if (!RPG.hasCraftAccess(save)) return;
@@ -115,7 +115,7 @@
     }
 
     // Знаряддя від Кузьми — одразу стають у кузню вашого дому
-    // ---------- Горно Сварога: 6 рун → 1 нова (data/runes.js → runeForge) ----------
+    // ---------- Рунне горно: 6 рун → 1 нова (data/runes.js → runeForge) ----------
     function showRuneForge() {
       document.querySelector(".rune-forge-dialog")?.remove();
       const F = RPG.RUNE_FORGE;
@@ -125,8 +125,8 @@
       const draw = () => {
         dlg.innerHTML = "";
         const close = closeBtn("Закрити горно");
-        dlg.append(close, el("h3", null, "Горно Сварога"));
-        dlg.append(noteP(`Покладіть у горно ${F.count} будь-яких рун, зламані теж. Сварог переплавить їх в одну нову — від звичайної до епічної. Якщо всі шість одного виду, нова руна буде того ж виду. Данина — ${fmtNum(F.fee)} золота (у вас ${fmtNum(save.character.gold)}).`));
+        dlg.append(close, el("h3", null, "Рунне горно"));
+        dlg.append(noteP(`Покладіть у горно ${F.count} будь-яких рун, зламані теж. Вогонь переплавить їх в одну нову — від звичайної до епічної. Якщо всі шість одного виду, нова руна буде того ж виду. Данина — ${fmtNum(F.fee)} золота (у вас ${fmtNum(save.character.gold)}).`));
         if (note) dlg.append(el("p", "forge-result" + (note.error ? " is-error" : ""), note.text));
         // 6 слотів горна
         const slots = el("div", "belt-slots rune-forge-slots");
