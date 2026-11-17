@@ -452,13 +452,17 @@
   }
 
   // ---------- Шапка NPC з портретом (assets/images/npc/<portrait>.webp; без файлу — лише ім'я) ----------
+  // Портрет — під круглою рамкою (ui/ui_portrait_frame.webp; «таємничі» — темна рамка), ім'я — на табличці (ui/ui_nameplate.webp)
+  const NPC_DARK = new Set(["npc_stranger", "npc_renouncer"]);
   function npcHead(portrait, name) {
     const head = el("div", "npc-head");
+    const pic = el("span", "npc-pic" + (NPC_DARK.has(portrait) ? " is-dark" : ""));
     const img = new Image();
     img.className = "npc-portrait"; img.alt = "";
-    img.addEventListener("error", () => img.remove());
+    img.addEventListener("error", () => pic.remove());
     img.src = RPG.asset(`assets/images/npc/${portrait}.webp`);
-    head.append(img);
+    pic.append(img);
+    head.append(pic);
     if (name) head.append(el("strong", "npc-name", name));
     return head;
   }

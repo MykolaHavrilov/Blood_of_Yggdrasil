@@ -6,7 +6,7 @@
 // ============================================================
 
 (function (RPG) {
-  const { $, el, noteP, link, button, fmtNum, showMsg, noticeDialog, showForgeBook, fillItemCell, memberTabs } = RPG.ui;
+  const { $, el, noteP, link, button, fmtNum, showMsg, noticeDialog, showForgeBook, fillItemCell, itemIcon, slotClass, memberTabs } = RPG.ui;
   RPG.gameParts = RPG.gameParts || {};
 
   RPG.gameParts.city = function (G) {
@@ -116,11 +116,14 @@
 
     // Знаряддя від Кузьми — одразу стають у кузню вашого дому
     // ---------- Рунне горно: 6 рун → 1 нова (data/runes.js → runeForge) ----------
+    // Центри 6 гнізд (за годинниковою стрілкою від 12-ї) і тигля — у % картини ui/rune_forge_*.webp (виміряно на ній)
+    const RF_SOCKETS = [[50, 18.6], [76.9, 34.2], [76.9, 64.5], [50, 79.6], [23.1, 64.5], [23.1, 34.2]];
+    const RF_CENTER = [50, 48.4];
     function showRuneForge() {
       document.querySelector(".rune-forge-dialog")?.remove();
       const F = RPG.RUNE_FORGE;
       const { dlg, closeBtn } = noticeDialog("rune-forge-dialog", () => renderAll());
-      let picked = [], note = null;
+      let picked = [], note = null, born = null;   // born — щойно народжена руна (показується в центрі, доки не покладуть нові)
       const left = id => RPG.countItem(save, id) - picked.filter(x => x === id).length;
       const draw = () => {
         dlg.innerHTML = "";
@@ -128,18 +131,41 @@
         dlg.append(close, el("h3", null, "Рунне горно"));
         dlg.append(noteP(`Покладіть у горно ${F.count} будь-яких рун, зламані теж. Вогонь переплавить їх в одну нову — від звичайної до епічної. Якщо всі шість одного виду, нова руна буде того ж виду. Шість однакових рун однієї рідкості дають таку саму руну на рідкість вище. Данина — ${fmtNum(F.fee)} золота (у вас ${fmtNum(save.character.gold)}).`));
         if (note) dlg.append(el("p", "forge-result" + (note.error ? " is-error" : ""), note.text));
-        // 6 слотів горна
-        const slots = el("div", "belt-slots rune-forge-slots");
-        for (let i = 0; i < F.count; i++) {
+        // Ліворуч — горно згори (ui/rune_forge_cold|lit.webp): 6 гнізд по колу, у центрі — що вийде; праворуч — шанси й руни героя
+        const body = el("div", "rf-body");
+        const wheel = el("div", "rf-wheel" + (picked.length === F.count ? " is-lit" : ""));
+        RF_SOCKETS.forEach(([x, y], i) => {
           const id = picked[i];
-          const cell = button("", "wf wf-slot belt-slot" + (id ? " is-filled" : ""), () => { if (id) { picked.splice(i, 1); note = null; draw(); } });
+          const cell = button("", "rf-slot" + (id ? " is-filled " + slotClass(id).replace(/^wf wf-slot/, "") : ""), () => { if (id) { picked.splice(i, 1); note = null; born = null; draw(); } });
+          Object.assign(cell.style, { left: x + "%", top: y + "%" });
           if (id) { fillItemCell(cell, id, 1); cell.title = `${RPG.ITEMS[id].name} — натисніть, щоб вийняти`; }
-          else cell.append(el("span", "belt-empty", "порожньо"));
-          slots.append(cell);
+          else { cell.disabled = true; cell.setAttribute("aria-label", `Гніздо ${i + 1} — порожнє`); }
+          wheel.append(cell);
+        });
+        const plan = picked.length ? RPG.runeForgePlan(picked) : null;
+        const center = el("div", "rf-center");
+        Object.assign(center.style, { left: RF_CENTER[0] + "%", top: RF_CENTER[1] + "%" });
+        const showRune = id => {          // конкретна руна в центрі: гарантована (6 однакових) або щойно народжена
+          const g = RPG.ITEMS[id].grade;
+          center.classList.add("has-rune", "rg-" + g);
+          center.append(el("span", "rf-fx"));
+          const ic = itemIcon(id, "rf-icon");
+          if (ic) center.append(ic);
+          center.title = RPG.ITEMS[id].name;
+        };
+        if (born && !picked.length) showRune(born);
+        else if (plan?.mode === "upgrade") showRune(plan.id);
+        else if (plan) {                  // випадкова руна — невідомий камінь; для 6 легендарних / 6 зламаних — рамка відомої рідкості
+          center.classList.add("is-unknown");
+          if (plan.mode === "legendary" || plan.mode === "broken") center.classList.add("rg-" + plan.grade);
+          center.append(el("span", "rf-unknown"));
+          center.title = "Випадкова руна";
         }
-        dlg.append(slots);
-        if (picked.length) {
-          const plan = RPG.runeForgePlan(picked);
+        wheel.append(center);
+        const side = el("div", "rf-side");
+        body.append(wheel, side);
+        dlg.append(body);
+        if (plan) {
           const o = plan.odds;
           const k = o.kind ? RPG.RUNE_KIND_NAME[o.kind].toLowerCase() : `будь-яка з ${Object.keys(RPG.RUNES).length}`;
           const gName = g => RPG.RUNE_GRADES[g].prefix.replace(/ руна$/, "").replace(/^Руна$/, "звичайна").toLowerCase();
@@ -149,13 +175,14 @@
             : plan.mode === "broken" ? `Шість зламаних — вийде випадкова звичайна руна · ${k}.`
             : (picked.length < F.count ? `Ще ${F.count - picked.length} — і горно готове. ` : "") +
               `Вийде: ${F.out.filter(g => o[g] >= 0.005).map(g => `${gName(g)} ${Math.round(o[g] * 100 * (F.count / picked.length))}%`).join(" · ")} · ${k}`;
-          dlg.append(el("p", "forge-odds" + (plan.mode === "random" ? "" : " is-sure"), text));
-        }
+          side.append(el("p", "forge-odds" + (plan.mode === "random" ? "" : " is-sure"), text));
+        } else side.append(el("p", "forge-odds", `Покладіть у гнізда ${F.count} рун — натискайте руни нижче.`));
         const go = button(`Розпалити горно · ${fmtNum(F.fee)} зол.`, "wf wf-button", async () => {
           const r = RPG.runeForge(save, picked);
           if (!r.ok) { note = { text: r.reason, error: true }; draw(); return; }
           await RPG.saveGame(save);
           picked = [];
+          born = r.id;
           note = { text: `З попелу народилася нова руна: ${RPG.ITEMS[r.id].name}! −${fmtNum(r.price)} золота данини.` };
           draw();
         });
@@ -163,7 +190,7 @@
         const row = el("div", "row");
         row.append(go);
         if (picked.length) row.append(button("Вийняти все", "wf wf-secondary", () => { picked = []; note = null; draw(); }));
-        dlg.append(row);
+        side.append(row);
         // руни героя (з мішечка для рун або з інвентаря — character.js → runeIds)
         const stacks = RPG.runeIds(save);
         const list = el("div", "rune-forge-list");
@@ -172,13 +199,13 @@
           const n = left(id);
           const b = button("", "wf wf-slot rune-forge-pick" + (n ? "" : " is-empty"), () => {
             if (picked.length >= F.count || left(id) < 1) return;
-            picked.push(id); note = null; draw();
+            picked.push(id); note = null; born = null; draw();
           });
           fillItemCell(b, id, n);
           b.disabled = !n || picked.length >= F.count;
           list.append(b);
         }
-        dlg.append(el("strong", null, "Ваші руни — натисніть, щоб покласти в горно:"), list);
+        side.append(el("strong", null, "Ваші руни — натисніть, щоб покласти в горно:"), list);
       };
       document.body.append(dlg);
       draw();

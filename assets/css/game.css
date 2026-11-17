@@ -1324,8 +1324,39 @@ main > a.location { display: flex; margin-bottom: 10px; }
 .chronicle-dialog .fbook-rune-vals .rt-legendary { color: #b55e00; text-shadow: none; }
 
 /* ---------- Горно Сварога (Гільдія ремісників) ---------- */
-.rune-forge-dialog { max-width: 620px; }
-.rune-forge-slots { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+/* Рунне горно (page-game-city.js → showRuneForge): ліворуч горно згори з 6 гніздами, у центрі — що вийде; праворуч — шанси й руни */
+.notice-dialog.rune-forge-dialog { max-width: min(880px, calc(100vw - 24px)); max-height: calc(100vh - 24px); overflow-y: auto; }
+.rf-body { display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 1fr); gap: 16px; align-items: start; margin-top: 6px; }
+.rf-side { display: grid; gap: 8px; align-content: start; }
+.rf-wheel { position: relative; aspect-ratio: 1; width: 100%; background: url("../images/ui/rune_forge_cold.webp") center / 100% 100% no-repeat; }
+.rf-wheel::before { content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .6s ease;
+  background: url("../images/ui/rune_forge_lit.webp") center / 100% 100% no-repeat; }
+.rf-wheel.is-lit::before { opacity: 1; }
+.rf-slot { position: absolute; width: 13%; aspect-ratio: 1; transform: translate(-50%, -50%); padding: 0; margin: 0;
+  border: 0; border-radius: 50%; background: transparent; display: grid; place-items: center; cursor: default; }
+.rf-slot:not(.is-filled) { box-shadow: none; }
+.rf-slot.is-filled { cursor: pointer; background: radial-gradient(circle, rgba(0, 0, 0, .15), rgba(0, 0, 0, .45) 70%); }
+.rf-slot.is-filled:hover { filter: brightness(1.2); }
+.rf-slot .item-icon { width: 86%; height: 86%; }
+.rf-slot.is-filled:not([class*="rarity-"]) { box-shadow: inset 0 0 0 1px rgba(232, 232, 232, .35); }
+.rf-center { position: absolute; width: 22%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%;
+  display: grid; place-items: center; --rf-c: #e8e8e8; }
+.rf-center > * { grid-area: 1 / 1; }
+.rf-center.rg-common { --rf-c: #e8e8e8; } .rf-center.rg-magic { --rf-c: #4f8dff; }
+.rf-center.rg-epic { --rf-c: #b265ff; } .rf-center.rg-legendary { --rf-c: #ff9d2e; } .rf-center.rg-broken { --rf-c: #8d8d8d; }
+.rf-center.is-unknown.rg-common, .rf-center.is-unknown.rg-legendary, .rf-center.has-rune { box-shadow: 0 0 0 2px var(--rf-c), 0 0 14px var(--rf-c); }
+.rf-unknown { width: 92%; aspect-ratio: 1; background: url("../images/ui/icon_rune_unknown.webp") center / contain no-repeat;
+  animation: rf-float 3s ease-in-out infinite; }
+.rf-icon { width: 70%; height: 70%; position: relative; }
+.rf-fx { width: 175%; aspect-ratio: 1; pointer-events: none; background: url("../images/ui/rune_forge_upgrade_fx.webp") center / contain no-repeat;
+  filter: drop-shadow(0 0 6px var(--rf-c)) drop-shadow(0 0 12px var(--rf-c)); animation: rf-spin 14s linear infinite; }
+@keyframes rf-float { 50% { transform: translateY(-4%); } }
+@keyframes rf-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .rf-unknown, .rf-fx { animation: none; } }
+@media (max-width: 700px) {
+  .rf-body { grid-template-columns: 1fr; }
+  .rf-wheel { width: min(100%, 360px); justify-self: center; }
+}
 .rune-forge-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(56px, 1fr)); gap: 6px; margin-top: 6px; max-height: 40vh; overflow-y: auto; }
 .rune-forge-pick { aspect-ratio: 1; min-height: 0; padding: 0; position: relative; }
 .rune-forge-pick.is-empty { opacity: .35; }

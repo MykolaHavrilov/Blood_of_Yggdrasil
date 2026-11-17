@@ -238,16 +238,18 @@ body[data-page="index"] {
    Розтягування «на 9 частин» (border-image): кути й кінці кнопки не змінюються, середина тягнеться під напис.
    Наведення / натиск / недоступна — фільтрами з main.css (яскравість, зсув, сірість). */
 .wf-button, .wf-link, .wf-secondary, .wf-danger { border-color: transparent; background: none; box-shadow: none; }
-.wf-button    { border-image: url("../images/ui/btn_main.webp") 81 100 fill / 50% 28px stretch; }
-.wf-link      { border-image: url("../images/ui/btn_link.webp") 50 42 fill / 14px 12px stretch; }
-.wf-secondary { border-image: url("../images/ui/btn_sec.webp") 81 90 fill / 50% 25px stretch; }
-.wf-danger    { border-image: url("../images/ui/btn_danger.webp") 62 95 fill / 17px 26px stretch; }
+/* v0.6.19: нові листи кнопок (4 стани). Верх/низ зрізу = половина висоти картинки, тож кінці масштабуються цілими;
+   ширина кінця = зріз × (висота кнопки 46 px / висота картинки) — орнамент не сплющується */
+.wf-button    { border-image: url("../images/ui/btn_main.webp") 63 122 64 fill / 50% 44px stretch; }
+.wf-link      { border-image: url("../images/ui/btn_link.webp") 71 48 72 fill / 50% 16px stretch; }
+.wf-secondary { border-image: url("../images/ui/btn_sec.webp") 62 82 fill / 50% 30px stretch; }
+.wf-danger    { border-image: url("../images/ui/btn_danger.webp") 65 86 66 fill / 50% 30px stretch; }
 .wf-link:hover { box-shadow: none; }
 button.wf:disabled { filter: grayscale(.75) brightness(.85); }
 
 /* Головне меню — великі кнопки з орнаментом ясена */
 .menu .wf {
-  border-image: url("../images/ui/btn_menu.webp") 72 100 fill / 50% 38px stretch;
+  border-image: url("../images/ui/btn_menu.webp") 53 120 fill / 50% 60px stretch;
   background: none; box-shadow: none; border-color: transparent;
 }
 .menu .wf::before, .menu .wf::after { content: none; }
@@ -256,19 +258,25 @@ button.wf:disabled { filter: grayscale(.75) brightness(.85); }
 /* Вкладки верхнього меню */
 header nav a.wf {
   border: 1px solid transparent;
-  border-image: url("../images/ui/nav_tab.webp") 89 30 fill / 50% 8px stretch;
+  border-image: url("../images/ui/nav_tab.webp") 62 88 fill / 50% 30px stretch;
 }
 header nav a.wf:hover { border-image-source: url("../images/ui/nav_tab_h.webp"); }
 header nav a[aria-current="page"] { background: none; border-image-source: url("../images/ui/nav_tab_a.webp"); }
+/* напис — між кутовими вузлами, не на них */
+header nav a.wf { padding-left: 26px; padding-right: 26px; border-image-width: 50% 24px; }
+@media (max-width: 1000px) { header nav a.wf { padding-left: 20px; padding-right: 20px; border-image-width: 50% 18px; } }
+@media (max-width: 700px)  { header nav a.wf { padding: 4px 10px; border-image-width: 50% 10px; } }
 
 /* Перемикачі-«пігулки»: сторінки атрибутів і вибір героя в групі */
 .carousel-dot {
   background: none; border: 1px solid transparent;
-  border-image: url("../images/ui/pill.webp") 89 90 fill / 50% 13px stretch;
+  border-image: url("../images/ui/pill.webp") 62 90 fill / 50% 22px stretch;
 }
 .carousel-dot.is-active { background: none; color: #1a120a; border-image-source: url("../images/ui/pill_a.webp"); }
 .carousel-dot:hover { filter: brightness(1.15); }
-.member-tabs .member-tab { border-image: url("../images/ui/pill.webp") 89 90 fill / 50% 18px stretch; text-shadow: none; }
+.member-tabs .member-tab { border-image: url("../images/ui/pill.webp") 62 90 fill / 50% 26px stretch; text-shadow: none; padding-left: 24px; padding-right: 24px; }
+.carousel-dot { border-image-width: 50% 14px; padding-left: 12px; padding-right: 12px; }
+.carousel-dot:hover:not(.is-active), .member-tabs .member-tab:hover:not(.wf-button) { border-image-source: url("../images/ui/pill_h.webp"); filter: none; }
 .member-tabs .member-tab.wf-button { color: #1a120a; border-image-source: url("../images/ui/pill_a.webp"); }
 
 /* Квадратні кнопки-значки (фільтр здобичі, пояс) */
@@ -302,8 +310,9 @@ header nav a[aria-current="page"] { background: none; border-image-source: url("
   background: url("../images/ui/slot.webp") center / 100% 100% no-repeat, #120e0a;
 }
 /* Напис не налазить на орнамент кінців кнопки */
-a.wf-button, button.wf-button { padding-left: 30px; padding-right: 30px; }
-a.wf-danger, button.wf-danger, a.wf-secondary, button.wf-secondary { padding-left: 26px; padding-right: 26px; }
+a.wf-button, button.wf-button { padding-left: 38px; padding-right: 38px; }
+a.wf-danger, button.wf-danger { padding-left: 30px; padding-right: 30px; }
+a.wf-secondary, button.wf-secondary { padding-left: 26px; padding-right: 26px; }
 button.attr-plus { padding: 0; }
 
 /* ---------- Шрифти (v170): Ponomar — великі заголовки, Kurale — кнопки й менші заголовки, Alegreya Sans — текст ---------- */
@@ -512,3 +521,110 @@ a.map-world:hover, a.map-world:focus-visible { outline: none; border-color: var(
 @media (max-width: 700px) {
   .bst-img { width: 4.2em; height: 4.2em; }
 }
+
+/* ---------- Розмови з NPC і вікна-повідомлення (v0.6.17) — assets/images/ui/ui_*.webp, btn_reply*.webp ----------
+   Рамка вікна, кругла рамка портрета, табличка з ім'ям, поле репліки, роздільник, кнопки відповідей із золотим ромбом.
+   Усе, що тягнеться, — «9 частин» (border-image): кути не змінюються, середина тягнеться під текст. */
+.npc-dialog, .notice-dialog {
+  border: 14px solid transparent; border-radius: 0; box-shadow: none;
+  border-image: url("../images/ui/ui_dialog_frame.webp") 110 fill / 44px stretch;
+  background: none;
+}
+.npc-dialog { padding: 14px 16px 16px; gap: 10px; }
+.notice-dialog { padding: 16px 20px 18px; filter: drop-shadow(0 14px 26px rgba(0, 0, 0, .75)); }
+.notice-dialog.is-warn { box-shadow: none; filter: drop-shadow(0 0 10px rgba(232, 163, 61, .55)) drop-shadow(0 14px 26px rgba(0, 0, 0, .75)); }
+.notice-dialog .notice-close { top: 10px; right: 10px; }
+/* Портрет під круглою рамкою: отвір рамки — 72% її ширини */
+.npc-pic { position: relative; width: 84px; height: 84px; flex: none; display: grid; place-items: center; }
+.npc-pic .npc-portrait { width: 74%; height: 74%; border: 0; border-radius: 50%; object-fit: cover; }
+.npc-pic::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: url("../images/ui/ui_portrait_frame.webp") center / 100% 100% no-repeat; }
+.npc-pic.is-dark::after { background-image: url("../images/ui/ui_portrait_frame_dark.webp"); }
+/* Ім'я на табличці */
+.npc-head .npc-name {
+  /* ui_nameplate 512×128: темне поле x 80–432, y 36–100. Зрізи 36 112 28 у масштабі 0.4 → 14 / 45 / 11 px;
+     відступи більші за зрізи — текст лише на темному полі, а не на рамці */
+  display: inline-flex; align-items: center; justify-content: center; text-align: center; min-height: 50px;
+  padding: 15px 48px 12px;
+  border: 1px solid transparent; border-image: url("../images/ui/ui_nameplate.webp") 36 112 28 fill / 14px 45px 11px stretch;
+  font-family: var(--font-head); font-weight: 400; line-height: 1.15; text-shadow: 0 1px 2px #000;
+}
+/* Репліка NPC — на тихому полі; роздільник — між реплікою й відповідями */
+.npc-line {
+  padding: 12px 16px 12px 22px; border: 6px solid transparent; font-style: italic; color: #eadfc8;
+  border-image: url("../images/ui/ui_speech_panel.webp") 70 fill / 28px stretch;
+}
+.npc-replies { padding-top: 22px; background: url("../images/ui/ui_dialog_divider.webp") center top / auto 20px no-repeat; }
+/* Наслідок дії — сувій із печаткою замість золотої смужки */
+.npc-result { position: relative; padding: 6px 10px 6px 44px; border-left: 0; background: rgba(0, 0, 0, .25); border-radius: 4px; }
+.npc-result::before { content: ""; position: absolute; left: 6px; top: 6px; width: 32px; height: 32px;
+  background: url("../images/ui/ui_dialog_result.webp") center / contain no-repeat; }
+.npc-result.is-error { box-shadow: inset 3px 0 0 #c9564a; }
+/* Кнопка відповіді: смуга + золотий ромб зліва (окремою картинкою — не тягнеться, коли відповідь у кілька рядків) */
+.npc-replies .wf.npc-reply, .wf.npc-reply {
+  position: relative; justify-content: flex-start; text-align: left; white-space: normal;
+  min-height: 40px; padding: 8px 14px 8px 46px; font-family: var(--font-body); font-size: .95rem; color: #f0e2bf;
+  border-image: url("../images/ui/btn_reply.webp") 12 30 fill / 10px 16px stretch;
+}
+.wf.npc-reply::before { content: ""; position: absolute; left: 4px; top: 50%; width: 30px; height: 30px; transform: translateY(-50%);
+  background: url("../images/ui/btn_reply_gem.webp") center / contain no-repeat; }
+.wf.npc-reply:hover, .wf.npc-reply:focus-visible { border-image-source: url("../images/ui/btn_reply_h.webp"); filter: none; color: #fff3d6; }
+.wf.npc-reply:hover::before, .wf.npc-reply:focus-visible::before { background-image: url("../images/ui/btn_reply_gem_h.webp"); filter: drop-shadow(0 0 4px rgba(255, 90, 60, .7)); }
+.wf.npc-reply:active { border-image-source: url("../images/ui/btn_reply_a.webp"); }
+button.wf.npc-reply:disabled { border-image-source: url("../images/ui/btn_reply_d.webp"); filter: none; color: #a59c8a; }
+button.wf.npc-reply:disabled::before { filter: grayscale(.8) brightness(.8); }
+@media (max-width: 700px) {
+  .npc-pic { width: 68px; height: 68px; }
+  .npc-head { flex-direction: column; gap: 6px; }       /* табличка під портретом — на всю ширину, ім'я в один рядок */
+  .npc-head .npc-name { flex: 0 1 auto; min-width: 0; max-width: 100%; min-height: 38px; padding: 11px 30px 9px; font-size: .8rem;
+    border-image-width: 10px 28px 8px; }
+  .npc-line { padding: 10px 12px 10px 18px; }
+  .wf.npc-reply { padding-left: 42px; font-size: .92rem; }
+}
+
+/* Напис кнопок-картинок — лише на золотому / зеленому полі, не на бічних вставках (btn_main: поле x 100–780 з 880 → вставка 28 px).
+   Сильніше за правила тісних рядків (.shop-row .wf, .popover-actions .wf…), що скидали відступ до 10 px. */
+:is(a, button, span).wf.wf-button:not(.has-icon):not(.member-tab):not(.attr-plus) { padding-left: 38px; padding-right: 38px; }
+:is(a, button, span).wf.wf-secondary:not(.has-icon), :is(a, button, span).wf.wf-danger:not(.has-icon) { padding-left: 28px; padding-right: 28px; }
+:is(a, button, span).wf.wf-link:not(.has-icon) { padding-left: max(18px, 1em); padding-right: max(18px, 1em); }
+
+/* ---------- Стани кнопок картинками (v0.6.19): під курсором / натиснута / недоступна — замість фільтрів ---------- */
+a.wf-button:hover, button.wf-button:hover:not(:disabled), .wf-button:focus-visible { border-image-source: url("../images/ui/btn_main_h.webp"); filter: none; }
+a.wf-button:active, button.wf-button:active:not(:disabled) { border-image-source: url("../images/ui/btn_main_a.webp"); }
+button.wf-button:disabled { border-image-source: url("../images/ui/btn_main_d.webp"); }
+a.wf-link:hover, button.wf-link:hover:not(:disabled), .wf-link:focus-visible { border-image-source: url("../images/ui/btn_link_h.webp"); filter: none; }
+a.wf-link:active, button.wf-link:active:not(:disabled) { border-image-source: url("../images/ui/btn_link_a.webp"); }
+button.wf-link:disabled { border-image-source: url("../images/ui/btn_link_d.webp"); }
+a.wf-secondary:hover, button.wf-secondary:hover:not(:disabled), .wf-secondary:focus-visible { border-image-source: url("../images/ui/btn_sec_h.webp"); filter: none; }
+a.wf-secondary:active, button.wf-secondary:active:not(:disabled) { border-image-source: url("../images/ui/btn_sec_a.webp"); }
+button.wf-secondary:disabled { border-image-source: url("../images/ui/btn_sec_d.webp"); }
+a.wf-danger:hover, button.wf-danger:hover:not(:disabled), .wf-danger:focus-visible { border-image-source: url("../images/ui/btn_danger_h.webp"); filter: none; }
+a.wf-danger:active, button.wf-danger:active:not(:disabled) { border-image-source: url("../images/ui/btn_danger_a.webp"); }
+button.wf-danger:disabled { border-image-source: url("../images/ui/btn_danger_d.webp"); }
+.menu a.wf:hover, .menu button.wf:hover:not(:disabled), .menu .wf:focus-visible { border-image-source: url("../images/ui/btn_menu_h.webp"); filter: none; }
+.menu a.wf:active, .menu button.wf:active:not(:disabled) { border-image-source: url("../images/ui/btn_menu_a.webp"); }
+.menu button.wf:disabled { border-image-source: url("../images/ui/btn_menu_d.webp"); }
+/* недоступна — власна сіра картинка: без додаткової сірості й напівпрозорості */
+button.wf-button:disabled, button.wf-link:disabled, button.wf-secondary:disabled, button.wf-danger:disabled, .menu button.wf:disabled { filter: none; opacity: .9; }
+.loot-filter-btn:hover { background-image: url("../images/ui/btn_square_h.webp"); filter: none; }
+.loot-filter-btn:active { background-image: url("../images/ui/btn_square_a.webp"); }
+.loot-filter-btn:disabled { background-image: url("../images/ui/btn_square_d.webp"); }
+.attr-plus:hover:not(:disabled) { background-image: url("../images/ui/btn_plus_h.webp"); filter: none; }
+.attr-plus:active:not(:disabled) { background-image: url("../images/ui/btn_plus_a.webp"); }
+.attr-plus:disabled { background-image: url("../images/ui/btn_plus_d.webp"); opacity: 1; }
+.carousel-arrow[data-step="-1"]:hover, .carousel-arrow[data-step="-1"]:focus-visible { background-image: url("../images/ui/arrow_l_h.webp"); }
+.carousel-arrow[data-step="1"]:hover, .carousel-arrow[data-step="1"]:focus-visible { background-image: url("../images/ui/arrow_r_h.webp"); }
+.carousel-arrow[data-step="-1"]:active { background-image: url("../images/ui/arrow_l_a.webp"); }
+.carousel-arrow[data-step="1"]:active { background-image: url("../images/ui/arrow_r_a.webp"); }
+.carousel-arrow[data-step="-1"]:disabled { background-image: url("../images/ui/arrow_l_d.webp"); opacity: 1; }
+.carousel-arrow[data-step="1"]:disabled { background-image: url("../images/ui/arrow_r_d.webp"); opacity: 1; }
+.carousel-arrow:hover, .carousel-arrow:focus-visible { filter: none; }
+:is(.notice-close, .popover-close, .toast-close, .globe-close, .chronicle-close):is(:hover, :focus-visible) { background-image: url("../images/ui/btn_close_h.webp"); filter: none; }
+:is(.notice-close, .popover-close, .toast-close, .globe-close, .chronicle-close):active { background-image: url("../images/ui/btn_close_a.webp"); }
+/* комірки: під курсором — тепле світло рамки; вибрана — золота; закрита — ланцюжок */
+button.wf-slot:hover:not(:disabled) { background-image: url("../images/ui/slot_h.webp"); filter: none; }
+.wf-slot.is-selected { background-image: url("../images/ui/slot_sel.webp"); }
+.wf-slot.wf-locked { background-image: url("../images/ui/slot_lock.webp"); filter: none; opacity: 1; }
+/* Низькі кнопки (36 px — рядки крамниці, завдань): кінці вужчі, щоб орнамент не розтягувався вшир */
+.shop-row .wf.wf-button:not(.has-icon) { border-image-width: 50% 34px; padding-left: 30px; padding-right: 30px; }
+.shop-row .wf.wf-secondary:not(.has-icon), .shop-row .wf.wf-danger:not(.has-icon) { border-image-width: 50% 24px; padding-left: 22px; padding-right: 22px; }

@@ -395,14 +395,7 @@
       const npc = RPG.NPCS[npcId];
       const node = npc.nodes[npcNode[npcId]] || npc.nodes.start;
       const wrap = el("div", "npc-dialog");
-      const head = el("div", "npc-head");
-      const img = new Image();
-      img.className = "npc-portrait";
-      img.alt = "";
-      img.addEventListener("error", () => img.remove());
-      img.src = RPG.asset(`assets/images/npc/${npc.portrait}.webp`);
-      head.append(img, el("strong", "npc-name", npc.name));
-      wrap.append(head);
+      wrap.append(RPG.ui.npcHead(npc.portrait, npc.name));   // портрет у рамці + табличка з ім'ям (game-common.js)
       const res = npcResult[npcId];
       if (res) wrap.append(el("p", "npc-result" + (res.error ? " is-error" : ""), res.text));
       const text = typeof node.text === "function" ? node.text(save, npcCtx) : node.text;
@@ -411,7 +404,7 @@
       for (const r of node.replies) {
         if (r.show && !r.show(save, npcCtx)) continue;
         const label = typeof r.text === "function" ? r.text(save, npcCtx) : r.text;
-        replies.append(button("➤ " + label, "wf wf-link npc-reply", async () => {
+        replies.append(button(label, "wf wf-link npc-reply", async () => {   // золотий ромб на початку — CSS (.npc-reply::before)
           npcResult[npcId] = null;
           if (r.action) {
             const out = await NPC_ACTIONS[r.action](npcId);

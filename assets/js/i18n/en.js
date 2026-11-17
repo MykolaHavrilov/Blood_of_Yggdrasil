@@ -2277,6 +2277,7 @@ RPG.I18N.en = {
 "Гільдія ремісників": "Craftsmen's Guild",
 "Торгова гільдія": "Merchants' Guild",
 "Рунне горно": "Rune Forge",
+"Випадкова руна": "Random rune",
 "Особливі набори — тут вогонь не грає в кості, результат відомий наперед:": "Special sets — here the fire does not roll dice, the result is known in advance:",
 "Що в горні": "What is in the forge",
 "Що вийде": "What comes out",
@@ -3402,6 +3403,8 @@ RPG.I18N.en = {
 "Земля велетнів: крижані перевали, Залізний ліс Ангрбоди, кам'яна пустка й брама Утгарда — а за краєм світу з чорного моря піднімає голову Світовий Змій": "The land of the giants: icy passes, Angrboða's Iron Wood, the stone waste and the gate of Útgarðr — and beyond the edge of the world the World Serpent raises his head from the black sea"
 },
 "patterns": [
+["^Покладіть у гнізда (\\d+) рун — натискайте руни нижче\\.$","Put $1 runes into the sockets — tap the runes below.",1,0,"Покладіть у гнізда"],
+["^Гніздо (\\d+) — порожнє$","Socket $1 — empty",1,0,"— порожнє"],
 ["^Шість однакових — гарантовано: (.*?)\\.$","Six identical — guaranteed: $1.",1,0,"Шість однакових — гарантовано"],
 ["^Шість легендарних — вийде випадкова легендарна руна · (.*?)\\.$","Six legendary — a random legendary rune will come out · $1.",1,0,"Шість легендарних — вийде"],
 ["^Шість зламаних — вийде випадкова звичайна руна · (.*?)\\.$","Six broken — a random common rune will come out · $1.",1,0,"Шість зламаних — вийде"],

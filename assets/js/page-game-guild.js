@@ -34,13 +34,7 @@
                           trainer: ["npc_trainer", "Брут, тренер гільдії"] };
       if (!GUILD_NPC[guildNpc]) guildNpc = "admin";
       const [pic, who] = GUILD_NPC[guildNpc];
-      const head = el("div", "npc-head");
-      const img = new Image();
-      img.className = "npc-portrait"; img.alt = "";
-      img.addEventListener("error", () => img.remove());
-      img.src = RPG.asset(`assets/images/npc/${pic}.webp`);
-      head.append(img, el("strong", "npc-name", who));
-      npc.append(head);
+      npc.append(RPG.ui.npcHead(pic, who));   // портрет у рамці + табличка з ім'ям (game-common.js)
       if (guildNpc === "admin") { giveRunePouch(); renderProfTalk(npc); renderQuestBoard(npc); }
       else if (guildNpc === "trader") {
         npc.append(noteP(
@@ -70,7 +64,7 @@
     function renderProfTalk(box) {
       if (save.story?.profTree !== "ostap" || RPG.classTreeOpen(save)) return;
       const g = (m, f) => RPG.gw(save, m, f);
-      box.append(button("➤ Остап із шинку сказав, що ви поясните, ким я можу стати", "wf wf-link npc-reply", async () => {
+      box.append(button("Остап із шинку сказав, що ви поясните, ким я можу стати", "wf wf-link npc-reply", async () => {
         save.story.profTree = "open";
         await RPG.saveGame(save);
         const P = RPG.profNeedText;
