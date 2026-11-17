@@ -1390,7 +1390,7 @@
       Object.assign(face.style, RPG.heroSpriteStyle(ms.character.classId, RPG.heroGender(ms)));
       const info = el("div", "party-info");
       const who = el("strong");
-      who.append(classEmblem(ms.character.classId), " ",
+      who.append(classEmblem(ms.character.classId, null, ms), " ",
         el("span", null, `${ms.character.name} · рів. ${ms.character.level}${dead ? (RPG.heroGender(ms) === "f" ? " · полегла" : " · полеглий") : ""}`));
       info.append(who);;
       const hp = miniBar("bar-hp", "HP", "party-hp-" + i), mp = miniBar("bar-mp", "MP", "party-mp-" + i);
@@ -1429,14 +1429,35 @@
 
   // Значок професії замість її назви: зброя правої й лівої руки кольором професії (data/classes.js → CLASS_COLORS,
   // картинка assets/images/ui/cls_<id>.webp). Назва професії — у підказці (title) і для читачів екрана.
-  function classEmblem(classId, title = null) {
+  // tipSave — сейв героя: тоді значок — кнопка з підказкою про професію (наведення миші — перегляд, клік / дотик — закріпити)
+  function classEmblem(classId, title = null, tipSave = null) {
     const s = el("span", "cls-emblem");
     s.style.backgroundImage = `url("${RPG.classEmblemUrl(classId)}")`;
     const name = `${title || RPG.getClass(classId).name} · ${RPG.classRankLabel(classId)}`;   // «Воїн · 1 професія»
-    s.title = name;
-    s.setAttribute("role", "img");
     s.setAttribute("aria-label", name);
+    if (!tipSave) { s.title = name; s.setAttribute("role", "img"); return s; }
+    s.classList.add("is-tip");
+    s.setAttribute("role", "button");
+    RPG.bindTip(s, () => classInfo(classId), () => RPG.classTreeOpen?.(tipSave)
+      ? [{ text: "Древо професій", className: "wf-link", onClick: () => showClassTree(tipSave) }] : null,
+      { onOpen: ev => ev.stopPropagation() });   // клік по значку не обирає героя в списку групи
     return s;
+  }
+  // Підказка про професію героя: назва й ранг, роль, опис, зброя
+  function classInfo(classId) {
+    const c = RPG.getClass(classId);
+    const box = el("div", "info-body class-info");
+    const head = el("p", "class-info-head");
+    head.append(classEmblem(classId), " ", el("strong", null, c.name), " · ", el("span", null, RPG.classRankLabel(classId)));
+    if (RPG.classRoles(classId).length) head.append(" ", RPG.roleTags(classId));
+    box.append(head);
+    if (c.description) box.append(el("p", null, c.description));
+    const w = el("p");
+    w.append(el("span", null, "Зброя:"), " ");
+    if (c.weapons?.length) c.weapons.forEach((t, i) => w.append(i ? ", " : "", el("span", null, RPG.WEAPON_TYPES[t]?.name || t)));
+    else w.append(el("span", null, "будь-яка"));
+    box.append(w);
+    return box;
   }
 
   // ---------- Древо професій (data/classes.js → CLASS_TREE) ----------
@@ -1664,7 +1685,7 @@
     const img = $("hero-img");
     if (img) { img._save = save; renderHeroDoll(img, save); }   // герой + зброя в руках (шари)
     const name = $("hero-name");
-    if (name) name.replaceChildren(el("span", null, ch.name), " ", classEmblem(ch.classId));   // ім'я — окремим вузлом: так переклад (i18n.js) не чіпає значок
+    if (name) name.replaceChildren(el("span", null, ch.name), " ", classEmblem(ch.classId, null, save));   // ім'я — окремим вузлом: так переклад (i18n.js) не чіпає значок
 
     setBar($("hero-hp"), ch.hp, st.hp);
     setBar($("hero-mp"), ch.mp, st.mp);

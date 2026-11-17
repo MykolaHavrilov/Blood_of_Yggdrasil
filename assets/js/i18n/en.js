@@ -4,6 +4,8 @@ RPG.I18N = RPG.I18N || {};
 RPG.I18N.en = {
 "phrases": {
 "Древо професій": "Profession Tree",
+"Зброя:": "Weapons:",
+"будь-яка": "any",
 "Усе древо": "Whole tree",
 "Ратники": "Men-at-Arms",
 "Тіні": "Shadows",

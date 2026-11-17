@@ -804,3 +804,7 @@ a, button, input, label, select, [tabindex] { touch-action: manipulation; -webki
   background: center / contain no-repeat;
   flex: none;
 }
+/* Значок професії біля імені героя — з підказкою про професію (game-common.js → classEmblem(…, tipSave) → classInfo) */
+.cls-emblem.is-tip { cursor: help; border-radius: 4px; }
+.cls-emblem.is-tip:hover, .cls-emblem.is-tip:focus-visible { outline: 1px solid rgba(201, 163, 90, .7); outline-offset: 1px; filter: brightness(1.2); }
+.class-info-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 0 0 6px; }
