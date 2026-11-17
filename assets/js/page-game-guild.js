@@ -41,7 +41,7 @@
       img.src = RPG.asset(`assets/images/npc/${pic}.webp`);
       head.append(img, el("strong", "npc-name", who));
       npc.append(head);
-      if (guildNpc === "admin") { giveRunePouch(); renderQuestBoard(npc); }
+      if (guildNpc === "admin") { giveRunePouch(); renderProfTalk(npc); renderQuestBoard(npc); }
       else if (guildNpc === "trader") {
         npc.append(noteP(
           `Тадеуш, торговець гільдії, продає зброю 1–2 виду, шкіряну броню (2 вид), малі й середні зілля (за ${Math.round(RPG.SHOP_SELL_RATE * 100)}% вартості), ` +
@@ -63,6 +63,31 @@
         `Отримано: Мішечок для рун. У нього перекладено рун: ${fmtNum(r.moved)}` + (r.lost ? ` (не вмістилося й пропало: ${fmtNum(r.lost)})` : "") + ".",
         `Відтепер усі руни потрапляють у мішечок, а не в інвентар. Він на сторінці «Інвентар» — кнопка «Мішечок для рун». У клітинці — до ${P.max} рун однієї руни й рідкості, зламаних — до ${P.maxBroken}; зайве пропадає.`
       ]);
+    }
+
+    // --- Артеміда пояснює шляхи професій: одноразова кнопка, коли героя прислав Остап (save.story.profTree === "ostap").
+    // Після пояснення — "open": на сторінці «Персонаж» і в картці квесту професії з'являється кнопка «Древо професій» (classes.js → classTreeOpen)
+    function renderProfTalk(box) {
+      if (save.story?.profTree !== "ostap" || RPG.classTreeOpen(save)) return;
+      const g = (m, f) => RPG.gw(save, m, f);
+      box.append(button("➤ Остап із шинку сказав, що ви поясните, ким я можу стати", "wf wf-link npc-reply", async () => {
+        save.story.profTree = "open";
+        await RPG.saveGame(save);
+        const P = RPG.profNeedText;
+        showNotice("Шляхи професій", [
+          `Артеміда відкладає перо. «Від Остапа, кажеш? Тоді слухай. Гільдія дивиться, у що ти ${g("сам", "сама")} вкладав${g("", "ла")} сили — ` +
+            "бо те, що дають роки, в усіх однакове. Кожен шлях вимагає свого.»",
+          `«Воїнам Гільдія дає «Шлях воїна». Хто куди піде — дивись, скільки ${g("сам вклав", "сама вклала")}: ` +
+            P(["warrior", "knight", "berserker", "rogue", "hunter", "paladin"]) + ".»",
+          "«Магам — «Шлях чародія». Усім чотирьом школам треба одного: " + P(["mage_fire"]).replace(/^[^—]+— /, "") +
+            `. А вогонь, вода, вітер чи земля — то вже ти ${g("сам", "сама")} обереш, як пройдеш випробування.»`,
+          "«Служителям духу — «Шлях духу»: " + P(["priest", "monk"]) + ".»",
+          `«Підходиш під кілька шляхів — ${g("сам", "сама")} і обереш. А як не підходиш ні під що — квесту я не дам. Іди тоді до Захара в Мерію: ` +
+            "він покаже, чого бракує, і допоможе переписати вкладені очки. Квест «Шлях професії» даю Селянину з " + RPG.PROFESSION_QUEST_LEVEL + " рівня.»",
+          "Відтепер на сторінці «Персонаж» є кнопка «Древо професій»: кольорові — шляхи, які вам уже підходять, сірі — ті, для яких ще бракує очок атрибутів."
+        ]);
+        renderAll();
+      }));
     }
 
     // --- Адміністратор гільдії: завдання ---
@@ -369,7 +394,7 @@
         b.disabled = !info.complete;
         card.append(b);
       }
-      card.append(button("Древо професій", "wf wf-link class-tree-open", () => RPG.ui.showClassTree(ms)));   // game-common.js → showClassTree
+      if (RPG.classTreeOpen(ms)) card.append(button("Древо професій", "wf wf-link class-tree-open", () => RPG.ui.showClassTree(ms)));   // game-common.js → showClassTree
       box.append(card);
       return true;
     }

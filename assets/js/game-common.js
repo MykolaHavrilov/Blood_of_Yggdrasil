@@ -1561,7 +1561,22 @@
       out.push(p);
     } else if (req?.quest === "shaman") {
       out.push(`Як отримати: секретний квест «Шлях відреченого» — обряд на ${req.level} рівні Селянина.`);
-    } else if (!req) {
+    }
+    if (req && node.id !== state.current && !state.had(node.id)) {
+      // Чи підходить професія цьому героєві (сірий вузол на древі — не підходить)
+      if (!req.from.includes(state.classId)) out.push(el("p", "ct-fit is-no", "Вашому героєві недоступна: цю професію обирають із Селянина."));
+      else {
+        const lack = RPG.professionLack(state.save, node.id);
+        if (!Object.keys(lack).length) out.push(el("p", "ct-fit is-yes", "Вашому героєві підходить: вкладених очок атрибутів досить."));
+        else {
+          const p = el("p", "ct-fit is-no");
+          p.append(el("span", null, "Вашому героєві поки не підходить. Бракує очок:"));
+          Object.entries(lack).forEach(([k, v], i) => p.append(i ? ", " : " ", el("span", null, RPG.ATTRS[k]), ` ${v}`));
+          out.push(p);
+        }
+      }
+    }
+    if (!req) {
       out.push("З цього починає кожен герой. Із 15 рівня Селянин може обрати одну з професій.");
     }
     return out;
@@ -1617,6 +1632,7 @@
         if (node.kind !== "next" && known) b.style.setProperty("--ct-color", RPG.getClass(node.id).color || "#b9a26a");
         if (node.kind !== "next" && node.id === state.current) b.classList.add("is-current");
         else if (node.kind !== "next" && had.has(node.id)) b.classList.add("is-passed");
+        if (node.kind === "prof" && known && !state.fits(node.id)) { b.classList.add("is-unfit"); b.style.setProperty("--ct-color", "#6b6f78"); }   // героєві не підходить — сіра
         // На картинці замки й «?» уже намальовані — поверх лише значок професії
         if (node.kind === "next") { if (!L.art) b.append(el("span", "ct-lock", "🔒")); }
         else if (!known) { b.classList.add("is-unknown"); if (!L.art) b.append(el("span", "ct-ask", "?")); }
@@ -1627,7 +1643,7 @@
         b.addEventListener("click", () => showInfo(node));
         field.append(b);
         if (L.labels && node.kind !== "next") {
-          const lab = el("span", "ct-label", known ? RPG.getClass(node.id).name : "?");
+          const lab = el("span", "ct-label" + (node.kind === "prof" && known && !state.fits(node.id) ? " is-unfit" : ""), known ? RPG.getClass(node.id).name : "?");
           Object.assign(lab.style, { left: pct(node.x, L.W), top: pct(node.y + node.size / 2 + L.H * 0.012, L.H) });
           field.append(lab);
         }

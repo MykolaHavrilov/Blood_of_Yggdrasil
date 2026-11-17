@@ -14,6 +14,9 @@ RPG.I18N.en = {
 "Про цей шлях ще нічого не відомо. Кажуть, його знаходять ті, хто довго не обирає жодного іншого.": "Nothing is known about this path yet. They say it is found by those who choose no other for a long time.",
 "З цього починає кожен герой. Із 15 рівня Селянин може обрати одну з професій.": "Every hero starts here. From level 15 a Peasant can choose one of the professions.",
 "Вкладені очки атрибутів:": "Invested attribute points:",
+"Вашому героєві недоступна: цю професію обирають із Селянина.": "Not available to your hero: this profession is chosen as a Peasant.",
+"Вашому героєві підходить: вкладених очок атрибутів досить.": "Suits your hero: enough attribute points invested.",
+"Вашому героєві поки не підходить. Бракує очок:": "Does not suit your hero yet. Points missing:",
 "професія відсутня": "no profession",
 "1 професія": "1st profession",
 "2 професія": "2nd profession",
@@ -3387,6 +3390,13 @@ RPG.I18N.en = {
 "Земля велетнів: крижані перевали, Залізний ліс Ангрбоди, кам'яна пустка й брама Утгарда — а за краєм світу з чорного моря піднімає голову Світовий Змій": "The land of the giants: icy passes, Angrboða's Iron Wood, the stone waste and the gate of Útgarðr — and beyond the edge of the world the World Serpent raises his head from the black sea"
 },
 "patterns": [
+["^Остап усміхається у вуса\\. «Бачив я на своєму віку чимало таких, як ти\\. Та ким тобі стати — не шинкареві казати\\. Іди до Артеміди, адміністраторки Гільдії авантюристів — це в Південному районі Дубової Застави\\. Скажи, що від Остапа\\. Вона кожному розтлумачить, які є шляхи і чого кожен вимагає\\.»$","Ostap smiles into his moustache. \"I've seen plenty like you in my time. But who you should become — that's not for an innkeeper to say. Go to Artemida, the administrator of the Adventurers' Guild — in the Southern District of Oak Outpost. Tell her Ostap sent you. She explains to everyone what paths there are and what each one demands.\"",1,0,"Та ким тобі стати — не шинкареві казати"],
+["^➤ Остап із шинку сказав, що ви поясните, ким я можу стати$","➤ Ostap from the tavern said you would explain who I can become",1,0,"Остап із шинку сказав"],
+["^Остап із шинку сказав, що ви поясните, ким я можу стати$","Ostap from the tavern said you would explain who I can become",1,0,"Остап із шинку сказав"],
+["^Шляхи професій$","Profession Paths",1,0,"Шляхи професій"],
+["^Артеміда відкладає перо\\. «Від Остапа, кажеш\\? Тоді слухай\\. Гільдія дивиться, у що ти (.*?) вкладав(.*?) сили — бо те, що дають роки, в усіх однакове\\. Кожен шлях вимагає свого\\.»$","Artemida puts down her quill. \"From Ostap, you say? Then listen. The Guild looks at what you $1 put$2 your strength into — because what the years give is the same for everyone. Every path demands its own.\"",1,0,"Артеміда відкладає перо"],
+["^«Підходиш під кілька шляхів — (.*?) і обереш\\. А як не підходиш ні під що — квесту я не дам\\. Іди тоді до Захара в Мерію: він покаже, чого бракує, і допоможе переписати вкладені очки\\. Квест «Шлях професії» даю Селянину з (\\d+) рівня\\.»$","\"If you fit several paths — you'll choose $1. And if you don't fit any — I won't give you the quest. Then go to Zakhar at the Town Hall: he'll show what's missing and help rewrite your invested points. I give the \"Path of the Profession\" quest to a Peasant from level $2.\"",1,0,"Підходиш під кілька шляхів"],
+["^Відтепер на сторінці «Персонаж» є кнопка «Древо професій»: кольорові — шляхи, які вам уже підходять, сірі — ті, для яких ще бракує очок атрибутів\\.$","From now on the \"Character\" page has a \"Profession Tree\" button: coloured are the paths that already suit you, grey are those you still lack attribute points for.",1,0,"Відтепер на сторінці «Персонаж» є кнопка"],
 ["^Продовження шляху «(.*?)». У грі цієї професії ще немає — вузол закритий.$","Continuation of the \"$1\" path. This profession is not in the game yet — the node is locked.",1,0,"Продовження шляху"],
 ["^Як отримати: квест «Шлях професії» з (.*?) рівня Селянина.$","How to get: the \"Path of a Profession\" quest from Peasant level $1.",1,0,"Як отримати: квест «Шлях професії»"],
 ["^Як отримати: секретний квест «Шлях відреченого» — обряд на (.*?) рівні Селянина.$","How to get: the secret \"Path of the Renouncer\" quest — the rite at Peasant level $1.",1,0,"Як отримати: секретний квест"],

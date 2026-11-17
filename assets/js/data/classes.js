@@ -357,8 +357,31 @@
     const had = new Set([ch.classId, ...(ch.classHistory || []).map(h => h.classId)]);
     const met = (save.story?.shaman?.stage || 0) >= 1;
     const secret = new Set(CLASS_TREE.filter(g => g.secret).flatMap(g => g.classes));
-    return { current: ch.classId, known: id => !secret.has(id) || had.has(id) || met };
+    // fits(id) — чи може цей герой відкрити професію: уже нею був, або з його нинішньої професії до неї є шлях
+    // і вистачає вкладених очок атрибутів (рівень не враховується — він лише відкриває квест). Решта на древі сіра.
+    const fits = id => {
+      if (had.has(id)) return true;
+      const req = CLASSES[id]?.requires;
+      return !!req && req.from.includes(ch.classId) && !Object.keys(professionLack(save, id)).length;
+    };
+    return { save, current: ch.classId, classId: ch.classId, had: id => had.has(id),
+             known: id => !secret.has(id) || had.has(id) || met, fits };
   }
+
+  // ---------- Коли видно кнопку «Древо професій» ----------
+  // save.story.profTree: (немає) → "ostap" — шинкар Остап на питання «Ким я можу стати?» відіслав до Артеміди →
+  // "open" — Артеміда пояснила шляхи (одноразова кнопка в Гільдії, page-game-guild.js → renderProfTalk).
+  // Герой, що вже має професію (сейви до цієї зміни), бачить древо й так.
+  function classTreeOpen(save) {
+    if (save.story?.profTree === "open") return true;
+    const heroes = RPG.partyMembers?.(save) || [save];
+    return heroes.some(ms => (getClass(ms.character.classId).tier || 1) > 1 || (ms.character.classHistory || []).length > 0);
+  }
+  // Умови професій словами (requires.attrs): «Воїн — Сила 10, Витривалість 5; Лицар — …»
+  const profNeedText = ids => ids.map(id => {
+    const c = CLASSES[id];
+    return `${c.name} — ` + Object.entries(c.requires.attrs).map(([k, v]) => `${RPG.ATTRS[k]} ${v}`).join(", ");
+  }).join("; ");
 
   // ---------- Колір і значок професії ----------
   // Значок — зброя правої й лівої руки професії, зафарбована її кольором: assets/images/ui/cls_<id>.webp (96×96).
@@ -374,7 +397,7 @@
   // Адреса картинки значка (невідома професія — значок Селянина)
   const classEmblemUrl = id => RPG.asset(`assets/images/ui/cls_${CLASSES[id] ? id : DEFAULT_CLASS}.webp`);
 
-  Object.assign(RPG, { DEFAULT_CLASS, CLASSES, ROLES, classRoles, classRankLabel, CLASS_TREE, CLASS_TREE_NEXT, classTreeState, classEmblemUrl, PROFESSION_LEVEL, getClass, heroDoll, heroFistStyle, heroSpriteStyle, heroSpriteId,
+  Object.assign(RPG, { DEFAULT_CLASS, CLASSES, ROLES, classRoles, classRankLabel, CLASS_TREE, CLASS_TREE_NEXT, classTreeState, classTreeOpen, profNeedText,classEmblemUrl, PROFESSION_LEVEL, getClass, heroDoll, heroFistStyle, heroSpriteStyle, heroSpriteId,
                        availableClassChanges, pickProfession,
                        investedAttrPoints, professionLack, eligibleProfessions, classAllowsWeapon, classAllowsOffHand });
 })(window.RPG);

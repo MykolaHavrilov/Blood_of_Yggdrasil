@@ -320,7 +320,8 @@
         }
       }
       // Древо професій: усі шляхи від Селянина, професія цього героя підсвічена (game-common.js → showClassTree)
-      info.append(button("Древо професій", "wf wf-link class-tree-open", () => RPG.ui.showClassTree(ms)));
+      // З'являється, коли Артеміда пояснила шляхи професій (до неї відсилає шинкар Остап) — classes.js → classTreeOpen
+      if (RPG.classTreeOpen(ms)) info.append(button("Древо професій", "wf wf-link class-tree-open", () => RPG.ui.showClassTree(ms)));
 
       // Вдягнені речі навколо героя (варіант В): по 8 комірок ліворуч і праворуч від картинки.
       // Артефакти — з професією; без неї комірки видно, але вони приглушені (підказка — чому).
