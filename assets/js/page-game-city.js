@@ -126,7 +126,7 @@
         dlg.innerHTML = "";
         const close = closeBtn("Закрити горно");
         dlg.append(close, el("h3", null, "Рунне горно"));
-        dlg.append(noteP(`Покладіть у горно ${F.count} будь-яких рун, зламані теж. Вогонь переплавить їх в одну нову — від звичайної до епічної. Якщо всі шість одного виду, нова руна буде того ж виду. Данина — ${fmtNum(F.fee)} золота (у вас ${fmtNum(save.character.gold)}).`));
+        dlg.append(noteP(`Покладіть у горно ${F.count} будь-яких рун, зламані теж. Вогонь переплавить їх в одну нову — від звичайної до епічної. Якщо всі шість одного виду, нова руна буде того ж виду. Шість однакових рун однієї рідкості дають таку саму руну на рідкість вище. Данина — ${fmtNum(F.fee)} золота (у вас ${fmtNum(save.character.gold)}).`));
         if (note) dlg.append(el("p", "forge-result" + (note.error ? " is-error" : ""), note.text));
         // 6 слотів горна
         const slots = el("div", "belt-slots rune-forge-slots");
@@ -139,10 +139,17 @@
         }
         dlg.append(slots);
         if (picked.length) {
-          const o = RPG.runeForgeOdds(picked);
+          const plan = RPG.runeForgePlan(picked);
+          const o = plan.odds;
           const k = o.kind ? RPG.RUNE_KIND_NAME[o.kind].toLowerCase() : `будь-яка з ${Object.keys(RPG.RUNES).length}`;
-          dlg.append(el("p", "forge-odds", (picked.length < F.count ? `Ще ${F.count - picked.length} — і горно готове. ` : "") +
-            `Вийде: ${F.out.filter(g => o[g] >= 0.005).map(g => `${RPG.RUNE_GRADES[g].prefix.replace(/ руна$/, "").replace(/^Руна$/, "звичайна").toLowerCase()} ${Math.round(o[g] * 100 * (F.count / picked.length))}%`).join(" · ")} · ${k}`));
+          const gName = g => RPG.RUNE_GRADES[g].prefix.replace(/ руна$/, "").replace(/^Руна$/, "звичайна").toLowerCase();
+          // Особливі набори (data/runes.js → runeForgePlan): результат відомий наперед
+          const text = plan.mode === "upgrade" ? `Шість однакових — гарантовано: ${RPG.ITEMS[plan.id].name}.`
+            : plan.mode === "legendary" ? `Шість легендарних — вийде випадкова легендарна руна · ${k}.`
+            : plan.mode === "broken" ? `Шість зламаних — вийде випадкова звичайна руна · ${k}.`
+            : (picked.length < F.count ? `Ще ${F.count - picked.length} — і горно готове. ` : "") +
+              `Вийде: ${F.out.filter(g => o[g] >= 0.005).map(g => `${gName(g)} ${Math.round(o[g] * 100 * (F.count / picked.length))}%`).join(" · ")} · ${k}`;
+          dlg.append(el("p", "forge-odds" + (plan.mode === "random" ? "" : " is-sure"), text));
         }
         const go = button(`Розпалити горно · ${fmtNum(F.fee)} зол.`, "wf wf-button", async () => {
           const r = RPG.runeForge(save, picked);

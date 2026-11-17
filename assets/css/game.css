@@ -1252,6 +1252,7 @@ main > a.location { display: flex; margin-bottom: 10px; }
 .forge-mat.is-ok { color: #cfe8c3; border-color: #5f8a52; }
 .forge-mat.is-short { color: #f0b1a6; border-color: #a0483a; }
 .forge-odds { margin: 0; font-size: .88rem; color: var(--text-dim); }
+.forge-odds.is-sure { color: var(--gold); font-weight: 600; }
 .forge-why { color: #f0b1a6; }
 .forge-btn { align-self: flex-start; }
 .forge-smelt-btns { gap: 6px; flex-wrap: wrap; }

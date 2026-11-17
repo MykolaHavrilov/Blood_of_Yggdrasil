@@ -117,8 +117,8 @@
   const RUNE_IDS = Object.keys(RUNES).map(k => runeItemId(k));
 
   // ---------- Рунне горно (Гільдія ремісників, Торговий район) ----------
-  // 6 будь-яких рун (зламані теж) → 1 нова руна від звичайної до епічної (легендарна з горна не виходить).
-  // Кожна руна дає 1/6 свого рядка ODDS. Вид нової: усі шість одного виду → той самий вид, інакше — будь-яка з 29.
+  // 6 будь-яких рун (зламані теж) → 1 нова руна від звичайної до епічної; особливі набори (6 однакових, 6 легендарних,
+  // 6 зламаних) — runeForgePlan. Кожна руна дає 1/6 свого рядка ODDS. Вид нової: усі шість одного виду → той самий вид, інакше — будь-яка з 29.
   // За кожне розпалювання — данина fee золота.
   // Горно з'являється в гільдії лише після того, як герой знайшов другу книгу Сварога (save.books.runes).
   const RUNE_FORGE = {
@@ -136,6 +136,29 @@
     const kinds = new Set(ids.map(id => RPG.ITEMS[id]?.runeKind));
     return { common: sum[0], magic: sum[1], epic: sum[2], kind: ids.length && kinds.size === 1 ? [...kinds][0] : null };
   }
+  // Що вийде з 6 рун (правила користувача, 2026-11-17):
+  //   «upgrade»   — усі 6 — та сама руна тієї самої рідкості → 1 така сама руна на рідкість вище (зламані → звичайна, епічні → легендарна);
+  //   «legendary» — усі 6 легендарні (будь-які, хоч і однакові) → 1 випадкова легендарна;
+  //   «broken»    — усі 6 зламані, але різні → 1 випадкова звичайна;
+  //   «random»    — решта: випадкова від звичайної до епічної за шансами odds.
+  // У випадкових вид нової руни — той самий, якщо всі шість одного виду. Повертає { mode, id?, grade?, odds, kind }
+  function runeForgePlan(ids) {
+    const odds = runeForgeOdds(ids);
+    const plan = { mode: "random", odds, kind: odds.kind };
+    if (ids.length !== RUNE_FORGE.count) return plan;
+    const items = ids.map(id => RPG.ITEMS[id]);
+    const grades = new Set(items.map(it => it?.grade));
+    const same = new Set(ids).size === 1;
+    if (grades.size === 1 && grades.has("legendary")) return Object.assign(plan, { mode: "legendary", grade: "legendary" });
+    if (same) {
+      const it = items[0];
+      const next = RUNE_GRADE_ORDER[RUNE_GRADE_ORDER.indexOf(it.grade) + 1];
+      return Object.assign(plan, { mode: "upgrade", grade: next, id: runeItemId(it.rune, next) });
+    }
+    if (grades.size === 1 && grades.has("broken")) return Object.assign(plan, { mode: "broken", grade: "common" });
+    return plan;
+  }
+
   // Розпалити горно: ids — 6 id рун з інвентаря (можна однакові). Повертає { ok, reason } або { ok, id, grade, price }
   function runeForge(save, ids) {
     if (!save.books?.runes) return { ok: false, reason: "Рунне горно відкривається тим, хто знайшов книгу «Руни Небесної Кузні»." };
@@ -145,13 +168,18 @@
     for (const id of ids) need[id] = (need[id] || 0) + 1;
     for (const [id, n] of Object.entries(need)) if (RPG.countItem(save, id) < n) return { ok: false, reason: `Бракує: ${RPG.ITEMS[id].name}.` };
     if (save.character.gold < RUNE_FORGE.fee) return { ok: false, reason: `Данина горну — ${RUNE_FORGE.fee} золота, а у вас менше.` };
-    const odds = runeForgeOdds(ids);
-    let x = Math.random(), grade = "common";
-    for (const g of RUNE_FORGE.out) { if (x < odds[g]) { grade = g; break; } x -= odds[g]; }
-    const pool = Object.keys(RUNES).filter(k => !odds.kind || RUNES[k].kind === odds.kind);
-    const key = pool[Math.floor(Math.random() * pool.length)];
+    const plan = runeForgePlan(ids);
+    let outId = plan.id, grade = plan.grade;
+    if (!outId) {
+      if (!grade) {
+        let x = Math.random();
+        grade = "common";
+        for (const g of RUNE_FORGE.out) { if (x < plan.odds[g]) { grade = g; break; } x -= plan.odds[g]; }
+      }
+      const pool = Object.keys(RUNES).filter(k => !plan.kind || RUNES[k].kind === plan.kind);
+      outId = runeItemId(pool[Math.floor(Math.random() * pool.length)], grade);
+    }
     for (const [id, n] of Object.entries(need)) RPG.removeItem(save, id, n);
-    const outId = runeItemId(key, grade);
     if (RPG.fitQty(save, outId, 1) < 1) {            // місця немає — повертаємо руни, данину не беремо
       for (const [id, n] of Object.entries(need)) RPG.addItem(save, id, n);
       return { ok: false, reason: "Інвентар повний — нікуди покласти нову руну." };
@@ -374,6 +402,6 @@
     return out;
   }
 
-  Object.assign(RPG, { RUNE_LIMIT, heroRuneCount, runeLimitEquip, RUNES, RUNE_GRADES, RUNE_GRADE_ORDER, RUNE_KIND_NAME, runeItemId, RUNE_IDS, RUNE_FORGE, runeForgeOdds, runeForge,
+  Object.assign(RPG, { RUNE_LIMIT, heroRuneCount, runeLimitEquip, RUNES, RUNE_GRADES, RUNE_GRADE_ORDER, RUNE_KIND_NAME, runeItemId, RUNE_IDS, RUNE_FORGE, runeForgeOdds, runeForgePlan, runeForge,
     RUNE_FITS, runeFits, runeEffectText, insertRune, removeRune, crackedRunes, runeNums, runeTotals, runeAttrs, teamRuneEco, RUNE_DROP, rollRunes, isFinalBoss });
 })(window.RPG);

@@ -1706,8 +1706,8 @@ RPG.I18N.en = {
 "Не дає нічого. Годиться лише як паливо для Рунного горна.": "Gives nothing. Only good as fuel for the Rune Forge.",
 "Базова сила знака.": "The basic power of the sign.",
 "Знак світиться синім, коли власник б'ється.": "The sign glows blue when its owner fights.",
-"Найвища рідкість, яку може дати Рунне горно.": "The highest rarity the Rune Forge can give.",
-"Знак горить золотом. У горні не народжується — лише з фінальних босів.": "The sign burns with gold. It is not born in the forge — only from final bosses.",
+"Найвища рідкість, яку Рунне горно дає випадково.": "The highest rarity the Rune Forge gives at random.",
+"Знак горить золотом. Падає з фінальних босів; у горні народжується лише з шести однакових епічних рун або з шести легендарних.": "The sign burns with gold. Drops from final bosses; in the forge it is born only from six identical epic runes or six legendary ones.",
 "Атрибути (Сила, Витривалість…) ростуть на 1–2 очки за кожну рідкість.": "Attributes (Strength, Vitality…) grow by 1–2 points for each rarity.",
 "Руни зброї": "Weapon Runes",
 "Скандинавські знаки Футарка — дар Асгарду, і слов'янські знаки — дар Ірію. Лягають лише у зброю.": "Norse Futhark signs — a gift of Asgard, and Slavic signs — a gift of Iriy. They go only into weapons.",
@@ -1716,7 +1716,7 @@ RPG.I18N.en = {
 "Універсальні руни": "Universal Runes",
 "Лягають у зброю, броню та прикраси. У персні чи амулеті діють так само, як у зброї чи броні.": "They go into weapons, armour and jewellery. In a ring or amulet they work the same as in a weapon or armour.",
 "Шість рун у вогонь — одна нова з попелу.": "Six runes into the fire — one new from the ashes.",
-"Покладіть у горно будь-які 6 рун, зламані теж. Вогонь переплавить їх в одну нову руну — від звичайної до епічної. Легендарна з горна не виходить ніколи.": "Put any 6 runes into the forge, broken ones too. The fire will smelt them into one new rune — from common to epic. A legendary never comes out of the forge.",
+"Покладіть у горно будь-які 6 рун, зламані теж. Вогонь переплавить їх в одну нову руну — від звичайної до епічної.": "Put any 6 runes into the forge, broken ones too. The fire will smelt them into one new rune — from common to epic.",
 "Кожна руна в горні": "Each rune in the forge",
 "Епічна чи легендарна": "Epic or legendary",
 "Кожна руна дає шосту частину свого рядка. Приклад: 3 зламані + 3 магічні → звичайна 45%, магічна 40%, епічна 15%.": "Each rune gives a sixth of its row. Example: 3 broken + 3 magic → common 45%, magic 40%, epic 15%.",
@@ -2277,6 +2277,15 @@ RPG.I18N.en = {
 "Гільдія ремісників": "Craftsmen's Guild",
 "Торгова гільдія": "Merchants' Guild",
 "Рунне горно": "Rune Forge",
+"Особливі набори — тут вогонь не грає в кості, результат відомий наперед:": "Special sets — here the fire does not roll dice, the result is known in advance:",
+"Що в горні": "What is in the forge",
+"Що вийде": "What comes out",
+"6 однакових рун однієї рідкості": "6 identical runes of one rarity",
+"Та сама руна на рідкість вище: зламана → звичайна → магічна → епічна → легендарна.": "The same rune one rarity higher: broken → common → magic → epic → legendary.",
+"6 легендарних (будь-яких)": "6 legendary (any)",
+"Випадкова легендарна руна.": "A random legendary rune.",
+"6 зламаних, але різних": "6 broken, but different",
+"Випадкова звичайна руна.": "A random common rune.",
 "Це не горно Сварога. Справжнє горно стоїть у Небесній кузні, і доки воно згасле, Перунові діти плавлять руни в рунному горні, розпаленому за цією книгою.": "This is not Svarog's forge. The true forge stands in the Heavenly Forge, and while it is cold, Perun's children smelt runes in a rune forge kindled according to this book.",
 "До Рунного горна": "To the Rune Forge",
 "Закрити горно": "Close the forge",
@@ -3393,6 +3402,9 @@ RPG.I18N.en = {
 "Земля велетнів: крижані перевали, Залізний ліс Ангрбоди, кам'яна пустка й брама Утгарда — а за краєм світу з чорного моря піднімає голову Світовий Змій": "The land of the giants: icy passes, Angrboða's Iron Wood, the stone waste and the gate of Útgarðr — and beyond the edge of the world the World Serpent raises his head from the black sea"
 },
 "patterns": [
+["^Шість однакових — гарантовано: (.*?)\\.$","Six identical — guaranteed: $1.",1,0,"Шість однакових — гарантовано"],
+["^Шість легендарних — вийде випадкова легендарна руна · (.*?)\\.$","Six legendary — a random legendary rune will come out · $1.",1,0,"Шість легендарних — вийде"],
+["^Шість зламаних — вийде випадкова звичайна руна · (.*?)\\.$","Six broken — a random common rune will come out · $1.",1,0,"Шість зламаних — вийде"],
 ["^Остап усміхається у вуса\\. «Бачив я на своєму віку чимало таких, як ти\\. Та ким тобі стати — не шинкареві казати\\. Іди до Артеміди, адміністраторки Гільдії авантюристів — це в Південному районі Дубової Застави\\. Скажи, що від Остапа\\. Вона кожному розтлумачить, які є шляхи і чого кожен вимагає\\.»$","Ostap smiles into his moustache. \"I've seen plenty like you in my time. But who you should become — that's not for an innkeeper to say. Go to Artemida, the administrator of the Adventurers' Guild — in the Southern District of Oak Outpost. Tell her Ostap sent you. She explains to everyone what paths there are and what each one demands.\"",1,0,"Та ким тобі стати — не шинкареві казати"],
 ["^➤ Остап із шинку сказав, що ви поясните, ким я можу стати$","➤ Ostap from the tavern said you would explain who I can become",1,0,"Остап із шинку сказав"],
 ["^Остап із шинку сказав, що ви поясните, ким я можу стати$","Ostap from the tavern said you would explain who I can become",1,0,"Остап із шинку сказав"],
@@ -4680,18 +4692,18 @@ RPG.I18N.en = {
 "»? Інші професії стануть недоступні назавжди."
 ],
 [
-"^Покладіть у горно (.*?) будь-яких рун, зламані теж\\. Вогонь переплавить їх в одну нову — від звичайної до епічної\\. Якщо всі шість одного виду, нова руна буде того ж виду\\. Данина — (.*?) золота \\(у вас (.*?)\\)\\.$",
-"Put $1 runes of any kind into the forge, broken ones too. The fire will smelt them into one new rune — from common to epic. If all six are of the same kind, the new rune will be of that kind. Tribute — $2 gold (you have $3).",
+"^Покладіть у горно (.*?) будь-яких рун, зламані теж\\. Вогонь переплавить їх в одну нову — від звичайної до епічної\\. Якщо всі шість одного виду, нова руна буде того ж виду\\. Шість однакових рун однієї рідкості дають таку саму руну на рідкість вище\\. Данина — (.*?) золота \\(у вас (.*?)\\)\\.$",
+"Put $1 runes of any kind into the forge, broken ones too. The fire will smelt them into one new rune — from common to epic. If all six are of the same kind, the new rune will be of that kind. Six identical runes of one rarity give the same rune one rarity higher. Tribute — $2 gold (you have $3).",
 1,
 0,
-"будь-яких рун, зламані теж. Вогонь переплавить їх в одну нову — від звичайної до епічної. Якщо всі шість одного виду, нова руна буде того ж виду. Данина —"
+"будь-яких рун, зламані теж. Вогонь переплавить їх в одну нову — від звичайної до епічної. Якщо всі шість одного виду, нова руна буде того ж виду. Шість однакових рун однієї рідкості дають таку саму руну на рідкість вище. Данина —"
 ],
 [
-"Покладіть у горно (.*?) будь-яких рун, зламані теж\\. Вогонь переплавить їх в одну нову — від звичайної до епічної\\. Якщо всі шість одного виду, нова руна буде того ж виду\\. Данина — (.*?) золота \\(у вас (.*?)\\)\\.",
-"Put $1 runes of any kind into the forge, broken ones too. The fire will smelt them into one new rune — from common to epic. If all six are of the same kind, the new rune will be of that kind. Tribute — $2 gold (you have $3).",
+"Покладіть у горно (.*?) будь-яких рун, зламані теж\\. Вогонь переплавить їх в одну нову — від звичайної до епічної\\. Якщо всі шість одного виду, нова руна буде того ж виду\\. Шість однакових рун однієї рідкості дають таку саму руну на рідкість вище\\. Данина — (.*?) золота \\(у вас (.*?)\\)\\.",
+"Put $1 runes of any kind into the forge, broken ones too. The fire will smelt them into one new rune — from common to epic. If all six are of the same kind, the new rune will be of that kind. Six identical runes of one rarity give the same rune one rarity higher. Tribute — $2 gold (you have $3).",
 0,
 0,
-"будь-яких рун, зламані теж. Вогонь переплавить їх в одну нову — від звичайної до епічної. Якщо всі шість одного виду, нова руна буде того ж виду. Данина —"
+"будь-яких рун, зламані теж. Вогонь переплавить їх в одну нову — від звичайної до епічної. Якщо всі шість одного виду, нова руна буде того ж виду. Шість однакових рун однієї рідкості дають таку саму руну на рідкість вище. Данина —"
 ],
 [
 "^Автозілля ввімкнено \\(Налаштування\\): після кожного бою герої п'ють зілля з інвентаря за тими ж правилами(.*?)(.*?)\\. Зілля спільні з тими, хто лишився вдома\\.$",
