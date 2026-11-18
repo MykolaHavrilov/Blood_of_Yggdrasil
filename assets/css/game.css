@@ -1358,6 +1358,9 @@ main > a.location { display: flex; margin-bottom: 10px; }
   .rf-wheel { width: min(100%, 360px); justify-self: center; }
 }
 .rune-forge-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(56px, 1fr)); gap: 6px; margin-top: 6px; max-height: 40vh; overflow-y: auto; }
+/* Списки клітинок з обмеженою висотою: рядки — за вмістом, інакше при великій кількості рун
+   сітка стискає рядки під max-height і клітинки налазять одна на одну (видно на телефонах). */
+.rune-forge-list, .temper-picks, .rune-pouch { grid-auto-rows: max-content; align-content: start; }
 .rune-forge-pick { aspect-ratio: 1; min-height: 0; padding: 0; position: relative; }
 .rune-forge-pick.is-empty { opacity: .35; }
 
