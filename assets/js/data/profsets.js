@@ -227,10 +227,61 @@
     }
   }
 
+  // ---------- Креслення тіру 4 (рішення користувача 2026-11-20) ----------
+  // Усі 17 рецептів тіру 4 (сталь ванів) куються лише за вивченим кресленням. Креслення падають у світах 4–5
+  // (Ванагейм, Свартальвгейм): звичайний ворог — mob, бос — boss, бос данжу — dungeonBoss. Вивчені падають і далі
+  // (рівноймовірно будь-яке з 17; дублікат можна продати). Старі сейви з відкритим Ванагеймом — усі вивчені (save.js, версія 11).
+  const T4_BLUEPRINT = {
+    mob: 0.005, boss: 0.05, dungeonBoss: 0.1, worlds: [4, 5], price: 600,
+    items: ["sword_t4", "axe_t4", "dagger_t4", "bow_t4", "staff_t4", "shield_t4", "knife_t4", "quiver_t4", "orb_t4",
+            "steel_head", "steel_chest", "steel_legs", "steel_hands", "steel_feet", "ring_t4", "amulet_t4", "earring_t4"],
+    ids: []
+  };
+  const T4_SET = new Set(T4_BLUEPRINT.items);
+  const enName = n => RPG.I18N?.en?.phrases?.[n] || n;
+  for (const id of T4_BLUEPRINT.items) {
+    const it = RPG.ITEMS[id];
+    if (!it) continue;
+    const bp = "blueprint_t4_" + id.replace(/_t4$/, "");
+    const icon = it.type === "armor" ? "blueprint_" + it.slot : it.type === "weapon" ? "blueprint_main" : "blueprint_off";   // перстень, амулет, сережка — поки значок лівої руки
+    RPG.ITEMS[bp] = {
+      iconFile: icon,
+      name: L(`Креслення: ${it.name}`, `Blueprint: ${enName(it.name)}`),
+      type: "blueprint", recipe: id, stackable: true, maxStack: 99, price: T4_BLUEPRINT.price, noShop: true,
+      description: L(`Креслення ковальського рецепта сталі ванів. Використайте — і «${it.name}» назавжди з'явиться у вашій кузні (тір 4). ` +
+        "Падає у Ванагеймі й Свартальвгеймі: зі звичайних ворогів рідко, з босів частіше, з босів данжів — найчастіше. Вивчене креслення можна продати.",
+        `A smith's recipe blueprint of Vanir steel. Use it — and "${enName(it.name)}" will appear in your forge for good (tier 4). ` +
+        "Dropped in Vanaheim and Svartalfheim: rarely by ordinary enemies, more often by bosses, most often by dungeon bosses. A learned blueprint can be sold.")
+    };
+    T4_BLUEPRINT.ids.push(bp);
+    if (RPG.RECIPES?.[id]) RPG.RECIPES[id].blueprint = true;     // recipes.js є лише на сторінці гри
+  }
+  const isT4Blueprint = itemId => T4_SET.has(itemId);
+  // Шанс креслення тіру 4 з ворога (0, якщо ворог не зі світів 4–5). o.dungeon — бій із босом данжу
+  function t4BlueprintChance(enemyId, o = {}) {
+    const e = RPG.ENEMIES?.[enemyId];
+    if (!e || e.darkSoul) return 0;
+    const worlds = [...(RPG.enemyRegions?.(enemyId) || [])].map(r => RPG.worldOfRegion ? RPG.worldOfRegion(r) : 0);
+    if (!worlds.some(w => T4_BLUEPRINT.worlds.includes(w))) return 0;
+    return e.boss ? (o.dungeon ? T4_BLUEPRINT.dungeonBoss : T4_BLUEPRINT.boss) : T4_BLUEPRINT.mob;
+  }
+  // Креслення тіру 4 з ворога: id або null
+  function rollT4Blueprint(enemyId, o = {}, rng = Math.random) {
+    const ch = t4BlueprintChance(enemyId, o);
+    if (!ch || rng() >= ch) return null;
+    return T4_BLUEPRINT.ids[Math.floor(rng() * T4_BLUEPRINT.ids.length)];
+  }
+  // Старі сейви: усі рецепти тіру 4 — вивчені
+  function learnAllT4(save) {
+    const b = (save.story ||= {}, save.story.blueprints ||= {});
+    for (const id of T4_BLUEPRINT.items) b[id] = true;
+  }
+
   // ---------- Креслення ----------
   const learned = save => (save.story ||= {}, save.story.blueprints ||= {});
   function knowsRecipe(save, itemId) {
-    return !RPG.ITEMS[itemId]?.profSet || !!save.story?.blueprints?.[itemId];
+    if (!RPG.ITEMS[itemId]?.profSet && !T4_SET.has(itemId)) return true;
+    return !!save.story?.blueprints?.[itemId];
   }
   // Чи є в групі герой цієї професії (для секретних креслень)
   const partyHas = (save, cls) => (RPG.partyMembers ? RPG.partyMembers(save) : [save]).some(ms => ms.character?.classId === cls);
@@ -266,5 +317,5 @@
     return partyHas(save, cls) || Object.keys(save.story?.blueprints || {}).some(id => RPG.ITEMS[id]?.classes?.[0] === cls);
   }
 
-  Object.assign(RPG, { blueprintVisible, PROF_SETS: SETS, BLUEPRINT_DROPS, BLUEPRINT_CHANCE, knowsRecipe, learnBlueprint, rollBlueprintDrop, blueprintSource });
+  Object.assign(RPG, { T4_BLUEPRINT, isT4Blueprint, t4BlueprintChance, rollT4Blueprint, learnAllT4, blueprintVisible, PROF_SETS: SETS, BLUEPRINT_DROPS, BLUEPRINT_CHANCE, knowsRecipe, learnBlueprint, rollBlueprintDrop, blueprintSource });
 })(window.RPG);

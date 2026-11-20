@@ -242,11 +242,18 @@
         if (!curOpen.ok) dlg.append(el("p", "forge-closed-note", curOpen.reason + " Рецепти можна переглянути, але кувати — ні."));
         const list = el("div", "stack forge-list");
         // Комплекти професій (data/profsets.js): у списку — лише вивчені за кресленнями
-        const bpAll = Object.entries(RPG.RECIPES).filter(([id, rc]) => rc.blueprint && rc.tier === curTier && group.types.includes(RPG.ITEMS[id]?.type) && RPG.blueprintVisible(save, id));
+        const bpAll = Object.entries(RPG.RECIPES).filter(([id, rc]) => rc.blueprint && RPG.ITEMS[id]?.profSet && rc.tier === curTier && group.types.includes(RPG.ITEMS[id]?.type) && RPG.blueprintVisible(save, id));
         if (bpAll.length) {
           const known = bpAll.filter(([id]) => RPG.knowsRecipe(save, id)).length;
           list.append(el("p", "forge-why", `Комплекти професій: вивчено креслень ${known} з ${bpAll.length}. ` +
             "Креслення падають з босів Альвгейму; використайте креслення в інвентарі — і рецепт з'явиться тут."));
+        }
+        // Сталь ванів (тір 4): кожен рецепт — за кресленням зі світів 4–5
+        const t4All = Object.entries(RPG.RECIPES).filter(([id, rc]) => rc.tier === curTier && RPG.isT4Blueprint?.(id) && group.types.includes(RPG.ITEMS[id]?.type));
+        if (t4All.length) {
+          const known = t4All.filter(([id]) => RPG.knowsRecipe(save, id)).length;
+          list.append(el("p", "forge-why", `Сталь ванів: вивчено креслень ${known} з ${t4All.length}. ` +
+            "Креслення падають у Ванагеймі й Свартальвгеймі (звичайні вороги — 0,5%, боси — 5%, боси данжів — 10%); використайте креслення в інвентарі — і рецепт з'явиться тут."));
         }
         for (const [id, rc] of Object.entries(RPG.RECIPES)) {
           const item = RPG.ITEMS[id];

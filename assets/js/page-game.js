@@ -1066,8 +1066,8 @@
           if (e.id === "forest_lord" && RPG.RUNE_BOOK && RPG.addToLibrary(save, "runes")) {
             summary.push(`📜 Серед трофеїв Володаря — книга Сварога «${RPG.RUNE_BOOK.title}»! Вона чекатиме в бібліотеці вашого дому (Спальний район Дубової Застави).`);
           }
-          // Креслення комплекту професії (боси Альвгейму, data/profsets.js)
-          const bp = RPG.rollBlueprintDrop?.(save, e.id);
+          // Креслення комплекту професії (боси Альвгейму) і креслення тіру 4 (світи 4–5) — data/profsets.js
+          for (const bp of [RPG.rollBlueprintDrop?.(save, e.id), RPG.rollT4Blueprint?.(e.id, { dungeon: !!dun })]) {
           if (bp) {
             const n = RPG.ITEMS[bp].name;
             if (RPG.fitQty(save, bp, 1)) {
@@ -1078,6 +1078,7 @@
               summary.push(`📐 Трофей боса: ${n} — пропав, інвентар повний!`);
               lost[n] = (lost[n] || 0) + 1;
             }
+          }
           }
           // Мішечок на пояс: 1% з кожного переможеного боса, окремо від звичайної здобичі
           const pouch = RPG.rollPouchDrop?.(e.id);

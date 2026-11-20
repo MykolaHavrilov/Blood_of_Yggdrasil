@@ -180,6 +180,8 @@
     }
     if (e.boss && RPG.POUCH_DROP) rows.push(["Мішечок на пояс", `${pct(RPG.POUCH_DROP.chance)}`]);
     if (RPG.BLUEPRINT_DROPS?.[id]?.length) rows.push(["Креслення комплекту професії", `${pct(RPG.BLUEPRINT_CHANCE)} — одне з ${RPG.BLUEPRINT_DROPS[id].length}`]);
+    const t4 = RPG.t4BlueprintChance?.(id) || 0;
+    if (t4) rows.push(["Креслення сталі ванів (тір 4)", e.boss ? `${pct(t4)}, у данжі — ${pct(RPG.T4_BLUEPRINT.dungeonBoss)} — одне з ${RPG.T4_BLUEPRINT.ids.length}` : `${pct(t4)} — одне з ${RPG.T4_BLUEPRINT.ids.length}`]);
     if (id === "forest_lord") rows.push(["Книга «Руни Небесної Кузні»", "після першої перемоги"]);
     // Матеріали й речі — вище; тут решта: золото, досвід, артефакти, ключі, трофеї босів
     frag.append(E("h4", "bst-h", "Решта здобичі"), table(null, rows));

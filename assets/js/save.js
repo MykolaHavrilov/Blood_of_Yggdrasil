@@ -12,7 +12,7 @@
   const STORE = "saves";
   const LS_PREFIX = "rpg_save_"; // запасне сховище в localStorage
 
-  const SAVE_VERSION = 10;        // версія ФОРМАТУ сейву (полів усередині)
+  const SAVE_VERSION = 11;        // версія ФОРМАТУ сейву (полів усередині)
   const CURRENT_SLOT_KEY = "rpg_current_slot";
 
   // ---------- Відкриття бази ----------
@@ -298,6 +298,9 @@
     if (typeof save.character.hp !== "number" || typeof save.character.mp !== "number") {
       RPG.fullHeal(save);
     }
+
+    // Версія 11: рецепти тіру 4 — лише за кресленнями (data/profsets.js → T4_BLUEPRINT). Хто вже дійшов до Ванагейму — має всі.
+    if ((save.saveVersion || 0) < 11 && RPG.isVanaheimOpen?.(save)) RPG.learnAllT4?.(save);
 
     save.saveVersion = SAVE_VERSION;
     return save;

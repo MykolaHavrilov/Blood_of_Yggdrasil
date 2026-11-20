@@ -287,7 +287,7 @@
     const open = RPG.craftTierOpen ? RPG.craftTierOpen(save, recipe.tier) : { ok: true };
     let reason = "";
     const known = RPG.knowsRecipe ? RPG.knowsRecipe(save, itemId) : true;   // рецепт комплекту професії — лише за кресленням
-    if (!known) reason = `Потрібне креслення — падає з боса «${RPG.blueprintSource(itemId)}».`;
+    if (!known) reason = RPG.isT4Blueprint?.(itemId) ? "Потрібне креслення — падає у Ванагеймі й Свартальвгеймі." : `Потрібне креслення — падає з боса «${RPG.blueprintSource(itemId)}».`;
     else if (!open.ok) reason = open.reason;
     else if (st.level < tierLevel) reason = `Потрібен рівень «${g?.name || "майстерності"}» ${tierLevel}.`;
     else if (!ready.ok) reason = ready.reason;

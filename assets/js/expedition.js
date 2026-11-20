@@ -200,6 +200,8 @@
         const lootOrb = RPG.godsOrb?.(save);
         const loot = RPG.rollLoot(en.id, lootOrb ? lootOrb.lootPct / 100 : 0);
         for (const r of RPG.rollRunes?.(en.id, { champion: en.champion, expedition: true }) || []) loot.items.push({ id: r, qty: 1 });   // руни — удвічі рідше
+        const bp4 = RPG.rollT4Blueprint?.(en.id);                    // креслення тіру 4 (світи 4–5)
+        if (bp4) loot.items.push({ id: bp4, qty: 1 });
         let gold = loot.gold || 0;
         if (runeEco.gold && gold) gold = Math.round(gold * (1 + runeEco.gold / 100));
         bag.gold += gold;

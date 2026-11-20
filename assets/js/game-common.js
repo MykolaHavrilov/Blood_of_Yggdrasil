@@ -1967,7 +1967,7 @@
     box.append(el("div", "tip-price", item.locked
       ? "Не продається, не викидається й не розбирається — лише в спільну скриню Домівки."
       : `Ціна: ${fmtNum(item.price || 0)} зол. · продаж: ${fmtNum(RPG.refSellPrice(ref))} зол.` +
-        (item.noShop ? (item.profSet ? " · лише кування за кресленням" : item.tier === 3 ? " · продає лише Торгова гільдія" : " · не продається") : "")));
+        (item.noShop ? (item.profSet || RPG.isT4Blueprint?.(ref?.id ?? ref) ? " · лише кування за кресленням" : item.tier === 3 ? " · продає лише Торгова гільдія" : " · не продається") : "")));
     return box;
   }
 

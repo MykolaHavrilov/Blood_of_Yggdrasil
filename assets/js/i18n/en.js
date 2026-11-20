@@ -1766,6 +1766,9 @@ RPG.I18N.en = {
 "Мова": "Language",
 "Відновлення": "Regeneration",
 "Креслення": "Blueprint",
+"Потрібне креслення — падає у Ванагеймі й Свартальвгеймі.": "Requires a blueprint — dropped in Vanaheim and Svartalfheim.",
+"Креслення падають у Ванагеймі й Свартальвгеймі (звичайні вороги — 0,5%, боси — 5%, боси данжів — 10%); використайте креслення в інвентарі — і рецепт з'явиться тут.": "Blueprints drop in Vanaheim and Svartalfheim (ordinary enemies — 0.5%, bosses — 5%, dungeon bosses — 10%); use a blueprint in the inventory — and the recipe will appear here.",
+"Креслення сталі ванів (тір 4)": "Vanir steel blueprint (tier 4)",
 "Креслення падають з босів Альвгейму; використайте креслення в інвентарі — і рецепт з'явиться тут.": "Blueprints drop from the bosses of Alfheim; use a blueprint in the inventory — and the recipe will appear here.",
 "Це не креслення.": "This is not a blueprint.",
 "Креслення немає в інвентарі.": "The blueprint is not in the inventory.",
@@ -3443,6 +3446,20 @@ RPG.I18N.en = {
 "Земля велетнів: крижані перевали, Залізний ліс Ангрбоди, кам'яна пустка й брама Утгарда — а за краєм світу з чорного моря піднімає голову Світовий Змій": "The land of the giants: icy passes, Angrboða's Iron Wood, the stone waste and the gate of Útgarðr — and beyond the edge of the world the World Serpent raises his head from the black sea"
 },
 "patterns": [
+[
+"^(\\S+), у данжі — (\\S+) — одне з (\\d+)$",
+"$1, in a dungeon — $2 — one of $3",
+1,
+0,
+"у данжі"
+],
+[
+"Сталь ванів: вивчено креслень (\\S+) з (\\S+)\\. ",
+"Vanir steel: blueprints learned $1 of $2. ",
+0,
+0,
+"Сталь ванів"
+],
 ["^(.+) \\+(\\d+)$","$1 +$2",1,1," +"],
 ["^Жарин у вас: (\\d+)\\.$","Embers you have: $1.",1,0,"Жарин у вас: "],
 ["^Шанс успіху: (\\d+)%$","Success chance: $1%",1,0,"Шанс успіху: "],

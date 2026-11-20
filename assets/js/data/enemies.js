@@ -4641,6 +4641,6 @@ const ENEMIES = {
     MONSTER_MOVES, RANGE_NAMES, enemyRange, enemyMove,
     ENEMIES, LOCATIONS, DUNGEONS, DEFAULT_LOCATION, RESPAWN_LOCATION, GUILD_SHOP, isAlfheimOpen, isVanaheimOpen, isSvartalfheimOpen, isJotunheimOpen, DARK_LOC_MAT,
     CHAMPION, rollChampion, rollChampionDrop, championBounty,
-    getEnemy, enemyExp, enemySpriteStyle, getLocation, isCombatLocation, canEnterLocation, pickEnemy, rollLoot, isCraftOnlyEnemy
+    getEnemy, enemyExp, enemySpriteStyle, getLocation, isCombatLocation, canEnterLocation, pickEnemy, rollLoot, isCraftOnlyEnemy, enemyRegions
   });
 })(window.RPG);
