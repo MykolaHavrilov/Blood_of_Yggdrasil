@@ -1347,8 +1347,9 @@ main > a.location { display: flex; margin-bottom: 10px; }
 .rf-center.is-unknown.rg-common, .rf-center.is-unknown.rg-legendary, .rf-center.has-rune { box-shadow: 0 0 0 2px var(--rf-c), 0 0 14px var(--rf-c); }
 .rf-unknown { width: 92%; aspect-ratio: 1; background: url("../images/ui/icon_rune_unknown.webp") center / contain no-repeat;
   animation: rf-float 3s ease-in-out infinite; }
-.rf-icon { width: 70%; height: 70%; position: relative; }
-.rf-fx { width: 175%; aspect-ratio: 1; pointer-events: none; background: url("../images/ui/rune_forge_upgrade_fx.webp") center / contain no-repeat;
+/* руна в центрі — як у гніздах: того ж розміру (гніздо 13% × іконка 86% ≈ 51% центру) і квадратна, без розтягування */
+.rf-icon { width: 51%; height: auto; aspect-ratio: 1; position: relative; }
+.rf-fx { position: absolute; inset: -37.5%; pointer-events: none;   /* сяйво не розпирає центр — інакше він видовжувався й руна ставала «яйцем» */ background: url("../images/ui/rune_forge_upgrade_fx.webp") center / contain no-repeat;
   filter: drop-shadow(0 0 6px var(--rf-c)) drop-shadow(0 0 12px var(--rf-c)); animation: rf-spin 14s linear infinite; }
 @keyframes rf-float { 50% { transform: translateY(-4%); } }
 @keyframes rf-spin { to { transform: rotate(360deg); } }
@@ -1388,7 +1389,7 @@ main > a.location { display: flex; margin-bottom: 10px; }
 @keyframes tw-fx { 15% { opacity: 1; } 60% { opacity: .9; } to { opacity: 0; transform: translate(-50%, -50%) scale(1.15); } }
 @keyframes tw-fail { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 .temper-center { left: 49.6%; top: 49.8%; width: 43%; z-index: 1; }
-.temper-center .rf-icon { width: 66%; height: 66%; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .7)); }
+.temper-center .rf-icon { width: 66%; height: auto; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .7)); }
 .temper-badge { align-self: end; justify-self: center; transform: translateY(45%); min-width: 96px; padding: 7px 22px 8px; white-space: nowrap; text-align: center;
   background: url("../images/ui/temper_badge.webp") center / 100% 100% no-repeat; color: var(--gold); font-weight: 700; font-size: .95rem;
   text-shadow: 0 1px 2px #000; }
