@@ -179,6 +179,7 @@
       const pct = x => `${Math.round(x * 100)}%`;
       const list = () => save.inventory.map((ref, i) => ({ ref, i })).filter(x => RPG.temperInfo(save, x.i));
       const draw = () => {
+        const keep = { dlg: dlg.scrollTop, list: dlg.querySelector(".temper-picks")?.scrollTop || 0 };   // прокрутка — лишається на місці
         dlg.innerHTML = "";
         dlg.append(closeBtn("Закрити горно"), el("h3", null, "Гартування"));
         dlg.append(noteP("Гартування посилює основу речі: зброя — атаку й силу магії, броня й щит — захист, прикраси — магічний захист. " +
@@ -254,6 +255,9 @@
         side.append(grid);
         body.append(side);
         dlg.append(body);
+        RPG.collapseNotes?.(dlg);
+        grid.scrollTop = keep.list;
+        dlg.scrollTop = keep.dlg;
       };
       document.body.append(dlg);
       draw();
@@ -267,6 +271,7 @@
       let picked = [], note = null, born = null;   // born — щойно народжена руна (показується в центрі, доки не покладуть нові)
       const left = id => RPG.countItem(save, id) - picked.filter(x => x === id).length;
       const draw = () => {
+        const keep = { dlg: dlg.scrollTop, list: dlg.querySelector(".rune-forge-list")?.scrollTop || 0 };   // прокрутка — лишається на місці
         dlg.innerHTML = "";
         const close = closeBtn("Закрити горно");
         dlg.append(close, el("h3", null, "Рунне горно"));
@@ -347,6 +352,10 @@
           list.append(b);
         }
         side.append(el("strong", null, "Ваші руни — натисніть, щоб покласти в горно:"), list);
+        // опис ховається під «і» одразу (ui.js → collapseNotes), а не пізніше — інакше вікно змінить висоту й прокрутка злетить на початок
+        RPG.collapseNotes?.(dlg);
+        list.scrollTop = keep.list;
+        dlg.scrollTop = keep.dlg;
       };
       document.body.append(dlg);
       draw();

@@ -435,7 +435,8 @@
     const exp = mats.reduce((n, m) => n + m[1], 0) * DISASSEMBLE_EXP.common + (bonus ? DISASSEMBLE_EXP[bonus] : 0);
     const ready = forgeReady(save);
     const locked = !!RPG.isItemLocked?.(ref);   // замок закрито — не розбирається
-    return { ref, recipe, rarity, share, mats, bonus, exp, ready, locked, confirm: rarity === "epic" || rarity === "legendary" };
+    const runes = RPG.crackedRunes ? RPG.crackedRunes(ref) : [];   // руни з гнізд: коваль виймає їх перед розбором — вони тріскаються
+    return { ref, recipe, rarity, share, mats, bonus, exp, ready, locked, runes, confirm: rarity === "epic" || rarity === "legendary" };
   }
 
   // Розібрати річ з інвентаря. Повертає { ok, reason } або { ok, got: [[id, qty]], exp, levelUps, name }
@@ -445,8 +446,8 @@
     if (!info.ready.ok) return { ok: false, reason: info.ready.reason };
     if (info.locked) return { ok: false, reason: RPG.LOCKED_REASON };
     const got = info.mats.map(m => [...m]);
-    // руни з гнізд при розборі тріскаються й повертаються зламаними
-    for (const id of (RPG.crackedRunes ? RPG.crackedRunes(info.ref) : [])) got.push([id, 1]);
+    // руни з гнізд спершу виймаються: тріскаються й повертаються зламаними (у мішечок для рун, якщо він є)
+    for (const id of info.runes) { const g = got.find(m => m[0] === id); if (g) g[1]++; else got.push([id, 1]); }
     if (info.bonus === "spark") got.push(["heavenly_spark", 1]);
     else if (info.bonus) {
       const [baseId] = info.recipe.mats[Math.floor(Math.random() * info.recipe.mats.length)];
@@ -454,7 +455,7 @@
     }
     // перевірка місця: річ звільняє клітинку, матеріали мають влізти
     const limit = save.inventory.length + RPG.invFree(save);
-    const tmp = { inventory: JSON.parse(JSON.stringify(save.inventory)) };
+    const tmp = { inventory: JSON.parse(JSON.stringify(save.inventory)), runePouch: save.runePouch, runes: JSON.parse(JSON.stringify(save.runes || {})) };
     tmp.inventory.splice(index, 1);
     for (const [id, q] of got) RPG.addItem(tmp, id, q);
     if (tmp.inventory.length > limit) return { ok: false, reason: "Інвентар повний — нікуди скласти матеріали." };

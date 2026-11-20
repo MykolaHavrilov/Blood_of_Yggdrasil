@@ -356,14 +356,13 @@
 
   // ---------- Випадіння рун (рішення користувача 2026-11-16; книга «Руни Небесної Кузні» → «Де шукати руни») ----------
   // Окремо від loot ворога, у всіх світах однаково (і в світах «лише ремесла» — руна не спорядження):
-  //   звичайний ворог — зламана руна з шансом broken;
+  //   звичайний ворог — рун не дає (зламані — лише з гнізд: вийняти руну або розібрати річ; рішення користувача 2026-11-20);
   //   чемпіон — замість цього з шансом champion руна championGrades (звичайна / магічна);
   //   будь-який бос (у данжі чи ні) — завжди одна руна boss (епічна / магічна);
   //   фінальний бос світу (1–9; data/worlds.js → gate.boss наступного світу, для 1-го й 9-го — EXTRA_FINAL_BOSSES) — ще й легендарна з шансом legendary.
   //   Правила діють для будь-якого ворога будь-якого світу — нові світи (7–9) отримують руни без змін тут.
-  // В експедиціях шанси зламаної й чемпіонської — ×expeditionMult. Знак — випадковий за вагою виду (kindWeight).
+  // В експедиціях шанс чемпіонської — ×expeditionMult. Знак — випадковий за вагою виду (kindWeight).
   const RUNE_DROP = {
-    broken: 0.05,
     champion: 0.5, championGrades: [["common", 0.75], ["magic", 0.25]],
     boss: [["epic", 0.2], ["magic", 0.8]],
     legendary: 0.1,
@@ -396,8 +395,6 @@
       if (isFinalBoss(enemyId) && Math.random() < RUNE_DROP.legendary) out.push(runeItemId(randomRuneKey(), "legendary"));
     } else if (o.champion) {
       if (Math.random() < RUNE_DROP.champion * m) out.push(runeItemId(randomRuneKey(), pickGrade(RUNE_DROP.championGrades)));
-    } else if (Math.random() < RUNE_DROP.broken * m) {
-      out.push(runeItemId(randomRuneKey(), "broken"));
     }
     return out;
   }

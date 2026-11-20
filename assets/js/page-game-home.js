@@ -321,7 +321,7 @@
       const drawDis = () => {
         const list = el("div", "stack forge-list");
         list.append(el("p", "forge-why", "Розбір повертає частину матеріалів рецепта: зламана річ — 25%, звичайна — 40%, магічна — 50% + 1 магічний матеріал, " +
-          "епічна — 60% + 1 епічний, легендарна — 70% + Небесна іскра. Досвід — за кожен матеріал: 1 / 3 / 8 / 25. Розбираються лише речі з інвентаря — рецепт не потрібен; вдягнені спершу зніміть, зі скринь — заберіть в інвентар."));
+          "епічна — 60% + 1 епічний, легендарна — 70% + Небесна іскра. Досвід — за кожен матеріал: 1 / 3 / 8 / 25. Руни з гнізд коваль спершу виймає — вони тріскаються й повертаються зламаними. Розбираються лише речі з інвентаря — рецепт не потрібен; вдягнені спершу зніміть, зі скринь — заберіть в інвентар."));
         const ready = RPG.craftForgeReady(save);
         if (!ready.ok) list.append(el("small", "forge-why", ready.reason));
         // «Розібрати все» — усе з відкритим замком; що не влізло (немає місця для матеріалів) — лишається
@@ -358,6 +358,9 @@
           for (const [id, q] of info.mats) mats.append(el("span", "forge-mat is-ok", `${RPG.ITEMS[id].name} ×${q}`));
           if (info.bonus === "spark") mats.append(el("span", "forge-mat is-ok rt-legendary", "Небесна іскра ×1"));
           else if (info.bonus) mats.append(el("span", "forge-mat is-ok rt-" + info.bonus, `+1 ${info.bonus === "magic" ? "магічний" : "епічний"} матеріал`));
+          const runeN = {};                                        // руни з гнізд — зламаними, однакові разом
+          for (const id of info.runes) runeN[id] = (runeN[id] || 0) + 1;
+          for (const [id, q] of Object.entries(runeN)) mats.append(el("span", "forge-mat is-ok forge-rune", `${RPG.ITEMS[id].name} ×${q}`));
           mats.append(el("span", "forge-mat", `+${info.exp} досвіду`));
           row.append(mats);
           const asking = disConfirm === index;

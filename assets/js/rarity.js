@@ -324,11 +324,16 @@
     return RPG.itemIconStyle(refId(ref));
   }
 
+  // Ціна продажу: ціна речі × рідкість + за кожну руну в гніздах — ціна продажу руни (половина її ціни; рідкісніша руна дорожча)
   function refSellPrice(ref) {
     const id = refId(ref);
     const base = RPG.shopBuyPrice(id);
     if (!hasRarity(id)) return base;
-    return Math.max(1, Math.round(base * RARITIES[rarityOf(ref)].priceMult));
+    return Math.max(1, Math.round(base * RARITIES[rarityOf(ref)].priceMult)) + runesSellPrice(ref);
+  }
+  function runesSellPrice(ref) {
+    if (!ref || typeof ref !== "object" || !Array.isArray(ref.runes)) return 0;
+    return ref.runes.reduce((n, rid) => n + (rid && RPG.ITEMS[rid] ? RPG.shopBuyPrice(rid) : 0), 0);
   }
 
   // Привести запис екіпірування / інвентаря до формату { id, qty, r }
@@ -376,6 +381,6 @@
     RARITY_ORDER, RARITIES, DROP_WEIGHTS, LUCK, LEGEND_OVERCAP, CORE_KEYS,
     refId, hasRarity, rarityOf, makeItem, rollRarity, newLuck,
     itemStats, itemName, itemFullName,
-    TEMPER_MAX, TEMPER_STEP, TEMPER_TOTAL, TEMPER_MILESTONES, TEMPER_MILESTONE_PCT, temperLevel, temperPct, temperKeys, canTemper, itemIconRef, refSellPrice, normalizeRef, SOCKETS, rollSockets
+    TEMPER_MAX, TEMPER_STEP, TEMPER_TOTAL, TEMPER_MILESTONES, TEMPER_MILESTONE_PCT, temperLevel, temperPct, temperKeys, canTemper, itemIconRef, refSellPrice, runesSellPrice, normalizeRef, SOCKETS, rollSockets
   });
 })(window.RPG);
