@@ -237,6 +237,40 @@
       return dlg;
     });
   }
+  // ---------- Кінець гри: перша перемога над Хеллою на її троні (світ 9; data/enemies.js → GAME_END_BOSS, ENDING) ----------
+  // Епілог, титри (повільно пливуть угору) і перехід у головне меню. Сейв лишається — гру можна продовжити.
+  function showEnding(save) {
+    const E = RPG.ENDING;
+    if (!E) return;
+    return queueDialog(() => {
+      const { dlg } = noticeDialog("ending-dialog");
+      const box = el("div", "stack ending");
+      box.append(el("h2", "ending-title", E.title));
+      const heroes = (RPG.partyMembers ? RPG.partyMembers(save) : [{ character: save.character }]).map(m => m.character.name).join(", ");
+      if (heroes) box.append(el("p", "ending-heroes", heroes));
+      for (const p of E.epilogue) box.append(el("p", "ending-text", p));
+      const roll = el("div", "ending-credits");
+      const inner = el("div", "ending-credits-roll");
+      inner.append(el("h3", null, E.creditsTitle), el("p", "ending-game", "Кров Іггдрасиля"));
+      for (const [role, who] of E.credits) {
+        const c = el("div", "ending-credit");
+        c.append(el("span", "role", role), el("strong", "who", who));
+        inner.append(c);
+      }
+      inner.append(el("p", "ending-thanks", E.thanks));
+      roll.append(inner);
+      box.append(roll, el("p", "ending-stay", E.stay));
+      const nav = el("div", "row game-over-nav");
+      nav.append(link(E.menu, "../index.html"));
+      box.append(nav);
+      dlg.append(box);
+      dlg.addEventListener("cancel", ev => ev.preventDefault());     // закривається лише переходом у меню
+      document.body.append(dlg);
+      dlg.showModal();
+      RPG.audio?.jingle?.("victory");
+      return dlg;
+    });
+  }
   // Напарники, що втратили останнє життя (party.js → hardcoreResolve): коротке вікно
   function showHardcoreLosses(removed) {
     if (!removed?.length) return;
@@ -1734,6 +1768,8 @@
       if (p.cap < RPG.LEVEL_CAP_PROFESSION) box.append(el("p", "note", ch.classId === RPG.DEFAULT_CLASS
         ? `Селянин росте лише до ${RPG.LEVEL_CAP_BASE} рівня. Героям з професією межа відкривається до ${RPG.LEVEL_CAP_PROFESSION} після першої перемоги над Белі (Альвгейм).`
         : `Межа відкриється до ${RPG.LEVEL_CAP_PROFESSION} рівня після першої перемоги над Белі — фінальним босом Альвгейму.`));
+      else if (p.cap === RPG.LEVEL_CAP_PROFESSION) box.append(el("p", "note",
+        `Межа ${RPG.LEVEL_CAP_SECOND} — лише для другої професії, коли відкрито Асгард (перша перемога над Суртом). Друга професія ще готується.`));
     } else {
       box.append(el("p", null, `Набрано ${p.percent}% до ${ch.level + 1} рівня.`));
       box.append(el("p", null, `Цей рівень: ${fmtNum(p.current)} / ${fmtNum(p.needed)} EXP (ще ${fmtNum(p.needed - p.current)}).`));
@@ -1976,7 +2012,7 @@
   // ============================================================
 
   RPG.pages = {};
-  RPG.ui = { scoreBox, showScore, showBuriedPage, hardcoreCheck, showGameOver, showGameOverPage, showHardcoreLosses, gameOverContent, expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showRunePouch, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, npcHead, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, showExpeditionBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, lockMark, lockButton, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, classTreeLayout, showClassTree, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
+  RPG.ui = { scoreBox, showScore, showBuriedPage, hardcoreCheck, showGameOver, showGameOverPage, showEnding, showHardcoreLosses, gameOverContent, expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showRunePouch, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, npcHead, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, showExpeditionBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, lockMark, lockButton, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, classTreeLayout, showClassTree, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
   RPG.ui.classEmblem = classEmblem;
   RPG.ui.meetRenouncer = meetRenouncer;   // «Шлях відреченого»
 })(window.RPG);

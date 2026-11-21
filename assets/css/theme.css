@@ -481,6 +481,22 @@ a.map-world:hover, a.map-world:focus-visible { outline: none; border-color: var(
 .death-bag-row > .wf-button { flex: 0 0 auto; }
 .death-bag-btn { color: #f0a08a; }
 .game-over-sub { font-size: .88rem; color: var(--text-dim); }
+/* Кінець гри (game-common.js → showEnding): епілог і титри, що пливуть угору */
+.ending-dialog { width: min(600px, 94vw); }
+.ending-title { font-family: var(--font-head); color: #e6c46a; text-align: center; margin: 0; font-size: 1.8rem; }
+.ending-heroes { text-align: center; color: var(--text-dim); margin: 0; }
+.ending-text { line-height: 1.5; }
+.ending-credits { position: relative; height: 180px; overflow: hidden; border-block: 1px solid var(--link-border);
+  mask-image: linear-gradient(transparent, #000 18%, #000 82%, transparent); -webkit-mask-image: linear-gradient(transparent, #000 18%, #000 82%, transparent); }
+.ending-credits-roll { display: grid; gap: 10px; text-align: center; padding: 60px 0 180px; animation: ending-roll 24s linear infinite; }
+.ending-credits-roll h3 { margin: 0; font-family: var(--font-head); }
+.ending-game { margin: 0; font-family: var(--font-head); color: #e6c46a; font-size: 1.2rem; }
+.ending-credit { display: grid; gap: 2px; }
+.ending-credit .role { font-size: .85rem; color: var(--text-dim); }
+.ending-thanks { margin: 6px 0 0; font-style: italic; }
+.ending-stay { text-align: center; font-size: .9rem; color: var(--text-dim); margin: 0; }
+@keyframes ending-roll { from { transform: translateY(0); } to { transform: translateY(-100%); } }
+@media (prefers-reduced-motion: reduce) { .ending-credits { height: auto; mask-image: none; -webkit-mask-image: none; } .ending-credits-roll { animation: none; padding: 8px 0; } }
 /* Рахунок гри (v0.3.30) */
 .score-box { gap: 4px; }
 .score-box h3 { margin: 6px 0 2px; }

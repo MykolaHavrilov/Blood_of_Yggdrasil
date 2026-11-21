@@ -397,14 +397,20 @@ function msToNextRegen(save, now = Date.now()) {
 // ---------- Межа рівня ----------
 // Усі герої — до 30 рівня. Після першої перемоги над Белі (фінальний бос Альвгейму, світ 3) межа для героїв
 // з професією (будь-яка, крім Селянина) — 50. Перемоги над босами — save.bossKills[id] (page-game.js → нагорода).
+// Межа 60 — лише другій професії (тір 3) і лише з відкритим Асгардом (світ 8 — перша перемога над Суртом).
+// Другої професії в грі ще немає (рішення 2026-11-21: «Світ 8 - Асгард - рішення.txt»), тож поки межа — 50 для всіх.
 const LEVEL_CAP_BASE = 30;
 const LEVEL_CAP_PROFESSION = 50;
+const LEVEL_CAP_SECOND = 60;
 const LEVEL_CAP_BOSS = "alf_boss_beli";
+const LEVEL_CAP_SECOND_BOSS = "musp_boss_surtr";
 function levelCapOpen(save) { return !!save.bossKills?.[LEVEL_CAP_BOSS]; }
 function levelCap(save) {
   const ch = save.character;
-  const top = maxLevel(getClass(ch.classId).levelTable);
-  const cap = ch.classId !== RPG.DEFAULT_CLASS && levelCapOpen(save) ? LEVEL_CAP_PROFESSION : LEVEL_CAP_BASE;
+  const cls = getClass(ch.classId);
+  const top = maxLevel(cls.levelTable);
+  let cap = ch.classId !== RPG.DEFAULT_CLASS && levelCapOpen(save) ? LEVEL_CAP_PROFESSION : LEVEL_CAP_BASE;
+  if (cap === LEVEL_CAP_PROFESSION && (cls.tier || 1) >= 3 && save.bossKills?.[LEVEL_CAP_SECOND_BOSS]) cap = LEVEL_CAP_SECOND;
   return Math.min(cap, top);
 }
 
@@ -601,7 +607,7 @@ function loseLife(ms) {
 //       + SCORE.craftLevel × (загальна майстерність коваля − 1) + SCORE.craftCat × (рівень кожного виду − 1).
 // Лічильники в сейві — save.score: { kills, dungeons, dunPts, exps, expPts } (рахуються в будь-якій грі).
 const SCORE = { heroLevel: 100, mercLevel: 50, locRank: 100, bossMult: 5, dungeon: 20, expedition: 10, itemLevel: 5, craftLevel: 100, craftCat: 50 };
-const REGION_WORLD = { start: 1, city: 1, dark: 2, alf: 3, van: 4, svartgard: 5, svart: 5, jot: 6, musp: 7 };
+const REGION_WORLD = { start: 1, city: 1, dark: 2, alf: 3, van: 4, svartgard: 5, svart: 5, jot: 6, musp: 7, asg: 8, nifl: 9 };
 function worldOfLoc(locId) {
   const r = RPG.LOCATIONS?.[locId]?.region || "start";
   return RPG.worldOfRegion?.(r) || REGION_WORLD[r] || 1;
@@ -2048,7 +2054,7 @@ Object.assign(RPG, {
   REGEN_TICK_MS, HOME_REGEN_PCT, RESPAWN_HP_PCT, DEATH_EXP_MULT, ITEM_LOSS_CHANCE, maxItemLoss,
   createNewSave, calcStats, speedCap, clampHpMp, fullHeal, FEMALE_NAMES, heroGender, gw,
   regenPerTick, applyRegen, msToNextRegen,
-  addExp, levelCap, levelCapOpen, LEVEL_CAP_BASE, LEVEL_CAP_PROFESSION, LEVEL_CAP_BOSS, removeExp, deathExpPenalty, DEATH_MAX_PCT, expProgress, applyDeath, markFallen, pray,
+  addExp, levelCap, levelCapOpen, LEVEL_CAP_BASE, LEVEL_CAP_PROFESSION, LEVEL_CAP_SECOND, LEVEL_CAP_BOSS, LEVEL_CAP_SECOND_BOSS, removeExp, deathExpPenalty, DEATH_MAX_PCT, expProgress, applyDeath, markFallen, pray,
   HC_LIVES, livesOf, loseLife, noteVictory, noteKills, noteExpedition, hardcoreScore, heroLevels, locLevel, locRankOf, SCORE,
   getClassChanges, changeClass,
   rootSave, countInList, addToList, addRefToList, removeFromList, countItem, addItem, removeItem,

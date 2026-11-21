@@ -382,7 +382,6 @@
   }
   // Фінальний бос світу: той, хто відкриває наступний світ (data/worlds.js → gate.boss: світи 2–8), а також EXTRA_FINAL_BOSSES:
   // світ 1 відкриває наступний без боса (капітан варти) — його єдиний бос Король слайм; світ 9 останній — Хелла, фінальна форма.
-  // Світи 7–9 ще не в грі: їхні ID босів — за спрайтами (new_assets/worlds_3-9_sprites.zip); при додаванні світу звірити.
   const EXTRA_FINAL_BOSSES = ["slime_king", "nifl_boss_hel_final_form"];
   const isFinalBoss = id => EXTRA_FINAL_BOSSES.includes(id) || !!RPG.WORLDS?.some(w => w.gate?.boss === id);
   // Руни за перемогу над ворогом: масив id предметів-рун (найчастіше порожній). o.champion, o.expedition

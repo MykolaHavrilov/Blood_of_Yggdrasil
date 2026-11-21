@@ -4248,6 +4248,1463 @@ const ENEMIES = {
         { id: "celestial_ore", chance: 0.15, qty: [1, 2] },
         { id: "sun_gold_ingot", chance: 0.1, qty: [1, 1] }
       ]
+    },
+    // ---------- АСГАРД (світ 8) — вороги 50–56 рівня, фінальна боса Хелла — 60 ----------
+    // Спорядження з ворогів не падає (worlds.js → CRAFT_ONLY_FROM) — матеріали 6 виду, зілля й ключі; з босів зрідка — матеріали 7 виду
+    // (на запас: кувати тір 7 можна лише з відкритим світом 9). Сила — від ворогів Йотунгейму тієї ж ролі з ростом за рівень (tools/balance.js asg_ --rarity epic).
+    asg_draugr_stormtrooper: {
+      name: "Драуг-штурмовик",
+      range: 1, move: { name: "Штурмовий удар", mult: 1.55, chance: 0.25 },
+      verb: "рубає з розгону",
+      level: 50,
+      role: "melee",
+      stats: { hp: 11510, mp: 0, attack: 2088, defense: 116, magicDefense: 137, speed: 41, crit: 27, dodge: 22 },
+      exp: 7500,
+      gold: [115, 220],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "celestial_ore", chance: 0.07, qty: [1, 1] },
+        { id: "bifrost_shard", chance: 0.035, qty: [1, 1] }
+      ]
+    },
+    asg_hels_rider: {
+      name: "Вершник Хелли",
+      range: 1, move: { name: "Мертвий наскок", mult: 1.55, chance: 0.25 },
+      verb: "топче мертвим конем",
+      level: 50,
+      role: "melee",
+      stats: { hp: 11510, mp: 0, attack: 2088, defense: 116, magicDefense: 137, speed: 41, crit: 27, dodge: 22 },
+      exp: 7500,
+      gold: [115, 220],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "celestial_ore", chance: 0.091, qty: [1, 1] },
+        { id: "bifrost_shard", chance: 0.035, qty: [1, 1] }
+      ]
+    },
+    asg_dead_man_of_naglfar: {
+      name: "Мрець з Нагльфара",
+      range: 1, move: { name: "Удар веслом", mult: 1.5, chance: 0.25 },
+      verb: "гамселить важким веслом",
+      level: 50,
+      role: "tank",
+      stats: { hp: 19603, mp: 0, attack: 1655, defense: 221, magicDefense: 182, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 7500,
+      gold: [115, 220],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "celestial_ore", chance: 0.07, qty: [1, 1] },
+        { id: "bifrost_shard", chance: 0.046, qty: [1, 1] }
+      ]
+    },
+    asg_boss_hrym: {
+      name: "Хрюм",
+      range: 1, move: { name: "Крижаний молот", mult: 1.7, chance: 0.25 },
+      verb: "трощить кригою",
+      level: 51,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "tank",
+      stats: { hp: 28770, mp: 1864, attack: 1093, magic: 836, defense: 301, magicDefense: 210, speed: 28, crit: 17, dodge: 12, blockPhys: 17, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Подих інею", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Крижаний міст", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Стерно Нагльфара", mp: 70, healPct: 0.1 }
+      ],
+      exp: 39015,
+      gold: [581, 1122],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "celestial_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "celestial_ore", chance: 0.35, qty: [1, 3] },
+        { id: "bifrost_shard", chance: 0.3, qty: [1, 2] },
+        { id: "ygg_bark", chance: 0.06, qty: [1, 1] },
+        { id: "mimir_water", chance: 0.04, qty: [1, 1] }
+      ]
+    },
+    asg_bog_corpse: {
+      name: "Болотяний мрець",
+      range: 1, move: { name: "Мулова хватка", mult: 1.5, chance: 0.25 },
+      verb: "тягне в мул",
+      level: 51,
+      role: "tank",
+      stats: { hp: 19995, mp: 0, attack: 1696, defense: 224, magicDefense: 184, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 7803,
+      gold: [117, 224],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "white_ash", chance: 0.07, qty: [1, 1] },
+        { id: "eagle_feather", chance: 0.035, qty: [1, 1] }
+      ]
+    },
+    asg_seidkona_witch: {
+      name: "Відьма-сейдкона",
+      range: 3, move: { name: "Чари сейду", mult: 1.55, chance: 0.25 },
+      verb: "насилає сейд на",
+      level: 51,
+      role: "caster",
+      stats: { hp: 10841, mp: 1502, attack: 1211, magic: 1605, defense: 113, magicDefense: 219, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Нитка прокляття", mp: 28, mult: 1.5, chance: 0.4 },
+      exp: 7803,
+      gold: [117, 224],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "white_ash", chance: 0.091, qty: [1, 1] },
+        { id: "eagle_feather", chance: 0.035, qty: [1, 1] }
+      ]
+    },
+    asg_bog_viper: {
+      name: "Болотяна гадюка",
+      range: 3, move: { name: "Отруйний плювок", mult: 1.55, chance: 0.25 },
+      verb: "плює отрутою в",
+      level: 51,
+      role: "ranged",
+      stats: { hp: 11068, mp: 0, attack: 2351, defense: 91, magicDefense: 121, speed: 37, crit: 29, dodge: 23 },
+      exp: 7803,
+      gold: [117, 224],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "white_ash", chance: 0.07, qty: [1, 1] },
+        { id: "eagle_feather", chance: 0.046, qty: [1, 1] }
+      ]
+    },
+    asg_boss_angrboda_hel_empowered_form: {
+      name: "Ангрбода (посилена Хеллою)",
+      range: 3, move: { name: "Вовче прокляття", mult: 1.7, chance: 0.25 },
+      verb: "насилає вовчу тьму на",
+      level: 52,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 23995, mp: 2562, attack: 841, magic: 991, defense: 133, magicDefense: 223, speed: 34, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Пряжа Хелли", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Болотяні пута", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Материнська гниль", mp: 70, healPct: 0.1 }
+      ],
+      exp: 40560,
+      gold: [593, 1144],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "celestial_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "white_ash", chance: 0.35, qty: [1, 3] },
+        { id: "eagle_feather", chance: 0.3, qty: [1, 2] },
+        { id: "bifrost_shard", chance: 0.2, qty: [1, 2] },
+        { id: "ygg_bark", chance: 0.06, qty: [1, 1] },
+        { id: "mimir_water", chance: 0.04, qty: [1, 1] }
+      ]
+    },
+    asg_fenrirs_wolf: {
+      name: "Вовк Фенріра",
+      range: 1, move: { name: "Вовча хватка", mult: 1.55, chance: 0.25 },
+      verb: "рве іклами",
+      level: 51,
+      role: "melee",
+      stats: { hp: 11740, mp: 0, attack: 2140, defense: 117, magicDefense: 139, speed: 41, crit: 27, dodge: 22 },
+      exp: 7803,
+      gold: [117, 224],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "eagle_feather", chance: 0.07, qty: [1, 1] },
+        { id: "white_ash", chance: 0.035, qty: [1, 1] }
+      ]
+    },
+    asg_skoll: {
+      name: "Скьоль",
+      range: 1, move: { name: "Погоня за Сонцем", mult: 1.55, chance: 0.25 },
+      verb: "вгризається в",
+      level: 52,
+      role: "melee",
+      stats: { hp: 11975, mp: 0, attack: 2193, defense: 119, magicDefense: 141, speed: 41, crit: 27, dodge: 22 },
+      exp: 8112,
+      gold: [120, 229],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "eagle_feather", chance: 0.091, qty: [1, 1] },
+        { id: "white_ash", chance: 0.035, qty: [1, 1] }
+      ]
+    },
+    asg_hati: {
+      name: "Хаті",
+      range: 3, move: { name: "Місячне виття", mult: 1.55, chance: 0.25 },
+      verb: "виє місячною тьмою на",
+      level: 52,
+      role: "caster",
+      stats: { hp: 11058, mp: 1517, attack: 1241, magic: 1646, defense: 114, magicDefense: 222, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Затемнення Місяця", mp: 28, mult: 1.5, chance: 0.4 },
+      exp: 8112,
+      gold: [120, 229],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "eagle_feather", chance: 0.07, qty: [1, 1] },
+        { id: "white_ash", chance: 0.046, qty: [1, 1] }
+      ]
+    },
+    asg_boss_fenrir: {
+      name: "Фенрір",
+      range: 1, move: { name: "Паща Фенріра", mult: 1.7, chance: 0.25 },
+      verb: "розриває пащею",
+      level: 52,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "melee",
+      stats: { hp: 19913, mp: 1985, attack: 1354, magic: 879, defense: 164, magicDefense: 164, speed: 45, crit: 26, dodge: 24, blockPhys: 18, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Виття Рагнарьоку", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Порвані пута", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Голод вовка", mp: 70, healPct: 0.1 }
+      ],
+      exp: 40560,
+      gold: [593, 1144],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "celestial_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "eagle_feather", chance: 0.35, qty: [1, 3] },
+        { id: "white_ash", chance: 0.3, qty: [1, 2] },
+        { id: "bifrost_shard", chance: 0.2, qty: [1, 2] },
+        { id: "ygg_bark", chance: 0.06, qty: [1, 1] },
+        { id: "mimir_water", chance: 0.04, qty: [1, 1] }
+      ]
+    },
+    asg_utgard_giant: {
+      name: "Велетень Утгарда",
+      range: 1, move: { name: "Удар брилою", mult: 1.5, chance: 0.25 },
+      verb: "трощить брилою",
+      level: 52,
+      role: "tank",
+      stats: { hp: 20395, mp: 0, attack: 1739, defense: 227, magicDefense: 186, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 8112,
+      gold: [120, 229],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "celestial_ore", chance: 0.07, qty: [1, 1] },
+        { id: "bifrost_shard", chance: 0.035, qty: [1, 1] }
+      ]
+    },
+    asg_stone_troll: {
+      name: "Кам'яний троль",
+      range: 1, move: { name: "Кам'яний кулак", mult: 1.55, chance: 0.25 },
+      verb: "гамселить кулаком",
+      level: 52,
+      role: "melee",
+      stats: { hp: 11975, mp: 0, attack: 2193, defense: 119, magicDefense: 141, speed: 41, crit: 27, dodge: 22 },
+      exp: 8112,
+      gold: [120, 229],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "celestial_ore", chance: 0.091, qty: [1, 1] },
+        { id: "bifrost_shard", chance: 0.035, qty: [1, 1] }
+      ]
+    },
+    asg_storm_spirit: {
+      name: "Грозовий дух",
+      range: 3, move: { name: "Розряд", mult: 1.55, chance: 0.25 },
+      verb: "б'є блискавкою в",
+      level: 53,
+      role: "caster",
+      stats: { hp: 11279, mp: 1532, attack: 1272, magic: 1687, defense: 116, magicDefense: 224, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Ланцюг блискавок", mp: 28, mult: 1.5, chance: 0.4 },
+      exp: 8427,
+      gold: [122, 233],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "celestial_ore", chance: 0.07, qty: [1, 1] },
+        { id: "bifrost_shard", chance: 0.046, qty: [1, 1] }
+      ]
+    },
+    asg_boss_hrungnir_hel_empowered_form: {
+      name: "Хрунґнір (посилений Хеллою)",
+      range: 1, move: { name: "Кам'яне точило", mult: 1.7, chance: 0.25 },
+      verb: "трощить точилом",
+      level: 53,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "tank",
+      stats: { hp: 29932, mp: 1901, attack: 1149, magic: 878, defense: 309, magicDefense: 215, speed: 28, crit: 17, dodge: 12, blockPhys: 17, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Уламки точила", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Кам'яне серце", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Гниль у тріщинах", mp: 70, healPct: 0.1 }
+      ],
+      exp: 42135,
+      gold: [604, 1166],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "celestial_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "celestial_ore", chance: 0.35, qty: [1, 3] },
+        { id: "bifrost_shard", chance: 0.3, qty: [1, 2] },
+        { id: "ygg_bark", chance: 0.06, qty: [1, 1] },
+        { id: "mimir_water", chance: 0.04, qty: [1, 1] }
+      ]
+    },
+    asg_enthralled_einherjar: {
+      name: "Полонений ейнгерій",
+      range: 1, move: { name: "Удар ейнгерія", mult: 1.55, chance: 0.25 },
+      verb: "рубає мечем",
+      level: 53,
+      role: "melee",
+      stats: { hp: 12215, mp: 0, attack: 2248, defense: 120, magicDefense: 143, speed: 41, crit: 27, dodge: 22 },
+      exp: 8427,
+      gold: [122, 233],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "sun_gold_ingot", chance: 0.035, qty: [1, 1] },
+        { id: "eagle_feather", chance: 0.07, qty: [1, 1] }
+      ]
+    },
+    asg_dead_valkyrie: {
+      name: "Мертва валькірія",
+      range: 2, move: { name: "Удар списом", mult: 1.55, chance: 0.25 },
+      verb: "колить списом",
+      level: 53,
+      role: "healer",
+      stats: { hp: 9519, mp: 2413, attack: 771, magic: 1137, defense: 103, magicDefense: 191, speed: 33, crit: 11, blockMag: 17 },
+      spell: { name: "Підняти полеглого", mp: 30, mult: 1.5, chance: 0.4 },
+      exp: 8427,
+      gold: [122, 233],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "sun_gold_ingot", chance: 0.046, qty: [1, 1] },
+        { id: "eagle_feather", chance: 0.07, qty: [1, 1] }
+      ]
+    },
+    asg_shadow_raven: {
+      name: "Тіньовий ворон",
+      range: 3, move: { name: "Дзьоб тіні", mult: 1.55, chance: 0.25 },
+      verb: "клює тінню",
+      level: 53,
+      role: "ranged",
+      stats: { hp: 11515, mp: 0, attack: 2470, defense: 94, magicDefense: 124, speed: 37, crit: 29, dodge: 23 },
+      exp: 8427,
+      gold: [122, 233],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "sun_gold_ingot", chance: 0.035, qty: [1, 1] },
+        { id: "eagle_feather", chance: 0.091, qty: [1, 1] }
+      ]
+    },
+    asg_boss_hlokk: {
+      name: "Хльок",
+      range: 3, move: { name: "Бойовий клич", mult: 1.7, chance: 0.25 },
+      verb: "оглушує криком",
+      level: 54,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 24964, mp: 2614, attack: 883, magic: 1041, defense: 136, magicDefense: 229, speed: 34, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Шум битви", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Вибір полеглих", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Мед мертвих", mp: 70, healPct: 0.1 }
+      ],
+      exp: 43740,
+      gold: [616, 1188],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "celestial_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "sun_gold_ingot", chance: 0.35, qty: [1, 3] },
+        { id: "eagle_feather", chance: 0.3, qty: [1, 2] },
+        { id: "bifrost_shard", chance: 0.2, qty: [1, 2] },
+        { id: "ygg_bark", chance: 0.06, qty: [1, 1] },
+        { id: "mimir_water", chance: 0.04, qty: [1, 1] }
+      ]
+    },
+    asg_dark_soul_envoy: {
+      name: "Темна душа-посланець",
+      range: 3, move: { name: "Темний наказ", mult: 1.55, chance: 0.25 },
+      verb: "кидає темряву в",
+      level: 54,
+      role: "caster",
+      stats: { hp: 11504, mp: 1548, attack: 1304, magic: 1729, defense: 117, magicDefense: 227, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Вість Хелли", mp: 28, mult: 1.5, chance: 0.4 },
+      exp: 8748,
+      gold: [124, 238],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "white_ash", chance: 0.07, qty: [1, 1] },
+        { id: "sun_gold_ingot", chance: 0.035, qty: [1, 1] }
+      ]
+    },
+    asg_dark_soul_archer: {
+      name: "Темна душа-лучник",
+      range: 3, move: { name: "Тіньова стріла", mult: 1.55, chance: 0.25 },
+      verb: "стріляє тінню в",
+      level: 54,
+      role: "ranged",
+      stats: { hp: 11745, mp: 0, attack: 2532, defense: 95, magicDefense: 125, speed: 37, crit: 29, dodge: 23 },
+      exp: 8748,
+      gold: [124, 238],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "white_ash", chance: 0.091, qty: [1, 1] },
+        { id: "sun_gold_ingot", chance: 0.035, qty: [1, 1] }
+      ]
+    },
+    asg_dark_priestess: {
+      name: "Темна жриця",
+      range: 2, move: { name: "Чорна молитва", mult: 1.55, chance: 0.25 },
+      verb: "проклинає",
+      level: 54,
+      role: "healer",
+      stats: { hp: 9710, mp: 2437, attack: 790, magic: 1165, defense: 105, magicDefense: 194, speed: 33, crit: 11, blockMag: 17 },
+      spell: { name: "Темне зцілення", mp: 30, mult: 1.5, chance: 0.4 },
+      exp: 8748,
+      gold: [124, 238],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "white_ash", chance: 0.07, qty: [1, 1] },
+        { id: "sun_gold_ingot", chance: 0.046, qty: [1, 1] }
+      ]
+    },
+    asg_boss_gullveig_hel_empowered_form: {
+      name: "Гулльвейг (посилена Хеллою)",
+      range: 3, move: { name: "Золотий жар", mult: 1.7, chance: 0.25 },
+      verb: "палить золотим жаром",
+      level: 55,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 25463, mp: 2640, attack: 905, magic: 1068, defense: 138, magicDefense: 231, speed: 34, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Четверте полум'я", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Спрага золота", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Попіл, що оживає", mp: 70, healPct: 0.1 }
+      ],
+      exp: 45375,
+      gold: [627, 1210],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "celestial_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "white_ash", chance: 0.35, qty: [1, 3] },
+        { id: "sun_gold_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "bifrost_shard", chance: 0.2, qty: [1, 2] },
+        { id: "ygg_bark", chance: 0.06, qty: [1, 1] },
+        { id: "mimir_water", chance: 0.04, qty: [1, 1] }
+      ]
+    },
+    asg_draugr_jarl: {
+      name: "Драуг-ярл",
+      range: 1, move: { name: "Удар ярла", mult: 1.5, chance: 0.25 },
+      verb: "рубає важкою сокирою",
+      level: 54,
+      role: "tank",
+      stats: { hp: 21219, mp: 0, attack: 1827, defense: 232, magicDefense: 190, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 8748,
+      gold: [124, 238],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "bifrost_shard", chance: 0.07, qty: [1, 1] },
+        { id: "celestial_ore", chance: 0.035, qty: [1, 1] }
+      ]
+    },
+    asg_dark_soul: {
+      name: "Темна душа",
+      range: 1, move: { name: "Тіньовий клинок", mult: 1.55, chance: 0.25 },
+      verb: "ріже тінню",
+      level: 55,
+      role: "melee",
+      stats: { hp: 12708, mp: 0, attack: 2362, defense: 123, magicDefense: 146, speed: 41, crit: 27, dodge: 22 },
+      exp: 9075,
+      gold: [126, 242],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "bifrost_shard", chance: 0.091, qty: [1, 1] },
+        { id: "celestial_ore", chance: 0.035, qty: [1, 1] }
+      ]
+    },
+    asg_bone_skald: {
+      name: "Кістяний скальд",
+      range: 3, move: { name: "Пісня кісток", mult: 1.55, chance: 0.25 },
+      verb: "співає смерть для",
+      level: 55,
+      role: "caster",
+      stats: { hp: 11735, mp: 1563, attack: 1336, magic: 1772, defense: 118, magicDefense: 230, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Драпа загибелі", mp: 28, mult: 1.5, chance: 0.4 },
+      exp: 9075,
+      gold: [126, 242],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "bifrost_shard", chance: 0.07, qty: [1, 1] },
+        { id: "celestial_ore", chance: 0.046, qty: [1, 1] }
+      ]
+    },
+    asg_boss_shadow_of_loki: {
+      name: "Тінь Локі",
+      range: 1, move: { name: "Підступний удар", mult: 1.7, chance: 0.25 },
+      verb: "б'є з тіні",
+      level: 55,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "melee",
+      stats: { hp: 21132, mp: 2045, attack: 1458, magic: 946, defense: 170, magicDefense: 170, speed: 45, crit: 26, dodge: 24, blockPhys: 18, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Сміх обманщика", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Тіньовий двійник", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Отрута змія", mp: 70, healPct: 0.1 }
+      ],
+      exp: 45375,
+      gold: [627, 1210],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "celestial_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "bifrost_shard", chance: 0.35, qty: [1, 3] },
+        { id: "celestial_ore", chance: 0.3, qty: [1, 2] },
+        { id: "ygg_bark", chance: 0.06, qty: [1, 1] },
+        { id: "mimir_water", chance: 0.04, qty: [1, 1] }
+      ]
+    },
+    asg_hels_elite_swordsman: {
+      name: "Еліта Хелли — мечник",
+      range: 1, move: { name: "Чорний клинок", mult: 1.55, chance: 0.25 },
+      verb: "рубає чорним мечем",
+      level: 55,
+      role: "melee",
+      stats: { hp: 12708, mp: 0, attack: 2362, defense: 123, magicDefense: 146, speed: 41, crit: 27, dodge: 22 },
+      exp: 9075,
+      gold: [126, 242],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "sun_gold_ingot", chance: 0.05, qty: [1, 1] },
+        { id: "celestial_ore", chance: 0.05, qty: [1, 1] }
+      ]
+    },
+    asg_hels_elite_shieldbearer: {
+      name: "Еліта Хелли — щитоносець",
+      range: 1, move: { name: "Удар щитом", mult: 1.5, chance: 0.25 },
+      verb: "б'є щитом",
+      level: 56,
+      role: "tank",
+      stats: { hp: 22076, mp: 0, attack: 1919, defense: 238, magicDefense: 195, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 9408,
+      gold: [129, 246],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "sun_gold_ingot", chance: 0.065, qty: [1, 1] },
+        { id: "celestial_ore", chance: 0.05, qty: [1, 1] }
+      ]
+    },
+    asg_hels_elite_sorcerer: {
+      name: "Еліта Хелли — чаклун",
+      range: 3, move: { name: "Мертве полум'я", mult: 1.55, chance: 0.25 },
+      verb: "палить мертвим вогнем",
+      level: 56,
+      role: "caster",
+      stats: { hp: 11969, mp: 1579, attack: 1370, magic: 1816, defense: 120, magicDefense: 233, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Зелена смерть", mp: 28, mult: 1.5, chance: 0.4 },
+      exp: 9408,
+      gold: [129, 246],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "sun_gold_ingot", chance: 0.05, qty: [1, 1] },
+        { id: "celestial_ore", chance: 0.065, qty: [1, 1] }
+      ]
+    },
+    asg_boss_utgarda_loki_hel_empowered_form: {
+      name: "Утгарда-Локі (посилений Хеллою)",
+      range: 3, move: { name: "Ілюзія", mult: 1.7, chance: 0.25 },
+      verb: "обманює ілюзією",
+      level: 56,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 25973, mp: 2666, attack: 928, magic: 1094, defense: 140, magicDefense: 234, speed: 34, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Поразка, що здається правдою", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Велетень-марево", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Чари Утгарда", mp: 70, healPct: 0.1 }
+      ],
+      exp: 47040,
+      gold: [638, 1232],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "celestial_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "sun_gold_ingot", chance: 0.35, qty: [1, 3] },
+        { id: "celestial_ore", chance: 0.3, qty: [1, 2] },
+        { id: "bifrost_shard", chance: 0.2, qty: [1, 2] },
+        { id: "ygg_bark", chance: 0.06, qty: [1, 1] },
+        { id: "mimir_water", chance: 0.04, qty: [1, 1] }
+      ]
+    },
+    asg_hels_royal_guard_swordsman: {
+      name: "Вартовий Хелли — мечник",
+      range: 1, move: { name: "Клинок варти", mult: 1.55, chance: 0.25 },
+      verb: "рубає мечем варти",
+      level: 56,
+      role: "melee",
+      stats: { hp: 12962, mp: 0, attack: 2421, defense: 125, magicDefense: 148, speed: 41, crit: 27, dodge: 22 },
+      exp: 9408,
+      gold: [129, 246],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "celestial_ore", chance: 0.05, qty: [1, 1] },
+        { id: "sun_gold_ingot", chance: 0.05, qty: [1, 1] }
+      ]
+    },
+    asg_hels_royal_guard_witch: {
+      name: "Вартова Хелли — чаклунка",
+      range: 3, move: { name: "Чари варти", mult: 1.55, chance: 0.25 },
+      verb: "насилає чари на",
+      level: 56,
+      role: "caster",
+      stats: { hp: 11969, mp: 1579, attack: 1370, magic: 1816, defense: 120, magicDefense: 233, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Подих Гельгейму", mp: 28, mult: 1.5, chance: 0.4 },
+      exp: 9408,
+      gold: [129, 246],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "celestial_ore", chance: 0.065, qty: [1, 1] },
+        { id: "sun_gold_ingot", chance: 0.05, qty: [1, 1] }
+      ]
+    },
+    asg_hels_guard_beast: {
+      name: "Звір варти Хелли",
+      range: 1, move: { name: "Мертва паща", mult: 1.5, chance: 0.25 },
+      verb: "рве мертвою пащею",
+      level: 56,
+      role: "tank",
+      stats: { hp: 22076, mp: 0, attack: 1919, defense: 238, magicDefense: 195, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 9408,
+      gold: [129, 246],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "celestial_ore", chance: 0.05, qty: [1, 1] },
+        { id: "sun_gold_ingot", chance: 0.065, qty: [1, 1] }
+      ]
+    },
+    asg_boss_hel_on_odins_throne: {
+      name: "Хелла (Глідскьяльв)",
+      range: 3, move: { name: "Дотик смерті", mult: 1.8, chance: 0.25 },
+      verb: "торкається смертю",
+      level: 60,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 31487, mp: 2774, attack: 1147, magic: 1353, defense: 146, magicDefense: 246, speed: 34, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Погляд з престолу", mp: 60, mult: 2.8 },
+        { kind: "stun", name: "Половина мерця", mp: 45, mult: 1.35 },
+        { kind: "heal", name: "Жнива дев'яти світів", mp: 70, healPct: 0.12 }
+      ],
+      exp: 70200,
+      gold: [889, 1716],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "celestial_ingot", chance: 0.45, qty: [1, 2] },
+        { id: "celestial_ore", chance: 0.35, qty: [1, 3] },
+        { id: "sun_gold_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "bifrost_shard", chance: 0.2, qty: [1, 2] },
+        { id: "ygg_bark", chance: 0.15, qty: [1, 2] },
+        { id: "mimir_water", chance: 0.1, qty: [1, 1] }
+      ]
+    },
+    // ---------- НІФЛЬГЕЙМ І ХЕЛЬГЕЙМ (світ 9) — вороги 57–60 рівня, фінальна Хелла — 65 (навмисно вище межі героя 60) ----------
+    // Матеріали 7 виду (Іггдрасиль), зілля й ключі; спорядження не падає (worlds.js → CRAFT_ONLY_FROM).
+    // Сила — від ворогів Йотунгейму тієї ж ролі з ростом за рівень (tools/balance.js nifl_ --rarity epic).
+    nifl_mist_wraith: {
+      name: "Туманна примара",
+      range: 3, move: { name: "Холодний дотик", mult: 1.55, chance: 0.25 },
+      verb: "огортає мрякою",
+      level: 57,
+      role: "caster",
+      stats: { hp: 12209, mp: 1594, attack: 1404, magic: 1862, defense: 121, magicDefense: 235, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Крижаний туман", mp: 28, mult: 1.5, chance: 0.4 },
+      exp: 9747,
+      gold: [131, 251],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_root", chance: 0.078, qty: [1, 1] },
+        { id: "ygg_bark", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    nifl_ice_wolf: {
+      name: "Крижаний вовк",
+      range: 1, move: { name: "Крижані ікла", mult: 1.55, chance: 0.25 },
+      verb: "рве крижаними іклами",
+      level: 57,
+      role: "melee",
+      stats: { hp: 13222, mp: 0, attack: 2482, defense: 126, magicDefense: 149, speed: 41, crit: 27, dodge: 22 },
+      exp: 9747,
+      gold: [131, 251],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_root", chance: 0.06, qty: [1, 1] },
+        { id: "ygg_bark", chance: 0.039, qty: [1, 1] }
+      ]
+    },
+    nifl_boss_warden_of_the_mist: {
+      name: "Вартовий Мряки",
+      range: 1, move: { name: "Удар з туману", mult: 1.7, chance: 0.25 },
+      verb: "б'є з туману",
+      level: 58,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "tank",
+      stats: { hp: 33048, mp: 1998, attack: 1300, magic: 993, defense: 328, magicDefense: 228, speed: 28, crit: 17, dodge: 12, blockPhys: 17, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Подих Ніфльгейму", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Сліпа мряка", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Туман загоює", mp: 70, healPct: 0.1 }
+      ],
+      exp: 50460,
+      gold: [661, 1276],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.3, qty: [1, 2] },
+        { id: "ygg_root", chance: 0.35, qty: [1, 3] },
+        { id: "ygg_bark", chance: 0.3, qty: [1, 2] },
+        { id: "ygg_heartwood", chance: 0.2, qty: [1, 2] },
+        { id: "mimir_water", chance: 0.08, qty: [1, 1] },
+        { id: "star_spark", chance: 0.06, qty: [1, 1] }
+      ]
+    },
+    nifl_rime_thurs: {
+      name: "Рімтурс",
+      range: 1, move: { name: "Крижаний кулак", mult: 1.5, chance: 0.25 },
+      verb: "гамселить крижаним кулаком",
+      level: 57,
+      role: "tank",
+      stats: { hp: 22518, mp: 0, attack: 1967, defense: 241, magicDefense: 197, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 9747,
+      gold: [131, 251],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_bark", chance: 0.078, qty: [1, 1] },
+        { id: "ygg_root", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    nifl_ice_serpent: {
+      name: "Крижаний змій",
+      range: 3, move: { name: "Крижаний плювок", mult: 1.55, chance: 0.25 },
+      verb: "плює кригою в",
+      level: 58,
+      role: "ranged",
+      stats: { hp: 12714, mp: 0, attack: 2795, defense: 99, magicDefense: 131, speed: 37, crit: 29, dodge: 23 },
+      exp: 10092,
+      gold: [133, 255],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_bark", chance: 0.06, qty: [1, 1] },
+        { id: "ygg_root", chance: 0.039, qty: [1, 1] }
+      ]
+    },
+    nifl_boss_bergelmir: {
+      name: "Бергельмір",
+      range: 1, move: { name: "Удар велетня", mult: 1.7, chance: 0.25 },
+      verb: "трощить крижаною палицею",
+      level: 58,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "melee",
+      stats: { hp: 22425, mp: 2107, attack: 1570, magic: 1019, defense: 176, magicDefense: 176, speed: 45, crit: 26, dodge: 24, blockPhys: 18, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Кров Іміра", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Крижаний потоп", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Інеєва шкура", mp: 70, healPct: 0.1 }
+      ],
+      exp: 50460,
+      gold: [661, 1276],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.3, qty: [1, 2] },
+        { id: "ygg_bark", chance: 0.35, qty: [1, 3] },
+        { id: "ygg_root", chance: 0.3, qty: [1, 2] },
+        { id: "ygg_heartwood", chance: 0.2, qty: [1, 2] },
+        { id: "mimir_water", chance: 0.08, qty: [1, 1] },
+        { id: "star_spark", chance: 0.06, qty: [1, 1] }
+      ]
+    },
+    nifl_steam_spirit: {
+      name: "Паровий дух",
+      range: 3, move: { name: "Окріп", mult: 1.55, chance: 0.25 },
+      verb: "обпікає парою",
+      level: 58,
+      role: "caster",
+      stats: { hp: 12453, mp: 1610, attack: 1439, magic: 1908, defense: 123, magicDefense: 238, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Кипучий вихор", mp: 28, mult: 1.5, chance: 0.4 },
+      exp: 10092,
+      gold: [133, 255],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_root", chance: 0.078, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    nifl_water_serpentine: {
+      name: "Водяний змієвик",
+      range: 3, move: { name: "Водяний батіг", mult: 1.55, chance: 0.25 },
+      verb: "хльоскає струменем",
+      level: 58,
+      role: "ranged",
+      stats: { hp: 12714, mp: 0, attack: 2795, defense: 99, magicDefense: 131, speed: 37, crit: 29, dodge: 23 },
+      exp: 10092,
+      gold: [133, 255],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_root", chance: 0.06, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.039, qty: [1, 1] }
+      ]
+    },
+    nifl_boss_grabakr: {
+      name: "Ґрабак",
+      range: 1, move: { name: "Укус Ґрабака", mult: 1.7, chance: 0.25 },
+      verb: "вгризається в",
+      level: 59,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "melee",
+      stats: { hp: 22873, mp: 2128, attack: 1609, magic: 1044, defense: 178, magicDefense: 178, speed: 45, crit: 26, dodge: 24, blockPhys: 18, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Отрута джерела", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Кільця змія", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Сік кореня", mp: 70, healPct: 0.1 }
+      ],
+      exp: 52215,
+      gold: [673, 1298],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.3, qty: [1, 2] },
+        { id: "ygg_root", chance: 0.35, qty: [1, 3] },
+        { id: "ygg_heartwood", chance: 0.2, qty: [1, 2] },
+        { id: "mimir_water", chance: 0.08, qty: [1, 1] },
+        { id: "star_spark", chance: 0.06, qty: [1, 1] }
+      ]
+    },
+    nifl_rotten_sprout: {
+      name: "Гнилий паросток",
+      range: 2, move: { name: "Гнилий батіг", mult: 1.55, chance: 0.25 },
+      verb: "хльоскає гнилим пагоном",
+      level: 58,
+      role: "healer",
+      stats: { hp: 10510, mp: 2536, attack: 872, magic: 1286, defense: 110, magicDefense: 203, speed: 33, crit: 11, blockMag: 17 },
+      spell: { name: "Сік гнилі", mp: 30, mult: 1.5, chance: 0.4 },
+      exp: 10092,
+      gold: [133, 255],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_bark", chance: 0.078, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    nifl_root_worm: {
+      name: "Кореневий черв",
+      range: 1, move: { name: "Обвиття", mult: 1.5, chance: 0.25 },
+      verb: "обвиває й душить",
+      level: 58,
+      role: "tank",
+      stats: { hp: 22968, mp: 0, attack: 2016, defense: 243, magicDefense: 200, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 10092,
+      gold: [133, 255],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_bark", chance: 0.06, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.039, qty: [1, 1] }
+      ]
+    },
+    nifl_boss_goinn_and_moinn: {
+      name: "Ґоїн і Моїн",
+      range: 1, move: { name: "Подвійний укус", mult: 1.7, chance: 0.25 },
+      verb: "кусають удвох",
+      level: 59,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "melee",
+      stats: { hp: 22873, mp: 2128, attack: 1609, magic: 1044, defense: 178, magicDefense: 178, speed: 45, crit: 26, dodge: 24, blockPhys: 18, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Гниль кореня", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Подвійні кільця", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Сік Дерева", mp: 70, healPct: 0.1 }
+      ],
+      exp: 52215,
+      gold: [673, 1298],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.3, qty: [1, 2] },
+        { id: "ygg_bark", chance: 0.35, qty: [1, 3] },
+        { id: "ygg_heartwood", chance: 0.2, qty: [1, 2] },
+        { id: "mimir_water", chance: 0.08, qty: [1, 1] },
+        { id: "star_spark", chance: 0.06, qty: [1, 1] }
+      ]
+    },
+    nifl_night_harpy: {
+      name: "Нічна гарпія",
+      range: 3, move: { name: "Кігті з темряви", mult: 1.55, chance: 0.25 },
+      verb: "пікірує на",
+      level: 58,
+      role: "ranged",
+      stats: { hp: 12714, mp: 0, attack: 2795, defense: 99, magicDefense: 131, speed: 37, crit: 29, dodge: 23 },
+      exp: 10092,
+      gold: [133, 255],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.078, qty: [1, 1] },
+        { id: "ygg_heartwood", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    nifl_stone_draugr: {
+      name: "Кам'яний драуг",
+      range: 1, move: { name: "Кам'яний удар", mult: 1.5, chance: 0.25 },
+      verb: "б'є кам'яним кулаком",
+      level: 59,
+      role: "tank",
+      stats: { hp: 23428, mp: 0, attack: 2067, defense: 246, magicDefense: 202, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 10443,
+      gold: [136, 260],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.06, qty: [1, 1] },
+        { id: "ygg_heartwood", chance: 0.039, qty: [1, 1] }
+      ]
+    },
+    nifl_boss_svafnir_and_ofnir: {
+      name: "Свавнір і Офнір",
+      range: 3, move: { name: "Шепіт змія", mult: 1.7, chance: 0.25 },
+      verb: "шепочуть прокляття на",
+      level: 59,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 27562, mp: 2747, attack: 999, magic: 1178, defense: 145, magicDefense: 243, speed: 34, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Прокляття Дерева", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Сон змія", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Скинута шкура", mp: 70, healPct: 0.1 }
+      ],
+      exp: 52215,
+      gold: [673, 1298],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.3, qty: [1, 2] },
+        { id: "ygg_heartwood", chance: 0.3, qty: [1, 2] },
+        { id: "mimir_water", chance: 0.08, qty: [1, 1] },
+        { id: "star_spark", chance: 0.06, qty: [1, 1] }
+      ]
+    },
+    nifl_dragon_hatchling: {
+      name: "Драконовий виводок",
+      range: 1, move: { name: "Гострі зуби", mult: 1.55, chance: 0.25 },
+      verb: "кусає",
+      level: 59,
+      role: "melee",
+      stats: { hp: 13756, mp: 0, attack: 2607, defense: 129, magicDefense: 153, speed: 41, crit: 27, dodge: 22 },
+      exp: 10443,
+      gold: [136, 260],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_heartwood", chance: 0.078, qty: [1, 1] },
+        { id: "ygg_bark", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    nifl_corpse_eater: {
+      name: "Трупоїд",
+      range: 1, move: { name: "Ненажерливий укус", mult: 1.55, chance: 0.25 },
+      verb: "рве гнилими зубами",
+      level: 59,
+      role: "melee",
+      stats: { hp: 13756, mp: 0, attack: 2607, defense: 129, magicDefense: 153, speed: 41, crit: 27, dodge: 22 },
+      exp: 10443,
+      gold: [136, 260],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_heartwood", chance: 0.06, qty: [1, 1] },
+        { id: "ygg_bark", chance: 0.039, qty: [1, 1] }
+      ]
+    },
+    nifl_boss_nidhogg: {
+      name: "Нідгьоґ",
+      range: 1, move: { name: "Паща Нідгьоґа", mult: 1.7, chance: 0.25 },
+      verb: "рве драконячою пащею",
+      level: 60,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "tank",
+      stats: { hp: 34383, mp: 2038, attack: 1366, magic: 1044, defense: 336, magicDefense: 234, speed: 28, crit: 17, dodge: 12, blockPhys: 17, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Подих гнилі", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Удар хвоста", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Трупна учта", mp: 70, healPct: 0.1 }
+      ],
+      exp: 54000,
+      gold: [684, 1320],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.3, qty: [1, 2] },
+        { id: "ygg_heartwood", chance: 0.35, qty: [1, 3] },
+        { id: "ygg_bark", chance: 0.3, qty: [1, 2] },
+        { id: "mimir_water", chance: 0.08, qty: [1, 1] },
+        { id: "star_spark", chance: 0.06, qty: [1, 1] }
+      ]
+    },
+    nifl_drowned_soul: {
+      name: "Утоплена душа",
+      range: 3, move: { name: "Холодна вода", mult: 1.55, chance: 0.25 },
+      verb: "тягне під воду",
+      level: 59,
+      role: "caster",
+      stats: { hp: 12702, mp: 1627, attack: 1475, magic: 1956, defense: 124, magicDefense: 241, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Плач Ґйолля", mp: 28, mult: 1.5, chance: 0.4 },
+      exp: 10443,
+      gold: [136, 260],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.078, qty: [1, 1] },
+        { id: "ygg_root", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    nifl_bridge_warden: {
+      name: "Мостовий вартовий",
+      humanoid: true,
+      weapons: ["axe"],
+      range: 1, move: { name: "Удар сокири", mult: 1.5, chance: 0.25 },
+      verb: "рубає сокирою",
+      level: 59,
+      role: "tank",
+      stats: { hp: 22256, mp: 0, attack: 1963, defense: 246, magicDefense: 202, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 10443,
+      gold: [136, 260],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.06, qty: [1, 1] },
+        { id: "ygg_root", chance: 0.039, qty: [1, 1] }
+      ]
+    },
+    nifl_boss_modgud: {
+      name: "Модгуд",
+      range: 3, move: { name: "Ім'я мерця", mult: 1.7, chance: 0.25 },
+      verb: "кличе на ім'я",
+      level: 60,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 28114, mp: 2774, attack: 1024, magic: 1208, defense: 146, magicDefense: 246, speed: 34, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Дзвін мосту", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Крок у Ґйолль", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Плата мерців", mp: 70, healPct: 0.1 }
+      ],
+      exp: 54000,
+      gold: [684, 1320],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.3, qty: [1, 2] },
+        { id: "ygg_root", chance: 0.3, qty: [1, 2] },
+        { id: "ygg_heartwood", chance: 0.2, qty: [1, 2] },
+        { id: "mimir_water", chance: 0.08, qty: [1, 1] },
+        { id: "star_spark", chance: 0.06, qty: [1, 1] }
+      ]
+    },
+    nifl_hellhound: {
+      name: "Пекельний пес",
+      range: 1, move: { name: "Вогняні ікла", mult: 1.55, chance: 0.25 },
+      verb: "рве палаючими іклами",
+      level: 59,
+      role: "melee",
+      stats: { hp: 13756, mp: 0, attack: 2607, defense: 129, magicDefense: 153, speed: 41, crit: 27, dodge: 22 },
+      exp: 10443,
+      gold: [136, 260],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_heartwood", chance: 0.078, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    nifl_bone_hound: {
+      name: "Кістяний гончак",
+      range: 1, move: { name: "Кістяна хватка", mult: 1.55, chance: 0.25 },
+      verb: "вчіплюється кістяними щелепами в",
+      level: 60,
+      role: "melee",
+      stats: { hp: 14031, mp: 0, attack: 2673, defense: 131, magicDefense: 155, speed: 41, crit: 27, dodge: 22 },
+      exp: 10800,
+      gold: [138, 264],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_heartwood", chance: 0.06, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.039, qty: [1, 1] }
+      ]
+    },
+    nifl_boss_garm: {
+      name: "Гарм",
+      range: 1, move: { name: "Паща Гарма", mult: 1.7, chance: 0.25 },
+      verb: "рве закривавленою пащею",
+      level: 60,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "melee",
+      stats: { hp: 23331, mp: 2149, attack: 1649, magic: 1071, defense: 181, magicDefense: 181, speed: 45, crit: 26, dodge: 24, blockPhys: 18, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Виття Гарма", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Зірваний ланцюг", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Кров на грудях", mp: 70, healPct: 0.1 }
+      ],
+      exp: 54000,
+      gold: [684, 1320],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.3, qty: [1, 2] },
+        { id: "ygg_heartwood", chance: 0.35, qty: [1, 3] },
+        { id: "mimir_water", chance: 0.08, qty: [1, 1] },
+        { id: "star_spark", chance: 0.06, qty: [1, 1] }
+      ]
+    },
+    nifl_draugr_gatekeeper: {
+      name: "Драуг-брамник",
+      humanoid: true,
+      weapons: ["axe"],
+      range: 1, move: { name: "Удар брами", mult: 1.5, chance: 0.25 },
+      verb: "рубає важкою сокирою",
+      level: 60,
+      role: "tank",
+      stats: { hp: 22701, mp: 0, attack: 2012, defense: 249, magicDefense: 205, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 10800,
+      gold: [138, 264],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_bark", chance: 0.078, qty: [1, 1] },
+        { id: "ygg_heartwood", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    nifl_bone_knight: {
+      name: "Кістяний лицар",
+      humanoid: true,
+      weapons: ["sword"],
+      range: 1, move: { name: "Кістяний клинок", mult: 1.55, chance: 0.25 },
+      verb: "рубає мечем",
+      level: 60,
+      role: "melee",
+      stats: { hp: 13329, mp: 0, attack: 2539, defense: 131, magicDefense: 155, speed: 41, crit: 27, dodge: 22 },
+      exp: 10800,
+      gold: [138, 264],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_bark", chance: 0.06, qty: [1, 1] },
+        { id: "ygg_heartwood", chance: 0.039, qty: [1, 1] }
+      ]
+    },
+    nifl_boss_gatekeeper_of_helgrind: {
+      name: "Брамник Хельгринду",
+      range: 1, move: { name: "Залізна брама", mult: 1.7, chance: 0.25 },
+      verb: "трощить залізною рукою",
+      level: 60,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "tank",
+      stats: { hp: 34383, mp: 2038, attack: 1366, magic: 1044, defense: 336, magicDefense: 234, speed: 28, crit: 17, dodge: 12, blockPhys: 17, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Зачинена брама", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Ключ мерців", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Кам'яна шкура", mp: 70, healPct: 0.1 }
+      ],
+      exp: 54000,
+      gold: [684, 1320],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.3, qty: [1, 2] },
+        { id: "ygg_bark", chance: 0.35, qty: [1, 3] },
+        { id: "ygg_heartwood", chance: 0.3, qty: [1, 2] },
+        { id: "mimir_water", chance: 0.08, qty: [1, 1] },
+        { id: "star_spark", chance: 0.06, qty: [1, 1] }
+      ]
+    },
+    nifl_dark_soul_swordsman: {
+      name: "Темна душа — мечник",
+      humanoid: true,
+      weapons: ["sword"],
+      range: 1, move: { name: "Клинок зради", mult: 1.55, chance: 0.25 },
+      verb: "б'є в спину",
+      level: 60,
+      role: "melee",
+      stats: { hp: 13329, mp: 0, attack: 2539, defense: 131, magicDefense: 155, speed: 41, crit: 27, dodge: 22 },
+      exp: 10800,
+      gold: [138, 264],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_root", chance: 0.078, qty: [1, 1] },
+        { id: "ygg_heartwood", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    nifl_dark_soul_archer: {
+      name: "Темна душа — лучник",
+      humanoid: true,
+      weapons: ["bow"],
+      range: 3, move: { name: "Отруйна стріла", mult: 1.55, chance: 0.25 },
+      verb: "стріляє отруєною стрілою в",
+      level: 60,
+      role: "ranged",
+      stats: { hp: 12566, mp: 0, attack: 2789, defense: 102, magicDefense: 134, speed: 37, crit: 29, dodge: 23 },
+      exp: 10800,
+      gold: [138, 264],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_root", chance: 0.06, qty: [1, 1] },
+        { id: "ygg_heartwood", chance: 0.039, qty: [1, 1] }
+      ]
+    },
+    nifl_boss_the_first_traitor: {
+      name: "Перший Зрадник",
+      range: 1, move: { name: "Порушена клятва", mult: 1.7, chance: 0.25 },
+      verb: "зраджує й б'є",
+      level: 60,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "melee",
+      stats: { hp: 23331, mp: 2149, attack: 1649, magic: 1071, defense: 181, magicDefense: 181, speed: 45, crit: 26, dodge: 24, blockPhys: 18, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Отрута з даху", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Ніж у спину", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Чуже життя", mp: 70, healPct: 0.1 }
+      ],
+      exp: 54000,
+      gold: [684, 1320],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.3, qty: [1, 2] },
+        { id: "ygg_root", chance: 0.35, qty: [1, 3] },
+        { id: "ygg_heartwood", chance: 0.3, qty: [1, 2] },
+        { id: "mimir_water", chance: 0.08, qty: [1, 1] },
+        { id: "star_spark", chance: 0.06, qty: [1, 1] }
+      ]
+    },
+    nifl_captive_einherjar: {
+      name: "Полонений ейнгерій",
+      humanoid: true,
+      weapons: ["sword","axe"],
+      range: 1, move: { name: "Удар полоненого", mult: 1.55, chance: 0.25 },
+      verb: "б'є без волі",
+      level: 60,
+      role: "melee",
+      stats: { hp: 13329, mp: 0, attack: 2539, defense: 131, magicDefense: 155, speed: 41, crit: 27, dodge: 22 },
+      exp: 10800,
+      gold: [138, 264],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_heartwood", chance: 0.078, qty: [1, 1] },
+        { id: "ygg_root", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    nifl_servant_of_hel: {
+      name: "Слуга Хелли",
+      humanoid: true,
+      weapons: ["staff"],
+      range: 2, move: { name: "Удар жезлом", mult: 1.55, chance: 0.25 },
+      verb: "б'є жезлом",
+      level: 60,
+      role: "healer",
+      stats: { hp: 10388, mp: 2587, attack: 871, magic: 1284, defense: 112, magicDefense: 208, speed: 33, crit: 11, blockMag: 17 },
+      spell: { name: "Молитва Хеллі", mp: 30, mult: 1.5, chance: 0.4 },
+      exp: 10800,
+      gold: [138, 264],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_heartwood", chance: 0.06, qty: [1, 1] },
+        { id: "ygg_root", chance: 0.039, qty: [1, 1] }
+      ]
+    },
+    nifl_boss_ganglati_and_ganglot: {
+      name: "Ґанґлаті й Ґанґлот",
+      range: 3, move: { name: "Повільна смерть", mult: 1.7, chance: 0.25 },
+      verb: "повільно душать",
+      level: 60,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 28114, mp: 2774, attack: 1024, magic: 1208, defense: 146, magicDefense: 246, speed: 34, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Прихід Хелли", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Застиглий час", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Служба мертвим", mp: 70, healPct: 0.1 }
+      ],
+      exp: 54000,
+      gold: [684, 1320],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.3, qty: [1, 2] },
+        { id: "ygg_heartwood", chance: 0.35, qty: [1, 3] },
+        { id: "ygg_root", chance: 0.3, qty: [1, 2] },
+        { id: "mimir_water", chance: 0.08, qty: [1, 1] },
+        { id: "star_spark", chance: 0.06, qty: [1, 1] }
+      ]
+    },
+    nifl_hel_guard_knight: {
+      name: "Хельська гвардія — лицар",
+      humanoid: true,
+      weapons: ["sword"],
+      range: 1, move: { name: "Клинок гвардії", mult: 1.5, chance: 0.25 },
+      verb: "рубає мечем гвардії",
+      level: 60,
+      role: "tank",
+      stats: { hp: 22701, mp: 0, attack: 2012, defense: 249, magicDefense: 205, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 10800,
+      gold: [138, 264],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_heartwood", chance: 0.065, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.05, qty: [1, 1] }
+      ]
+    },
+    nifl_hel_guard_witch: {
+      name: "Хельська гвардія — чаклунка",
+      humanoid: true,
+      weapons: ["staff"],
+      range: 3, move: { name: "Удар посохом", mult: 1.55, chance: 0.25 },
+      verb: "б'є посохом",
+      level: 60,
+      role: "caster",
+      stats: { hp: 12308, mp: 1643, attack: 1436, magic: 1905, defense: 126, magicDefense: 244, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Подих Хельгейму", mp: 28, mult: 1.5, chance: 0.4 },
+      exp: 10800,
+      gold: [138, 264],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "ygg_heartwood", chance: 0.05, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.065, qty: [1, 1] }
+      ]
+    },
+    nifl_boss_hel_final_form: {
+      name: "Хелла (фінальна форма)",
+      range: 3, move: { name: "Дотик смерті", mult: 1.9, chance: 0.25 },
+      verb: "торкається смертю",
+      level: 65,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 147747, mp: 2916, attack: 4704, magic: 5548, defense: 155, magicDefense: 261, speed: 34, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Жнива дев'яти світів", mp: 60, mult: 2.9 },
+        { kind: "stun", name: "Половина мерця", mp: 45, mult: 1.4 },
+        { kind: "heal", name: "Трон Хельгейму", mp: 70, healPct: 0.12 }
+      ],
+      exp: 92950,
+      gold: [1112, 2145],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "ygg_sap", chance: 0.5, qty: [1, 2] },
+        { id: "ygg_heartwood", chance: 0.35, qty: [1, 3] },
+        { id: "mimir_water", chance: 0.35, qty: [1, 2] },
+        { id: "star_spark", chance: 0.3, qty: [1, 2] }
+      ]
     }
   };
 
@@ -4730,7 +6187,181 @@ const ENEMIES = {
       description: "Рівнина в кратері вулкана, лава стікає стінами з усіх боків. На чорному троні сидить Сурт, а поруч у камінь встромлено палаючий меч. Хелла обіцяла йому світ — і він чекає лише сигналу.",
       enemies: ["musp_son_of_muspel", "musp_fire_drake", "musp_surtrs_guard", "musp_boss_surtr"],
       dungeon: "musp_volcano_heart",
+      edge: "rocks",
+      // Біфрест: після першої перемоги над Суртом — шлях в Асгард (світ 8)
+      portal: { to: "asg_gate", world: 8, title: "Біфрест",
+                text: "Сурт упав, а його полум'яний меч так і не торкнувся моста. Над кратером, крізь дим, проступає райдуга — Біфрест цілий, і він веде вгору, в Асгард, де вже стоїть армія Хелли.",
+                button: "Піднятися Біфростом" }
+    },
+
+    // ---------- АСГАРД (region: "asg", світ 8) — Біфростом з кратера Сурта ----------
+    // Відкривається після першої перемоги над Суртом (save.bossKills.musp_boss_surtr). Мапа — assets/images/map/map_asgard.webp.
+    // Дорога одна: Хімінбйорг → Фенсалір → Брейдаблік → Бількірнір → Валгалла → (брама фортеці) → Вінґольв → Гладсгейм → площа → Глідскьяльв.
+    asg_gate: {
+      name: "Кінець Біфросту", type: "portal", region: "asg", typeLabel: "Райдужний міст",   // підпис на мапі (page-maps.js)
+      description: "Райдужний міст Біфрест виходить із хмар просто до стін Асгарду. Попереду — золоті дахи й мури, а вдалині вже здіймається стовп зеленого диму.",
+      portal: { to: "musp_surtr", title: "Біфрест", text: "Міст веде назад, у кратер вулкана, до Трону Сурта в Муспельгеймі.", button: "Повернутися в Муспельгейм" }
+    },
+    asg_himinbjorg: {
+      name: "Хімінбйорг", type: "combat", region: "asg", minLevel: 50,
+      description: "Кінець Біфросту біля сторожової фортеці Хеймдалля. Третина мурів розбита й горить зеленим вогнем, на камінні лежить розколотий ріг Гьяллархорн, а з півночі повзе іній — це йде Хрюм.",
+      enemies: ["asg_draugr_stormtrooper", "asg_hels_rider", "asg_dead_man_of_naglfar", "asg_boss_hrym"],
+      dungeon: "asg_himinbjorg_watch",
       edge: "rocks"
+    },
+    asg_fensalir: {
+      name: "Фенсалір", type: "combat", region: "asg", minLevel: 50,
+      description: "Сухий луг серед болотяних озер біля туманного чертогу Фрігг. Очерет шепоче, а по воді розповзається зелена гниль: Ангрбода, мати вовків, прийшла сюди з благословення Хелли.",
+      enemies: ["asg_bog_corpse", "asg_seidkona_witch", "asg_bog_viper", "asg_boss_angrboda_hel_empowered_form"],
+      dungeon: "asg_fensalir_halls",
+      edge: "water"
+    },
+    asg_breidablik: {
+      name: "Брейдаблік", type: "combat", region: "asg", minLevel: 50,
+      description: "Колись сяйливий луг Бальдра в білих квітах. Тепер його розорали вовчі кігті, а чисте світло тьмяніє в диму. Фенрір вирвався з пут і веде сюди свою зграю.",
+      enemies: ["asg_fenrirs_wolf", "asg_skoll", "asg_hati", "asg_boss_fenrir"],
+      dungeon: "asg_breidablik_meadow",
+      edge: "trees"
+    },
+    asg_bilskirnir: {
+      name: "Бількірнір", type: "combat", region: "asg", minLevel: 50,
+      description: "Кам'яне подвір'я перед величезним чертогом Тора, над ним грозові хмари й блискавки. Посеред двору — уламок точила Хрунґніра, і з тріщин у камені повзе зелена гниль.",
+      enemies: ["asg_utgard_giant", "asg_stone_troll", "asg_storm_spirit", "asg_boss_hrungnir_hel_empowered_form"],
+      dungeon: "asg_bilskirnir_hall",
+      edge: "walls"
+    },
+    asg_valhalla: {
+      name: "Валгалла", type: "combat", region: "asg", minLevel: 50,
+      description: "Подвір'я перед чертогом, вкритим золотими щитами, а крокви в ньому — списи. Щити й списи розкидано боєм, на розбитій стіні горить зелений вогонь. Ейнгерії, що мали стати за Одіна, тепер служать Хеллі.",
+      enemies: ["asg_enthralled_einherjar", "asg_dead_valkyrie", "asg_shadow_raven", "asg_boss_hlokk"],
+      dungeon: "asg_valhalla_shields",
+      edge: "walls"
+    },
+    asg_vingolf: {
+      name: "Вінґольв", type: "combat", region: "asg", minLevel: 50,
+      description: "Сад перед чертогом богинь за брамою Великої фортеці. Білі квіти в'януть, крізь сад тягнуться жарини й зелений дим. Гулльвейг, яку тричі палили й тричі вона поверталась, повернулася вчетверте — з Хеллою.",
+      enemies: ["asg_dark_soul_envoy", "asg_dark_soul_archer", "asg_dark_priestess", "asg_boss_gullveig_hel_empowered_form"],
+      dungeon: "asg_vingolf_garden",
+      edge: "trees"
+    },
+    asg_gladsheim: {
+      name: "Гладсгейм", type: "combat", region: "asg", minLevel: 50,
+      description: "Кругле подвір'я, оточене дванадцятьма високими тронами богів. Золоте світло тьмяніє — підлогою повзе темрява. На одному з тронів хтось сидить, хоч там нікого немає: це Тінь Локі.",
+      enemies: ["asg_draugr_jarl", "asg_dark_soul", "asg_bone_skald", "asg_boss_shadow_of_loki"],
+      dungeon: "asg_gladsheim_thrones",
+      edge: "walls"
+    },
+    asg_square: {
+      name: "Головна площа Асгарду", type: "combat", region: "asg", minLevel: 50,
+      description: "Найбільша площа міста, вимощена білим каменем. Між колонами стоять чорні прапори армії Хелли, у жаровнях горить зелений вогонь. Тут Утгарда-Локі, володар ілюзій, збирає еліту Хелли для останнього штурму.",
+      enemies: ["asg_hels_elite_swordsman", "asg_hels_elite_shieldbearer", "asg_hels_elite_sorcerer", "asg_boss_utgarda_loki_hel_empowered_form"],
+      dungeon: "asg_square_heart",
+      edge: "walls"
+    },
+    asg_hlidskjalf: {
+      name: "Глідскьяльв", type: "combat", region: "asg", minLevel: 50,
+      description: "Мармуровий майданчик на вершині найвищої вежі. На краю — престол Одіна, з якого видно всі дев'ять світів, поруч дві темні статуї воронів, а в небі крутиться зелена буря. На престолі сидить Хелла.",
+      enemies: ["asg_hels_royal_guard_swordsman", "asg_hels_royal_guard_witch", "asg_hels_guard_beast", "asg_boss_hel_on_odins_throne"],
+      dungeon: "asg_hlidskjalf_throne",
+      edge: "walls",
+      // Портал Хелли: після першої перемоги над нею — шлях у Ніфльгейм (світ 9)
+      portal: { to: "nifl_gate", world: 9, title: "Портал Хелли",
+                text: "Там, де впала з престолу Хелла, у повітрі досі висить зелено-чорний портал. Звідти тягне холодом і гниллю — шлях у Ніфльгейм, а за ним у Хельгейм.",
+                button: "Ступити в портал" }
+    },
+
+    // ---------- НІФЛЬГЕЙМ І ХЕЛЬГЕЙМ (region: "nifl", світ 9) — порталом Хелли з Глідскьяльва ----------
+    // Відкривається після першої перемоги над Хеллою в Глідскьяльві (save.bossKills.asg_boss_hel_on_odins_throne).
+    // Мапа — assets/images/map/map_niflheim_helheim.webp. Дорога одна: Туманна межа → … → Ельвюднір → Трон Хелли.
+    // Перемога над Хеллою на троні (GAME_END_BOSS) завершує гру: епілог і титри (game-common.js → showEnding).
+    nifl_gate: {
+      name: "Портал Хелли", type: "portal", region: "nifl", typeLabel: "Зелено-чорний портал",
+      description: "Зелено-чорний портал, яким утекла Хелла. За ним — вічний туман Ніфльгейму, крижані ріки й дорога вниз, у Хельгейм.",
+      portal: { to: "asg_hlidskjalf", title: "Портал Хелли", text: "Портал веде назад в Асгард, на вершину Глідскьяльва.", button: "Повернутися в Асгард" }
+    },
+    nifl_border: {
+      name: "Туманна межа", type: "combat", region: "nifl", minLevel: 50,
+      description: "Портал Хелли викидає на крижаний уступ, де кінчається світ живих. Туман тут густий, як молоко, і в ньому ходять примари, а вовки чують тепло живого за милю.",
+      enemies: ["nifl_mist_wraith", "nifl_ice_wolf", "nifl_boss_warden_of_the_mist"],
+      dungeon: "nifl_border_mist",
+      edge: "rocks"
+    },
+    nifl_elivagar: {
+      name: "Елівагар", type: "combat", region: "nifl", minLevel: 50,
+      description: "Крижані ріки, що течуть з Ніфльгейму від початку часів. Їхня вода отруйна й холодна, а на берегах сидять рімтурси — інеєві велетні, нащадки Іміра.",
+      enemies: ["nifl_rime_thurs", "nifl_ice_serpent", "nifl_boss_bergelmir"],
+      dungeon: "nifl_elivagar_rivers",
+      edge: "water"
+    },
+    nifl_hvergelmir: {
+      name: "Ґвергельмір", type: "combat", region: "nifl", minLevel: 50,
+      description: "Кипуче джерело під коренем Іггдрасиля, з якого витікають усі ріки світу. Над водою клубочиться пара, і в ній живуть духи, а змії гризуть корінь знизу.",
+      enemies: ["nifl_steam_spirit", "nifl_water_serpentine", "nifl_boss_grabakr"],
+      dungeon: "nifl_hvergelmir_spring",
+      edge: "water"
+    },
+    nifl_roots: {
+      name: "Корені Дерева", type: "combat", region: "nifl", minLevel: 50,
+      description: "Тут із криги виходить корінь Іггдрасиля — товщий за будь-яку фортецю. Кора гниє, з ран тече золотий сік, а з гнилі проростають паростки Хелли.",
+      enemies: ["nifl_rotten_sprout", "nifl_root_worm", "nifl_boss_goinn_and_moinn"],
+      dungeon: "nifl_roots_deep",
+      edge: "trees"
+    },
+    nifl_nidafjoll: {
+      name: "Нідафйолл", type: "combat", region: "nifl", minLevel: 50,
+      description: "Темні гори на півночі, де ніколи не світає. Над скелями кружляють нічні гарпії, а в ущелинах стоять кам'яні драуги — мерці, що забули, як лягти.",
+      enemies: ["nifl_night_harpy", "nifl_stone_draugr", "nifl_boss_svafnir_and_ofnir"],
+      dungeon: "nifl_nidafjoll_peaks",
+      edge: "rocks"
+    },
+    nifl_nidhogg: {
+      name: "Гніздо Нідгьоґа", type: "combat", region: "nifl", minLevel: 50,
+      description: "Кістки й луска завбільшки з щит, а під ними — гніздо. Тут Нідгьоґ гризе корінь Дерева й трупи зрадників, а його виводок підростає на тому ж.",
+      enemies: ["nifl_dragon_hatchling", "nifl_corpse_eater", "nifl_boss_nidhogg"],
+      dungeon: "nifl_nidhogg_nest",
+      edge: "rocks"
+    },
+    nifl_gjallarbru: {
+      name: "Міст Ґйаллабру", type: "combat", region: "nifl", minLevel: 50,
+      description: "Золотий міст над рікою Ґйолль, яким мертві йдуть у Хельгейм. Під мостом пливуть кригою утоплені душі, а на мосту стоять вартові: живим тут не раді.",
+      enemies: ["nifl_drowned_soul", "nifl_bridge_warden", "nifl_boss_modgud"],
+      dungeon: "nifl_gjallarbru_bridge",
+      edge: "water"
+    },
+    nifl_gnipahellir: {
+      name: "Гніпахеллір", type: "combat", region: "nifl", minLevel: 50,
+      description: "Печера біля брами Хельгейму, з якої віє зеленим вогнем. Біля входу висять розірвані ланцюги, а довкола нишпорять пекельні пси й кістяні гончаки.",
+      enemies: ["nifl_hellhound", "nifl_bone_hound", "nifl_boss_garm"],
+      dungeon: "nifl_gnipahellir_cave",
+      edge: "rocks"
+    },
+    nifl_helgrind: {
+      name: "Хельгринд", type: "combat", region: "nifl", minLevel: 50,
+      description: "Брама Хельгейму — чорне залізо між двома кам'яними мерцями. Мертві проходять крізь неї й не повертаються, а драуги-брамники стоять тут від першої смерті.",
+      enemies: ["nifl_draugr_gatekeeper", "nifl_bone_knight", "nifl_boss_gatekeeper_of_helgrind"],
+      dungeon: "nifl_helgrind_gate",
+      edge: "walls"
+    },
+    nifl_nastrond: {
+      name: "Наструнд", type: "combat", region: "nifl", minLevel: 50,
+      description: "Берег мерців, далеко від сонця. Двері тут дивляться на північ, з даху капає отрута, а по березі блукають темні душі зрадників і клятвопорушників.",
+      enemies: ["nifl_dark_soul_swordsman", "nifl_dark_soul_archer", "nifl_boss_the_first_traitor"],
+      dungeon: "nifl_nastrond_shore",
+      edge: "water"
+    },
+    nifl_eljudnir: {
+      name: "Ельвюднір", type: "combat", region: "nifl", minLevel: 50,
+      description: "Чертог Хелли з чорними стягами й зеленим полум'ям у вікнах. Тут полонені ейнгерії прислуговують мертвим, а слуги Хелли стережуть кожні двері.",
+      enemies: ["nifl_captive_einherjar", "nifl_servant_of_hel", "nifl_boss_ganglati_and_ganglot"],
+      dungeon: "nifl_eljudnir_hall",
+      edge: "walls"
+    },
+    nifl_throne: {
+      name: "Трон Хелли", type: "combat", region: "nifl", minLevel: 50,
+      description: "Серце Хельгейму: мертвий сад із сухим деревом, кістками велетня й блідими квітами, що ростуть без сонця. Тут Хелла зібрала останню варту — і тут кінчається її шлях.",
+      enemies: ["nifl_hel_guard_knight", "nifl_hel_guard_witch", "nifl_boss_hel_final_form"],
+      dungeon: "nifl_throne_hall",
+      edge: "walls"
     }
   };
   const DEFAULT_LOCATION = "home";
@@ -4792,6 +6423,18 @@ const ENEMIES = {
                  description: "Обсидіанова копальня біля лавових рік. Залізна руда тут спечена в брили, а гірський кришталь виростає з жару — тільки встигай вибирати, поки з лави не вилізли її господарі." },
       sawmill: { minLevel: 45, image: "sawmill_musp", yields: ["ironwood"],
                  description: "Обгорілий гай залізного дерева на краю попелястих рівнин. Вогонь його не бере — тільки чорнить кору, а вогняні гончаки вважають ці стовбури своїми." }
+    },
+    asg: {
+      mine:    { minLevel: 50, image: "mine_asgard", yields: ["celestial_ore", "bifrost_shard"],
+                 description: "Небесна копальня на краю хмар під мурами Асгарду. Небесна руда тут виходить просто на скелі, а з тріщин світять уламки Біфросту — тільки армія Хелли вже знає, де копати." },
+      sawmill: { minLevel: 50, image: "sawmill_asgard", yields: ["white_ash", "eagle_feather"],
+                 description: "Гай білого ясеня на схилі під Брейдабліком. Деревина тут світла й легка, як пір'я, а орли з вершин скидають на землю свої пера — та вовки Фенріра вже нишпорять між стовбурами." }
+    },
+    nifl: {
+      mine:    { minLevel: 50, image: "mine_hel", yields: ["ygg_heartwood", "star_spark"],
+                 description: "Копальня в кризі під коренем Дерева. Тут із льоду вибивають окам'янілу серцевину Іггдрасиля, а в темряві часом блищать зоряні іскри — та туманні примари не люблять стуку кайла." },
+      sawmill: { minLevel: 50, image: "sawmill_hel", yields: ["ygg_bark", "ygg_root"],
+                 description: "Мертвий гай біля коріння, де відмерлі пагони Іггдрасиля стоять, як дерева. Кору й коріння тут можна брати, не ранячи Дерева, — якщо встигнеш до кореневих червів." }
     }
   };
   const SITE_NAMES = { mine: "Шахта", sawmill: "Лісопилка" };
@@ -5046,6 +6689,134 @@ const ENEMIES = {
       minLevel: 50,   // фінальний бій світу 7 — з 50 рівня
       edge: "rocks",
       description: "У самому серці вулкана Сурт піднімається з трону. Якщо він дійде до Біфросту, міст згорить — і Асгард залишиться без захисту."
+    },
+    // Данжі Асгарду (світ 8) — звуться як локації (рішення 2026-11-21)
+    asg_himinbjorg_watch: {
+      name: "Хімінбйорг", explore: "Обстеження варти", location: "asg_himinbjorg",
+      key: "key_asg_himinbjorg", keyChance: 0.01, boss: "asg_boss_hrym", pool: ["asg_draugr_stormtrooper", "asg_hels_rider", "asg_dead_man_of_naglfar"],
+      edge: "rocks",
+      description: "У підвалах сторожової вежі Хрюм, стерновий Нагльфара, зводить крижаний міст для армії мерців. Поки він тут — Біфрост належить Хеллі."
+    },
+    asg_fensalir_halls: {
+      name: "Фенсалір", explore: "Обстеження боліт", location: "asg_fensalir",
+      key: "key_asg_fensalir", keyChance: 0.01, boss: "asg_boss_angrboda_hel_empowered_form", pool: ["asg_bog_corpse", "asg_seidkona_witch", "asg_bog_viper"],
+      edge: "water",
+      description: "У залитих залах Фрігг Ангрбода пряде нитку долі навиворіт. Сила Хелли зробила її вдвічі страшнішою."
+    },
+    asg_breidablik_meadow: {
+      name: "Брейдаблік", explore: "Обстеження лугу", location: "asg_breidablik",
+      key: "key_asg_breidablik", keyChance: 0.01, boss: "asg_boss_fenrir", pool: ["asg_fenrirs_wolf", "asg_skoll", "asg_hati"],
+      edge: "trees",
+      description: "Посеред лугу лежать порвані пута Ґлейпнір. Фенрір чекає поруч — і пам'ятає кожного бога, що сміявся з нього."
+    },
+    asg_bilskirnir_hall: {
+      name: "Бількірнір", explore: "Обстеження подвір'я", location: "asg_bilskirnir",
+      key: "key_asg_bilskirnir", keyChance: 0.01, boss: "asg_boss_hrungnir_hel_empowered_form", pool: ["asg_utgard_giant", "asg_stone_troll", "asg_storm_spirit"],
+      edge: "walls",
+      description: "Тор пішов битися на Біфрост, і в його чертог вліз Хрунґнір — кам'яне серце, кам'яна голова, а тепер ще й сила Хелли."
+    },
+    asg_valhalla_shields: {
+      name: "Валгалла", explore: "Обстеження подвір'я", location: "asg_valhalla",
+      key: "key_asg_valhalla", keyChance: 0.01, boss: "asg_boss_hlokk", pool: ["asg_enthralled_einherjar", "asg_dead_valkyrie", "asg_shadow_raven"],
+      edge: "walls",
+      description: "У залі бенкетів, де ейнгерії пили мед, валькірія Хльок збирає мертвих не для Одіна, а для Хелли."
+    },
+    asg_vingolf_garden: {
+      name: "Вінґольв", explore: "Обстеження саду", location: "asg_vingolf",
+      key: "key_asg_vingolf", keyChance: 0.01, boss: "asg_boss_gullveig_hel_empowered_form", pool: ["asg_dark_soul_envoy", "asg_dark_soul_archer", "asg_dark_priestess"],
+      edge: "trees",
+      description: "У глибині саду Гулльвейг роздмухує жар, у якому її колись палили. Тепер горять не вона — горять квіти богинь."
+    },
+    asg_gladsheim_thrones: {
+      name: "Гладсгейм", explore: "Обстеження тронів", location: "asg_gladsheim",
+      key: "key_asg_gladsheim", keyChance: 0.01, boss: "asg_boss_shadow_of_loki", pool: ["asg_draugr_jarl", "asg_dark_soul", "asg_bone_skald"],
+      edge: "walls",
+      description: "Тінь Локі сміється з порожніх тронів. Справжній Локі ще скутий, але його тінь давно вільна — і вона служить Хеллі, своїй доньці."
+    },
+    asg_square_heart: {
+      name: "Головна площа Асгарду", explore: "Обстеження площі", location: "asg_square",
+      key: "key_asg_square", keyChance: 0.01, boss: "asg_boss_utgarda_loki_hel_empowered_form", pool: ["asg_hels_elite_swordsman", "asg_hels_elite_shieldbearer", "asg_hels_elite_sorcerer"],
+      edge: "walls",
+      description: "Посеред площі Утгарда-Локі показує богам їхню поразку — так правдиво, що декотрі вже повірили. Сила Хелли зробила його ілюзії гострими, як сталь."
+    },
+    asg_hlidskjalf_throne: {
+      name: "Глідскьяльв", explore: "Обстеження вежі", location: "asg_hlidskjalf",
+      key: "key_asg_hlidskjalf", keyChance: 0.01, boss: "asg_boss_hel_on_odins_throne", pool: ["asg_hels_royal_guard_swordsman", "asg_hels_royal_guard_witch", "asg_hels_guard_beast"],
+      edge: "walls",
+      description: "Хелла сидить на престолі Одіна й дивиться на всі світи разом. Її варта стоїть на сходах, а за її спиною в небі вже відкривається зелено-чорний портал."
+    },
+    // Данжі Ніфльгейму й Хельгейму (світ 9) — звуться як локації (рішення 2026-11-21)
+    nifl_border_mist: {
+      name: "Туманна межа", explore: "Обстеження мряки", location: "nifl_border",
+      key: "key_nifl_border", keyChance: 0.01, boss: "nifl_boss_warden_of_the_mist", pool: ["nifl_mist_wraith", "nifl_ice_wolf"],
+      edge: "rocks",
+      description: "Посеред туману стоїть Вартовий Мряки — той, хто вирішує, кого пропустити вниз, до Хелли. Живих він не пропускає ніколи."
+    },
+    nifl_elivagar_rivers: {
+      name: "Елівагар", explore: "Обстеження рік", location: "nifl_elivagar",
+      key: "key_nifl_elivagar", keyChance: 0.01, boss: "nifl_boss_bergelmir", pool: ["nifl_rime_thurs", "nifl_ice_serpent"],
+      edge: "water",
+      description: "Бергельмір — єдиний інеєвий велетень, що пережив потоп крові Іміра. Він пам'ятає, як боги вбили його діда, і чекав саме цієї війни."
+    },
+    nifl_hvergelmir_spring: {
+      name: "Ґвергельмір", explore: "Обстеження джерела", location: "nifl_hvergelmir",
+      key: "key_nifl_hvergelmir", keyChance: 0.01, boss: "nifl_boss_grabakr", pool: ["nifl_steam_spirit", "nifl_water_serpentine"],
+      edge: "water",
+      description: "На дні джерела лежить Ґрабак — змій, що гризе корінь Дерева разом із Нідгьоґом. Хелла пообіцяла йому, що Дерево скоро впаде."
+    },
+    nifl_roots_deep: {
+      name: "Корені Дерева", explore: "Обстеження коріння", location: "nifl_roots",
+      key: "key_nifl_roots", keyChance: 0.01, boss: "nifl_boss_goinn_and_moinn", pool: ["nifl_rotten_sprout", "nifl_root_worm"],
+      edge: "trees",
+      description: "У глибині коріння двоє зміїв, Ґоїн і Моїн, прогризають хід до самого серця Дерева. Ще трохи — і Іггдрасиль захитається."
+    },
+    nifl_nidafjoll_peaks: {
+      name: "Нідафйолл", explore: "Обстеження гір", location: "nifl_nidafjoll",
+      key: "key_nifl_nidafjoll", keyChance: 0.01, boss: "nifl_boss_svafnir_and_ofnir", pool: ["nifl_night_harpy", "nifl_stone_draugr"],
+      edge: "rocks",
+      description: "У найглибшій ущелині ховаються Свавнір і Офнір — змії-чаклуни, що шепочуть прокляття самому Дереву."
+    },
+    nifl_nidhogg_nest: {
+      name: "Гніздо Нідгьоґа", explore: "Обстеження гнізда", location: "nifl_nidhogg",
+      key: "key_nifl_nidhogg", keyChance: 0.01, boss: "nifl_boss_nidhogg", pool: ["nifl_dragon_hatchling", "nifl_corpse_eater"],
+      edge: "rocks",
+      description: "Нідгьоґ, дракон-трупоїд, підняв голову від кореня. Він давно чекав кінця світу — і не хоче, щоб хтось його зупинив."
+    },
+    nifl_gjallarbru_bridge: {
+      name: "Міст Ґйаллабру", explore: "Обстеження мосту", location: "nifl_gjallarbru",
+      key: "key_nifl_gjallarbru", keyChance: 0.01, boss: "nifl_boss_modgud", pool: ["nifl_drowned_soul", "nifl_bridge_warden"],
+      edge: "water",
+      description: "Модгуд стереже міст, скільки існує смерть. Вона питає кожного ім'я — і для живого в неї є лише одна відповідь."
+    },
+    nifl_gnipahellir_cave: {
+      name: "Гніпахеллір", explore: "Обстеження печери", location: "nifl_gnipahellir",
+      key: "key_nifl_gnipahellir", keyChance: 0.01, boss: "nifl_boss_garm", pool: ["nifl_hellhound", "nifl_bone_hound"],
+      edge: "rocks",
+      description: "Гарм, пес Хелли, зірвався з ланцюга. Його виття чути на всі дев'ять світів — і він знає запах кожного, хто ступив у Хельгейм живим."
+    },
+    nifl_helgrind_gate: {
+      name: "Хельгринд", explore: "Обстеження брами", location: "nifl_helgrind",
+      key: "key_nifl_helgrind", keyChance: 0.01, boss: "nifl_boss_gatekeeper_of_helgrind", pool: ["nifl_draugr_gatekeeper", "nifl_bone_knight"],
+      edge: "walls",
+      description: "Брамник Хельгринду тримає ключ від брами в кістяній руці. Щоб пройти до Хелли, доведеться забрати його силою."
+    },
+    nifl_nastrond_shore: {
+      name: "Наструнд", explore: "Обстеження берега", location: "nifl_nastrond",
+      key: "key_nifl_nastrond", keyChance: 0.01, boss: "nifl_boss_the_first_traitor", pool: ["nifl_dark_soul_swordsman", "nifl_dark_soul_archer"],
+      edge: "water",
+      description: "Тут чекає Перший Зрадник — той, хто першим порушив клятву в дев'яти світах. Хелла зробила його начальником над усіма, хто прийшов слідом."
+    },
+    nifl_eljudnir_hall: {
+      name: "Ельвюднір", explore: "Обстеження чертогу", location: "nifl_eljudnir",
+      key: "key_nifl_eljudnir", keyChance: 0.01, boss: "nifl_boss_ganglati_and_ganglot", pool: ["nifl_captive_einherjar", "nifl_servant_of_hel"],
+      edge: "walls",
+      description: "Ґанґлаті й Ґанґлот, слуга й служниця Хелли, такі повільні, що здаються нерухомими. Та коли гість чужий — вони стають швидкими."
+    },
+    nifl_throne_hall: {
+      name: "Трон Хелли", explore: "Обстеження трону", location: "nifl_throne",
+      key: "key_nifl_throne", keyChance: 0.01, boss: "nifl_boss_hel_final_form", pool: ["nifl_hel_guard_knight", "nifl_hel_guard_witch"],
+      edge: "walls",
+      description: "Хелла більше не тікає. На своєму троні, у своєму світі, вона сильніша, ніж будь-де — половина живої, половина мертвої, володарка всіх, хто помер не в бою."
     }
   };
 
@@ -5171,7 +6942,30 @@ const ENEMIES = {
     "musp_fire_knight", "musp_flame_mage", "musp_obsidian_sentinel", "musp_boss_fortress_commander",
     "musp_flame_priestess", "musp_fire_bird", "musp_chest_guardian", "musp_boss_sinmara",
     "musp_steam_spirit", "musp_frost_shade", "musp_chaos_spirit", "musp_boss_echo_of_ymir",
-    "musp_son_of_muspel", "musp_fire_drake", "musp_surtrs_guard", "musp_boss_surtr"
+    "musp_son_of_muspel", "musp_fire_drake", "musp_surtrs_guard", "musp_boss_surtr",
+    // Асгард (світ 8)
+    "asg_draugr_stormtrooper", "asg_hels_rider", "asg_dead_man_of_naglfar", "asg_boss_hrym",
+    "asg_bog_corpse", "asg_seidkona_witch", "asg_bog_viper", "asg_boss_angrboda_hel_empowered_form",
+    "asg_fenrirs_wolf", "asg_skoll", "asg_hati", "asg_boss_fenrir",
+    "asg_utgard_giant", "asg_stone_troll", "asg_storm_spirit", "asg_boss_hrungnir_hel_empowered_form",
+    "asg_enthralled_einherjar", "asg_dead_valkyrie", "asg_shadow_raven", "asg_boss_hlokk",
+    "asg_dark_soul_envoy", "asg_dark_soul_archer", "asg_dark_priestess", "asg_boss_gullveig_hel_empowered_form",
+    "asg_draugr_jarl", "asg_dark_soul", "asg_bone_skald", "asg_boss_shadow_of_loki",
+    "asg_hels_elite_swordsman", "asg_hels_elite_shieldbearer", "asg_hels_elite_sorcerer", "asg_boss_utgarda_loki_hel_empowered_form",
+    "asg_hels_royal_guard_swordsman", "asg_hels_royal_guard_witch", "asg_hels_guard_beast", "asg_boss_hel_on_odins_throne",
+    // Ніфльгейм і Хельгейм (світ 9)
+    "nifl_mist_wraith", "nifl_ice_wolf", "nifl_boss_warden_of_the_mist",
+    "nifl_rime_thurs", "nifl_ice_serpent", "nifl_boss_bergelmir",
+    "nifl_steam_spirit", "nifl_water_serpentine", "nifl_boss_grabakr",
+    "nifl_rotten_sprout", "nifl_root_worm", "nifl_boss_goinn_and_moinn",
+    "nifl_night_harpy", "nifl_stone_draugr", "nifl_boss_svafnir_and_ofnir",
+    "nifl_dragon_hatchling", "nifl_corpse_eater", "nifl_boss_nidhogg",
+    "nifl_drowned_soul", "nifl_bridge_warden", "nifl_boss_modgud",
+    "nifl_hellhound", "nifl_bone_hound", "nifl_boss_garm",
+    "nifl_draugr_gatekeeper", "nifl_bone_knight", "nifl_boss_gatekeeper_of_helgrind",
+    "nifl_dark_soul_swordsman", "nifl_dark_soul_archer", "nifl_boss_the_first_traitor",
+    "nifl_captive_einherjar", "nifl_servant_of_hel", "nifl_boss_ganglati_and_ganglot",
+    "nifl_hel_guard_knight", "nifl_hel_guard_witch", "nifl_boss_hel_final_form"
   ]);
   // Заглушка, поки картинки немає: темний силует з очима
   const ENEMY_PLACEHOLDER = "data:image/svg+xml," + encodeURIComponent(
@@ -5230,6 +7024,41 @@ const ENEMIES = {
     return !!(isJotunheimOpen(save) && save.bossKills?.jot_boss_jormungandr);
   }
 
+  // Хелла в Глідскьяльві (фінал світу 8): перша перемога — вона тікає в портал (page-game.js → підсумок бою), шлях у світ 9 — data/worlds.js
+  const HEL_ESCAPE_BOSS = "asg_boss_hel_on_odins_throne";
+  const HEL_ESCAPE_TEXT = "Хелла хитається, падає з престолу Одіна — і, поранена, кидається в зелено-чорний портал. Він закривається за нею. Хелла втекла в Ніфльгейм, і шлях туди тепер відкритий.";
+
+  // Ніфльгейм і Хельгейм (світ 9): відкритий Асгард + перша перемога над Хеллою в Глідскьяльві (портал Хелли)
+  function isNiflheimOpen(save) {
+    return !!(isAsgardOpen(save) && save.bossKills?.[HEL_ESCAPE_BOSS]);
+  }
+  // Кінець гри: перша перемога над Хеллою на її троні (page-game.js → save.story.gameWon, game-common.js → showEnding)
+  const GAME_END_BOSS = "nifl_boss_hel_final_form";
+  const ENDING = {
+    title: "Перемога",
+    epilogue: [
+      "Хелла падає з трону — і цього разу не тікає. Зелене полум'я в чертогах Ельвюдніра гасне одне за одним, а туман над Хельгеймом вперше за віки розходиться.",
+      "Корені Іггдрасиля перестають гнити. Золотий сік загоює рани Дерева, і по всіх дев'яти світах проходить тихий подих — ніби Дерево видихнуло.",
+      "Мертві повертаються на свої місця, армія Хелли розсипається на прах, а в Асгарді над Глідскьяльвом знову світить сонце.",
+      "Рагнарок не настав. Кров Іггдрасиля знову тече чисто — і скальди ще довго співатимуть про героїв, що пройшли дев'ять світів і повернулися."
+    ],
+    thanks: "Дякуємо, що пройшли гру!",
+    stay: "Збереження лишається — можна повернутися й далі ходити дев'ятьма світами.",
+    menu: "Головне меню",
+    creditsTitle: "Титри",
+    credits: [   // як на сторінці «Про автора» (pages/about.html)
+      ["Розробник", "DerekUa"],
+      ["Редактор, локалізатор", "Deztraf"],
+      ["Тестувальники", "Deztraf, Kvantoom, Danaec"],
+      ["Інструменти створення", "Claude, ChatGPT"]
+    ]
+  };
+
+  // Асгард (світ 8): відкритий Муспельгейм + перша перемога над Суртом (Біфрест із Трону Сурта)
+  function isAsgardOpen(save) {
+    return !!(isMuspelheimOpen(save) && save.bossKills?.musp_boss_surtr);
+  }
+
   function canEnterLocation(id, heroLevel = 1, save = null) {
     const loc = LOCATIONS[id];
     if (!loc) return { ok: false, reason: "Такої локації немає." };
@@ -5251,6 +7080,12 @@ const ENEMIES = {
     }
     if (loc.region === "musp" && save && !isMuspelheimOpen(save)) {
       return { ok: false, reason: "Шлях у Муспельгейм відкриється після першої перемоги над Йормунгандом (Нагльфар біля Берега Світового Змія, Йотунгейм)." };
+    }
+    if (loc.region === "nifl" && save && !isNiflheimOpen(save)) {
+      return { ok: false, reason: "Портал Хелли в Ніфльгейм відкриється після першої перемоги над нею в Глідскьяльві (Асгард)." };
+    }
+    if (loc.region === "asg" && save && !isAsgardOpen(save)) {
+      return { ok: false, reason: "Біфрест в Асгард відкриється після першої перемоги над Суртом (Трон Сурта, Муспельгейм)." };
     }
     if (loc.minLevel && heroLevel < loc.minLevel) {
       return { ok: false, reason: `${loc.name}: вхід з ${loc.minLevel} рівня персонажа.` };
@@ -5328,7 +7163,7 @@ const ENEMIES = {
 
   Object.assign(RPG, {
     MONSTER_MOVES, RANGE_NAMES, enemyRange, enemyMove,
-    ENEMIES, LOCATIONS, DUNGEONS, DEFAULT_LOCATION, RESPAWN_LOCATION, GUILD_SHOP, isAlfheimOpen, isVanaheimOpen, isSvartalfheimOpen, isJotunheimOpen, isMuspelheimOpen, DARK_LOC_MAT,
+    ENEMIES, LOCATIONS, DUNGEONS, DEFAULT_LOCATION, RESPAWN_LOCATION, GUILD_SHOP, isAlfheimOpen, isVanaheimOpen, isSvartalfheimOpen, isJotunheimOpen, isMuspelheimOpen, isAsgardOpen, isNiflheimOpen, HEL_ESCAPE_BOSS, HEL_ESCAPE_TEXT, GAME_END_BOSS, ENDING, DARK_LOC_MAT,
     CHAMPION, rollChampion, rollChampionDrop, championBounty,
     getEnemy, enemyExp, enemySpriteStyle, getLocation, isCombatLocation, canEnterLocation, pickEnemy, rollLoot, isCraftOnlyEnemy, enemyRegions
   });

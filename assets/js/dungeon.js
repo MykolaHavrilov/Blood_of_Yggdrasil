@@ -102,7 +102,7 @@
     };
   }
   // світ данжу: worlds.js (на сторінці гри підключений раніше), інакше — запасна таблиця (інші сторінки його не мають або мають пізніше)
-  const REGION_WORLD = { start: 1, city: 1, dark: 2, alf: 3, van: 4, svartgard: 5, svart: 5, jot: 6, musp: 7 };
+  const REGION_WORLD = { start: 1, city: 1, dark: 2, alf: 3, van: 4, svartgard: 5, svart: 5, jot: 6, musp: 7, asg: 8, nifl: 9 };
   const worldOfDungeon = d => { const r = RPG.LOCATIONS?.[d.location]?.region || "start"; return RPG.worldOfRegion?.(r) || REGION_WORLD[r] || 0; };
   for (const [dId, d] of Object.entries(RPG.DUNGEONS || {})) {
     const boss = RPG.ENEMIES[d.boss];
@@ -199,6 +199,11 @@
   const SVART_POWER = VAN_POWER;                                               // Свартальвгейм (світ 5) — поки як у Ванагеймі
   const JOT_POWER = VAN_POWER;                                                 // Йотунгейм (світ 6) — поки як у Ванагеймі
   const MUSP_POWER = VAN_POWER;                                                // Муспельгейм (світ 7) — поки як у Ванагеймі
+  const ASG_POWER = VAN_POWER;                                                 // Асгард (світ 8) — поки як у Ванагеймі
+  const NIFL_POWER = VAN_POWER;                                                // Ніфльгейм і Хельгейм (світ 9) — поки як у Ванагеймі
+  // Трон Хелли (фінал гри): Хелла лише для повної групи — соло без знижки, групі — посилення (симуляція 2026-11-21:
+  // герої 50 рів. в епічних речах — соло 0%, 2–3 героїв ≤ 5%, 4 — ≈20%, 5 — ≈28%, 6 — ≈53%)
+  const HEL_POWER = { 1: 1, 2: 1.15, 3: 1.3, 4: 1.45, 5: 1.4, 6: 1.35 };
   const GROUP_POWER = {
     cave_secret: { 1: 0.82, 2: 1.3,  3: 1.7,  4: 1.9,  5: 2.1,  6: 2.15 },
     web_nest:    { 1: 0.48, 2: 0.71, 3: 0.88, 4: 0.92, 5: 0.93, 6: 0.94 },
@@ -212,7 +217,11 @@
     jot_troll_cave: JOT_POWER, jot_eagle_nest: JOT_POWER, jot_angrboda_lair: JOT_POWER, jot_thrym_hoard: JOT_POWER,
     jot_stone_heart: JOT_POWER, jot_hall_of_illusions: JOT_POWER, jot_hymir_cauldron: JOT_POWER, jot_serpent_ring: JOT_POWER,
     musp_hound_lair: MUSP_POWER, musp_serpent_nest: MUSP_POWER, musp_sons_forge: MUSP_POWER, musp_citadel_vaults: MUSP_POWER,
-    musp_sinmara_vault: MUSP_POWER, musp_ymir_abyss: MUSP_POWER, musp_volcano_heart: MUSP_POWER
+    musp_sinmara_vault: MUSP_POWER, musp_ymir_abyss: MUSP_POWER, musp_volcano_heart: MUSP_POWER,
+    asg_himinbjorg_watch: ASG_POWER, asg_fensalir_halls: ASG_POWER, asg_breidablik_meadow: ASG_POWER, asg_bilskirnir_hall: ASG_POWER,
+    asg_valhalla_shields: ASG_POWER, asg_vingolf_garden: ASG_POWER, asg_gladsheim_thrones: ASG_POWER, asg_square_heart: ASG_POWER, asg_hlidskjalf_throne: ASG_POWER,
+    nifl_border_mist: NIFL_POWER, nifl_elivagar_rivers: NIFL_POWER, nifl_hvergelmir_spring: NIFL_POWER, nifl_roots_deep: NIFL_POWER, nifl_nidafjoll_peaks: NIFL_POWER, nifl_nidhogg_nest: NIFL_POWER,
+    nifl_gjallarbru_bridge: NIFL_POWER, nifl_gnipahellir_cave: NIFL_POWER, nifl_helgrind_gate: NIFL_POWER, nifl_nastrond_shore: NIFL_POWER, nifl_eljudnir_hall: NIFL_POWER, nifl_throne_hall: HEL_POWER
   };
   function groupPower(dungeonId, size) {
     const row = (RPG.DUNGEON_GROUP_POWER || GROUP_POWER)[dungeonId];

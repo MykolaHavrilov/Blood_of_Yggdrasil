@@ -19,7 +19,9 @@
     van:   { mine_van:   { x: 52, y: 37, w: 7, h: 11 }, sawmill_van:   { x: 91, y: 63, w: 7, h: 11 } },
     svart: { mine_svart: { x: 61, y: 62, w: 7, h: 11 }, sawmill_svart: { x: 91, y: 68, w: 7, h: 11 } },
     jot:   { mine_jot:   { x: 64, y: 57, w: 7, h: 11 }, sawmill_jot:   { x: 24, y: 74, w: 7, h: 11 } },
-    musp:  { mine_musp:  { x: 31, y: 88, w: 7, h: 11 }, sawmill_musp:  { x: 5, y: 72, w: 7, h: 11 } }
+    musp:  { mine_musp:  { x: 31, y: 88, w: 7, h: 11 }, sawmill_musp:  { x: 5, y: 72, w: 7, h: 11 } },
+    asg:   { mine_asg:   { x: 92, y: 87, w: 7, h: 11 }, sawmill_asg:   { x: 20, y: 52, w: 7, h: 11 } },
+    nifl:  { mine_nifl:  { x: 95, y: 8, w: 7, h: 11 }, sawmill_nifl:  { x: 63, y: 86, w: 7, h: 11 } }
   };
   const SITE_ICON = {
     mine: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7 Q12 1 20 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M12 4 L12 22" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>`,
@@ -29,7 +31,7 @@
   // Будівлі Шахти й Лісопилки (assets/images/map/bld_<id>.webp) — у центрі SITE_ZONES, ширина в % мапи.
   // Значок (кирка / пила) лишається маленьким у кутку: туди лише експедиція.
   const SITE_BLD_W = 6.8;      // ~68% від першої версії (10)
-  const SITE_BUILDINGS = new Set(["mine_start", "sawmill_start", "mine_dark", "sawmill_dark", "mine_alf", "sawmill_alf", "mine_van", "sawmill_van", "mine_svart", "sawmill_svart", "mine_jot", "sawmill_jot", "mine_musp", "sawmill_musp"]);
+  const SITE_BUILDINGS = new Set(["mine_start", "sawmill_start", "mine_dark", "sawmill_dark", "mine_alf", "sawmill_alf", "mine_van", "sawmill_van", "mine_svart", "sawmill_svart", "mine_jot", "sawmill_jot", "mine_musp", "sawmill_musp", "mine_asg", "sawmill_asg", "mine_nifl", "sawmill_nifl"]);
   // Порядок місць у списку під мапою
   const REGION_ORDER = {
     start: ["home", "temple", "village_start", "tavern", "south_gate", "forest_path", "forest_cave"],
@@ -40,7 +42,9 @@
     van: ["van_gate", "van_shore", "van_marsh", "van_kvasir", "van_barrow", "van_temple", "van_ran"],
     svart: ["svart_gate", "svart_mines", "svart_falls", "svart_quarters", "svart_alvis", "svart_forges", "svart_runes", "svart_mokkur"],
     jot: ["jot_gate", "jot_passes", "jot_thrymheim", "jot_ironwood", "jot_thrym", "jot_waste", "jot_utgard", "jot_hymir", "jot_serpent"],
-    musp: ["musp_gate", "musp_ash", "musp_lava", "musp_forges", "musp_fortress", "musp_sinmara", "musp_ginnungagap", "musp_surtr"]
+    musp: ["musp_gate", "musp_ash", "musp_lava", "musp_forges", "musp_fortress", "musp_sinmara", "musp_ginnungagap", "musp_surtr"],
+    asg: ["asg_gate", "asg_himinbjorg", "asg_fensalir", "asg_breidablik", "asg_bilskirnir", "asg_valhalla", "asg_vingolf", "asg_gladsheim", "asg_square", "asg_hlidskjalf"],
+    nifl: ["nifl_gate", "nifl_border", "nifl_elivagar", "nifl_hvergelmir", "nifl_roots", "nifl_nidafjoll", "nifl_nidhogg", "nifl_gjallarbru", "nifl_gnipahellir", "nifl_helgrind", "nifl_nastrond", "nifl_eljudnir", "nifl_throne"]
   };
   // Зони кліку (x, y — центр; w, h — розмір у % мапи). Стартова мапа — за картинками будівель (map_layout.js):
   // Дубова Застава на ній — це вхід south_gate («Південний район»).
@@ -119,6 +123,33 @@
     musp_ginnungagap: { x: 19, y: 34.5, w: 13.0, h: 14.0 },
     musp_surtr:       { x: 54, y: 7.5, w: 13.0, h: 14.0 }
   };
+  const ASG_ZONES = {                        // під картинку map_asgard.webp (брама Великої фортеці (54, 44) — лише на стежці)
+    asg_gate:        { x: 6.5, y: 88, w: 8.0, h: 10.0 },
+    asg_himinbjorg:  { x: 13.6, y: 79, w: 13.0, h: 14.0 },
+    asg_fensalir:    { x: 36.6, y: 69.5, w: 13.0, h: 14.0 },
+    asg_breidablik:  { x: 62.4, y: 80.6, w: 13.0, h: 14.0 },
+    asg_bilskirnir:  { x: 86.4, y: 67.5, w: 13.0, h: 14.0 },
+    asg_valhalla:    { x: 65, y: 57.5, w: 13.0, h: 14.0 },
+    asg_vingolf:     { x: 31.5, y: 33.3, w: 13.0, h: 14.0 },
+    asg_gladsheim:   { x: 13.2, y: 17.6, w: 13.0, h: 14.0 },
+    asg_square:      { x: 46, y: 19, w: 13.0, h: 14.0 },
+    asg_hlidskjalf:  { x: 82, y: 9.6, w: 13.0, h: 14.0 }
+  };
+  const NIFL_ZONES = {                       // під картинку map_niflheim_helheim.webp (портал Хелли — угорі ліворуч)
+    nifl_gate:         { x: 6.5, y: 7, w: 8.0, h: 10.0 },
+    nifl_border:       { x: 12, y: 17.2, w: 13.0, h: 14.0 },
+    nifl_elivagar:     { x: 32.8, y: 25.7, w: 13.0, h: 14.0 },
+    nifl_hvergelmir:   { x: 54.9, y: 13.6, w: 13.0, h: 14.0 },
+    nifl_roots:        { x: 85.8, y: 16.6, w: 13.0, h: 14.0 },
+    nifl_nidafjoll:    { x: 78.5, y: 33.3, w: 13.0, h: 14.0 },
+    nifl_nidhogg:      { x: 52.4, y: 33.3, w: 13.0, h: 14.0 },
+    nifl_gjallarbru:   { x: 20.8, y: 59, w: 13.0, h: 14.0 },
+    nifl_gnipahellir:  { x: 10.7, y: 77.6, w: 13.0, h: 14.0 },
+    nifl_helgrind:     { x: 30.9, y: 83.7, w: 13.0, h: 14.0 },
+    nifl_nastrond:     { x: 55.5, y: 66.5, w: 13.0, h: 14.0 },
+    nifl_eljudnir:     { x: 87.1, y: 59.5, w: 13.0, h: 14.0 },
+    nifl_throne:       { x: 77.6, y: 82.7, w: 13.0, h: 14.0 }
+  };
   // Картинки локацій поверх галявин (assets/images/map/bld_<id>.webp): x, y — центр, w — ширина в % мапи
   const REGION_BUILDINGS = {
     alf: { alf_grove: { x: 16.5, y: 74.5, w: 11 }, alf_lake: { x: 42, y: 61.5, w: 11 }, alf_gardens: { x: 72, y: 69.5, w: 11 },
@@ -130,7 +161,11 @@
     jot: { jot_passes: { x: 16, y: 82.5, w: 11 }, jot_thrymheim: { x: 12, y: 34.5, w: 11 }, jot_ironwood: { x: 34, y: 61.5, w: 11 }, jot_thrym: { x: 55.5, y: 73.5, w: 11 },
            jot_waste: { x: 81, y: 66.5, w: 11 }, jot_utgard: { x: 80, y: 39.5, w: 11 }, jot_hymir: { x: 44, y: 33.5, w: 11 }, jot_serpent: { x: 51.5, y: 5.5, w: 11 } },
     musp: { musp_ash: { x: 15, y: 82.5, w: 11 }, musp_lava: { x: 37.5, y: 63, w: 11 }, musp_forges: { x: 69.5, y: 74, w: 11 }, musp_fortress: { x: 89, y: 42.5, w: 11 },
-            musp_sinmara: { x: 55.5, y: 38.5, w: 11 }, musp_ginnungagap: { x: 19, y: 32, w: 11 }, musp_surtr: { x: 54, y: 5, w: 11 } }
+            musp_sinmara: { x: 55.5, y: 38.5, w: 11 }, musp_ginnungagap: { x: 19, y: 32, w: 11 }, musp_surtr: { x: 54, y: 5, w: 11 } },
+    asg: { asg_himinbjorg: { x: 13.6, y: 76.5, w: 11 }, asg_fensalir: { x: 36.6, y: 67, w: 11 }, asg_breidablik: { x: 62.4, y: 78.1, w: 11 }, asg_bilskirnir: { x: 86.4, y: 65, w: 11 }, asg_valhalla: { x: 65, y: 55, w: 11 },
+           asg_vingolf: { x: 31.5, y: 30.8, w: 11 }, asg_gladsheim: { x: 13.2, y: 15.1, w: 11 }, asg_square: { x: 46, y: 16.5, w: 11 }, asg_hlidskjalf: { x: 82, y: 7.1, w: 11 } },
+    nifl: { nifl_border: { x: 12, y: 14.7, w: 11 }, nifl_elivagar: { x: 32.8, y: 23.2, w: 11 }, nifl_hvergelmir: { x: 54.9, y: 11.1, w: 11 }, nifl_roots: { x: 85.8, y: 14.1, w: 11 }, nifl_nidafjoll: { x: 78.5, y: 30.8, w: 11 }, nifl_nidhogg: { x: 52.4, y: 30.8, w: 11 },
+            nifl_gjallarbru: { x: 20.8, y: 56.5, w: 11 }, nifl_gnipahellir: { x: 10.7, y: 75.1, w: 11 }, nifl_helgrind: { x: 30.9, y: 81.2, w: 11 }, nifl_nastrond: { x: 55.5, y: 64, w: 11 }, nifl_eljudnir: { x: 87.1, y: 57, w: 11 }, nifl_throne: { x: 77.6, y: 80.2, w: 11 } }
   };
   function startZones() {
     const b = (RPG.MAP_LAYOUT && RPG.MAP_LAYOUT.buildings) || {};
@@ -168,7 +203,7 @@
     const region = t0 ? t0.region : view;
     const away = !t0 && region !== here.region;   // інший світ: героя тут немає, дорога — через брами
     const R = RPG.MAP_REGIONS[region];
-    const ZONES = Object.assign({}, region === "city" ? CITY_ZONES : region === "svartgard" ? SVARTGARD_ZONES : region === "dark" ? DARK_ZONES : region === "alf" ? ALF_ZONES : region === "van" ? VAN_ZONES : region === "svart" ? SVART_ZONES : region === "jot" ? JOT_ZONES : region === "musp" ? MUSP_ZONES : startZones(), SITE_ZONES[region] || {});
+    const ZONES = Object.assign({}, region === "city" ? CITY_ZONES : region === "svartgard" ? SVARTGARD_ZONES : region === "dark" ? DARK_ZONES : region === "alf" ? ALF_ZONES : region === "van" ? VAN_ZONES : region === "svart" ? SVART_ZONES : region === "jot" ? JOT_ZONES : region === "musp" ? MUSP_ZONES : region === "asg" ? ASG_ZONES : region === "nifl" ? NIFL_ZONES : startZones(), SITE_ZONES[region] || {});
     const cityId = RPG.cityOf(region);                       // мапа міста (Дубова Застава, Свартгард): місця — райони
     const districts = cityId ? RPG.LOCATIONS[cityId].districts || [] : [];
     const ids = REGION_ORDER[region].filter(id => ZONES[id] && R.spots[id]).concat(Object.keys(SITE_ZONES[region] || {}).filter(id => RPG.LOCATIONS[id]));

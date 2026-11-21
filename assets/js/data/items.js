@@ -1357,6 +1357,113 @@ const ITEMS = {
     type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Масивний ключ із темного заліза, стрижень якого — палаючий меч; вушко — рогата корона з вогню, ключ сяє біло-помаранчевим жаром. Відчиняє данж «Серце вулкана» (Трон Сурта). Одна спроба — один ключ."
   },
+  // Ключі данжів Асгарду (світ 8)
+  key_asg_himinbjorg: {
+    name: "Ключ «Хімінбйорг»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Ключ зі світлого срібла й золота; вушко — крилатий кінь із розгорнутими крилами. Груди коня обплела зелена гниль, і вона стікає краплями. Відчиняє данж «Хімінбйорг» (Хімінбйорг). Одна спроба — один ключ."
+  },
+  key_asg_fensalir: {
+    name: "Ключ «Фенсалір»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Золотий ключ у формі рогу з карбованими візерунками; гострий кінець рогу позеленів від гнилі Хелли, і з нього капає. Відчиняє данж «Фенсалір» (Фенсалір). Одна спроба — один ключ."
+  },
+  key_asg_breidablik: {
+    name: "Ключ «Брейдаблік»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Сяйливий золотий ключ, вушко якого — тризубець із вигнутими зубцями; між ними сидить блакитний самоцвіт, а з одного боку повзе зелена гниль. Відчиняє данж «Брейдаблік» (Брейдаблік). Одна спроба — один ключ."
+  },
+  key_asg_bilskirnir: {
+    name: "Ключ «Бількірнір»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Ключ зі срібним стрижнем; вушко — золоте деревце з листям. Половина крони вже зогнила й стікає зеленим. Відчиняє данж «Бількірнір» (Бількірнір). Одна спроба — один ключ."
+  },
+  key_asg_valhalla: {
+    name: "Ключ «Валгалла»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Золотий ключ із крилатим шоломом ейнгерія на вушку. Під шолом затекла зелена гниль, і крила вже вкриваються її краплями. Відчиняє данж «Валгалла» (Валгалла). Одна спроба — один ключ."
+  },
+  key_asg_vingolf: {
+    name: "Ключ «Вінґольв»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Золотий ключ, вушко якого — арфа зі срібними струнами й завитками. Одну дугу арфи обплела зелена гниль. Відчиняє данж «Вінґольв» (Вінґольв). Одна спроба — один ключ."
+  },
+  key_asg_gladsheim: {
+    name: "Ключ «Гладсгейм»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Золотий ключ із сонцем на вушку: гострі промені навколо сяйливого бурштинового серця. З одного боку промені вкрилися зеленими паростками гнилі. Відчиняє данж «Гладсгейм» (Гладсгейм). Одна спроба — один ключ."
+  },
+  key_asg_square: {
+    name: "Ключ «Головна площа Асгарду»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Ключ із темного срібла з фіолетовим самоцвітом на борідці; вушко — голова ворона Одіна з червоним оком. Пір'я на шиї обросло зеленою гниллю. Відчиняє данж «Головна площа Асгарду» (Головна площа Асгарду). Одна спроба — один ключ."
+  },
+  key_asg_hlidskjalf: {
+    name: "Ключ «Глідскьяльв»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Величний золотий ключ: вушко — золота арка з рунами, у ній райдужний Біфрест і білі вежі Асгарду, а над ними — кришталь. По арці стікає зелена гниль. Відчиняє данж «Глідскьяльв» (Глідскьяльв). Одна спроба — один ключ."
+  },
+  // Ключі данжів Ніфльгейму й Хельгейму (світ 9)
+  key_nifl_border: {
+    name: "Ключ «Туманна межа»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Срібний ключ, вушко якого — примара в каптурі з порожнім черепом замість обличчя; з-під каптура стікає зелена мряка. Відчиняє данж «Туманна межа» (Туманна межа). Одна спроба — один ключ."
+  },
+  key_nifl_elivagar: {
+    name: "Ключ «Елівагар»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Ключ із блакитного льоду, вушко — велика сніжинка з гострими променями. Лід не тане навіть у руці. Відчиняє данж «Елівагар» (Елівагар). Одна спроба — один ключ."
+  },
+  key_nifl_hvergelmir: {
+    name: "Ключ «Ґвергельмір»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Срібний ключ із ліхтарем на вушку: у ліхтарі горить зелений вогонь, а ланцюжок над ним обріс інеєм. Відчиняє данж «Ґвергельмір» (Ґвергельмір). Одна спроба — один ключ."
+  },
+  key_nifl_roots: {
+    name: "Ключ «Корені Дерева»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Срібний ключ із черепом оленя на вушку — одного з чотирьох оленів, що їдять листя Іггдрасиля. З очниць тече зелене світло. Відчиняє данж «Корені Дерева» (Корені Дерева). Одна спроба — один ключ."
+  },
+  key_nifl_nidafjoll: {
+    name: "Ключ «Нідафйолл»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Ключ, вушко якого — чорна троянда з фіолетовим полиском; стебло з шипами обвиває стрижень, а з пелюстки капає зелене. Відчиняє данж «Нідафйолл» (Нідафйолл). Одна спроба — один ключ."
+  },
+  key_nifl_nidhogg: {
+    name: "Ключ «Гніздо Нідгьоґа»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Кістяний ключ: вушко — череп дракона з зеленим оком, а стрижень вигинається, як його хребет із шипами. Відчиняє данж «Гніздо Нідгьоґа» (Гніздо Нідгьоґа). Одна спроба — один ключ."
+  },
+  key_nifl_gjallarbru: {
+    name: "Ключ «Міст Ґйаллабру»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Срібний ключ із пісковим годинником на вушку: зелений пісок сиплеться вниз, а рамка обросла інеєм. Час живих тут спливає. Відчиняє данж «Міст Ґйаллабру» (Міст Ґйаллабру). Одна спроба — один ключ."
+  },
+  key_nifl_gnipahellir: {
+    name: "Ключ «Гніпахеллір»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Бронзовий ключ, вушко — грудна клітка з кісток, а всередині пульсує зелений самоцвіт, мов серце. По кістках в'ється гнилий пагін. Відчиняє данж «Гніпахеллір» (Гніпахеллір). Одна спроба — один ключ."
+  },
+  key_nifl_helgrind: {
+    name: "Ключ «Хельгринд»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Ключ, вушко якого — брама з черепами й шпилями, а за нею сяє зелений кристал. По стрижню повзе зелена гниль. Відчиняє данж «Хельгринд» (Хельгринд). Одна спроба — один ключ."
+  },
+  key_nifl_nastrond: {
+    name: "Ключ «Наструнд»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Срібний ключ із двома обличчями на вушку, що дивляться в різні боки; з тріщини між ними стікає зелене. Як і зрадники — двоє в одному. Відчиняє данж «Наструнд» (Наструнд). Одна спроба — один ключ."
+  },
+  key_nifl_eljudnir: {
+    name: "Ключ «Ельвюднір»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Ключ, вушко якого — фіолетова безодня, що крутиться, обплетена чорним терном; на борідці — фіолетовий кристал. Відчиняє данж «Ельвюднір» (Ельвюднір). Одна спроба — один ключ."
+  },
+  key_nifl_throne: {
+    name: "Ключ «Трон Хелли»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Срібний ключ із короною на вушку: гострі зубці, фіолетовий самоцвіт посередині, і з корони стікає фіолетове світло. Відчиняє данж «Трон Хелли» (Трон Хелли). Одна спроба — один ключ."
+  },
 
   // ---------- Предмет адміністратора (для тестування прогресу) ----------
   // Діє на ВСЮ групу, поки лежить в інвентарі (character.js → godsOrb): +800% досвіду (бої й квести),
@@ -1562,6 +1669,8 @@ const ICON_FILES = new Set(["sword", "dagger", "axe", "bow", "staff", "shield", 
 ["key_svart_alvis", "key_svart_falls", "key_svart_forges", "key_svart_mines", "key_svart_mokkur", "key_svart_quarters", "key_svart_runes", "heavenly_ember", "storm_amulet", "storm_axe", "storm_bow", "storm_chest", "storm_dagger", "storm_earring", "storm_feet", "storm_hands", "storm_head", "storm_knife", "storm_legs", "storm_orb", "storm_quiver", "storm_ring", "storm_shield", "storm_staff", "storm_sword", "blueprint_amulet", "blueprint_earring", "blueprint_ring"].forEach(id => ICON_FILES.add(id));
 ["key_jot_passes", "key_jot_thrymheim", "key_jot_ironwood", "key_jot_thrym", "key_jot_waste", "key_jot_utgard", "key_jot_hymir", "key_jot_serpent"].forEach(id => ICON_FILES.add(id));
 ["key_musp_ash", "key_musp_lava", "key_musp_forges", "key_musp_fortress", "key_musp_sinmara", "key_musp_ginnungagap", "key_musp_surtr"].forEach(id => ICON_FILES.add(id));
+["key_asg_himinbjorg", "key_asg_fensalir", "key_asg_breidablik", "key_asg_bilskirnir", "key_asg_valhalla", "key_asg_vingolf", "key_asg_gladsheim", "key_asg_square", "key_asg_hlidskjalf"].forEach(id => ICON_FILES.add(id));
+["key_nifl_border", "key_nifl_elivagar", "key_nifl_hvergelmir", "key_nifl_roots", "key_nifl_nidafjoll", "key_nifl_nidhogg", "key_nifl_gjallarbru", "key_nifl_gnipahellir", "key_nifl_helgrind", "key_nifl_nastrond", "key_nifl_eljudnir", "key_nifl_throne"].forEach(id => ICON_FILES.add(id));
 // Броня й прикраси 1–3 виду, комплект слизу — нові окремі іконки (2026-11-16; промти — «Речі 1-3 тіру - іконки (промти).txt» у H:/Game_NEW), замість листів armor / accessory
 ["linen", "leather", "iron"].forEach(m => ["head", "chest", "legs", "hands", "feet"].forEach(sl => ICON_FILES.add(`${m}_${sl}`)));
 ["ring", "amulet", "earring"].forEach(k => [1, 2, 3].forEach(t => ICON_FILES.add(`${k}_t${t}`)));

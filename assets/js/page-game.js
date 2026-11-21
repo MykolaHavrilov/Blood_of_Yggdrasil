@@ -994,6 +994,7 @@
       // уникнути поразки, просто закривши сторінку під час показу бою
       const summary = [];
       const levelLines = [];
+      let showEnding = false;            // перша перемога над Хеллою на троні — після бою вікно кінця гри
       const got = {}, lost = {}, filtered = {};   // речі цього бою (для підсумку поля бою); filtered — викинув фільтр
       const freeBefore = RPG.invFree(save);
       let battleGold = 0, battleExp = 0;
@@ -1012,9 +1013,19 @@
         // Перемоги над босами (перша — з датою): відкривають світи й межу рівня (character.js → levelCap).
         // Записуємо ДО досвіду — досвід за Белі вже йде під нову межу 50.
         const capWasOpen = RPG.levelCapOpen(save);
+        const helWasBeaten = !!save.bossKills?.[RPG.HEL_ESCAPE_BOSS];
+        const gameWasWon = !!save.bossKills?.[RPG.GAME_END_BOSS];
         for (const e of result.enemies) if (RPG.ENEMIES[e.id]?.boss && !RPG.ENEMIES[e.id].darkSoul) (save.bossKills ??= {})[e.id] ??= Date.now();   // Темна душа — не бос для світів
         if (!capWasOpen && RPG.levelCapOpen(save)) {
           summary.push(`⭐ Белі повалено! Межа рівня для героїв з професією відтепер — ${RPG.LEVEL_CAP_PROFESSION} (Селянин лишається до ${RPG.LEVEL_CAP_BASE}).`);
+        }
+        // Хелла в Глідскьяльві (фінал світу 8) не гине — тікає в портал (data/enemies.js → HEL_ESCAPE_TEXT)
+        if (!helWasBeaten && save.bossKills?.[RPG.HEL_ESCAPE_BOSS]) summary.push("🌀 " + RPG.HEL_ESCAPE_TEXT);
+        // Хелла на своєму троні (фінал світу 9) — кінець гри: після показу бою — епілог і титри (game-common.js → showEnding)
+        if (!gameWasWon && save.bossKills?.[RPG.GAME_END_BOSS]) {
+          (save.story ??= {}).gameWon ??= Date.now();
+          showEnding = true;
+          summary.push("👑 Хеллу переможено — Рагнарок не настав!");
         }
         let gold = 0;
         const runeEco = RPG.teamRuneEco ? RPG.teamRuneEco(team) : { gold: 0, lootRarity: 0 };   // руни Феху й Даждьбог усієї групи
@@ -1265,6 +1276,7 @@
         return;
       }
       if (hc?.removed.length) RPG.ui.showHardcoreLosses(hc.removed);
+      if (showEnding) setTimeout(() => RPG.ui.showEnding(save), 1200);
       if (deaths) {
         const wake = el("li", "log-action");
         wake.append(link("Прокинутися в Храмі", "game.html"));
