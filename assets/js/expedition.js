@@ -46,7 +46,7 @@
   // Ворогів у бою — стільки ж, скільки героїв, і 4 години боїв поспіль (з чемпіонами) без цього не пережити;
   // підібрано симуляцією так, щоб група з 3 героїв свого рівня доживала до кінця приблизно в половині експедицій,
   // група з 6 — майже завжди (Гардарика й Темний ліс — Селяни в синіх/фіолетових речах; Альвгейм — професії в повному сеті; Ванагейм — так само, 31–34 рівень).
-  const EXP_POWER = { start: 0.5, dark: 0.32, alf: 0.37, van: 0.38, svart: 0.38, jot: 0.38 };
+  const EXP_POWER = { start: 0.5, dark: 0.32, alf: 0.37, van: 0.38, svart: 0.38, jot: 0.38, musp: 0.38 };
 
   // ---------- Герої ----------
   function memberIdOf(save, ms) {
@@ -200,8 +200,7 @@
         const lootOrb = RPG.godsOrb?.(save);
         const loot = RPG.rollLoot(en.id, lootOrb ? lootOrb.lootPct / 100 : 0);
         for (const r of RPG.rollRunes?.(en.id, { champion: en.champion, expedition: true }) || []) loot.items.push({ id: r, qty: 1 });   // руни — удвічі рідше
-        const bp4 = RPG.rollT4Blueprint?.(en.id);                    // креслення тіру 4 (світи 4–5)
-        if (bp4) loot.items.push({ id: bp4, qty: 1 });
+        for (const bp of RPG.rollTierBlueprints?.(en.id) || []) loot.items.push({ id: bp, qty: 1 });   // креслення тірів 3–7 і Штормової сталі
         let gold = loot.gold || 0;
         if (runeEco.gold && gold) gold = Math.round(gold * (1 + runeEco.gold / 100));
         bag.gold += gold;

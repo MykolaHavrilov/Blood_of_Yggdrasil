@@ -301,6 +301,20 @@
 
     // Версія 11: рецепти тіру 4 — лише за кресленнями (data/profsets.js → T4_BLUEPRINT). Хто вже дійшов до Ванагейму — має всі.
     if ((save.saveVersion || 0) < 11 && RPG.isVanaheimOpen?.(save)) RPG.learnAllT4?.(save);
+    // Креслення тірів 3, 5, 6, 7 (v0.7.0): рецепти — теж лише за кресленнями (data/profsets.js → TIER_BLUEPRINTS).
+    // Тір, який гравець уже міг кувати, — вивчений: тір 3 — майстерність виду 20+ у будь-кого з групи або відкритий Альвгейм;
+    // тіри 5–7 — відкритий світ ресурсів тіру (data/recipes.js → CRAFT_TIER_WORLD).
+    // Позначка в сейві, а не saveVersion: на сторінках без data/worlds.js чи data/profsets.js міграцію треба відкласти.
+    if (!save.story?.tierBp12 && RPG.learnAllTier && RPG.isWorldOpen) {
+      (save.story ||= {}).tierBp12 = true;
+      const heroes = [save.character, ...(save.party || []).map(m => m?.character)].filter(Boolean);
+      const t3 = heroes.some(ch => Object.values(ch.craft?.cats || {}).some(c => (c?.level || 0) >= 20)) || RPG.isWorldOpen?.(save, 3)?.ok;
+      if (t3) RPG.learnAllTier(save, 3);
+      for (const t of [5, 6, 7]) {
+        const w = RPG.CRAFT_TIER_WORLD?.[t] || { 5: 5, 6: 8, 7: 9 }[t];
+        if (w && RPG.isWorldOpen?.(save, w)?.ok) RPG.learnAllTier(save, t);
+      }
+    }
 
     save.saveVersion = SAVE_VERSION;
     return save;

@@ -4,6 +4,7 @@
 // RECIPES[<id речі>] = { tier, mats: [[id матеріалу, кількість], …], tools: [id знаряддя, …] }
 //   tier  — 1…7: потрібен рівень майстерності ВИДУ (Зброя / Броня / Ювелір) CRAFT_TIER_LEVEL[tier] (1 / 10 / 20 / 30 / 40 / 50 / 60)
 //   mats  — базові ID матеріалів; підходить будь-яка рідкість (craft.js сам підбирає стопки)
+//   catLevel — (необов'язково) потрібний рівень виду замість CRAFT_TIER_LEVEL[tier] (Штормова сталь — 45)
 //   tools — знаряддя понад обов'язкові (горно, ковадло, молот, кліщі, діжка — потрібні завжди)
 // SMELT[<id злитка>] = { ore, oreQty, coal, tools } — переплавка руди в горні (завжди вдається).
 // Кувати можна будь-які речі — незалежно від професії героя.
@@ -90,6 +91,27 @@
     ring_t4:    { tier: 4, mats: [["platinum_ingot", 2], ["pearl", 1]], tools: ["crucible"] },
     amulet_t4:  { tier: 4, mats: [["platinum_ingot", 3], ["pearl", 1], ["amber", 1]], tools: ["crucible"] },
     earring_t4: { tier: 4, mats: [["platinum_ingot", 1], ["pearl", 1]], tools: ["crucible"] },
+
+    // ---------- Тір 4+ «Штормова сталь» (45 рівень; рішення користувача 2026-11-21) ----------
+    // Рецепт сталі ванів + матеріали тіру 5 (падають у світах 6–7); знаряддя тіру 4 + рунне горно.
+    // catLevel — потрібний рівень виду (не 30, як для тіру 4, а 45). Лише за кресленням (data/profsets.js → STORM_BLUEPRINT).
+    storm_sword:  { tier: 4, catLevel: 45, mats: [["steel_ingot", 6], ["darksteel_ingot", 3], ["coal", 4], ["lizard_leather", 2]], tools: ["bellows", "vanir_quench", "rune_forge"] },
+    storm_axe:    { tier: 4, catLevel: 45, mats: [["steel_ingot", 7], ["darksteel_ingot", 3], ["coal", 4], ["ironwood", 2]], tools: ["bellows", "vanir_quench", "rune_forge"] },
+    storm_dagger: { tier: 4, catLevel: 45, mats: [["steel_ingot", 3], ["darksteel_ingot", 2], ["coal", 2], ["lizard_leather", 1]], tools: ["bellows", "vanir_quench", "rune_forge"] },
+    storm_bow:    { tier: 4, catLevel: 45, mats: [["yew_wood", 5], ["ironwood", 2], ["steel_ingot", 2], ["lizard_leather", 1]], tools: ["carving", "bellows", "vanir_quench", "rune_forge"] },
+    storm_staff:  { tier: 4, catLevel: 45, mats: [["yew_wood", 3], ["ironwood", 2], ["steel_ingot", 2], ["rune_gem", 1]], tools: ["carving", "bellows", "vanir_quench", "rune_forge"] },
+    storm_shield: { tier: 4, catLevel: 45, mats: [["steel_ingot", 6], ["darksteel_ingot", 3], ["coal", 3], ["ironwood", 1]], tools: ["bellows", "vanir_quench", "rune_forge"] },
+    storm_knife:  { tier: 4, catLevel: 45, mats: [["steel_ingot", 2], ["darksteel_ingot", 1], ["coal", 1], ["lizard_leather", 1]], tools: ["bellows", "vanir_quench", "rune_forge"] },
+    storm_quiver: { tier: 4, catLevel: 45, mats: [["seal_leather", 3], ["lizard_leather", 2], ["steel_ingot", 2], ["darksteel_ingot", 1]], tools: ["leatherwork", "bellows", "vanir_quench", "rune_forge"] },
+    storm_orb:    { tier: 4, catLevel: 45, mats: [["amber", 3], ["rock_crystal", 2], ["steel_ingot", 1], ["rune_gem", 1]], tools: ["bellows", "vanir_quench", "rune_forge"] },
+    storm_head:   { tier: 4, catLevel: 45, mats: [["steel_ingot", 4], ["darksteel_ingot", 2], ["coal", 2], ["lizard_leather", 1]], tools: ["bellows", "vanir_quench", "rune_forge"] },
+    storm_chest:  { tier: 4, catLevel: 45, mats: [["steel_ingot", 8], ["darksteel_ingot", 4], ["coal", 4], ["lizard_leather", 2]], tools: ["bellows", "vanir_quench", "rune_forge"] },
+    storm_legs:   { tier: 4, catLevel: 45, mats: [["steel_ingot", 6], ["darksteel_ingot", 3], ["coal", 3], ["lizard_leather", 1]], tools: ["bellows", "vanir_quench", "rune_forge"] },
+    storm_hands:  { tier: 4, catLevel: 45, mats: [["steel_ingot", 4], ["darksteel_ingot", 2], ["coal", 2], ["lizard_leather", 1]], tools: ["bellows", "vanir_quench", "rune_forge"] },
+    storm_feet:   { tier: 4, catLevel: 45, mats: [["steel_ingot", 5], ["darksteel_ingot", 2], ["coal", 2], ["lizard_leather", 1]], tools: ["bellows", "vanir_quench", "rune_forge"] },
+    storm_ring:    { tier: 4, catLevel: 45, mats: [["platinum_ingot", 2], ["pearl", 1], ["rune_gem", 1], ["rock_crystal", 1]], tools: ["crucible", "rune_forge"] },
+    storm_amulet:  { tier: 4, catLevel: 45, mats: [["platinum_ingot", 3], ["pearl", 1], ["amber", 1], ["rune_gem", 1], ["rock_crystal", 2]], tools: ["crucible", "rune_forge"] },
+    storm_earring: { tier: 4, catLevel: 45, mats: [["platinum_ingot", 1], ["pearl", 1], ["rune_gem", 1], ["rock_crystal", 1]], tools: ["crucible", "rune_forge"] },
 
     // ---------- Тір 5 (двергська сталь, кришталь, рунні самоцвіти) — знаряддя: міхи + рунне горно ----------
     sword_t5:   { tier: 5, mats: [["darksteel_ingot", 6], ["coal", 4], ["lizard_leather", 2]], tools: ["bellows", "rune_forge"] },

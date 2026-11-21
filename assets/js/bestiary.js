@@ -13,6 +13,7 @@
 // Сторінка ворога з'являється після першої перемоги. Шкала 0…200 перемог (MARKS):
 //     1 — картинка й назва;      10 — здоров'я й мана (від мінімального до максимального);
 //    50 — матеріали й шанс;     100 — речі й шанс;     200 — уся здобич, роль і характеристики, чемпіон.
+// Сторінку можна згорнути (лишаються картинка, назва, здоров'я й мана); у згорнутій здобич розгортається окремо.
 // Шанси — з таблиць здобичі (data/enemies.js → loot) і правил гри, тож завжди збігаються з грою;
 // поруч — скільки разів у середньому випаде за 1000 перемог над цим ворогом.
 // ============================================================
@@ -30,7 +31,7 @@
   // Назви світів, якщо data/worlds.js на сторінці немає (той самий порядок, що в WORLDS)
   const WORLD_NAMES = ["Гардарика", "Темний ліс", "Альвгейм", "Ванагейм", "Свартальвгейм", "Йотунгейм", "Муспельгейм", "Асгард", "Ніфльгейм і Хельгейм"];
   const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
-  const REGION_WORLD = { start: 1, city: 1, dark: 2, alf: 3, van: 4, svartgard: 5, svart: 5, jot: 6 };
+  const REGION_WORLD = { start: 1, city: 1, dark: 2, alf: 3, van: 4, svartgard: 5, svart: 5, jot: 6, musp: 7 };
   const ROLE_NAMES = { tank: "Танк", melee: "Дамагер ближнього бою", ranged: "Дамагер дальнього бою", caster: "Маг", healer: "Хілер" };
 
   const worldOfRegion = r => RPG.worldOfRegion?.(r)?.n || REGION_WORLD[r] || 1;
@@ -180,8 +181,11 @@
     }
     if (e.boss && RPG.POUCH_DROP) rows.push(["Мішечок на пояс", `${pct(RPG.POUCH_DROP.chance)}`]);
     if (RPG.BLUEPRINT_DROPS?.[id]?.length) rows.push(["Креслення комплекту професії", `${pct(RPG.BLUEPRINT_CHANCE)} — одне з ${RPG.BLUEPRINT_DROPS[id].length}`]);
-    const t4 = RPG.t4BlueprintChance?.(id) || 0;
-    if (t4) rows.push(["Креслення сталі ванів (тір 4)", e.boss ? `${pct(t4)}, у данжі — ${pct(RPG.T4_BLUEPRINT.dungeonBoss)} — одне з ${RPG.T4_BLUEPRINT.ids.length}` : `${pct(t4)} — одне з ${RPG.T4_BLUEPRINT.ids.length}`]);
+    for (const [key, def] of Object.entries(RPG.TIER_BLUEPRINTS || {})) {
+      const ch = RPG.tierBlueprintChance(key, id);
+      if (!ch) continue;
+      rows.push([def.bpName, e.boss ? `${pct(ch)}, у данжі — ${pct(def.dungeonBoss)} — одне з ${def.ids.length}` : `${pct(ch)} — одне з ${def.ids.length}`]);
+    }
     if (id === "forest_lord") rows.push(["Книга «Руни Небесної Кузні»", "після першої перемоги"]);
     // Матеріали й речі — вище; тут решта: золото, досвід, артефакти, ключі, трофеї босів
     frag.append(E("h4", "bst-h", "Решта здобичі"), table(null, rows));
@@ -226,11 +230,38 @@
     return frag;
   }
 
+  // Згортання сторінок (v0.6.27): згорнута — лише картинка, назва, здоров'я й мана; здобич розгортається окремо.
+  // Стан — у браузері (localStorage), для кожного ворога: { c: опис згорнуто, d: здобич розгорнуто }
+  const UI_KEY = "rpg-bestiary-ui";
+  let ui = null;
+  function uiState() {
+    if (ui) return ui;
+    try { ui = JSON.parse(localStorage.getItem(UI_KEY) || "{}") || {}; } catch { ui = {}; }
+    return ui;
+  }
+  function uiSave() { try { localStorage.setItem(UI_KEY, JSON.stringify(ui || {})); } catch { /* без сховища — лише до перезапуску */ } }
+  function setUi(id, key, val) {
+    const st = uiState();
+    const r = { ...(st[id] || {}) };
+    if (val) r[key] = 1; else delete r[key];
+    if (Object.keys(r).length) st[id] = r; else delete st[id];
+    uiSave();
+  }
+  function applyUi(sec, id) {
+    const r = uiState()[id] || {};
+    sec.classList.toggle("is-collapsed", !!r.c);
+    sec.classList.toggle("show-drop", !!r.d);
+    const t = sec.querySelector(".bst-toggle"), d = sec.querySelector(".bst-drop-toggle");
+    if (t) { t.textContent = r.c ? "▸ Розгорнути опис" : "▾ Згорнути опис"; t.setAttribute("aria-expanded", r.c ? "false" : "true"); }
+    if (d) { d.textContent = r.d ? "▾ Сховати здобич" : "▸ Показати здобич"; d.setAttribute("aria-expanded", r.d ? "true" : "false"); }
+  }
+
   function entry(save, id) {
     const e = RPG.ENEMIES[id];
     const r = save.bestiary?.[id] || { k: 0 };
     const k = r.k || 0;
     const sec = E("section", "bst-entry" + (e.boss ? " is-boss" : ""));
+    sec.dataset.enemy = id;
     const head = E("div", "bst-head");
     const img = E("span", "bst-img");
     Object.assign(img.style, RPG.enemySpriteStyle(id));
@@ -238,24 +269,46 @@
     img.setAttribute("aria-label", e.name);
     const title = E("div", "bst-title");
     title.append(E("h3", "chronicle-sub", e.name), E("span", "bst-sub", (e.bestiaryOnly ? "Рівень — як у боса данжу" : `Рівень ${e.level}`) + (e.boss ? " · бос" : "") + (r.ch ? ` · чемпіонів переможено: ${r.ch}` : "")));
-    head.append(img, title);
-    sec.append(head, bar(k));
-    if (e.bestiaryOnly) {
-      const ds = save.darkSouls || {};
-      sec.append(E("p", "chronicle-p", `Може з'явитися замість боса будь-якого данжу з ${worldName(RPG.DARK_SOUL?.fromWorld || 4)} і далі (шанс ${Math.round((RPG.DARK_SOUL?.chance || 0.1) * 100)}% при відкритті ключем). Удвічі сильніша за боса, досвіду — уп'ятеро більше. Перемог над Зрадниками: ${ds.kills || 0}, здобуто жарин Небесного горна: ${ds.embers || 0}.`));
-    }
     if (k >= 10) {
       const hp = r.hp || [e.stats.hp, e.stats.hp], mp = r.mp || [e.stats.mp || 0, e.stats.mp || 0];
       const span = ([a, b]) => a === b ? RPG.ui.fmtNum(a) : `${RPG.ui.fmtNum(a)}–${RPG.ui.fmtNum(b)}`;
-      sec.append(E("p", "chronicle-p bst-hpmp", `Здоров'я: ${span(hp)} · Мана: ${span(mp)}`));
-    } else sec.append(locked(10, "Здоров'я й мана"));
-    if (k >= 50) sec.append(E("h4", "bst-h", "Матеріали"), lootTable(lootRows(id, "mat")));
-    else sec.append(locked(50, "Матеріали"));
-    if (k >= 100) sec.append(E("h4", "bst-h", "Речі"), lootTable(lootRows(id, "item")));
-    else sec.append(locked(100, "Речі"));
-    if (k >= 200) sec.append(fullDrop(id), roleAndStats(id));
-    else sec.append(locked(200, "Уся здобич, роль і характеристики, чемпіон"));
+      title.append(E("span", "bst-hpmp", `Здоров'я: ${span(hp)} · Мана: ${span(mp)}`));
+    } else title.append(E("span", "bst-hpmp is-locked", "🔒 Здоров'я й мана — з 10 перемог"));
+    head.append(img, title);
+    const tools = E("div", "bst-tools");
+    tools.append(RPG.ui.button("", "bst-toggle", () => { setUi(id, "c", !sec.classList.contains("is-collapsed")); applyUi(sec, id); }),
+      RPG.ui.button("", "bst-drop-toggle", () => { setUi(id, "d", !sec.classList.contains("show-drop")); applyUi(sec, id); }));
+    sec.append(head, tools);
+    const body = E("div", "bst-body");
+    body.append(bar(k));
+    if (e.bestiaryOnly) {
+      const ds = save.darkSouls || {};
+      body.append(E("p", "chronicle-p", `Може з'явитися замість боса будь-якого данжу з ${worldName(RPG.DARK_SOUL?.fromWorld || 4)} і далі (шанс ${Math.round((RPG.DARK_SOUL?.chance || 0.1) * 100)}% при відкритті ключем). Удвічі сильніша за боса, досвіду — уп'ятеро більше. Перемог над Зрадниками: ${ds.kills || 0}, здобуто жарин Небесного горна: ${ds.embers || 0}.`));
+    }
+    // Здобич — окремий блок: коли опис згорнуто, його можна розгорнути самостійно
+    const drop = E("div", "bst-drop");
+    if (k >= 50) drop.append(E("h4", "bst-h", "Матеріали"), lootTable(lootRows(id, "mat")));
+    else drop.append(locked(50, "Матеріали"));
+    if (k >= 100) drop.append(E("h4", "bst-h", "Речі"), lootTable(lootRows(id, "item")));
+    else drop.append(locked(100, "Речі"));
+    if (k >= 200) drop.append(fullDrop(id));
+    else drop.append(locked(200, "Решта здобичі"));
+    body.append(drop);
+    if (k >= 200) body.append(roleAndStats(id));
+    else body.append(locked(200, "Роль і характеристики, чемпіон"));
+    sec.append(body);
+    applyUi(sec, id);
     return sec;
+  }
+  // Згорнути / розгорнути всі сторінки глави
+  function chapterTools(ids) {
+    const row = E("div", "bst-chapter-tools");
+    const all = val => () => {
+      for (const id of ids) setUi(id, "c", val);
+      document.querySelectorAll(".bst-entry").forEach(s => { if (ids.includes(s.dataset.enemy)) applyUi(s, s.dataset.enemy); });
+    };
+    row.append(RPG.ui.button("▸ Згорнути всі описи", "bst-toggle", all(true)), RPG.ui.button("▾ Розгорнути всі", "bst-toggle", all(false)));
+    return row;
   }
 
   // Розділ книги для вікна-книги (game-common.js → showChronicle, opts.book)
@@ -281,6 +334,7 @@
     const ids = enemiesOfWorld(n);
     const met = ids.filter(id => kills(save, id) > 0);
     if (!met.length) frag.append(E("p", "chronicle-blank", "Сторінки цієї глави ще чисті. Їх напишуть перемоги, яких поки не було…"));
+    else if (met.length > 1) frag.append(chapterTools(met));
     for (const id of met) frag.append(entry(save, id));
     if (ids.length > met.length) frag.append(E("p", "chronicle-note bst-unknown", `Ще не зустрінуто: ${ids.length - met.length} з ${ids.length} істот цієї глави.`));
     return frag;

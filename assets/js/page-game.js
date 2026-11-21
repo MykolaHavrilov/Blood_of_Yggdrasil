@@ -1066,16 +1066,16 @@
           if (e.id === "forest_lord" && RPG.RUNE_BOOK && RPG.addToLibrary(save, "runes")) {
             summary.push(`📜 Серед трофеїв Володаря — книга Сварога «${RPG.RUNE_BOOK.title}»! Вона чекатиме в бібліотеці вашого дому (Спальний район Дубової Застави).`);
           }
-          // Креслення комплекту професії (боси Альвгейму) і креслення тіру 4 (світи 4–5) — data/profsets.js
-          for (const bp of [RPG.rollBlueprintDrop?.(save, e.id), RPG.rollT4Blueprint?.(e.id, { dungeon: !!dun })]) {
+          // Креслення комплекту професії (лише визначені боси) і звичайні креслення тірів 3–7 та Штормової сталі (будь-які вороги своїх світів) — data/profsets.js
+          for (const bp of [RPG.rollBlueprintDrop?.(save, e.id), ...(RPG.rollTierBlueprints?.(e.id, { dungeon: !!dun }) || [])]) {
           if (bp) {
             const n = RPG.ITEMS[bp].name;
             if (RPG.fitQty(save, bp, 1)) {
               RPG.addItem(save, bp, 1);
-              summary.push(`📐 Трофей боса: ${n}!`);
+              summary.push(e.boss ? `📐 Трофей боса: ${n}!` : `📐 Здобич: ${n}!`);
               got[n] = (got[n] || 0) + 1;
             } else {
-              summary.push(`📐 Трофей боса: ${n} — пропав, інвентар повний!`);
+              summary.push(e.boss ? `📐 Трофей боса: ${n} — пропав, інвентар повний!` : `📐 Здобич: ${n} — пропала, інвентар повний!`);
               lost[n] = (lost[n] || 0) + 1;
             }
           }

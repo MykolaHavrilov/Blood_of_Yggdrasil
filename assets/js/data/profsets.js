@@ -227,60 +227,110 @@
     }
   }
 
-  // ---------- Креслення тіру 4 (рішення користувача 2026-11-20) ----------
-  // Усі 17 рецептів тіру 4 (сталь ванів) куються лише за вивченим кресленням. Креслення падають у світах 4–5
-  // (Ванагейм, Свартальвгейм): звичайний ворог — mob, бос — boss, бос данжу — dungeonBoss. Вивчені падають і далі
-  // (рівноймовірно будь-яке з 17; дублікат можна продати). Старі сейви з відкритим Ванагеймом — усі вивчені (save.js, версія 11).
-  const T4_BLUEPRINT = {
-    mob: 0.005, boss: 0.05, dungeonBoss: 0.1, worlds: [4, 5], price: 600,
-    items: ["sword_t4", "axe_t4", "dagger_t4", "bow_t4", "staff_t4", "shield_t4", "knife_t4", "quiver_t4", "orb_t4",
-            "steel_head", "steel_chest", "steel_legs", "steel_hands", "steel_feet", "ring_t4", "amulet_t4", "earring_t4"],
-    ids: []
+  // ---------- Креслення тірів 3–7 і «Штормової сталі» (рішення користувача 2026-11-20, 2026-11-21) ----------
+  // Усі 17 рецептів кожного тіру 3–7 (і 17 рецептів Штормової сталі) куються лише за вивченим кресленням.
+  // Це «звичайні» креслення: падають з БУДЬ-ЯКИХ ворогів своїх світів — звичайний ворог mob, бос boss, бос данжу dungeonBoss.
+  // «Комплектні» (комплекти професій) — лише з визначених босів (BLUEPRINT_DROPS вище).
+  // Вивчене креслення падає й далі: дублікат можна продати або покласти на ковадло (craft.js → BLUEPRINT_LEGEND_BONUS).
+  // Старі сейви: тіри, які гравець уже міг кувати, — вивчені (save.js → позначка story.tierBp12).
+  const TIER_BP_CHANCE = { mob: 0.005, boss: 0.05, dungeonBoss: 0.1 };
+  const tierItems = (t, re, armor) => ["sword", "axe", "dagger", "bow", "staff", "shield", "knife", "quiver", "orb"].map(k => `${k}_t${t}`)
+    .concat(["head", "chest", "legs", "hands", "feet"].map(s => `${armor}_${s}`), ["ring", "amulet", "earring"].map(k => `${k}_t${t}`));
+  const TIER_BLUEPRINTS = {
+    3: { tier: 3, worlds: [3, 4], price: 150, items: tierItems(3, null, "iron"),
+         what: L("Креслення ковальського рецепта заліза (тір 3).", "A smith's recipe blueprint of iron (tier 3)."),
+         where: L("в Альвгеймі й Ванагеймі", "in Alfheim and Vanaheim") },
+    4: { tier: 4, worlds: [4, 5], price: 600, items: tierItems(4, null, "steel"),
+         what: L("Креслення ковальського рецепта сталі ванів (тір 4).", "A smith's recipe blueprint of Vanir steel (tier 4)."),
+         where: L("у Ванагеймі й Свартальвгеймі", "in Vanaheim and Svartalfheim") },
+    storm: { tier: 4, worlds: [6, 7], price: 2000, items: ["sword", "axe", "dagger", "bow", "staff", "shield", "knife", "quiver", "orb",
+             "head", "chest", "legs", "hands", "feet", "ring", "amulet", "earring"].map(k => "storm_" + k),
+         what: L("Креслення Штормової сталі (тір 4+, 45 рівень).", "A Storm Steel blueprint (tier 4+, level 45)."),
+         where: L("у Йотунгеймі й Муспельгеймі", "in Jotunheim and Muspelheim") },
+    5: { tier: 5, worlds: [6, 7], price: 1200, items: tierItems(5, null, "dwarf"),
+         what: L("Креслення ковальського рецепта двергської сталі (тір 5).", "A smith's recipe blueprint of dwarven steel (tier 5)."),
+         where: L("у Йотунгеймі й Муспельгеймі", "in Jotunheim and Muspelheim") },
+    6: { tier: 6, worlds: [8], price: 3000, items: tierItems(6, null, "asgard"),
+         what: L("Креслення ковальського рецепта небесного металу (тір 6).", "A smith's recipe blueprint of heavenly metal (tier 6)."),
+         where: L("в Асгарді", "in Asgard") },
+    7: { tier: 7, worlds: [9], price: 5000, items: tierItems(7, null, "ygg"),
+         what: L("Креслення ковальського рецепта з коріння Іггдрасиля (тір 7).", "A smith's recipe blueprint from Yggdrasil's roots (tier 7)."),
+         where: L("у Ніфльгеймі й Хельгеймі", "in Niflheim and Helheim") }
   };
-  const T4_SET = new Set(T4_BLUEPRINT.items);
+  const BP_DEF_OF = {};                  // рецепт → ключ TIER_BLUEPRINTS
   const enName = n => RPG.I18N?.en?.phrases?.[n] || n;
-  for (const id of T4_BLUEPRINT.items) {
-    const it = RPG.ITEMS[id];
-    if (!it) continue;
-    const bp = "blueprint_t4_" + id.replace(/_t4$/, "");
-    const icon = it.type === "armor" ? "blueprint_" + it.slot : it.type === "weapon" ? "blueprint_main" : "blueprint_off";   // перстень, амулет, сережка — поки значок лівої руки
-    RPG.ITEMS[bp] = {
-      iconFile: icon,
-      name: L(`Креслення: ${it.name}`, `Blueprint: ${enName(it.name)}`),
-      type: "blueprint", recipe: id, stackable: true, maxStack: 99, price: T4_BLUEPRINT.price, noShop: true,
-      description: L(`Креслення ковальського рецепта сталі ванів. Використайте — і «${it.name}» назавжди з'явиться у вашій кузні (тір 4). ` +
-        "Падає у Ванагеймі й Свартальвгеймі: зі звичайних ворогів рідко, з босів частіше, з босів данжів — найчастіше. Вивчене креслення можна продати.",
-        `A smith's recipe blueprint of Vanir steel. Use it — and "${enName(it.name)}" will appear in your forge for good (tier 4). ` +
-        "Dropped in Vanaheim and Svartalfheim: rarely by ordinary enemies, more often by bosses, most often by dungeon bosses. A learned blueprint can be sold.")
-    };
-    T4_BLUEPRINT.ids.push(bp);
-    if (RPG.RECIPES?.[id]) RPG.RECIPES[id].blueprint = true;     // recipes.js є лише на сторінці гри
+  for (const [key, def] of Object.entries(TIER_BLUEPRINTS)) {
+    Object.assign(def, TIER_BP_CHANCE, { key, ids: [],
+      label: key === "storm" ? L("Штормова сталь (45 рівень)", "Storm Steel (level 45)") : L(`Тір ${def.tier}`, `Tier ${def.tier}`),
+      bpName: key === "storm" ? L("Креслення Штормової сталі (45 рівень)", "Storm Steel blueprint (level 45)") : L(`Креслення тіру ${def.tier}`, `Tier ${def.tier} blueprint`) });
+    def.items = def.items.filter(id => RPG.ITEMS[id]);
+    for (const id of def.items) {
+      const it = RPG.ITEMS[id];
+      // id креслень: тір 4 і Штормова сталь — як були (сейви), решта — blueprint_t<N>_<річ>
+      const bp = key === "storm" ? "blueprint_" + id : `blueprint_t${key}_` + id.replace(/_t\d$/, "");
+      const icon = it.type === "armor" ? "blueprint_" + it.slot : it.type === "weapon" ? "blueprint_main"
+        : RPG.ITEM_ICON_FILES?.has("blueprint_" + it.slot) ? "blueprint_" + it.slot : "blueprint_off";   // перстень, амулет, сережка — свій значок, коли є icon_blueprint_<слот>.webp
+      RPG.ITEMS[bp] = {
+        iconFile: icon,
+        name: L(`Креслення: ${it.name}`, `Blueprint: ${enName(it.name)}`),
+        type: "blueprint", recipe: id, stackable: true, maxStack: 99, price: def.price, noShop: true,
+        description: L(`${def.what} Використайте — і «${it.name}» назавжди з'явиться у вашій кузні. ` +
+          `Падає ${def.where}: зі звичайних ворогів рідко, з босів частіше, з босів данжів — найчастіше. Дублікат вивченого креслення можна продати або покласти на ковадло, коли кує цю річ: +0,5% до легендарної за кожне (до 10 за одне кування).`,
+          `${def.what} Use it — and "${enName(it.name)}" will appear in your forge for good. ` +
+          `Dropped ${def.where}: rarely by ordinary enemies, more often by bosses, most often by dungeon bosses. A duplicate of a learned blueprint can be sold or laid on the anvil when forging this item: +0.5% to legendary for each (up to 10 per forging).`)
+      };
+      def.ids.push(bp);
+      BP_DEF_OF[id] = key;
+      if (RPG.RECIPES?.[id]) RPG.RECIPES[id].blueprint = true;     // recipes.js є лише на сторінці гри
+    }
   }
-  const isT4Blueprint = itemId => T4_SET.has(itemId);
-  // Шанс креслення тіру 4 з ворога (0, якщо ворог не зі світів 4–5). o.dungeon — бій із босом данжу
-  function t4BlueprintChance(enemyId, o = {}) {
-    const e = RPG.ENEMIES?.[enemyId];
-    if (!e || e.darkSoul) return 0;
-    const worlds = [...(RPG.enemyRegions?.(enemyId) || [])].map(r => RPG.worldOfRegion ? RPG.worldOfRegion(r) : 0);
-    if (!worlds.some(w => T4_BLUEPRINT.worlds.includes(w))) return 0;
-    return e.boss ? (o.dungeon ? T4_BLUEPRINT.dungeonBoss : T4_BLUEPRINT.boss) : T4_BLUEPRINT.mob;
+  // Опис набору креслень, якому належить рецепт itemId, або null
+  const tierBlueprintDef = itemId => TIER_BLUEPRINTS[BP_DEF_OF[itemId]] || null;
+  // Світи ворога (номери)
+  const enemyWorlds = enemyId => [...(RPG.enemyRegions?.(enemyId) || [])].map(r => RPG.worldOfRegion ? RPG.worldOfRegion(r) : 0);
+  // Шанс креслення набору key з ворога (0, якщо ворог не з його світів). o.dungeon — бій із босом данжу
+  function tierBlueprintChance(key, enemyId, o = {}) {
+    const def = TIER_BLUEPRINTS[key], e = RPG.ENEMIES?.[enemyId];
+    if (!def || !e || e.darkSoul) return 0;
+    if (!enemyWorlds(enemyId).some(w => def.worlds.includes(w))) return 0;
+    return e.boss ? (o.dungeon ? def.dungeonBoss : def.boss) : def.mob;
   }
-  // Креслення тіру 4 з ворога: id або null
-  function rollT4Blueprint(enemyId, o = {}, rng = Math.random) {
-    const ch = t4BlueprintChance(enemyId, o);
-    if (!ch || rng() >= ch) return null;
-    return T4_BLUEPRINT.ids[Math.floor(rng() * T4_BLUEPRINT.ids.length)];
+  // Креслення з ворога: масив id (кожен набір кидається окремо; рівноймовірно будь-яке з набору)
+  function rollTierBlueprints(enemyId, o = {}, rng = Math.random) {
+    const out = [];
+    for (const key of Object.keys(TIER_BLUEPRINTS)) {
+      const ch = tierBlueprintChance(key, enemyId, o);
+      if (ch && rng() < ch) { const ids = TIER_BLUEPRINTS[key].ids; out.push(ids[Math.floor(rng() * ids.length)]); }
+    }
+    return out;
   }
-  // Старі сейви: усі рецепти тіру 4 — вивчені
-  function learnAllT4(save) {
+  // Вивчити всі креслення набору key (міграція старих сейвів)
+  function learnAllTier(save, key) {
     const b = (save.story ||= {}, save.story.blueprints ||= {});
-    for (const id of T4_BLUEPRINT.items) b[id] = true;
+    for (const id of TIER_BLUEPRINTS[key]?.items || []) b[id] = true;
+  }
+  // Сумісність зі старими назвами
+  const T4_BLUEPRINT = TIER_BLUEPRINTS[4], STORM_BLUEPRINT = TIER_BLUEPRINTS.storm;
+  const isT4Blueprint = itemId => BP_DEF_OF[itemId] === "4";
+  const isStormBlueprint = itemId => BP_DEF_OF[itemId] === "storm";
+  const t4BlueprintChance = (enemyId, o) => tierBlueprintChance(4, enemyId, o);
+  const stormBlueprintChance = (enemyId, o) => tierBlueprintChance("storm", enemyId, o);
+  const learnAllT4 = save => learnAllTier(save, 4);
+
+  // Креслення, що відкриває рецепт itemId (для клітинки креслень біля ковадла), або null
+  let bpByRecipe = null;
+  function blueprintOf(itemId) {
+    if (!bpByRecipe) {
+      bpByRecipe = {};
+      for (const [id, it] of Object.entries(RPG.ITEMS)) if (it.type === "blueprint" && it.recipe) bpByRecipe[it.recipe] = id;
+    }
+    return bpByRecipe[itemId] || null;
   }
 
   // ---------- Креслення ----------
   const learned = save => (save.story ||= {}, save.story.blueprints ||= {});
   function knowsRecipe(save, itemId) {
-    if (!RPG.ITEMS[itemId]?.profSet && !T4_SET.has(itemId)) return true;
+    if (!RPG.ITEMS[itemId]?.profSet && !BP_DEF_OF[itemId]) return true;
     return !!save.story?.blueprints?.[itemId];
   }
   // Чи є в групі герой цієї професії (для секретних креслень)
@@ -317,5 +367,5 @@
     return partyHas(save, cls) || Object.keys(save.story?.blueprints || {}).some(id => RPG.ITEMS[id]?.classes?.[0] === cls);
   }
 
-  Object.assign(RPG, { T4_BLUEPRINT, isT4Blueprint, t4BlueprintChance, rollT4Blueprint, learnAllT4, blueprintVisible, PROF_SETS: SETS, BLUEPRINT_DROPS, BLUEPRINT_CHANCE, knowsRecipe, learnBlueprint, rollBlueprintDrop, blueprintSource });
+  Object.assign(RPG, { TIER_BLUEPRINTS, TIER_BP_CHANCE, tierBlueprintDef, tierBlueprintChance, rollTierBlueprints, learnAllTier, STORM_BLUEPRINT, isStormBlueprint, stormBlueprintChance, blueprintOf, T4_BLUEPRINT, isT4Blueprint, t4BlueprintChance, learnAllT4, blueprintVisible, PROF_SETS: SETS, BLUEPRINT_DROPS, BLUEPRINT_CHANCE, knowsRecipe, learnBlueprint, rollBlueprintDrop, blueprintSource });
 })(window.RPG);

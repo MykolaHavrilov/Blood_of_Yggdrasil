@@ -685,6 +685,112 @@ const ITEMS = {
     stats: { mp: 138, dodge: 6 },
     description: "Сережка з крапелькою смарагду, добутого при світлі горна. Можна носити дві сережки."
   },
+  // --- 4+ вид: Штормова сталь (45 рівень; рішення користувача 2026-11-21) ---
+  // Сталь ванів, перекована в штормах Ньорда. Сила — посередині між 5 і 6 видом, носить будь-яка професія.
+  // Лише кування за кресленням (data/profsets.js → STORM_BLUEPRINT; креслення — з босів світів 6–7).
+  // Своїх іконок ще немає — iconFile бере іконку сталі ванів; промти — H:\Game_NEW\Предмети t4+ - Штормова сталь - *.txt.
+  storm_sword: {
+    name: "Штормовий меч", iconFile: "sword_t4",
+    type: "weapon", slot: "mainHand", tier: 4, improved: true, levelReq: 45, price: 10800, weaponType: "sword", noShop: true,
+    stats: { attack: 108, crit: 6 },
+    description: "Сталь ванів, перекована на палубі під час шторму: Ньорд гасив розпечене лезо хвилею. По клинку біжать сині блискавки, мов гребені валів."
+  },
+  storm_axe: {
+    name: "Штормова сокира", iconFile: "axe_t4",
+    type: "weapon", slot: "mainHand", tier: 4, improved: true, levelReq: 45, price: 11400, weaponType: "axe", noShop: true,
+    stats: { attack: 135, str: 8, speed: -2 },
+    description: "Бородата сокира з обухом, окутим двергською сталлю. Кажуть, нею рубають щогли, коли буря тягне корабель на скелі."
+  },
+  storm_dagger: {
+    name: "Штормовий кинджал", iconFile: "dagger_t4",
+    type: "weapon", slot: "mainHand", tier: 4, improved: true, levelReq: 45, price: 10200, weaponType: "dagger", noShop: true,
+    stats: { attack: 81, crit: 13, speed: 6 },
+    description: "Тонкий клинок, вигнутий, як хвиля перед ударом об берег. Б'є швидко й без звуку — як блискавка вдалині."
+  },
+  storm_bow: {
+    name: "Штормовий лук", iconFile: "bow_t4",
+    type: "weapon", slot: "mainHand", tier: 4, improved: true, levelReq: 45, price: 11400, weaponType: "bow", noShop: true,
+    stats: { attack: 103, crit: 7, speed: 6 },
+    description: "Тис і залізне дерево, стягнуті штормовою сталлю. Тятива гуде на вітрі, а стріла летить крізь зливу, не збиваючись."
+  },
+  storm_staff: {
+    name: "Штормовий посох", iconFile: "staff_t4",
+    type: "weapon", slot: "mainHand", tier: 4, improved: true, levelReq: 45, price: 11400, weaponType: "staff", noShop: true,
+    stats: { attack: 17, magic: 119, mp: 162, int: 6 },
+    description: "Посох морських вельв: у навершя вкуто рунний самоцвіт, у якому, кажуть, замкнено одну блискавку Ньордової бурі."
+  },
+  storm_shield: {
+    name: "Штормовий щит", iconFile: "shield_t4",
+    type: "shield", slot: "offHand", tier: 4, improved: true, levelReq: 45, price: 9600, offType: "shield", noShop: true,
+    stats: { defense: 65, blockPhys: 21 },
+    description: "Круглий щит з умбоном із двергської сталі. Його край витримує не одну хвилю — цілий шторм."
+  },
+  storm_knife: {
+    name: "Штормовий малий кинджал", iconFile: "knife_t4",
+    type: "offhand", slot: "offHand", tier: 4, improved: true, levelReq: 45, price: 9000, offType: "knife", noShop: true,
+    stats: { attack: 44, crit: 8 },
+    description: "Короткий сакс для лівої руки з руків'ям у шкірі печерного ящура. Ним ріжуть снасті — і ворожі ремені."
+  },
+  storm_quiver: {
+    name: "Штормовий колчан", iconFile: "quiver_t4",
+    type: "offhand", slot: "offHand", tier: 4, improved: true, levelReq: 45, price: 9000, offType: "quiver", noShop: true,
+    stats: { attack: 38, speed: 6 },
+    description: "Колчан із тюленячої шкіри, окутий штормовою сталлю. Стріли в ньому сухі навіть після ночі під зливою."
+  },
+  storm_orb: {
+    name: "Штормова сфера", iconFile: "orb_t4",
+    type: "offhand", slot: "offHand", tier: 4, improved: true, levelReq: 45, price: 9600, offType: "orb", noShop: true,
+    stats: { magic: 60, mp: 162, mpRegen: 5 },
+    description: "Бурштин, оплавлений блискавкою, у кришталевій оправі. Усередині клубочаться крихітні грозові хмари."
+  },
+  storm_head: {
+    name: "Штормовий шолом", iconFile: "steel_head",
+    type: "armor", slot: "head", tier: 4, improved: true, levelReq: 45, price: 5400, noShop: true,
+    stats: { defense: 27, hp: 108 },
+    description: "Шолом із наносником, перекований з двергською сталлю. На гребені — карбована хвиля, що здіймається проти вітру."
+  },
+  storm_chest: {
+    name: "Штормова кольчуга", iconFile: "steel_chest",
+    type: "armor", slot: "chest", tier: 4, improved: true, levelReq: 45, price: 9000, noShop: true,
+    stats: { defense: 49, hp: 189 },
+    description: "Подвійне плетиво штормової сталі під накидкою кольору грозового моря. Тримає удар, як корабельний борт тримає вал."
+  },
+  storm_legs: {
+    name: "Штормові поножі", iconFile: "steel_legs",
+    type: "armor", slot: "legs", tier: 4, improved: true, levelReq: 45, price: 6600, noShop: true,
+    stats: { defense: 33, hp: 135 },
+    description: "Кольчужні поножі з наколінниками з чорної сталі. У них стоять на хиткій палубі, як на камені."
+  },
+  storm_hands: {
+    name: "Штормові наручі", iconFile: "steel_hands",
+    type: "armor", slot: "hands", tier: 4, improved: true, levelReq: 45, price: 5400, noShop: true,
+    stats: { defense: 22, attack: 17 },
+    description: "Наручі зі сталевими смугами, на яких карбовано блискавки. Не дають рукам ковзати по мокрому руків'ю."
+  },
+  storm_feet: {
+    name: "Штормові чоботи", iconFile: "steel_feet",
+    type: "armor", slot: "feet", tier: 4, improved: true, levelReq: 45, price: 6000, noShop: true,
+    stats: { defense: 22, speed: 6 },
+    description: "Чоботи з тюленячої шкіри на підошві з ящурової. Не промокають і не ковзають — ні на палубі, ні на кризі Йотунгейму."
+  },
+  storm_ring: {
+    name: "Штормове кільце", iconFile: "ring_t4",
+    type: "accessory", slot: "ring", tier: 4, improved: true, levelReq: 45, price: 14400, noShop: true,
+    stats: { magicDefense: 25, crit: 8, str: 11 },
+    description: "Платинове кільце з рунним самоцвітом, у якому спалахує блискавка, щойно власник стискає кулак. Можна носити два кільця."
+  },
+  storm_amulet: {
+    name: "Штормовий амулет", iconFile: "amulet_t4",
+    type: "accessory", slot: "amulet", tier: 4, improved: true, levelReq: 45, price: 14400, noShop: true,
+    stats: { magicDefense: 25, hp: 270, spi: 14 },
+    description: "Платиновий амулет-хвиля з кришталем у серцевині — оберіг моряків, що вертаються додому крізь бурю."
+  },
+  storm_earring: {
+    name: "Штормова сережка", iconFile: "earring_t4",
+    type: "accessory", slot: "earring", tier: 4, improved: true, levelReq: 45, price: 14400, noShop: true,
+    stats: { magicDefense: 25, mp: 162, dodge: 7 },
+    description: "Сережка з грозовою перлиною: у ній чути далекий грім. Можна носити дві сережки."
+  },
   // --- 6 вид: Небесний метал Асгарду (50 рівень) ---
   sword_t6: {
     name: "Асгардський меч",
@@ -1215,6 +1321,42 @@ const ITEMS = {
     type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
     description: "Ключ у вигляді зелено-чорного морського змія, що кусає власний хвіст; на борідці — крапля отрути. Відчиняє данж «Кільце Змія» (Берег Світового Змія). Одна спроба — один ключ."
   },
+  // Ключі данжів Муспельгейму (світ 7)
+  key_musp_ash: {
+    name: "Ключ «Лігво вогняних псів»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Почорнілий залізний ключ у сірому попелі; вушко — оскалена голова вогняного гончака з жаринами замість очей. Відчиняє данж «Лігво вогняних псів» (Попелясті рівнини). Одна спроба — один ключ."
+  },
+  key_musp_lava: {
+    name: "Ключ «Гніздо Лавового змія»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Ключ із застиглої чорної лави, крізь яку світяться помаранчеві тріщини; вушко — звитий лавовий змій. Відчиняє данж «Гніздо Лавового змія» (Лавові ріки). Одна спроба — один ключ."
+  },
+  key_musp_forges: {
+    name: "Ключ «Горно синів Муспелля»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Розпечений кований ключ, ніби щойно з горна; вушко — маленьке ковадло в полум'ї, на стрижні — сліди молота. Відчиняє данж «Горно синів Муспелля» (Кузні синів Муспелля). Одна спроба — один ключ."
+  },
+  key_musp_fortress: {
+    name: "Ключ «Підземелля цитаделі»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Гострий блискучий ключ з чорного обсидіану з гранями; вушко — вежа фортеці з червоним вікном, по краях біжить тонка смужка вогню. Відчиняє данж «Підземелля цитаделі» (Обсидіанова фортеця). Одна спроба — один ключ."
+  },
+  key_musp_sinmara: {
+    name: "Ключ «Скарбниця Сінмари»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Вишуканий ключ з темної бронзи з візерунком-полум'ям; вушко — жіноча долоня, що тримає крихітний вогник, у долоні — рубін. Відчиняє данж «Скарбниця Сінмари» (Чертог Сінмари). Одна спроба — один ключ."
+  },
+  key_musp_ginnungagap: {
+    name: "Ключ «Безодня Іміра»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Ключ, розколотий навпіл: одна половина — білий іній, друга — помаранчеве полум'я, а у вушку їх з'єднує крихітний вир темного туману. Відчиняє данж «Безодня Іміра» (Межа Гіннунгагапу). Одна спроба — один ключ."
+  },
+  key_musp_surtr: {
+    name: "Ключ «Серце вулкана»",
+    type: "quest", quest: true, pocket: "keys", price: 0, noShop: true,
+    description: "Масивний ключ із темного заліза, стрижень якого — палаючий меч; вушко — рогата корона з вогню, ключ сяє біло-помаранчевим жаром. Відчиняє данж «Серце вулкана» (Трон Сурта). Одна спроба — один ключ."
+  },
 
   // ---------- Предмет адміністратора (для тестування прогресу) ----------
   // Діє на ВСЮ групу, поки лежить в інвентарі (character.js → godsOrb): +800% досвіду (бої й квести),
@@ -1417,8 +1559,9 @@ const ICON_FILES = new Set(["sword", "dagger", "axe", "bow", "staff", "shield", 
  "orb_veles", "orb_gods"]
   .forEach(id => ICON_FILES.add(id));
 // Іконки, додані скриптом tools/add-image.js (окремі файли assets/images/items/icon_<id>.webp)
-["key_svart_alvis", "key_svart_falls", "key_svart_forges", "key_svart_mines", "key_svart_mokkur", "key_svart_quarters", "key_svart_runes", "heavenly_ember"].forEach(id => ICON_FILES.add(id));
+["key_svart_alvis", "key_svart_falls", "key_svart_forges", "key_svart_mines", "key_svart_mokkur", "key_svart_quarters", "key_svart_runes", "heavenly_ember", "storm_amulet", "storm_axe", "storm_bow", "storm_chest", "storm_dagger", "storm_earring", "storm_feet", "storm_hands", "storm_head", "storm_knife", "storm_legs", "storm_orb", "storm_quiver", "storm_ring", "storm_shield", "storm_staff", "storm_sword", "blueprint_amulet", "blueprint_earring", "blueprint_ring"].forEach(id => ICON_FILES.add(id));
 ["key_jot_passes", "key_jot_thrymheim", "key_jot_ironwood", "key_jot_thrym", "key_jot_waste", "key_jot_utgard", "key_jot_hymir", "key_jot_serpent"].forEach(id => ICON_FILES.add(id));
+["key_musp_ash", "key_musp_lava", "key_musp_forges", "key_musp_fortress", "key_musp_sinmara", "key_musp_ginnungagap", "key_musp_surtr"].forEach(id => ICON_FILES.add(id));
 // Броня й прикраси 1–3 виду, комплект слизу — нові окремі іконки (2026-11-16; промти — «Речі 1-3 тіру - іконки (промти).txt» у H:/Game_NEW), замість листів armor / accessory
 ["linen", "leather", "iron"].forEach(m => ["head", "chest", "legs", "hands", "feet"].forEach(sl => ICON_FILES.add(`${m}_${sl}`)));
 ["ring", "amulet", "earring"].forEach(k => [1, 2, 3].forEach(t => ICON_FILES.add(`${k}_t${t}`)));
@@ -1427,8 +1570,8 @@ const ICON_FILE_BASE = RPG.asset("assets/images/items/icon_");
 
 // Стиль іконки предмета (окремий файл або клітинка спрайт-листа); null — іконки немає (буде заглушка)
 function itemIconStyle(id) {
-  const file = ITEMS[id]?.iconFile;                 // квестовий предмет може брати іконку іншої речі
-  if (file && ICON_FILES.has(file)) id = file;
+  const file = ITEMS[id]?.iconFile;                 // квестовий предмет може брати іконку іншої речі (поки своєї немає)
+  if (file && !ICON_FILES.has(id) && ICON_FILES.has(file)) id = file;
   // Магічний / епічний / легендарний матеріал — іконка звичайного (рідкість видно з рамки комірки)
   if (!ICON_FILES.has(id) && ITEMS[id]?.gradeOf && ICON_FILES.has(ITEMS[id].gradeOf)) id = ITEMS[id].gradeOf;
   if (ICON_FILES.has(id)) {

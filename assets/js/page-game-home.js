@@ -6,7 +6,7 @@
 // ============================================================
 
 (function (RPG) {
-  const { $, el, noteP, link, button, fmtNum, showMsg, noticeDialog, showParchment, openLibraryBook, showForgeBook, rarityTextClass, lockMark, smallIcon } = RPG.ui;
+  const { $, el, noteP, link, button, fmtNum, showMsg, noticeDialog, showParchment, openLibraryBook, showForgeBook, rarityTextClass, lockMark, smallIcon, slotClass, fillItemCell } = RPG.ui;
   RPG.gameParts = RPG.gameParts || {};
 
   RPG.gameParts.home = function (G) {
@@ -170,12 +170,22 @@
       if (g && r.catUps?.length) parts.push(`${g.name}: рівень ${r.catUps.at(-1)}!`);
       return parts.length ? ". " + parts.join(" ") : ".";
     }
-    let forgeTab = "weapon", forgePreferRare = false, forgeSpark = false, forgeResult = null, disConfirm = null;
-    const forgeTier = {};       // вибраний тір на кожній вкладці кузні: { weapon: 4, armor: 2, … }
+    let forgeTab = "weapon", forgeSpark = false, forgeResult = null, disConfirm = null;
+    const forgeTier = {};       // вибраний тір на кожній вкладці кузні: { weapon: 4, armor: 2, armor: "4+", … }
+    // Ковадло: вибраний рецепт на кожній вкладці, рідкість матеріалів і покладені креслення для кожного рецепта, кількість підряд
+    const forgePick = {}, forgeGrades = {}, forgeBp = {};
+    let forgeCount = 1, forgeShowAll = false, matPick = null;   // matPick — клітинка, для якої відкрито вибір: id матеріалу або "bp"
+    const STORM_CAT_LEVEL = 45;
+    const tierKey = rc => rc.catLevel ? `${rc.tier}+` : rc.tier;          // «Тір 4+» — Штормова сталь (рецепти з catLevel)
+    const GRADE_LABEL = { common: "Звичайні", magic: "Магічні", epic: "Епічні", legendary: "Легендарні" };
+    const gradeIds = base => RPG.CRAFT_GRADES.map(g => ({ grade: g, id: RPG.materialOfGrade(base, g) })).filter(g => g.grade === "common" || g.id !== RPG.materialBase(base));
+    const fmtPct = x => (Math.round(x * 1000) / 10).toLocaleString("uk-UA") + "%";
     function showForge() {
       document.querySelector(".forge-dialog")?.remove();
-      const { dlg, closeBtn } = noticeDialog("forge-dialog", () => { forgeResult = null; disConfirm = null; renderAll(); });
+      const { dlg, closeBtn } = noticeDialog("forge-dialog", () => { forgeResult = null; disConfirm = null; matPick = null; renderAll(); });
       const draw = () => {
+        const top = dlg.scrollTop;
+        queueMicrotask(() => { dlg.scrollTop = top; });   // після перемальовування прокрутка лишається на місці
         dlg.innerHTML = "";
         const close = closeBtn("Закрити кузню");
         const st = RPG.craftState(save);
@@ -202,92 +212,188 @@
         }
         if (forgeTab === "smelt") { drawSmelt(); return; }
         if (forgeTab === "dis") { drawDis(); return; }
-        // параметри
-        const optRow = el("div", "forge-opts");
-        const cb = (label, val, set) => {
-          const l = el("label", "forge-opt");
-          const i = el("input"); i.type = "checkbox"; i.checked = val;
-          i.addEventListener("change", () => { set(i.checked); draw(); });
-          l.append(i, document.createTextNode(" " + label));
-          return l;
-        };
-        optRow.append(cb("Спершу рідкісніші матеріали (кращі шанси)", forgePreferRare, v => forgePreferRare = v));
-        const sparks = RPG.craftCountMat(save, "heavenly_spark");
-        if (sparks) optRow.append(cb(`Додати Небесну іскру (до +10% до легендарної; є ${sparks})`, forgeSpark, v => forgeSpark = v));
-        else forgeSpark = false;
-        dlg.append(optRow);
-        if (RPG.chestsHere(save).some(id => RPG.parseCraftChest(id)?.type === "mat"))
-          dlg.append(el("small", "forge-why", "Матеріали беруться з інвентаря і скринь для матеріалів цього дому."));
-        const group = RPG.RECIPE_GROUPS.find(x => x.id === forgeTab);
-        // Фільтр тірів: кнопка на кожен тір цього виду. Закритий тір (світ із ресурсами не відкрито) — сірий:
-        // рецепти видно, але кувати не можна (data/recipes.js → craftTierOpen)
-        const tiers = [...new Set(Object.entries(RPG.RECIPES).filter(([id]) => group.types.includes(RPG.ITEMS[id]?.type)).map(([, r]) => r.tier))].sort((a, b) => a - b);
+        drawAnvil(curGroup);
+      };
+      // ---------- Ковадло (v0.6.27): вибір рецепта → кількість → матеріали під ковадлом → креслення ліворуч → «Кувати» ----------
+      // Над ковадлом — рецепти вибраного тіру (спершу ті, на які є все потрібне); під ковадлом — клітинки матеріалів
+      // (заповнюються самі, рідкість кожної можна змінити — але не сам матеріал); ліворуч — клітинка креслень-дублікатів (лише вручну).
+      const drawAnvil = group => {
+        const tiers = [...new Set(Object.entries(RPG.RECIPES).filter(([id]) => group.types.includes(RPG.ITEMS[id]?.type)).map(([, r]) => tierKey(r)))]
+          .sort((a, b) => parseFloat(a) - parseFloat(b) || String(a).length - String(b).length);
         const catLevel = RPG.craftCat(save, group.id).level;
-        const tierOpen = t => RPG.craftTierOpen ? RPG.craftTierOpen(save, t) : { ok: true };
+        const tierOpen = t => RPG.craftTierOpen ? RPG.craftTierOpen(save, parseInt(t, 10)) : { ok: true };
+        const tierNeed = t => String(t).endsWith("+") ? STORM_CAT_LEVEL : RPG.CRAFT_TIER_LEVEL[parseInt(t, 10)];
         if (!tiers.includes(forgeTier[group.id])) {
-          const usable = tiers.filter(t => tierOpen(t).ok && catLevel >= RPG.CRAFT_TIER_LEVEL[t]);
+          const usable = tiers.filter(t => tierOpen(t).ok && catLevel >= tierNeed(t));
           forgeTier[group.id] = usable.length ? usable.at(-1) : tiers[0];
         }
         const curTier = forgeTier[group.id];
         const tierRow = el("div", "forge-tiers");
         for (const t of tiers) {
           const open = tierOpen(t);
-          const lvlOk = catLevel >= RPG.CRAFT_TIER_LEVEL[t];
-          const tb = button(`Тір ${t}`, "wf " + (t === curTier ? "wf-button" : "wf-link") + (open.ok ? "" : " is-closed"), () => { forgeTier[group.id] = t; forgeResult = null; draw(); });
-          tb.title = !open.ok ? open.reason : lvlOk ? `Тір ${t} відкрито` : `Тір ${t} — з рівня «${group.name}» ${RPG.CRAFT_TIER_LEVEL[t]}`;
+          const lvlOk = catLevel >= tierNeed(t);
+          const tb = button(`Тір ${t}`, "wf " + (t === curTier ? "wf-button" : "wf-link") + (open.ok ? "" : " is-closed"), () => { forgeTier[group.id] = t; forgeResult = null; forgePick[group.id] = null; matPick = null; draw(); });
+          tb.title = !open.ok ? open.reason : lvlOk ? `Тір ${t} відкрито` : `Тір ${t} — з рівня «${group.name}» ${tierNeed(t)}`;
           tierRow.append(tb);
         }
         dlg.append(tierRow);
         const curOpen = tierOpen(curTier);
         if (!curOpen.ok) dlg.append(el("p", "forge-closed-note", curOpen.reason + " Рецепти можна переглянути, але кувати — ні."));
-        const list = el("div", "stack forge-list");
-        // Комплекти професій (data/profsets.js): у списку — лише вивчені за кресленнями
-        const bpAll = Object.entries(RPG.RECIPES).filter(([id, rc]) => rc.blueprint && RPG.ITEMS[id]?.profSet && rc.tier === curTier && group.types.includes(RPG.ITEMS[id]?.type) && RPG.blueprintVisible(save, id));
-        if (bpAll.length) {
-          const known = bpAll.filter(([id]) => RPG.knowsRecipe(save, id)).length;
-          list.append(el("p", "forge-why", `Комплекти професій: вивчено креслень ${known} з ${bpAll.length}. ` +
-            "Креслення падають з босів Альвгейму; використайте креслення в інвентарі — і рецепт з'явиться тут."));
+        // Креслення: скільки вивчено (комплекти професій, сталь ванів, Штормова сталь)
+        const inTier = Object.entries(RPG.RECIPES).filter(([id, rc]) => tierKey(rc) === curTier && group.types.includes(RPG.ITEMS[id]?.type));
+        const bpNote = (list, text) => {
+          if (!list.length) return;
+          const known = list.filter(([id]) => RPG.knowsRecipe(save, id)).length;
+          dlg.append(el("p", "forge-why", text(known, list.length)));
+        };
+        bpNote(inTier.filter(([id, rc]) => rc.blueprint && RPG.ITEMS[id]?.profSet && RPG.blueprintVisible(save, id)),
+          (k, n) => `Комплекти професій: вивчено креслень ${k} з ${n}. Креслення падають з босів Альвгейму; використайте креслення в інвентарі — і рецепт з'явиться тут.`);
+        for (const def of Object.values(RPG.TIER_BLUEPRINTS || {})) {
+          bpNote(inTier.filter(([id]) => RPG.tierBlueprintDef(id) === def),
+            (k, n) => `${def.label}: вивчено креслень ${k} з ${n}. Креслення падають ${def.where} (звичайні вороги — 0,5%, боси — 5%, боси данжів — 10%); використайте креслення в інвентарі — і рецепт з'явиться тут.`);
         }
-        // Сталь ванів (тір 4): кожен рецепт — за кресленням зі світів 4–5
-        const t4All = Object.entries(RPG.RECIPES).filter(([id, rc]) => rc.tier === curTier && RPG.isT4Blueprint?.(id) && group.types.includes(RPG.ITEMS[id]?.type));
-        if (t4All.length) {
-          const known = t4All.filter(([id]) => RPG.knowsRecipe(save, id)).length;
-          list.append(el("p", "forge-why", `Сталь ванів: вивчено креслень ${known} з ${t4All.length}. ` +
-            "Креслення падають у Ванагеймі й Свартальвгеймі (звичайні вороги — 0,5%, боси — 5%, боси данжів — 10%); використайте креслення в інвентарі — і рецепт з'явиться тут."));
+        // Рецепти над ковадлом: вивчені; спершу ті, на які є все потрібне
+        const recipes = inTier.filter(([id, rc]) => !rc.blueprint || RPG.knowsRecipe(save, id)).map(([id]) => ({ id, info: RPG.recipeInfo(save, id) }));
+        const ready = recipes.filter(r => r.info.canCraft || r.info.bagFull);
+        const shown = forgeShowAll ? recipes : ready;
+        const head = el("div", "anvil-recipes-head");
+        head.append(el("strong", null, ready.length ? `Оберіть рецепт (доступно ${ready.length} з ${recipes.length}):` : "Оберіть рецепт:"));
+        if (recipes.length > ready.length) {
+          const l = el("label", "forge-opt");
+          const i = el("input"); i.type = "checkbox"; i.checked = forgeShowAll;
+          i.addEventListener("change", () => { forgeShowAll = i.checked; draw(); });
+          l.append(i, document.createTextNode(" показати й ті, на які бракує матеріалів"));
+          head.append(l);
         }
-        for (const [id, rc] of Object.entries(RPG.RECIPES)) {
-          const item = RPG.ITEMS[id];
-          if (!item || !group.types.includes(item.type) || rc.tier !== curTier) continue;
-          if (rc.blueprint && !RPG.knowsRecipe(save, id)) continue;
-          const info = RPG.recipeInfo(save, id);
-          const row = el("div", "forge-row" + (!info.tierOpen ? " is-closed" : info.levelOk ? "" : " is-locked"));
-          const head = el("div", "forge-head");
-          head.append(smallIcon(id), el("strong", null, item.name), el("small", "forge-tier", `тір ${rc.tier}`));
-          row.append(head);
-          const mats = el("div", "forge-mats");
-          for (const m of info.mats) mats.append(el("span", "forge-mat" + (m.have >= m.need ? " is-ok" : " is-short"), `${RPG.ITEMS[m.id].name} ${fmtNum(m.have)}/${m.need}`));
-          for (const t of info.tools) mats.append(el("span", "forge-mat" + (t.have ? " is-ok" : " is-short"), `знаряддя: ${RPG.FORGE_TOOLS[t.id].name}`));
-          row.append(mats);
-          if (info.levelOk && info.tierOpen) {
-            const odds = RPG.craftOdds(save, id, { preferRare: forgePreferRare, spark: forgeSpark });
-            row.append(el("p", "forge-odds", ["broken", "common", "magic", "epic", "legendary"]
-              .filter(r => odds[r] >= 0.005).map(r => `${RARITY_LABEL[r]} ${pct(odds[r])}`).join(" · ")));
+        dlg.append(head);
+        if (!forgePick[group.id] || !shown.some(r => r.id === forgePick[group.id])) forgePick[group.id] = shown[0]?.id || null;
+        const pickId = forgePick[group.id];
+        const grid = el("div", "anvil-recipes");
+        if (!shown.length) grid.append(el("p", "forge-why", recipes.length ? "Немає рецептів, на які вистачає матеріалів. Позначте «показати й ті, на які бракує матеріалів», щоб глянути, чого бракує." : "У цьому тірі ще немає вивчених рецептів."));
+        for (const { id, info } of shown) {
+          const b = button("", "anvil-recipe" + (id === pickId ? " is-selected" : "") + (info.canCraft || info.bagFull ? " is-ready" : " is-short"), () => { forgePick[group.id] = id; matPick = null; forgeResult = null; draw(); });
+          b.append(smallIcon(id), el("span", "anvil-recipe-name", RPG.ITEMS[id].name));
+          b.title = info.canCraft ? RPG.ITEMS[id].name : `${RPG.ITEMS[id].name} — ${info.reason}`;
+          grid.append(b);
+        }
+        dlg.append(grid);
+        if (!pickId) return;
+        drawAnvilBench(group, pickId);
+      };
+      // Ковадло з вибраним рецептом
+      const drawAnvilBench = (group, id) => {
+        const item = RPG.ITEMS[id], rc = RPG.RECIPES[id];
+        const info = RPG.recipeInfo(save, id);
+        const grades = (forgeGrades[id] ??= {});
+        // клітинки матеріалів заповнюються самі: найдешевша рідкість, якої вистачає (інакше — звичайна)
+        for (const [base, need] of rc.mats) {
+          if (grades[base] && gradeIds(base).some(g => g.grade === grades[base])) continue;
+          const ok = gradeIds(base).find(g => RPG.craftCountMat(save, g.id) >= need);
+          grades[base] = ok ? ok.grade : "common";
+        }
+        const slot = RPG.blueprintSlot(save, id);
+        if (slot) forgeBp[id] = Math.min(forgeBp[id] || 0, slot.have); else delete forgeBp[id];
+        const bpPut = forgeBp[id] || 0;
+        const usable = info.canCraft || info.bagFull;
+        const max = usable ? RPG.craftMaxCount(save, id, { grades }) : 0;
+        const bench = el("div", "anvil-bench");
+        // ліворуч — креслення-дублікати
+        const bpBox = el("div", "anvil-bp");
+        const bpCell = button("", "wf wf-slot anvil-bp-cell" + (bpPut ? " is-filled" : " is-empty") + (matPick === "bp" ? " is-active" : ""), () => { matPick = matPick === "bp" ? null : "bp"; draw(); });
+        if (slot && bpPut) fillItemCell(bpCell, slot.id, bpPut);
+        bpCell.title = !slot ? "Для цього рецепта креслень немає" : bpPut ? `Покладено креслень: ${bpPut}` : "Покладіть креслення-дублікати цього рецепта";
+        bpCell.disabled = !slot;
+        bpBox.append(bpCell, el("small", "anvil-bp-label", !slot ? "Креслення не потрібне" : bpPut ? `Креслень: ${bpPut} · +${fmtPct(Math.min(bpPut, RPG.BLUEPRINT_MAX) * RPG.BLUEPRINT_LEGEND_BONUS)} до легендарної` : `Креслення (є ${slot.have})`));
+        // посередині — ковадло з річчю
+        const anvil = el("div", "anvil");
+        const on = el("div", "anvil-item");
+        on.append(smallIcon(id));
+        anvil.append(on, el("strong", "anvil-name", item.name), el("small", "anvil-tier", `тір ${tierKey(rc)} · рівень ${item.levelReq || 1}`));
+        bench.append(bpBox, anvil);
+        dlg.append(bench);
+        // під ковадлом — матеріали
+        const mats = el("div", "anvil-mats");
+        for (const [base, need] of rc.mats) {
+          const gid = RPG.materialOfGrade(base, grades[base]);
+          const have = RPG.craftCountMat(save, gid);
+          const cell = button("", slotClass(gid, "anvil-mat" + (have >= need ? " is-ok" : " is-short") + (matPick === base ? " is-active" : "")), () => { matPick = matPick === base ? null : base; draw(); });
+          fillItemCell(cell, gid, 1);
+          cell.append(el("span", "anvil-mat-qty", `${fmtNum(have)}/${need}`));
+          cell.title = `${RPG.ITEMS[gid].name}: є ${fmtNum(have)}, треба ${need} на річ — натисніть, щоб змінити рідкість`;
+          mats.append(cell);
+        }
+        for (const t of info.tools.filter(t => !t.have)) mats.append(el("span", "forge-mat is-short", `знаряддя: ${RPG.FORGE_TOOLS[t.id].name}`));
+        dlg.append(mats);
+        // вибір рідкості матеріалу / кількості креслень
+        if (matPick === "bp" && slot) {
+          const row = el("div", "anvil-choose");
+          row.append(el("span", null, `Креслення на ковадлі: ${bpPut} з ${slot.have}. Кожне кування бере до ${RPG.BLUEPRINT_MAX}.`));
+          const set = n => () => { forgeBp[id] = Math.max(0, Math.min(slot.have, n)); draw(); };
+          row.append(button("−1", "wf wf-link", set(bpPut - 1)), button("+1", "wf wf-link", set(bpPut + 1)), button("+10", "wf wf-link", set(bpPut + 10)),
+            button("Усі", "wf wf-link", set(slot.have)), button("Забрати", "wf wf-link", set(0)));
+          dlg.append(row);
+        } else if (matPick && rc.mats.some(([b]) => b === matPick)) {
+          const need = rc.mats.find(([b]) => b === matPick)[1];
+          const row = el("div", "anvil-choose");
+          row.append(el("span", null, `${RPG.ITEMS[matPick].name} — рідкість:`));
+          for (const g of gradeIds(matPick)) {
+            const n = RPG.craftCountMat(save, g.id);
+            const b = button(`${GRADE_LABEL[g.grade]} · ${fmtNum(n)}`, "wf " + (grades[matPick] === g.grade ? "wf-button" : "wf-link") + " anvil-grade rt-" + g.grade, () => { grades[matPick] = g.grade; matPick = null; draw(); });
+            if (n < need) b.classList.add("is-short");
+            row.append(b);
           }
-          const b = button(!info.tierOpen ? "Закрито" : info.levelOk ? "Кувати" : `${group.name} ${info.tierLevel}`, "wf wf-button forge-btn", async () => {
-            const r = RPG.craftItem(save, id, { preferRare: forgePreferRare, spark: forgeSpark });
-            if (!r.ok) { forgeResult = { text: r.reason, error: true }; draw(); return; }
-            await RPG.saveGame(save);
-            forgeResult = { text: `Викувано: ${RPG.itemFullName(r.ref)} (${RARITY_LABEL[r.rarity]}). +${r.exp} досвіду майстерності` +
-              (r.spark ? ", Небесна іскра згоріла" : "") + craftUpsText(r) };
-            draw();
-          });
-          b.disabled = !info.canCraft;
-          if (!info.canCraft && info.reason) b.title = info.reason;
-          row.append(b);
-          if (!info.canCraft && info.levelOk && info.tierOpen) row.append(el("small", "forge-why", info.reason));
-          list.append(row);
+          dlg.append(row);
         }
-        dlg.append(list);
+        // кількість за одне натискання
+        const cnt = el("div", "anvil-count");
+        cnt.append(el("span", null, "Кувати підряд:"));
+        for (const c of RPG.CRAFT_BATCH) {
+          const label = c === "all" ? `Усі (${max})` : String(c);
+          const b = button(label, "wf " + (forgeCount === c ? "wf-button" : "wf-link"), () => { forgeCount = c; draw(); });
+          cnt.append(b);
+        }
+        dlg.append(cnt);
+        // Небесна іскра та шанси
+        const sparks = RPG.craftCountMat(save, "heavenly_spark");
+        if (sparks) {
+          const l = el("label", "forge-opt");
+          const i = el("input"); i.type = "checkbox"; i.checked = forgeSpark;
+          i.addEventListener("change", () => { forgeSpark = i.checked; draw(); });
+          l.append(i, document.createTextNode(` Додати Небесну іскру в кожне кування (до +10% до легендарної; є ${sparks})`));
+          dlg.append(l);
+        } else forgeSpark = false;
+        if (info.levelOk && info.tierOpen) {
+          const odds = RPG.craftOdds(save, id, { grades, spark: forgeSpark, blueprints: Math.min(bpPut, RPG.BLUEPRINT_MAX) });
+          dlg.append(el("p", "forge-odds", (bpPut ? "Перше кування: " : "") + ["broken", "common", "magic", "epic", "legendary"]
+            .filter(r => odds[r] >= 0.005).map(r => `${RARITY_LABEL[r]} ${fmtPct(odds[r])}`).join(" · ")));
+        }
+        if (RPG.chestsHere(save).some(cid => RPG.parseCraftChest(cid)?.type === "mat"))
+          dlg.append(el("small", "forge-why", "Матеріали беруться з інвентаря і скринь для матеріалів цього дому."));
+        const n = forgeCount === "all" ? max : Math.min(forgeCount, Math.max(max, 1));
+        const go = button(usable ? `Кувати ×${forgeCount === "all" ? max : forgeCount}` : !info.tierOpen ? "Закрито" : info.levelOk ? "Кувати" : `${group.name} ${info.tierLevel}`, "wf wf-button forge-btn anvil-go", async () => {
+          const r = RPG.craftBatch(save, id, forgeCount, { grades, spark: forgeSpark, blueprints: forgeBp[id] || 0 });
+          if (!r.ok) {
+            forgeResult = { text: r.reason, error: true };
+            draw();   // спершу перемалювати: повідомлення лягає у вікно кузні, і перемальовування його б стерло
+            if (r.stop === "full") showMsg(msg, "Інвентар повний — немає місця для нових речей.", true);
+            return;
+          }
+          await RPG.saveGame(save);
+          forgeBp[id] = Math.max(0, (forgeBp[id] || 0) - r.blueprints);
+          const by = {};
+          for (const m of r.made) by[m.rarity] = (by[m.rarity] || 0) + 1;
+          const parts = ["legendary", "epic", "magic", "common", "broken"].filter(k => by[k]).map(k => `${RARITY_LABEL[k]} ×${by[k]}`);
+          const one = r.made.length === 1 ? RPG.itemFullName(r.made[0].ref) : `${item.name} ×${r.made.length}`;
+          forgeResult = { text: `Викувано: ${one} (${parts.join(", ")}). +${fmtNum(r.exp)} досвіду майстерності` +
+            (r.sparks ? `, Небесних іскор згоріло: ${r.sparks}` : "") + (r.blueprints ? `, креслень витрачено: ${r.blueprints}` : "") +
+            craftUpsText({ levelUps: r.levelUps, catUps: r.catUps, cat: r.cat }) + (r.stop === "full" ? " Інвентар повний — кування зупинено." : r.stop === "mats" ? ` ${r.reason}` : "") };
+          draw();
+          if (r.stop === "full") showMsg(msg, `Інвентар повний — викувано ${r.made.length}, кування зупинено.`, true);
+        });
+        go.disabled = !usable || !n;
+        if (!usable && info.reason) go.title = info.reason;
+        dlg.append(go);
+        if (!info.canCraft && info.levelOk && info.tierOpen) dlg.append(el("small", "forge-why", info.reason));
       };
       const drawSmelt = () => {
         const list = el("div", "stack forge-list");

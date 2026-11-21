@@ -517,6 +517,19 @@ a.map-world:hover, a.map-world:focus-visible { outline: none; border-color: var(
 .bst-item { display: inline-flex; align-items: center; gap: .35em; }
 .bst-item-icon { flex: 0 0 auto; width: 1.7em; height: 1.7em; }
 .bst-unknown { margin-top: .8em; }
+/* згортання сторінки (v0.6.27): згорнута — картинка, назва, здоров'я й мана; здобич — окремо */
+.bst-title .bst-hpmp { margin: 0; font-size: .86em; font-weight: 700; }
+.bst-title .bst-hpmp.is-locked { font-weight: 400; font-style: italic; opacity: .62; }
+.bst-tools, .bst-chapter-tools { display: flex; flex-wrap: wrap; gap: .4em; margin: .35em 0 .15em; break-after: avoid; }
+.bst-chapter-tools { margin: 0 0 .8em; }
+.bst-toggle, .bst-drop-toggle { font: inherit; font-size: .78em; padding: .15em .6em; border-radius: 4px; cursor: pointer;
+  color: #3b240e; background: rgba(201, 154, 58, .18); border: 1px solid rgba(90, 60, 30, .45); }
+.bst-toggle:hover, .bst-drop-toggle:hover { background: rgba(201, 154, 58, .34); }
+.bst-drop-toggle { display: none; }
+.bst-entry.is-collapsed .bst-drop-toggle { display: inline-block; }
+.bst-entry.is-collapsed .bst-body > :not(.bst-drop) { display: none; }
+.bst-entry.is-collapsed:not(.show-drop) .bst-drop { display: none; }
+.bst-entry.is-collapsed { padding-bottom: .35em; margin-bottom: .6em; }
 /* телефон: сторінка-пергамент */
 @media (max-width: 700px) {
   .bst-img { width: 4.2em; height: 4.2em; }

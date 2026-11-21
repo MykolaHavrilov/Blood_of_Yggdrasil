@@ -9,6 +9,8 @@
 // Невдача — річ виходить ЗЛАМАНОЮ (матеріали витрачено). Успіх — рідкість за таблицею RARITY_ANCHORS
 // (опорні рівні 1, 5, 10, 15, 20, 25, 30, між ними — плавно). Числа — з «Небесна_кузня_крафт_v2.xlsx».
 //
+// Ковадло (v0.6.27): гравець обирає рецепт, кількість (1 / 5 / 10 / усі — craftBatch), рідкість кожного матеріалу (grades)
+// і вручну кладе креслення-дублікати (+0,5% до легендарної за кожне, до 10 за кування).
 // Якість матеріалів: середня рідкість витрачених стопок (звичайна 0, магічна 1, епічна 2, легендарна 3)
 // переносить частину звичайних результатів у кращі рідкості; Небесна іскра (за бажанням) додає +10% до легендарної і згоряє.
 // Кувати можна лише в домі з кузнею і всіма обов'язковими знаряддями, героєві з професією —
@@ -35,6 +37,11 @@
   const GRADE_SCORE = { common: 0, magic: 1, epic: 2, legendary: 3 };
   const GRADE_ORDER = ["common", "magic", "epic", "legendary"];
   const SPARK_BONUS = 0.10;
+  // Креслення-дублікати на ковадлі (рішення користувача 2026-11-21): +0,5% до легендарної за кожне, не більше 10 за одне кування.
+  // Кладуться лише вручну; у серії кожне кування бере до 10 з покладених, доки вони є (30 на 5 речей → 10, 10, 10, 0, 0).
+  const BLUEPRINT_LEGEND_BONUS = 0.005, BLUEPRINT_MAX = 10;
+  // Скільки речей кувати за одне натискання: 1, 5, 10 або «усі» (на всі матеріали)
+  const CRAFT_BATCH = [1, 5, 10, "all"];
 
   function craftState(save) {
     const ch = save.character;
@@ -101,7 +108,7 @@
   // Якість переносить частину ЗВИЧАЙНИХ результатів у кращі рідкості (на низькій майстерності ефект малий):
   // за кожен бал якості — 15% звичайних у магічні, 8% у епічні, 2% у легендарні (при q = 3 — разом 75%).
   // Небесна іскра — ще до +10% (від усіх спроб) до легендарної, але не більше 60% звичайних, що лишились.
-  function applyQuality(tab, q, spark, svarog = false) {
+  function applyQuality(tab, q, spark, svarog = false, blueprints = 0) {
     const t = { ...tab };
     const base = t.common;
     const move = (to, amount) => { const a = Math.max(0, Math.min(t.common, amount)); t.common -= a; t[to] += a; };
@@ -110,6 +117,7 @@
     move("legendary", base * 0.02 * q);
     if (spark) move("legendary", Math.min(SPARK_BONUS, t.common * 0.6));
     if (svarog) move("legendary", Math.min(SVAROG.legendBonus, t.common * 0.6));   // вогонь Сварога
+    if (blueprints > 0) move("legendary", Math.min(blueprints, BLUEPRINT_MAX) * BLUEPRINT_LEGEND_BONUS);   // креслення-дублікати на ковадлі
     return t;
   }
 
@@ -240,13 +248,15 @@
     return GRADE_ORDER.reduce((n, g) => n + countMat(save, RPG.materialOfGrade(baseId, g)), 0);
   }
   // План витрати: які стопки брати. preferRare — спершу рідкісніші, інакше спершу звичайні
-  function pickMaterials(save, mats, mult = 1, preferRare = false) {
+  // grades — { [базовий id]: рідкість } — гравець сам поклав на ковадло стопки цієї рідкості (лише вони й беруться)
+  function pickMaterials(save, mats, mult = 1, preferRare = false, grades = null) {
     const order = preferRare ? [...GRADE_ORDER].reverse() : GRADE_ORDER;
     const plan = [];
     let score = 0, units = 0;
     for (const [baseId, qty] of mats) {
       let left = qty * mult;
-      for (const g of order) {
+      const fixed = grades?.[baseId];
+      for (const g of fixed && GRADE_ORDER.includes(fixed) ? [fixed] : order) {
         const id = RPG.materialOfGrade(baseId, g);
         if (g !== "common" && id === baseId) continue;
         const take = Math.min(left, countMat(save, id));
@@ -280,20 +290,21 @@
     const st = catState(save, cat) || { level: 1 };
     const g = RPG.RECIPE_GROUPS.find(x => x.id === cat);
     const house = craftHouse(save);
-    const tierLevel = RPG.CRAFT_TIER_LEVEL[recipe.tier];
+    const tierLevel = recipe.catLevel || RPG.CRAFT_TIER_LEVEL[recipe.tier];
     const mats = recipe.mats.map(([id, need]) => ({ id, need, have: haveMaterial(save, id) }));
     const tools = recipe.tools.map(id => ({ id, have: !!house?.forge?.tools?.[id] }));
     const ready = forgeReady(save, recipe.tools);
     const open = RPG.craftTierOpen ? RPG.craftTierOpen(save, recipe.tier) : { ok: true };
     let reason = "";
     const known = RPG.knowsRecipe ? RPG.knowsRecipe(save, itemId) : true;   // рецепт комплекту професії — лише за кресленням
-    if (!known) reason = RPG.isT4Blueprint?.(itemId) ? "Потрібне креслення — падає у Ванагеймі й Свартальвгеймі." : `Потрібне креслення — падає з боса «${RPG.blueprintSource(itemId)}».`;
+    if (!known) { const def = RPG.tierBlueprintDef?.(itemId); reason = def ? `Потрібне креслення — падає ${def.where}.` : `Потрібне креслення — падає з боса «${RPG.blueprintSource(itemId)}».`; }
     else if (!open.ok) reason = open.reason;
     else if (st.level < tierLevel) reason = `Потрібен рівень «${g?.name || "майстерності"}» ${tierLevel}.`;
     else if (!ready.ok) reason = ready.reason;
     else if (mats.some(m => m.have < m.need)) reason = "Бракує матеріалів.";
     else if (!RPG.invFree(save)) reason = "Інвентар повний.";
-    return { recipe, cat, tierLevel, levelOk: st.level >= tierLevel, tierOpen: open.ok, known, mats, tools, canCraft: !reason, reason };
+    // bagFull — усе є, бракує лише місця в інвентарі (ковадло показує рецепт, а натискання — повідомлення «Інвентар повний»)
+    return { recipe, cat, tierLevel, levelOk: st.level >= tierLevel, tierOpen: open.ok, known, mats, tools, canCraft: !reason, reason, bagFull: reason === "Інвентар повний." };
   }
 
   function addCraftExp(save, amount) {
@@ -324,29 +335,86 @@
     const recipe = RPG.RECIPES[itemId];
     const house = craftHouse(save);
     const success = successChance(save, house);
-    const pick = recipe ? pickMaterials(save, recipe.mats, 1, !!opts.preferRare) : null;
+    const pick = recipe ? pickMaterials(save, recipe.mats, 1, !!opts.preferRare, opts.grades) : null;
     const spark = !!opts.spark && countMat(save, "heavenly_spark") > 0;
-    return applyQuality(rarityTable(craftState(save).level, success), pick?.quality || 0, spark, !!house?.svarog);
+    return applyQuality(rarityTable(craftState(save).level, success), pick?.quality ?? gradesQuality(recipe, opts.grades), spark, !!house?.svarog,
+      Math.min(BLUEPRINT_MAX, Math.max(0, Math.floor(opts.blueprints || 0))));
   }
 
-  // Кувати річ. opts: { preferRare, spark }. Повертає { ok, reason } або { ok, ref, rarity, exp, levelUps }
+  // Якість, якщо матеріалів вибраної рідкості поки не вистачає (для показу шансів)
+  function gradesQuality(recipe, grades) {
+    if (!recipe || !grades) return 0;
+    let score = 0, units = 0;
+    for (const [baseId, qty] of recipe.mats) { score += (GRADE_SCORE[grades[baseId]] || 0) * qty; units += qty; }
+    return units ? score / units : 0;
+  }
+  // Креслення-дублікат для рецепта: { id, have } або null (рецепт без креслення)
+  function blueprintSlot(save, itemId) {
+    const id = RPG.blueprintOf?.(itemId);
+    return id ? { id, have: countMat(save, id) } : null;
+  }
+
+  // Кувати річ. opts: { preferRare, spark, grades: { базовий id: рідкість }, blueprints: 0–10 }.
+  // Повертає { ok, reason } або { ok, ref, rarity, exp, levelUps, blueprints }
   function craftItem(save, itemId, opts = {}) {
     const info = recipeInfo(save, itemId);
     if (!info) return { ok: false, reason: "Такого рецепта немає." };
-    if (!info.canCraft) return { ok: false, reason: info.reason };
-    const pick = pickMaterials(save, info.recipe.mats, 1, !!opts.preferRare);
-    if (!pick) return { ok: false, reason: "Бракує матеріалів." };
+    if (!info.canCraft) return { ok: false, reason: info.reason, full: !RPG.invFree(save) };
+    const pick = pickMaterials(save, info.recipe.mats, 1, !!opts.preferRare, opts.grades);
+    if (!pick) return { ok: false, reason: opts.grades ? "Бракує матеріалів вибраної рідкості." : "Бракує матеріалів." };
     const spark = !!opts.spark && countMat(save, "heavenly_spark") > 0;
-    const tab = craftOdds(save, itemId, opts);
+    const slot = blueprintSlot(save, itemId);
+    const bps = slot ? Math.min(BLUEPRINT_MAX, slot.have, Math.max(0, Math.floor(opts.blueprints || 0))) : 0;
+    const tab = craftOdds(save, itemId, { ...opts, blueprints: bps });
     for (const [id, qty] of pick.plan) takeMat(save, id, qty);
     if (spark) takeMat(save, "heavenly_spark", 1);
+    if (bps) takeMat(save, slot.id, bps);
     const rarity = rollFrom(tab);
     const ref = RPG.makeItem(itemId, rarity);
     save.inventory.push(ref);
     const exp = Math.round(CRAFT_EXP[info.recipe.tier] * (rarity === "broken" ? 0.5 : 1));
     const levelUps = addCraftExp(save, exp);
     const catUps = addCatExp(save, info.cat, exp);
-    return { ok: true, ref, rarity, exp, levelUps, cat: info.cat, catUps, spark };
+    return { ok: true, ref, rarity, exp, levelUps, cat: info.cat, catUps, spark, blueprints: bps };
+  }
+
+  // Скільки речей вистачить матеріалів (з вибраною рідкістю)
+  function craftMaxCount(save, itemId, opts = {}) {
+    const recipe = RPG.RECIPES[itemId];
+    if (!recipe) return 0;
+    let n = Infinity;
+    for (const [baseId, qty] of recipe.mats) {
+      const g = opts.grades?.[baseId];
+      const have = g && GRADE_ORDER.includes(g) ? countMat(save, RPG.materialOfGrade(baseId, g)) : haveMaterial(save, baseId);
+      n = Math.min(n, Math.floor(have / qty));
+    }
+    return Number.isFinite(n) ? n : 0;
+  }
+  // Серія кувань за одне натискання. count — 1, 5, 10 або "all" (на всі матеріали).
+  // opts.blueprints — скільки креслень-дублікатів покладено (кожне кування бере до 10, доки є).
+  // Зупиняється, коли бракує матеріалів або місця в інвентарі (stop: "full").
+  // Повертає { ok, made: [результати craftItem], stop, reason, exp, levelUps, catUps, blueprints, sparks }
+  function craftBatch(save, itemId, count = 1, opts = {}) {
+    const all = count === "all";
+    const want = all ? 999 : Math.max(1, Math.floor(count) || 1);
+    let bpLeft = Math.max(0, Math.floor(opts.blueprints || 0));
+    const made = [], levelUps = [], catUps = [];
+    let exp = 0, blueprints = 0, sparks = 0, stop = null, reason = "";
+    while (made.length < want) {
+      if (!RPG.invFree(save)) { stop = "full"; reason = "Інвентар повний — кування зупинено."; break; }
+      const r = craftItem(save, itemId, { ...opts, blueprints: Math.min(BLUEPRINT_MAX, bpLeft) });
+      if (!r.ok) { stop = r.full ? "full" : "mats"; reason = r.full ? "Інвентар повний — кування зупинено." : r.reason; break; }
+      made.push(r);
+      bpLeft -= r.blueprints; blueprints += r.blueprints;
+      if (r.spark) sparks++;
+      exp += r.exp;
+      levelUps.push(...(r.levelUps || []));
+      catUps.push(...(r.catUps || []));
+    }
+    if (!made.length) return { ok: false, reason: reason || "Не вдалося кувати.", stop };
+    // «усі»: зупинка через матеріали — це звичайний кінець серії
+    if (all && stop === "mats") { stop = null; reason = ""; }
+    return { ok: true, made, stop, reason, exp, levelUps, catUps, cat: made[0].cat, blueprints, sparks };
   }
 
   // ---------- Переплавка руди ----------
@@ -502,7 +570,7 @@
     disassembleAll, disassembleAllCandidates,
     CRAFT_MAX_LEVEL: MAX_LEVEL, CRAFT_CAT_MAX_LEVEL: CAT_MAX_LEVEL, CRAFT_EXP, craftState, craftExpToNext: expToNext, baseCraftChance: baseChance,
     craftSuccessChance: successChance, craftRarityTable: rarityTable, craftOdds, haveMaterial, recipeInfo,
-    craftForgeReady: forgeReady, craftItem, addCraftExp, smeltInfo, smelt,
+    craftForgeReady: forgeReady, craftItem, craftBatch, craftMaxCount, blueprintSlot, CRAFT_BATCH, BLUEPRINT_LEGEND_BONUS, BLUEPRINT_MAX, CRAFT_GRADES: GRADE_ORDER, addCraftExp, smeltInfo, smelt,
     DISASSEMBLE_SHARE, DISASSEMBLE_EXP, disassembleInfo, disassemble, salvageRecipe,
     craftCountMat: countMat, craftHouse,
     SVAROG, atSvarogForge, svarogLit, lightSvarog, TEMPER_CHANCE, TEMPER_GOLD, temperCost, temperInfo, temperItem,

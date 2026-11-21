@@ -18,7 +18,8 @@
     alf:   { mine_alf:   { x: 75, y: 9,  w: 7, h: 11 }, sawmill_alf:   { x: 38, y: 86, w: 7, h: 11 } },
     van:   { mine_van:   { x: 52, y: 37, w: 7, h: 11 }, sawmill_van:   { x: 91, y: 63, w: 7, h: 11 } },
     svart: { mine_svart: { x: 61, y: 62, w: 7, h: 11 }, sawmill_svart: { x: 91, y: 68, w: 7, h: 11 } },
-    jot:   { mine_jot:   { x: 64, y: 57, w: 7, h: 11 }, sawmill_jot:   { x: 24, y: 74, w: 7, h: 11 } }
+    jot:   { mine_jot:   { x: 64, y: 57, w: 7, h: 11 }, sawmill_jot:   { x: 24, y: 74, w: 7, h: 11 } },
+    musp:  { mine_musp:  { x: 31, y: 88, w: 7, h: 11 }, sawmill_musp:  { x: 5, y: 72, w: 7, h: 11 } }
   };
   const SITE_ICON = {
     mine: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7 Q12 1 20 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M12 4 L12 22" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>`,
@@ -28,7 +29,7 @@
   // Будівлі Шахти й Лісопилки (assets/images/map/bld_<id>.webp) — у центрі SITE_ZONES, ширина в % мапи.
   // Значок (кирка / пила) лишається маленьким у кутку: туди лише експедиція.
   const SITE_BLD_W = 6.8;      // ~68% від першої версії (10)
-  const SITE_BUILDINGS = new Set(["mine_start", "sawmill_start", "mine_dark", "sawmill_dark", "mine_alf", "sawmill_alf", "mine_van", "sawmill_van", "mine_svart", "sawmill_svart", "mine_jot", "sawmill_jot"]);
+  const SITE_BUILDINGS = new Set(["mine_start", "sawmill_start", "mine_dark", "sawmill_dark", "mine_alf", "sawmill_alf", "mine_van", "sawmill_van", "mine_svart", "sawmill_svart", "mine_jot", "sawmill_jot", "mine_musp", "sawmill_musp"]);
   // Порядок місць у списку під мапою
   const REGION_ORDER = {
     start: ["home", "temple", "village_start", "tavern", "south_gate", "forest_path", "forest_cave"],
@@ -38,7 +39,8 @@
     alf: ["alf_gate", "alf_grove", "alf_lake", "alf_gardens", "alf_towers", "alf_freyr", "alf_beli"],
     van: ["van_gate", "van_shore", "van_marsh", "van_kvasir", "van_barrow", "van_temple", "van_ran"],
     svart: ["svart_gate", "svart_mines", "svart_falls", "svart_quarters", "svart_alvis", "svart_forges", "svart_runes", "svart_mokkur"],
-    jot: ["jot_gate", "jot_passes", "jot_thrymheim", "jot_ironwood", "jot_thrym", "jot_waste", "jot_utgard", "jot_hymir", "jot_serpent"]
+    jot: ["jot_gate", "jot_passes", "jot_thrymheim", "jot_ironwood", "jot_thrym", "jot_waste", "jot_utgard", "jot_hymir", "jot_serpent"],
+    musp: ["musp_gate", "musp_ash", "musp_lava", "musp_forges", "musp_fortress", "musp_sinmara", "musp_ginnungagap", "musp_surtr"]
   };
   // Зони кліку (x, y — центр; w, h — розмір у % мапи). Стартова мапа — за картинками будівель (map_layout.js):
   // Дубова Застава на ній — це вхід south_gate («Південний район»).
@@ -107,6 +109,16 @@
     jot_hymir:       { x: 44, y: 36, w: 13.0, h: 14.0 },
     jot_serpent:     { x: 51.5, y: 8, w: 13.0, h: 14.0 }
   };
+  const MUSP_ZONES = {                       // під картинку map_muspelheim.webp (галявина (10.5, 55) — лише бічна стежка)
+    musp_gate:        { x: 4, y: 95, w: 8.0, h: 10.0 },
+    musp_ash:         { x: 15, y: 85, w: 13.0, h: 14.0 },
+    musp_lava:        { x: 37.5, y: 65.5, w: 13.0, h: 14.0 },
+    musp_forges:      { x: 69.5, y: 76.5, w: 13.0, h: 14.0 },
+    musp_fortress:    { x: 89, y: 45, w: 13.0, h: 14.0 },
+    musp_sinmara:     { x: 55.5, y: 41, w: 13.0, h: 14.0 },
+    musp_ginnungagap: { x: 19, y: 34.5, w: 13.0, h: 14.0 },
+    musp_surtr:       { x: 54, y: 7.5, w: 13.0, h: 14.0 }
+  };
   // Картинки локацій поверх галявин (assets/images/map/bld_<id>.webp): x, y — центр, w — ширина в % мапи
   const REGION_BUILDINGS = {
     alf: { alf_grove: { x: 16.5, y: 74.5, w: 11 }, alf_lake: { x: 42, y: 61.5, w: 11 }, alf_gardens: { x: 72, y: 69.5, w: 11 },
@@ -116,7 +128,9 @@
     svart: { svart_mines: { x: 50.5, y: 72.5, w: 11 }, svart_falls: { x: 18.3, y: 59, w: 11 }, svart_quarters: { x: 38.5, y: 38, w: 11 }, svart_alvis: { x: 14.5, y: 17.5, w: 11 }, 
              svart_forges: { x: 48, y: 14, w: 11 }, svart_runes: { x: 78.5, y: 40, w: 11 }, svart_mokkur: { x: 86.5, y: 11.5, w: 11 } },
     jot: { jot_passes: { x: 16, y: 82.5, w: 11 }, jot_thrymheim: { x: 12, y: 34.5, w: 11 }, jot_ironwood: { x: 34, y: 61.5, w: 11 }, jot_thrym: { x: 55.5, y: 73.5, w: 11 },
-           jot_waste: { x: 81, y: 66.5, w: 11 }, jot_utgard: { x: 80, y: 39.5, w: 11 }, jot_hymir: { x: 44, y: 33.5, w: 11 }, jot_serpent: { x: 51.5, y: 5.5, w: 11 } }
+           jot_waste: { x: 81, y: 66.5, w: 11 }, jot_utgard: { x: 80, y: 39.5, w: 11 }, jot_hymir: { x: 44, y: 33.5, w: 11 }, jot_serpent: { x: 51.5, y: 5.5, w: 11 } },
+    musp: { musp_ash: { x: 15, y: 82.5, w: 11 }, musp_lava: { x: 37.5, y: 63, w: 11 }, musp_forges: { x: 69.5, y: 74, w: 11 }, musp_fortress: { x: 89, y: 42.5, w: 11 },
+            musp_sinmara: { x: 55.5, y: 38.5, w: 11 }, musp_ginnungagap: { x: 19, y: 32, w: 11 }, musp_surtr: { x: 54, y: 5, w: 11 } }
   };
   function startZones() {
     const b = (RPG.MAP_LAYOUT && RPG.MAP_LAYOUT.buildings) || {};
@@ -154,7 +168,7 @@
     const region = t0 ? t0.region : view;
     const away = !t0 && region !== here.region;   // інший світ: героя тут немає, дорога — через брами
     const R = RPG.MAP_REGIONS[region];
-    const ZONES = Object.assign({}, region === "city" ? CITY_ZONES : region === "svartgard" ? SVARTGARD_ZONES : region === "dark" ? DARK_ZONES : region === "alf" ? ALF_ZONES : region === "van" ? VAN_ZONES : region === "svart" ? SVART_ZONES : region === "jot" ? JOT_ZONES : startZones(), SITE_ZONES[region] || {});
+    const ZONES = Object.assign({}, region === "city" ? CITY_ZONES : region === "svartgard" ? SVARTGARD_ZONES : region === "dark" ? DARK_ZONES : region === "alf" ? ALF_ZONES : region === "van" ? VAN_ZONES : region === "svart" ? SVART_ZONES : region === "jot" ? JOT_ZONES : region === "musp" ? MUSP_ZONES : startZones(), SITE_ZONES[region] || {});
     const cityId = RPG.cityOf(region);                       // мапа міста (Дубова Застава, Свартгард): місця — райони
     const districts = cityId ? RPG.LOCATIONS[cityId].districts || [] : [];
     const ids = REGION_ORDER[region].filter(id => ZONES[id] && R.spots[id]).concat(Object.keys(SITE_ZONES[region] || {}).filter(id => RPG.LOCATIONS[id]));

@@ -3687,6 +3687,567 @@ const ENEMIES = {
         { id: "rune_gem", chance: 0.2, qty: [1, 2] },
         { id: "ironwood", chance: 0.3, qty: [1, 3] }
       ]
+    },
+    // ---------- МУСПЕЛЬГЕЙМ (світ 7) — вороги 45–50 рівня ----------
+    // Спорядження з ворогів не падає (worlds.js → CRAFT_ONLY_FROM) — матеріали 5 виду, зілля й ключі; з босів зрідка — матеріали 6 виду (на запас:
+    // кувати тір 6 можна лише з відкритим світом 8). Сила — від ворогів Йотунгейму тієї ж ролі (tools/balance.js musp_ --rarity epic).
+    musp_fire_hound: {
+      name: "Вогняний гончак",
+      range: 1, move: { name: "Палаючі ікла", mult: 1.55, chance: 0.25 },
+      verb: "рве палаючими іклами",
+      level: 45,
+      role: "melee",
+      stats: { hp: 9308, mp: 0, attack: 1648, defense: 109, magicDefense: 130, speed: 41, crit: 27, dodge: 22 },
+      exp: 6075,
+      gold: [103, 198],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.07, qty: [1, 1] },
+        { id: "ironwood", chance: 0.035, qty: [1, 1] }
+      ]
+    },
+    musp_salamander: {
+      name: "Саламандра",
+      range: 3, move: { name: "Вогняний плювок", mult: 1.55, chance: 0.25 },
+      verb: "плює вогнем у",
+      level: 45,
+      role: "ranged",
+      stats: { hp: 8775, mp: 0, attack: 1810, defense: 85, magicDefense: 112, speed: 37, crit: 29, dodge: 23 },
+      exp: 6075,
+      gold: [103, 198],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.091, qty: [1, 1] },
+        { id: "ironwood", chance: 0.035, qty: [1, 1] }
+      ]
+    },
+    musp_ash_spirit: {
+      name: "Попелястий дух",
+      range: 3, move: { name: "Попелястий вихор", mult: 1.55, chance: 0.25 },
+      verb: "засипає попелом",
+      level: 46,
+      role: "caster",
+      stats: { hp: 8767, mp: 1429, attack: 955, magic: 1267, defense: 106, magicDefense: 206, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Задушливий попіл", mp: 28, mult: 1.5, chance: 0.4 },
+      exp: 6348,
+      gold: [106, 202],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.07, qty: [1, 1] },
+        { id: "ironwood", chance: 0.046, qty: [1, 1] }
+      ]
+    },
+    musp_boss_hound_packleader: {
+      name: "Ватажок гончаків",
+      range: 1, move: { name: "Хватка ватажка", mult: 1.7, chance: 0.25 },
+      verb: "рве іклами",
+      level: 46,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "melee",
+      stats: { hp: 15324, mp: 1870, attack: 1012, magic: 657, defense: 153, magicDefense: 153, speed: 45, crit: 26, dodge: 24, blockPhys: 18, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Полум'яне виття", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Стрибок зграї", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Жар із нори", mp: 70, healPct: 0.1 }
+      ],
+      exp: 31740,
+      gold: [524, 1012],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "lizard_leather", chance: 0.35, qty: [1, 3] },
+        { id: "ironwood", chance: 0.3, qty: [1, 2] },
+        { id: "rune_gem", chance: 0.2, qty: [1, 2] },
+        { id: "celestial_ore", chance: 0.06, qty: [1, 1] },
+        { id: "sun_gold_ingot", chance: 0.04, qty: [1, 1] }
+      ]
+    },
+    musp_magma_elemental: {
+      name: "Магмовий елементаль",
+      range: 1, move: { name: "Удар магмою", mult: 1.5, chance: 0.25 },
+      verb: "б'є розпеченою брилою",
+      level: 46,
+      role: "tank",
+      stats: { hp: 16170, mp: 0, attack: 1338, defense: 211, magicDefense: 173, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 6348,
+      gold: [106, 202],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.07, qty: [1, 1] },
+        { id: "iron_ore", chance: 0.05, qty: [1, 1] }
+      ]
+    },
+    musp_lava_worm: {
+      name: "Лавовий черв",
+      range: 1, move: { name: "Розпечена паща", mult: 1.55, chance: 0.25 },
+      verb: "вгризається в",
+      level: 46,
+      role: "melee",
+      stats: { hp: 9494, mp: 0, attack: 1689, defense: 111, magicDefense: 131, speed: 41, crit: 27, dodge: 22 },
+      exp: 6348,
+      gold: [106, 202],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.091, qty: [1, 1] },
+        { id: "iron_ore", chance: 0.05, qty: [1, 1] }
+      ]
+    },
+    musp_fire_serpent: {
+      name: "Вогняна змія",
+      range: 3, move: { name: "Плювок лави", mult: 1.55, chance: 0.25 },
+      verb: "плює лавою в",
+      level: 46,
+      role: "ranged",
+      stats: { hp: 8951, mp: 0, attack: 1855, defense: 86, magicDefense: 114, speed: 37, crit: 29, dodge: 23 },
+      exp: 6348,
+      gold: [106, 202],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.07, qty: [1, 1] },
+        { id: "iron_ore", chance: 0.065, qty: [1, 1] }
+      ]
+    },
+    musp_boss_lava_serpent: {
+      name: "Лавовий змій",
+      range: 3, move: { name: "Удар хвоста", mult: 1.7, chance: 0.25 },
+      verb: "б'є хвостом",
+      level: 47,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 18835, mp: 2438, attack: 644, magic: 759, defense: 125, magicDefense: 210, speed: 34, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Ріка вогню", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Кільця магми", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Нова луска", mp: 70, healPct: 0.1 }
+      ],
+      exp: 33135,
+      gold: [536, 1034],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "rock_crystal", chance: 0.35, qty: [1, 3] },
+        { id: "iron_ore", chance: 0.3, qty: [1, 2] },
+        { id: "rune_gem", chance: 0.2, qty: [1, 2] },
+        { id: "celestial_ore", chance: 0.06, qty: [1, 1] },
+        { id: "sun_gold_ingot", chance: 0.04, qty: [1, 1] }
+      ]
+    },
+    musp_fire_giant_smith: {
+      name: "Вогняний велетень-коваль",
+      humanoid: true,
+      weapons: ["axe"],
+      range: 1, move: { name: "Удар молота", mult: 1.55, chance: 0.25 },
+      verb: "гатить молотом",
+      level: 46,
+      role: "melee",
+      stats: { hp: 9020, mp: 0, attack: 1604, defense: 111, magicDefense: 131, speed: 41, crit: 27, dodge: 22 },
+      exp: 6348,
+      gold: [106, 202],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "iron_ore", chance: 0.07, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.025, qty: [1, 1] }
+      ]
+    },
+    musp_living_iron: {
+      name: "Ожиле залізо",
+      range: 1, move: { name: "Залізний кулак", mult: 1.5, chance: 0.25 },
+      verb: "б'є залізним кулаком",
+      level: 47,
+      role: "tank",
+      stats: { hp: 16493, mp: 0, attack: 1372, defense: 214, magicDefense: 175, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 6627,
+      gold: [108, 207],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "iron_ore", chance: 0.091, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.025, qty: [1, 1] }
+      ]
+    },
+    musp_glowing_golem: {
+      name: "Розжарений голем",
+      range: 1, move: { name: "Розжарені обійми", mult: 1.55, chance: 0.25 },
+      verb: "палить дотиком",
+      level: 47,
+      role: "melee",
+      stats: { hp: 9684, mp: 0, attack: 1731, defense: 112, magicDefense: 133, speed: 41, crit: 27, dodge: 22 },
+      exp: 6627,
+      gold: [108, 207],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "iron_ore", chance: 0.07, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.033, qty: [1, 1] }
+      ]
+    },
+    musp_boss_master_smith_of_muspel: {
+      name: "Майстер-коваль Муспелля",
+      range: 1, move: { name: "Удар ковальського молота", mult: 1.7, chance: 0.25 },
+      verb: "гатить молотом",
+      level: 47,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "tank",
+      stats: { hp: 23035, mp: 1791, attack: 859, magic: 656, defense: 287, magicDefense: 200, speed: 28, crit: 17, dodge: 12, blockPhys: 17, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Розплавлений метал", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Удар по ковадлу", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Гартування", mp: 70, healPct: 0.1 }
+      ],
+      exp: 33135,
+      gold: [536, 1034],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "iron_ore", chance: 0.35, qty: [1, 3] },
+        { id: "rune_gem", chance: 0.2, qty: [1, 2] },
+        { id: "celestial_ore", chance: 0.06, qty: [1, 1] },
+        { id: "sun_gold_ingot", chance: 0.04, qty: [1, 1] }
+      ]
+    },
+    musp_fire_knight: {
+      name: "Вогняний лицар",
+      humanoid: true,
+      weapons: ["sword"],
+      range: 1, move: { name: "Палаючий клинок", mult: 1.55, chance: 0.25 },
+      verb: "рубає палаючим мечем",
+      level: 47,
+      role: "melee",
+      stats: { hp: 9200, mp: 0, attack: 1644, defense: 112, magicDefense: 133, speed: 41, crit: 27, dodge: 22 },
+      exp: 6627,
+      gold: [108, 207],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.07, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    musp_flame_mage: {
+      name: "Маг полум'я",
+      humanoid: true,
+      weapons: ["staff"],
+      range: 3, move: { name: "Удар посохом", mult: 1.55, chance: 0.25 },
+      verb: "б'є посохом",
+      level: 47,
+      role: "caster",
+      stats: { hp: 8495, mp: 1443, attack: 930, magic: 1234, defense: 108, magicDefense: 209, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Вогняна куля", mp: 28, mult: 1.5, chance: 0.4 },
+      exp: 6627,
+      gold: [108, 207],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.091, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.03, qty: [1, 1] }
+      ]
+    },
+    musp_obsidian_sentinel: {
+      name: "Обсидіановий вартовий",
+      range: 1, move: { name: "Удар обсидіановим щитом", mult: 1.5, chance: 0.25 },
+      verb: "б'є щитом",
+      level: 48,
+      role: "tank",
+      stats: { hp: 16823, mp: 0, attack: 1406, defense: 216, magicDefense: 177, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 6912,
+      gold: [110, 211],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.07, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.039, qty: [1, 1] }
+      ]
+    },
+    musp_boss_fortress_commander: {
+      name: "Комендант фортеці",
+      range: 1, move: { name: "Удар булавою", mult: 1.7, chance: 0.25 },
+      verb: "гатить булавою",
+      level: 48,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "tank",
+      stats: { hp: 23496, mp: 1809, attack: 880, magic: 672, defense: 291, magicDefense: 203, speed: 28, crit: 17, dodge: 12, blockPhys: 17, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Вогняний наказ", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Удар обсидіанового щита", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Друге дихання", mp: 70, healPct: 0.1 }
+      ],
+      exp: 34560,
+      gold: [547, 1056],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "rock_crystal", chance: 0.35, qty: [1, 3] },
+        { id: "rune_gem", chance: 0.3, qty: [1, 2] },
+        { id: "celestial_ore", chance: 0.06, qty: [1, 1] },
+        { id: "sun_gold_ingot", chance: 0.04, qty: [1, 1] }
+      ]
+    },
+    musp_flame_priestess: {
+      name: "Жриця полум'я",
+      humanoid: true,
+      weapons: ["staff"],
+      range: 2, move: { name: "Удар жезлом", mult: 1.55, chance: 0.25 },
+      verb: "б'є жезлом",
+      level: 48,
+      role: "healer",
+      stats: { hp: 7313, mp: 2296, attack: 578, magic: 852, defense: 97, magicDefense: 180, speed: 33, crit: 11, blockMag: 17 },
+      spell: { name: "Молитва вогню", mp: 30, mult: 1.5, chance: 0.4 },
+      exp: 6912,
+      gold: [110, 211],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.05, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.04, qty: [1, 1] }
+      ]
+    },
+    musp_fire_bird: {
+      name: "Вогняний птах",
+      range: 3, move: { name: "Палаюче перо", mult: 1.55, chance: 0.25 },
+      verb: "метає палаючі пера в",
+      level: 48,
+      role: "ranged",
+      stats: { hp: 9312, mp: 0, attack: 1949, defense: 88, magicDefense: 116, speed: 37, crit: 29, dodge: 23 },
+      exp: 6912,
+      gold: [110, 211],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.065, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.04, qty: [1, 1] }
+      ]
+    },
+    musp_chest_guardian: {
+      name: "Сторож скрині",
+      range: 1, move: { name: "Удар окутим кулаком", mult: 1.5, chance: 0.25 },
+      verb: "б'є кулаком",
+      level: 48,
+      role: "tank",
+      stats: { hp: 16823, mp: 0, attack: 1406, defense: 216, magicDefense: 177, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 6912,
+      gold: [110, 211],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.05, qty: [1, 1] },
+        { id: "lizard_leather", chance: 0.052, qty: [1, 1] }
+      ]
+    },
+    musp_boss_sinmara: {
+      name: "Сінмара",
+      range: 3, move: { name: "Удар жаровнею", mult: 1.7, chance: 0.25 },
+      verb: "б'є жаровнею",
+      level: 49,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "caster",
+      stats: { hp: 19596, mp: 2487, attack: 677, magic: 798, defense: 128, magicDefense: 215, speed: 34, crit: 16, dodge: 23, blockPhys: 17, blockMag: 15 },
+      skills: [
+        { kind: "magic", name: "Полум'я Леватейна", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Дев'ять замків", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Тепло домашнього вогнища", mp: 70, healPct: 0.1 }
+      ],
+      exp: 36015,
+      gold: [559, 1078],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "rune_gem", chance: 0.35, qty: [1, 3] },
+        { id: "lizard_leather", chance: 0.3, qty: [1, 2] },
+        { id: "celestial_ore", chance: 0.06, qty: [1, 1] },
+        { id: "sun_gold_ingot", chance: 0.04, qty: [1, 1] }
+      ]
+    },
+    musp_steam_spirit: {
+      name: "Паровий дух",
+      range: 3, move: { name: "Обпікаюча пара", mult: 1.55, chance: 0.25 },
+      verb: "обпікає парою",
+      level: 48,
+      role: "caster",
+      stats: { hp: 9121, mp: 1458, attack: 1004, magic: 1331, defense: 109, magicDefense: 211, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Гарячий туман", mp: 28, mult: 1.5, chance: 0.4 },
+      exp: 6912,
+      gold: [110, 211],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.06, qty: [1, 1] },
+        { id: "white_pelt", chance: 0.05, qty: [1, 1] }
+      ]
+    },
+    musp_frost_shade: {
+      name: "Інеїста тінь",
+      range: 1, move: { name: "Крижаний дотик", mult: 1.55, chance: 0.25 },
+      verb: "морозить дотиком",
+      level: 49,
+      role: "melee",
+      stats: { hp: 10076, mp: 0, attack: 1819, defense: 115, magicDefense: 136, speed: 41, crit: 27, dodge: 22 },
+      exp: 7203,
+      gold: [113, 216],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.078, qty: [1, 1] },
+        { id: "white_pelt", chance: 0.05, qty: [1, 1] }
+      ]
+    },
+    musp_chaos_spirit: {
+      name: "Дух первісного хаосу",
+      range: 3, move: { name: "Удар порожнечі", mult: 1.55, chance: 0.25 },
+      verb: "б'є порожнечею",
+      level: 49,
+      role: "caster",
+      stats: { hp: 9304, mp: 1472, attack: 1029, magic: 1364, defense: 110, magicDefense: 214, speed: 31, crit: 17, blockMag: 17 },
+      spell: { name: "Подих Гіннунгагапу", mp: 28, mult: 1.5, chance: 0.4 },
+      exp: 7203,
+      gold: [113, 216],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "rock_crystal", chance: 0.06, qty: [1, 1] },
+        { id: "white_pelt", chance: 0.065, qty: [1, 1] }
+      ]
+    },
+    musp_boss_echo_of_ymir: {
+      name: "Відлуння Іміра",
+      range: 1, move: { name: "Удар першого велетня", mult: 1.7, chance: 0.25 },
+      verb: "гатить кулаком",
+      level: 49,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "tank",
+      stats: { hp: 23966, mp: 1827, attack: 902, magic: 689, defense: 294, magicDefense: 205, speed: 28, crit: 17, dodge: 12, blockPhys: 17, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Лід і полум'я", mp: 60, mult: 2.6 },
+        { kind: "stun", name: "Крок першого велетня", mp: 45, mult: 1.25 },
+        { kind: "heal", name: "Кров, що стала морем", mp: 70, healPct: 0.1 }
+      ],
+      exp: 36015,
+      gold: [559, 1078],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.3, qty: [1, 2] },
+        { id: "rock_crystal", chance: 0.35, qty: [1, 3] },
+        { id: "white_pelt", chance: 0.3, qty: [1, 2] },
+        { id: "rune_gem", chance: 0.2, qty: [1, 2] },
+        { id: "celestial_ore", chance: 0.06, qty: [1, 1] },
+        { id: "sun_gold_ingot", chance: 0.04, qty: [1, 1] }
+      ]
+    },
+    musp_son_of_muspel: {
+      name: "Син Муспелля",
+      humanoid: true,
+      weapons: ["sword"],
+      range: 1, move: { name: "Удар вогняним мечем", mult: 1.55, chance: 0.25 },
+      verb: "рубає вогняним мечем",
+      level: 49,
+      role: "melee",
+      stats: { hp: 9572, mp: 0, attack: 1728, defense: 115, magicDefense: 136, speed: 41, crit: 27, dodge: 22 },
+      exp: 7203,
+      gold: [113, 216],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.03, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.035, qty: [1, 1] }
+      ]
+    },
+    musp_fire_drake: {
+      name: "Вогняний дракон",
+      range: 3, move: { name: "Вогняний подих", mult: 1.55, chance: 0.25 },
+      verb: "дихає вогнем на",
+      level: 50,
+      role: "ranged",
+      stats: { hp: 9688, mp: 0, attack: 2048, defense: 90, magicDefense: 119, speed: 37, crit: 29, dodge: 23 },
+      exp: 7500,
+      gold: [115, 220],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.039, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.035, qty: [1, 1] }
+      ]
+    },
+    musp_surtrs_guard: {
+      name: "Гвардієць Сурта",
+      humanoid: true,
+      weapons: ["axe"],
+      range: 1, move: { name: "Удар сокири", mult: 1.5, chance: 0.25 },
+      verb: "рубає сокирою",
+      level: 50,
+      role: "tank",
+      stats: { hp: 16628, mp: 0, attack: 1404, defense: 221, magicDefense: 182, speed: 26, crit: 17, blockPhys: 17 },
+      exp: 7500,
+      gold: [115, 220],
+      loot: [
+        { id: "potion_hp_large", chance: 0.14, qty: [1, 1] },
+        { id: "potion_mp_large", chance: 0.1, qty: [1, 1] },
+        { id: "potion_magic", chance: 0.03, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.03, qty: [1, 1] },
+        { id: "rune_gem", chance: 0.046, qty: [1, 1] }
+      ]
+    },
+    musp_boss_surtr: {
+      name: "Сурт",
+      range: 1, move: { name: "Удар вогняного меча", mult: 1.8, chance: 0.25 },
+      verb: "рубає вогняним мечем",
+      level: 50,
+      boss: true, noChampion: true, spawnWeight: 0.1,
+      role: "melee",
+      stats: { hp: 17915, mp: 1945, attack: 1206, magic: 783, defense: 160, magicDefense: 160, speed: 45, crit: 26, dodge: 24, blockPhys: 18, blockMag: 16 },
+      skills: [
+        { kind: "magic", name: "Полум'я Рагнарьоку", mp: 60, mult: 2.8 },
+        { kind: "stun", name: "Меч, що яскравіший за сонце", mp: 45, mult: 1.35 },
+        { kind: "heal", name: "Жар Муспельгейму", mp: 70, healPct: 0.12 }
+      ],
+      exp: 48750,
+      gold: [741, 1430],
+      loot: [
+        { id: "potion_hp_large", chance: 0.35, qty: [1, 2] },
+        { id: "potion_mp_large", chance: 0.3, qty: [1, 2] },
+        { id: "potion_magic", chance: 0.15, qty: [1, 1] },
+        { id: "darksteel_ingot", chance: 0.45, qty: [1, 2] },
+        { id: "rune_gem", chance: 0.3, qty: [1, 2] },
+        { id: "celestial_ore", chance: 0.15, qty: [1, 2] },
+        { id: "sun_gold_ingot", chance: 0.1, qty: [1, 1] }
+      ]
     }
   };
 
@@ -4107,7 +4668,69 @@ const ENEMIES = {
       description: "Край світу, де чорне море б'ється об скелі, а з хвиль виринають луски завбільшки зі щит. Йормунганд, що оперізує Мідгард, піднімає голову — і Хелла вже нашіптує йому, що час Рагнарьоку близько.",
       enemies: ["jot_serpent_spawn", "jot_venom_jellyfish", "jot_serpent_cultist", "jot_boss_jormungandr"],
       dungeon: "jot_serpent_ring",
-      edge: "water"
+      edge: "water",
+      // Нагльфар: після першої перемоги над Йормунгандом — шлях у Муспельгейм (світ 7)
+      portal: { to: "musp_gate", world: 7, title: "Нагльфар",
+                text: "Коли Йормунганд пірнув у глибину, з туману виплив корабель із нігтів мерців — Нагльфар. Його ніхто не веде, але він пливе туди, куди треба Хеллі: на південь, через море, у Муспельгейм.",
+                button: "Піднятися на Нагльфар" }
+    },
+
+    // ---------- МУСПЕЛЬГЕЙМ (region: "musp", світ 7) — за морем, кораблем Нагльфар з Берега Світового Змія ----------
+    // Відкривається після першої перемоги над Йормунгандом (save.bossKills.jot_boss_jormungandr). Мапа — assets/images/map/map_muspelheim.webp.
+    // Дорога одна: рівнини → лавові ріки → кузні → фортеця → чертог Сінмари → межа Гіннунгагапу → трон Сурта.
+    musp_gate: {
+      name: "Попеляста межа", type: "portal", region: "musp", typeLabel: "Причал Нагльфара",   // підпис на мапі (page-maps.js)
+      description: "Нагльфар, корабель із нігтів мерців, пристав до сірого попелястого берега. Попереду — земля вогню: мертві чорні дерева, стежка старих слідів у попелі, а на обрії — червоне сяйво великого вулкана.",
+      portal: { to: "jot_serpent", title: "Нагльфар", text: "Нагльфар чекає біля берега — він відвезе назад, на Берег Світового Змія в Йотунгеймі.", button: "Повернутися в Йотунгейм" }
+    },
+    musp_ash: {
+      name: "Попелясті рівнини", type: "combat", region: "musp", minLevel: 45,
+      description: "Сіре поле попелу, з неба сиплеться ще. Обгорілі пні, кістки, у попелі тліють сліди лап — вогняні гончаки Сурта чують чужинця за милю й женуть його, доки той не впаде.",
+      enemies: ["musp_fire_hound", "musp_salamander", "musp_ash_spirit", "musp_boss_hound_packleader"],
+      dungeon: "musp_hound_lair",
+      edge: "rocks"
+    },
+    musp_lava: {
+      name: "Лавові ріки", type: "combat", region: "musp", minLevel: 45,
+      description: "Базальтовий острів між двома руслами розпеченої лави. Міст із застиглого каменю тріщить під ногами, а з лави виринають ті, кому вогонь — домівка.",
+      enemies: ["musp_magma_elemental", "musp_lava_worm", "musp_fire_serpent", "musp_boss_lava_serpent"],
+      dungeon: "musp_serpent_nest",
+      edge: "rocks"
+    },
+    musp_forges: {
+      name: "Кузні синів Муспелля", type: "combat", region: "musp", minLevel: 46,
+      description: "Обсидіановий поміст серед велетенських ковадл. Тут сини Муспелля кують зброю для Рагнарьоку — мечі завдовжки з корабель і списи, що не гаснуть. Ковалі не люблять, коли їм заважають.",
+      enemies: ["musp_fire_giant_smith", "musp_living_iron", "musp_glowing_golem", "musp_boss_master_smith_of_muspel"],
+      dungeon: "musp_sons_forge",
+      edge: "walls"
+    },
+    musp_fortress: {
+      name: "Обсидіанова фортеця", type: "combat", region: "musp", minLevel: 47,
+      description: "Порожній двір перед чорними склистими мурами й шипастими вежами. У вузьких вікнах горить червоне світло, а варта Сурта не питає, хто йде, — вона просто стріляє.",
+      enemies: ["musp_fire_knight", "musp_flame_mage", "musp_obsidian_sentinel", "musp_boss_fortress_commander"],
+      dungeon: "musp_citadel_vaults",
+      edge: "walls"
+    },
+    musp_sinmara: {
+      name: "Чертог Сінмари", type: "combat", region: "musp", minLevel: 47,
+      description: "Площа з темно-червоного каменю, бронзові жаровні й скриня на дев'ять замків. Сінмара, дружина Сурта, береже в ній Леватейн — і кожен, хто зазирне, згорить раніше, ніж побачить.",
+      enemies: ["musp_flame_priestess", "musp_fire_bird", "musp_chest_guardian", "musp_boss_sinmara"],
+      dungeon: "musp_sinmara_vault",
+      edge: "walls"
+    },
+    musp_ginnungagap: {
+      name: "Межа Гіннунгагапу", type: "combat", region: "musp", minLevel: 48,
+      description: "Уступ над бездонною прірвою: ліворуч — вогонь, праворуч — лід і крижаний туман, а там, де вони сходяться, з порожнечі здіймається пара. Тут колись народився Імір — і щось від нього лишилося.",
+      enemies: ["musp_steam_spirit", "musp_frost_shade", "musp_chaos_spirit", "musp_boss_echo_of_ymir"],
+      dungeon: "musp_ymir_abyss",
+      edge: "rocks"
+    },
+    musp_surtr: {
+      name: "Трон Сурта", type: "combat", region: "musp", minLevel: 49,
+      description: "Рівнина в кратері вулкана, лава стікає стінами з усіх боків. На чорному троні сидить Сурт, а поруч у камінь встромлено палаючий меч. Хелла обіцяла йому світ — і він чекає лише сигналу.",
+      enemies: ["musp_son_of_muspel", "musp_fire_drake", "musp_surtrs_guard", "musp_boss_surtr"],
+      dungeon: "musp_volcano_heart",
+      edge: "rocks"
     }
   };
   const DEFAULT_LOCATION = "home";
@@ -4163,6 +4786,12 @@ const ENEMIES = {
                  description: "Копальня велетнів у схилі льодовика. Залізна руда тут лежить брилами, які йотуни вивертали голими руками, а між ними блищить гірський кришталь." },
       sawmill: { minLevel: 40, image: "sawmill_jot", yields: ["ironwood"],
                  description: "Вирубка на краю Залізного лісу. Стовбури тут тверді, як ковадло, а вовки Ангрбоди вважають кожне повалене дерево своїм." }
+    },
+    musp: {
+      mine:    { minLevel: 45, image: "mine_musp", yields: ["iron_ore", "rock_crystal"],
+                 description: "Обсидіанова копальня біля лавових рік. Залізна руда тут спечена в брили, а гірський кришталь виростає з жару — тільки встигай вибирати, поки з лави не вилізли її господарі." },
+      sawmill: { minLevel: 45, image: "sawmill_musp", yields: ["ironwood"],
+                 description: "Обгорілий гай залізного дерева на краю попелястих рівнин. Вогонь його не бере — тільки чорнить кору, а вогняні гончаки вважають ці стовбури своїми." }
     }
   };
   const SITE_NAMES = { mine: "Шахта", sawmill: "Лісопилка" };
@@ -4373,6 +5002,50 @@ const ENEMIES = {
       minLevel: 45,   // фінальний бій світу 6 — з 45 рівня
       edge: "water",
       description: "Там, де Змій кусає власний хвіст, кільце його тіла замикає море. Хелла кличе Йормунганда на берег — і якщо він вийде, Мідгард не встоїть."
+    },
+    // Данжі Муспельгейму (світ 7)
+    musp_hound_lair: {
+      name: "Лігво вогняних псів", explore: "Обстеження рівнин", location: "musp_ash",
+      key: "key_musp_ash", keyChance: 0.01, boss: "musp_boss_hound_packleader", pool: ["musp_fire_hound", "musp_salamander", "musp_ash_spirit"],
+      edge: "rocks",
+      description: "Під шаром попелу — нори, де гончаки виводять цуценят у жарі. Ватажок зграї не любить гостей."
+    },
+    musp_serpent_nest: {
+      name: "Гніздо Лавового змія", explore: "Обстеження русла", location: "musp_lava",
+      key: "key_musp_lava", keyChance: 0.01, boss: "musp_boss_lava_serpent", pool: ["musp_magma_elemental", "musp_lava_worm", "musp_fire_serpent"],
+      edge: "rocks",
+      description: "Там, де дві ріки лави сходяться, у кипучому вирі звився Лавовий змій. Його луска — застигла магма, його подих — сама ріка."
+    },
+    musp_sons_forge: {
+      name: "Горно синів Муспелля", explore: "Обстеження кузень", location: "musp_forges",
+      key: "key_musp_forges", keyChance: 0.01, boss: "musp_boss_master_smith_of_muspel", pool: ["musp_fire_giant_smith", "musp_living_iron", "musp_glowing_golem"],
+      edge: "walls",
+      description: "У серці кузень палає горно, де метал плавиться від самого погляду. Майстер-коваль Муспелля кує тут меч, яким колись спалять світ."
+    },
+    musp_citadel_vaults: {
+      name: "Підземелля цитаделі", explore: "Обстеження фортеці", location: "musp_fortress",
+      key: "key_musp_fortress", keyChance: 0.01, boss: "musp_boss_fortress_commander", pool: ["musp_fire_knight", "musp_flame_mage", "musp_obsidian_sentinel"],
+      edge: "walls",
+      description: "Під фортецею — склепи, де Сурт тримає полонених і зброю. Комендант знає кожен коридор, а коридори знають його."
+    },
+    musp_sinmara_vault: {
+      name: "Скарбниця Сінмари", explore: "Обстеження чертогу", location: "musp_sinmara",
+      key: "key_musp_sinmara", keyChance: 0.01, boss: "musp_boss_sinmara", pool: ["musp_flame_priestess", "musp_fire_bird", "musp_chest_guardian"],
+      edge: "walls",
+      description: "За дев'ятьма замками — скарбниця, де Сінмара ховає те, що дорожче за вогонь. Вона не віддасть ключ ні богам, ні велетням."
+    },
+    musp_ymir_abyss: {
+      name: "Безодня Іміра", explore: "Обстеження прірви", location: "musp_ginnungagap",
+      key: "key_musp_ginnungagap", keyChance: 0.01, boss: "musp_boss_echo_of_ymir", pool: ["musp_steam_spirit", "musp_frost_shade", "musp_chaos_spirit"],
+      edge: "rocks",
+      description: "На дні Гіннунгагапу, де вогонь і лід ще досі б'ються, блукає відлуння першого велетня. Воно пам'ятає, як боги розірвали його на світ."
+    },
+    musp_volcano_heart: {
+      name: "Серце вулкана", explore: "Обстеження кратера", location: "musp_surtr",
+      key: "key_musp_surtr", keyChance: 0.01, boss: "musp_boss_surtr", pool: ["musp_son_of_muspel", "musp_fire_drake", "musp_surtrs_guard"],
+      minLevel: 50,   // фінальний бій світу 7 — з 50 рівня
+      edge: "rocks",
+      description: "У самому серці вулкана Сурт піднімається з трону. Якщо він дійде до Біфросту, міст згорить — і Асгард залишиться без захисту."
     }
   };
 
@@ -4490,7 +5163,15 @@ const ENEMIES = {
     "jot_stone_giant", "jot_rock_troll", "jot_living_boulder", "jot_boss_hrungnir",
     "jot_logi", "jot_hugi", "jot_elli", "jot_boss_utgarda_loki",
     "jot_sea_troll", "jot_giant_walrus", "jot_draugr_fisher", "jot_boss_hymir",
-    "jot_serpent_spawn", "jot_venom_jellyfish", "jot_serpent_cultist", "jot_boss_jormungandr"
+    "jot_serpent_spawn", "jot_venom_jellyfish", "jot_serpent_cultist", "jot_boss_jormungandr",
+    // Муспельгейм (світ 7)
+    "musp_fire_hound", "musp_salamander", "musp_ash_spirit", "musp_boss_hound_packleader",
+    "musp_magma_elemental", "musp_lava_worm", "musp_fire_serpent", "musp_boss_lava_serpent",
+    "musp_fire_giant_smith", "musp_living_iron", "musp_glowing_golem", "musp_boss_master_smith_of_muspel",
+    "musp_fire_knight", "musp_flame_mage", "musp_obsidian_sentinel", "musp_boss_fortress_commander",
+    "musp_flame_priestess", "musp_fire_bird", "musp_chest_guardian", "musp_boss_sinmara",
+    "musp_steam_spirit", "musp_frost_shade", "musp_chaos_spirit", "musp_boss_echo_of_ymir",
+    "musp_son_of_muspel", "musp_fire_drake", "musp_surtrs_guard", "musp_boss_surtr"
   ]);
   // Заглушка, поки картинки немає: темний силует з очима
   const ENEMY_PLACEHOLDER = "data:image/svg+xml," + encodeURIComponent(
@@ -4544,6 +5225,11 @@ const ENEMIES = {
     return !!(isSvartalfheimOpen(save) && save.bossKills?.svart_boss_mokkurkalfi);
   }
 
+  // Муспельгейм (світ 7): відкритий Йотунгейм + перша перемога над Йормунгандом (Нагльфар на Березі Світового Змія)
+  function isMuspelheimOpen(save) {
+    return !!(isJotunheimOpen(save) && save.bossKills?.jot_boss_jormungandr);
+  }
+
   function canEnterLocation(id, heroLevel = 1, save = null) {
     const loc = LOCATIONS[id];
     if (!loc) return { ok: false, reason: "Такої локації немає." };
@@ -4562,6 +5248,9 @@ const ENEMIES = {
     }
     if (loc.region === "jot" && save && !isJotunheimOpen(save)) {
       return { ok: false, reason: "Шлях у Йотунгейм відкриється після першої перемоги над Мьоккуркальві (Витяжна шахта в Кузні Мьоккуркальві, Свартальвгейм)." };
+    }
+    if (loc.region === "musp" && save && !isMuspelheimOpen(save)) {
+      return { ok: false, reason: "Шлях у Муспельгейм відкриється після першої перемоги над Йормунгандом (Нагльфар біля Берега Світового Змія, Йотунгейм)." };
     }
     if (loc.minLevel && heroLevel < loc.minLevel) {
       return { ok: false, reason: `${loc.name}: вхід з ${loc.minLevel} рівня персонажа.` };
@@ -4639,7 +5328,7 @@ const ENEMIES = {
 
   Object.assign(RPG, {
     MONSTER_MOVES, RANGE_NAMES, enemyRange, enemyMove,
-    ENEMIES, LOCATIONS, DUNGEONS, DEFAULT_LOCATION, RESPAWN_LOCATION, GUILD_SHOP, isAlfheimOpen, isVanaheimOpen, isSvartalfheimOpen, isJotunheimOpen, DARK_LOC_MAT,
+    ENEMIES, LOCATIONS, DUNGEONS, DEFAULT_LOCATION, RESPAWN_LOCATION, GUILD_SHOP, isAlfheimOpen, isVanaheimOpen, isSvartalfheimOpen, isJotunheimOpen, isMuspelheimOpen, DARK_LOC_MAT,
     CHAMPION, rollChampion, rollChampionDrop, championBounty,
     getEnemy, enemyExp, enemySpriteStyle, getLocation, isCombatLocation, canEnterLocation, pickEnemy, rollLoot, isCraftOnlyEnemy, enemyRegions
   });
