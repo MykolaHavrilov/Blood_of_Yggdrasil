@@ -230,6 +230,8 @@
       }
       // ресурси Шахти й Лісопилки
       for (const id of loc.yields || []) bagAddStack(bag, id, RPG.randInt(1, 3));
+      // трави (Лісопилка) і мінерали (Шахта) для алхімії — alchemy.js → alchYields, 8–12 кожного
+      for (const id of RPG.alchYields?.(loc) || []) bagAddStack(bag, id, RPG.randInt(RPG.ALCH_YIELD[0], RPG.ALCH_YIELD[1]));
     }
     if (!result.win && !result.draw) return { wiped: true, enemyIds: result.enemyIds };
     return result.win ? "win" : "draw";

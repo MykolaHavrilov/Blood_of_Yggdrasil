@@ -63,7 +63,11 @@
         else if (d.id === "north") renderNpc(box, "captain");
         else if (d.id === "center") renderTownHall(box);
         else if (d.id === "rest") renderRestDistrict(box);
-        else if (d.id === "forges") renderToolShop(box, { shop: "svartgard" });   // Свартгард: знаряддя двергів
+        else if (d.id === "forges") {                                               // Свартгард: знаряддя двергів і філіал Торгової гільдії (колби)
+          renderToolShop(box, { shop: "svartgard" });
+          box.append(el("h3", null, "Філіал Торгової гільдії"));
+          G.renderFlaskShop(box);
+        }
         else if (d.id === "brokk") renderSvarogForge(box);                          // Свартгард: Небесна кузня, Горно Сварога
         // Вихід із міста в цьому районі (Свартгард: штольня до Бухти Ран, брама до копалень)
         if (d.exit && !districtLocked(d)) {
@@ -95,13 +99,18 @@
       box.append(tabs);
       if (tradeNpc === "scrooge") {
         if (save.character.level < RPG.TRADE_MIN_LEVEL) {
-          box.append(el("p", "status", `Торгова гільдія Скруджа приймає лише поважних гостей — з ${RPG.TRADE_MIN_LEVEL} рівня.`));
+          box.append(el("p", "status", `Торгова гільдія Скруджа приймає лише поважних гостей — з ${RPG.TRADE_MIN_LEVEL} рівня. ` +
+            "Але порожні колби для алхімії прикажчик продає всім."));
+          G.renderFlaskShop(box);
           return;
         }
         renderTradeGuild(box);
+        G.renderFlaskShop(box, { noGold: true });
         return;
       }
       renderNpc(box, "kuzma");
+      // Алхімічний станок — у Гільдії ремісників (alchemy.js, page-game-alchemy.js)
+      G.renderAlchemyRow(box, "guild");
       // Рунне горно — всередині Гільдії ремісників (data/runes.js → RUNE_FORGE); з'являється лише після знахідки
       // другої книги Сварога «Руни Небесної Кузні» (save.books.runes)
       if (RPG.RUNE_FORGE && save.books?.runes) {

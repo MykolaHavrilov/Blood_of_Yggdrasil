@@ -192,9 +192,10 @@
     //   page-game-shop.js   — купівля й продаж у торговця
     //   page-game-city.js   — Дубова Застава: райони, Торговий район, Рунне горно, Мерія
     //   page-game-guild.js  — Гільдія авантюристів: завдання, шлях професії, Тренер
+    //   page-game-alchemy.js — Алхімічний станок (Гільдія ремісників, Храм), колби
     // G — спільне для частин: дані екрана й функції, які частини кличуть одна в одної та в цьому файлі
     const G = { save, msg, place, locData, renderPlace, renderAll, get fighting() { return fighting; } };
-    for (const part of ["home", "places", "shop", "city", "guild"]) Object.assign(G, RPG.gameParts[part](G));
+    for (const part of ["home", "places", "shop", "city", "guild", "alchemy"]) Object.assign(G, RPG.gameParts[part](G));
     const { renderHome, renderTemple, renderTavern, renderCity, renderDarkGate, renderCityGate, renderPortalPlace, portalOpen, portalCard } = G;
 
     // ---------- Бій ----------

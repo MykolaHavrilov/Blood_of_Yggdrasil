@@ -91,6 +91,7 @@
         `Сюди повертаються загиблі. Відроджені мають ${Math.round(RPG.RESPAWN_HP_PCT * 100)}% здоров'я та 0% мани — ` +
         "відновіться зіллям або вирушайте відпочити в Домівку."));
       renderNpc(place, "nun");
+      G.renderAlchemyRow(place, "temple");       // Алхімічний станок Храму — свій казан (alchemy.js)
       const sh = RPG.shamanState(save).stage;
       if (sh >= 1 && sh <= 4) renderRenouncer(place);
       if (RPG.velesState(save).stage >= 4) renderCourtyard(place);
@@ -426,6 +427,7 @@
         `${locData.merchant || "Торговець"} продає за ${Math.round(RPG.SHOP_SELL_RATE * 100)}% вартості, ` +
         `а купує за ${Math.round(RPG.SHOP_BUY_RATE * 100)}%. Великі та чарівні зілля тут не купиш — лише здобути в бою.`));
       renderShop(place, locData.shop || []);
+      G.renderFlaskShop(place, { byLevel: true, noGold: true });   // колби тірів, відкритих Алхімією (alchemy.js)
       const row = el("div", "row");
       row.append(link("Мапа", "maps.html"));
       place.append(row);

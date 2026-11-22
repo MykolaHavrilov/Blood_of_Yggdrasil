@@ -25,15 +25,16 @@
       document.body.classList.add("buy-locked");
       setTimeout(() => document.body.classList.remove("buy-locked"), BUY_PAUSE_MS);
     }
-    // opts: { priceOf(id), buy(save, id, qty), stock: true — продавати й речі з позначкою noShop }
+    // opts: { priceOf(id), buy(save, id, qty), stock: true — продавати й речі з позначкою noShop,
+    //        title — заголовок «Купити», noSell — без стовпця продажу, noGold — без рядка «Ваше золото» }
     function renderShop(box, shopIds, opts = {}) {
       const priceOf = opts.priceOf || RPG.shopSellPrice;
       const buyFn = opts.buy || RPG.buyItem;
-      box.append(el("p", "status shop-gold", `Ваше золото: ${fmtNum(save.character.gold)}`));
+      if (!opts.noGold) box.append(el("p", "status shop-gold", `Ваше золото: ${fmtNum(save.character.gold)}`));
 
       const cols = el("div", "row shop");
       const buyBox = el("div", "stack shop-list");
-      buyBox.append(el("h3", null, "Купити"));
+      buyBox.append(el("h3", null, opts.title || "Купити"));
       for (const id of shopIds) {
         const item = RPG.ITEMS[id];
         if (!item || (item.noShop && !opts.stock)) continue;
@@ -204,7 +205,8 @@
         sellBox.append(line);
       });
 
-      cols.append(buyBox, sellBox);
+      cols.append(buyBox);
+      if (!opts.noSell) cols.append(sellBox);        // opts.noSell — лише купівля (колби для алхімії поруч із крамницею)
       box.append(cols);
     }
 

@@ -41,6 +41,7 @@
           `Тадеуш, торговець гільдії, продає зброю 1–2 виду, шкіряну броню (2 вид), малі й середні зілля (за ${Math.round(RPG.SHOP_SELL_RATE * 100)}% вартості), ` +
           `а купує будь-що за ${Math.round(RPG.SHOP_BUY_RATE * 100)}%.`));
         renderShop(npc, RPG.GUILD_SHOP || []);
+        G.renderFlaskShop(npc, { byLevel: true, noGold: true });   // колби тірів, відкритих Алхімією (alchemy.js)
       } else renderTrainer(npc);
       box.append(npc);
     }

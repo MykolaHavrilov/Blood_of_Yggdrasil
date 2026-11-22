@@ -245,7 +245,11 @@
     return queueDialog(() => {
       const { dlg } = noticeDialog("ending-dialog");
       const box = el("div", "stack ending");
-      box.append(el("h2", "ending-title", E.title));
+      // Картинка епілогу (ui/ending.webp, 16:9; промт — «Фінал - картинка епілогу (промт).txt»)
+      const art = el("img", "ending-art");
+      Object.assign(art, { src: RPG.asset("assets/images/ui/ending.webp"), alt: "", decoding: "async" });
+      art.addEventListener("error", () => art.remove());
+      box.append(art, el("h2", "ending-title", E.title));
       const heroes = (RPG.partyMembers ? RPG.partyMembers(save) : [{ character: save.character }]).map(m => m.character.name).join(", ");
       if (heroes) box.append(el("p", "ending-heroes", heroes));
       for (const p of E.epilogue) box.append(el("p", "ending-text", p));

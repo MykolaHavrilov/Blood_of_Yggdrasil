@@ -1655,3 +1655,58 @@ main > a.location { display: flex; margin-bottom: 10px; }
 }
 .class-tree-info .ct-fit.is-yes { color: #8fd46a; }
 .class-tree-info .ct-fit.is-no { color: #a9adb5; }
+
+/* ---------- Алхімічний станок (page-game-alchemy.js): ліворуч вибір, у центрі казан, праворуч комірки інгредієнтів ---------- */
+.notice-dialog.alchemy-dialog { max-width: min(980px, calc(100vw - 24px)); }
+.alch-level { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 2px 0 6px; color: var(--gold); }
+.alch-bar { flex: 1 1 160px; max-width: 260px; height: 8px; border: 1px solid var(--accent); border-radius: 4px; overflow: hidden; background: rgba(0, 0, 0, .4); }
+.alch-bar-fill { display: block; height: 100%; background: linear-gradient(90deg, #6fbf5a, #e9c77b); }
+.alch-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 300px) minmax(0, 1fr); gap: 16px; align-items: center; margin-top: 8px; }
+.alch-left { display: grid; gap: 6px; align-content: start; }
+.alch-cap { color: var(--text-dim); font-size: .9rem; }
+.alch-select { width: 100%; padding: 6px 8px; font: inherit; color: inherit; background: rgba(0, 0, 0, .45); border: 1px solid var(--accent); border-radius: 4px; }
+.alch-select option:disabled { color: #777; }
+.alch-recipe, .alch-total { margin: 0; font-size: .9rem; }
+.alch-range { width: 100%; accent-color: var(--accent); }
+.alch-range-ends { display: flex; justify-content: space-between; font-size: .75rem; color: var(--text-dim); margin-top: -4px; }
+.alch-go { justify-self: start; margin-top: 4px; }
+.alch-mid { display: grid; justify-items: center; gap: 6px; }
+.alch-cauldron { position: relative; width: 100%; max-width: 330px; aspect-ratio: 720 / 640; --alch-glow: rgba(255, 80, 60, .55); }
+.alch-cauldron.is-mp { --alch-glow: rgba(80, 150, 255, .55); }
+/* картинки казана: чорне тло розчиняється в тлі вікна */
+.alch-pot { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; user-select: none;
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 72%, transparent 100%); mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 72%, transparent 100%); }
+.alch-pot.is-lit { opacity: 0; transition: opacity .6s ease; }
+.alch-cauldron.is-brewing .alch-pot.is-lit, .alch-cauldron.is-ready .alch-pot.is-lit { opacity: 1; }
+.alch-cauldron.is-brewing .alch-pot.is-lit { animation: alch-fire 1.6s ease-in-out infinite; }
+@keyframes alch-fire { 50% { filter: brightness(1.12) saturate(1.08); } }
+.alch-row-icon { width: 48px; height: 48px; flex: 0 0 48px; border-radius: 6px; box-shadow: 0 0 0 1px var(--border-color); }
+/* фон вікна — комора станка (Гільдія / Храм); рамка без заливки, щоб фон було видно */
+.notice-dialog.alchemy-dialog.has-bg { border-image-slice: 110; background-color: #15110d;
+  background-image: linear-gradient(rgba(14, 11, 9, .55), rgba(14, 11, 9, .72)), var(--alch-bg); background-size: cover; background-position: center; }
+/* готове зілля — комірка посеред казана */
+.alch-result { position: absolute; left: 50%; top: 25%; width: 26%; aspect-ratio: 1; transform: translate(-50%, -50%); padding: 0; margin: 0;
+  display: grid; place-items: center; cursor: pointer; box-shadow: 0 0 0 2px var(--gold), 0 0 16px var(--alch-glow); animation: rf-float 2.4s ease-in-out infinite; }
+.alch-result .item-icon, .alch-slot .item-icon { position: absolute; inset: 7%; width: auto; height: auto; }
+.alch-clock { margin: 0; font-family: var(--font-head); color: var(--gold); font-size: 1.1rem; text-align: center; }
+.alch-slots { display: grid; gap: 8px; align-content: center; justify-items: center; }
+.alch-slot-wrap { display: grid; justify-items: center; gap: 2px; text-align: center; }
+.alch-slot-wrap.is-flask { margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(201, 163, 90, .4); }
+.alch-slot { position: relative; width: 64px; height: 64px; display: grid; place-items: center; }
+.alch-slot .item-ph { font-size: .62rem; line-height: 1.05; padding: 2px; }
+.alch-slot.is-short { box-shadow: inset 0 0 0 2px #c0392b; }
+.alch-slot.is-used { opacity: .55; }
+.alch-slot-cap { color: var(--text-dim); font-size: .78rem; max-width: 180px; }
+.alch-row strong { color: var(--gold); }
+@media (prefers-reduced-motion: reduce) { .alch-cauldron .alch-pot, .alch-result { animation: none; } }
+@media (max-width: 700px) {
+  .alch-body { grid-template-columns: 1fr; }
+  .alch-mid { order: -1; }
+  .alch-cauldron { max-width: 240px; }
+  .alch-slots { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); }
+  .alch-slot-wrap.is-flask { margin-top: 0; padding-top: 0; border-top: 0; }
+}
+
+/* Мапи міст: фон плато під острівцями районів */
+.world-map.has-bg { background-color: #1c1f18; background-size: cover; background-position: center; }
+.notice-dialog.alchemy-dialog.has-bg .alch-body, .notice-dialog.alchemy-dialog.has-bg .alch-level { text-shadow: 0 1px 3px #000, 0 0 6px rgba(0, 0, 0, .8); }

@@ -484,7 +484,8 @@ a.map-world:hover, a.map-world:focus-visible { outline: none; border-color: var(
 .death-bag-btn { color: #f0a08a; }
 .game-over-sub { font-size: .88rem; color: var(--text-dim); }
 /* Кінець гри (game-common.js → showEnding): епілог і титри, що пливуть угору */
-.ending-dialog { width: min(600px, 94vw); }
+.ending-dialog { width: min(720px, 94vw); }
+.ending-art { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 6px; border: 1px solid var(--link-border); box-shadow: 0 4px 16px rgba(0, 0, 0, .6); }
 .ending-title { font-family: var(--font-head); color: #e6c46a; text-align: center; margin: 0; font-size: 1.8rem; }
 .ending-heroes { text-align: center; color: var(--text-dim); margin: 0; }
 .ending-text { line-height: 1.5; }

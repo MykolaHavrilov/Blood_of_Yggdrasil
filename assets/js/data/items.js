@@ -1576,6 +1576,61 @@ ITEMS.heavenly_spark = {
   description: "Вогник з горна Сварога. Без нього легендарна річ майже не народжується. Згоряє при куванні."
 };
 
+// ---------- АЛХІМІЯ: трави, мінерали, порожні колби, зілля тірів 4–8 (alchemy.js; дані — «Зілля — проєкт.xlsx») ----------
+// Трави (зілля здоров'я) — з Лісопилок, мінерали (зілля мани) — з Шахт; колби продає Торгова гільдія та її філіали.
+// Рідкостей у них немає (noGrades). Іконки — промти «Алхімія - матеріали, колби й зілля (промти).txt»; поки їх немає — у клітинці назва.
+const ALCH_MATERIALS = {
+  alch_plantain:      { name: "Подорожник",              tier: 1, kind: "hp", price: 1,  description: "Широке листя з придорожніх стежок. Найпростіша трава для зілля здоров'я." },
+  alch_st_johns_wort: { name: "Звіробій",                tier: 2, kind: "hp", price: 2,  description: "Жовті квіти, що, кажуть, «звіра б'ють». Основа середнього зілля здоров'я." },
+  alch_alf_chamomile: { name: "Альвійська ромашка",      tier: 3, kind: "hp", price: 4,  description: "Ромашка з золотим серцем, що світиться в сутінках Темного лісу." },
+  alch_sea_grass:     { name: "Морська трава",           tier: 4, kind: "hp", price: 8,  description: "Довгі зелені стрічки з берегів Альвгейму й Ванагейму, ще мокрі від моря." },
+  alch_cave_mushroom: { name: "Печерний гриб",           tier: 5, kind: "hp", price: 14, description: "Блідий гриб з синім сяйвом. Росте в печерах двергів і в холодних ущелинах йотунів." },
+  alch_ash_root:      { name: "Попелястий корінь",       tier: 6, kind: "hp", price: 25, description: "Обвуглений корінь з Муспельгейму, у тріщинах якого досі жевріє вогонь." },
+  alch_idunn_blossom: { name: "Цвіт Ідунниних яблунь",   tier: 7, kind: "hp", price: 40, description: "Біло-рожевий цвіт з садів Асгарду, що пахне вічною молодістю." },
+  alch_ice_moss:      { name: "Крижаний мох",            tier: 8, kind: "hp", price: 60, description: "Мох, укритий інеєм, — єдине живе, що росте біля коріння в Ніфльгеймі." },
+  alch_blue_salt:     { name: "Блакитна сіль",           tier: 1, kind: "mp", price: 1,  description: "Грубі блакитні кристали з солоних жил Гардарики. Основа малого зілля мани." },
+  alch_silver_dust:   { name: "Срібний пил",             tier: 2, kind: "mp", price: 2,  description: "Дрібний блискучий пил зі срібних штолень." },
+  alch_moonstone:     { name: "Місячний камінь",         tier: 3, kind: "mp", price: 4,  description: "Молочно-білий камінь, у якому ходить синє світло." },
+  alch_mist_quartz:   { name: "Туманний кварц",          tier: 4, kind: "mp", price: 8,  description: "Кварц, у якому застиг туман ванських боліт." },
+  alch_crystal_dust:  { name: "Кристальний пил",         tier: 5, kind: "mp", price: 14, description: "Синьо-фіолетовий пил з кристалів, що освітлюють печери двергів." },
+  alch_ember_sulfur:  { name: "Жарова сірка",            tier: 6, kind: "mp", price: 25, description: "Сірка з лавових рік — гаряча навіть у долонях." },
+  alch_bifrost_dust:  { name: "Райдужний пил Біфросту",  tier: 7, kind: "mp", price: 40, description: "Пил усіх кольорів веселки, що осипається з мосту Біфрост." },
+  alch_nifl_ice:      { name: "Крига Ніфльгейму",        tier: 8, kind: "mp", price: 60, description: "Прадавня темно-синя крига, що не тане ніколи." }
+};
+for (const [id, m] of Object.entries(ALCH_MATERIALS)) {
+  ITEMS[id] = { name: m.name, type: "material", price: m.price, alchTier: m.tier, alchKind: m.kind, noGrades: true,
+                stackable: true, maxStack: MATERIAL_STACK, noShop: true,
+                description: `${m.description} Матеріал алхімії, тір ${m.tier}: зілля ${m.kind === "hp" ? "здоров'я" : "мани"}.` };
+}
+const ALCH_FLASKS = {
+  alch_flask_1: { name: "Глиняна колба",          tier: 1, price: 1 },
+  alch_flask_2: { name: "Скляна колба",           tier: 2, price: 5 },
+  alch_flask_3: { name: "Кришталева колба",       tier: 3, price: 20 },
+  alch_flask_4: { name: "Колба з морського скла", tier: 4, price: 40 },
+  alch_flask_5: { name: "Колба двергів",          tier: 5, price: 70 },
+  alch_flask_6: { name: "Жаротривка колба",       tier: 6, price: 150 },
+  alch_flask_7: { name: "Небесна колба",          tier: 7, price: 220 },
+  alch_flask_8: { name: "Колба з вічного льоду",  tier: 8, price: 300 }
+};
+for (const [id, f] of Object.entries(ALCH_FLASKS)) {
+  ITEMS[id] = { name: f.name, type: "material", price: f.price, alchTier: f.tier, alchFlask: true, noGrades: true,
+                stackable: true, maxStack: MATERIAL_STACK, noShop: true,
+                description: `Порожня колба для зілля ${f.tier} тіру. Продає Торгова гільдія та її філіали.` };
+}
+// Зілля тірів 4–8 (тіри 1–3 — потрібні вище: potion_hp_small … potion_mp_large)
+const ALCH_POTIONS = {
+  potion_hp_t4: { name: "Зілля морської трави",  hp: 400,  price: 120 }, potion_mp_t4: { name: "Зілля туманного вина", mp: 240,  price: 130 },
+  potion_hp_t5: { name: "Рудний настій двергів", hp: 600,  price: 180 }, potion_mp_t5: { name: "Кристальний відвар",   mp: 360,  price: 200 },
+  potion_hp_t6: { name: "Попелясте зілля",       hp: 1000, price: 300 }, potion_mp_t6: { name: "Жарове зілля",         mp: 600,  price: 330 },
+  potion_hp_t7: { name: "Зілля Ідунниних яблук", hp: 1500, price: 450 }, potion_mp_t7: { name: "Небесна роса",         mp: 900,  price: 500 },
+  potion_hp_t8: { name: "Зілля вічної криги",    hp: 2200, price: 650 }, potion_mp_t8: { name: "Сльоза Хельгейму",     mp: 1300, price: 720 }
+};
+for (const [id, p] of Object.entries(ALCH_POTIONS)) {
+  ITEMS[id] = { name: p.name, type: "consumable", price: p.price, stackable: true, maxStack: POTION_STACK, noShop: true,
+                effect: p.hp ? { healHp: p.hp } : { healMp: p.mp },
+                description: p.hp ? `Відновлює ${p.hp} здоров'я.` : `Відновлює ${p.mp} мани.` };
+}
+
 // Рід назв наявних матеріалів (для назв магічних/епічних/легендарних стопок)
 Object.assign(ITEMS.rat_tail, { g: "m" }); Object.assign(ITEMS.rat_skin, { g: "f" });
 Object.assign(ITEMS.wolf_pelt, { g: "f" }); Object.assign(ITEMS.wolf_fang, { g: "n" });
@@ -1666,7 +1721,7 @@ const ICON_FILES = new Set(["sword", "dagger", "axe", "bow", "staff", "shield", 
  "orb_veles", "orb_gods"]
   .forEach(id => ICON_FILES.add(id));
 // Іконки, додані скриптом tools/add-image.js (окремі файли assets/images/items/icon_<id>.webp)
-["key_svart_alvis", "key_svart_falls", "key_svart_forges", "key_svart_mines", "key_svart_mokkur", "key_svart_quarters", "key_svart_runes", "heavenly_ember", "storm_amulet", "storm_axe", "storm_bow", "storm_chest", "storm_dagger", "storm_earring", "storm_feet", "storm_hands", "storm_head", "storm_knife", "storm_legs", "storm_orb", "storm_quiver", "storm_ring", "storm_shield", "storm_staff", "storm_sword", "blueprint_amulet", "blueprint_earring", "blueprint_ring"].forEach(id => ICON_FILES.add(id));
+["key_svart_alvis", "key_svart_falls", "key_svart_forges", "key_svart_mines", "key_svart_mokkur", "key_svart_quarters", "key_svart_runes", "heavenly_ember", "storm_amulet", "storm_axe", "storm_bow", "storm_chest", "storm_dagger", "storm_earring", "storm_feet", "storm_hands", "storm_head", "storm_knife", "storm_legs", "storm_orb", "storm_quiver", "storm_ring", "storm_shield", "storm_staff", "storm_sword", "blueprint_amulet", "blueprint_earring", "blueprint_ring", "alch_alf_chamomile", "alch_ash_root", "alch_bifrost_dust", "alch_blue_salt", "alch_cave_mushroom", "alch_crystal_dust", "alch_ember_sulfur", "alch_flask_1", "alch_flask_2", "alch_flask_3", "alch_flask_4", "alch_flask_5", "alch_flask_6", "alch_flask_7", "alch_flask_8", "alch_ice_moss", "alch_idunn_blossom", "alch_mist_quartz", "alch_moonstone", "alch_nifl_ice", "alch_plantain", "alch_sea_grass", "alch_silver_dust", "alch_st_johns_wort", "potion_hp_large", "potion_hp_medium", "potion_hp_small", "potion_hp_t4", "potion_hp_t5", "potion_hp_t6", "potion_hp_t7", "potion_hp_t8", "potion_mp_large", "potion_mp_medium", "potion_mp_small", "potion_mp_t4", "potion_mp_t5", "potion_mp_t6", "potion_mp_t7", "potion_mp_t8"].forEach(id => ICON_FILES.add(id));
 ["key_jot_passes", "key_jot_thrymheim", "key_jot_ironwood", "key_jot_thrym", "key_jot_waste", "key_jot_utgard", "key_jot_hymir", "key_jot_serpent"].forEach(id => ICON_FILES.add(id));
 ["key_musp_ash", "key_musp_lava", "key_musp_forges", "key_musp_fortress", "key_musp_sinmara", "key_musp_ginnungagap", "key_musp_surtr"].forEach(id => ICON_FILES.add(id));
 ["key_asg_himinbjorg", "key_asg_fensalir", "key_asg_breidablik", "key_asg_bilskirnir", "key_asg_valhalla", "key_asg_vingolf", "key_asg_gladsheim", "key_asg_square", "key_asg_hlidskjalf"].forEach(id => ICON_FILES.add(id));

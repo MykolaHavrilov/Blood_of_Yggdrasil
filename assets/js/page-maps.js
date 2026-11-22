@@ -293,6 +293,9 @@
     img.width = R.w; img.height = R.h;
     img.alt = `Мапа: ${R.name}`;
     mapBox.classList.add("region-" + region);
+    // Міста: під острівцями районів (прозоре тло) — окремий фон плато (images/map/<місто>_bg.webp)
+    const CITY_BG = { city: "assets/images/map/city_bg.webp", svartgard: "assets/images/map/svartgard_bg.webp" };
+    if (CITY_BG[region]) { mapBox.style.backgroundImage = `url("${RPG.asset(CITY_BG[region])}")`; mapBox.classList.add("has-bg"); }
     if (region === "start" && RPG.MAP_LAYOUT) {
       const layer = el("div", "map-buildings");
       for (const [id, b] of Object.entries(RPG.MAP_LAYOUT.buildings || {})) {
