@@ -227,7 +227,7 @@
     function placeState(id) {
       if (isSite(id)) {
         const can = RPG.canEnterLocation(id, RPG.LOCATIONS[id].minLevel || 1, save);
-        return can.ok ? { kind: "site", text: "Без дороги — лише експедиція (3 або 6 героїв, 4 год)" } : { kind: "closed", text: can.reason };
+        return can.ok ? { kind: "site", text: "Без дороги — лише експедиція (3 або 6 героїв, 1–8 год)" } : { kind: "closed", text: can.reason };
       }
       const tr = RPG.travelState(save);
       if (tr) {
@@ -529,7 +529,7 @@
       // Експедиція: бойові локації (вороги без босів), Шахта й Лісопилка
       if (p.loc && RPG.isExpeditionLoc?.(selected)) {
         if (st.kind === "closed" && isSite(selected)) { details.append(el("p", "status", st.text)); return; }
-        const b = button("Відправити експедицію · 4 год", "wf " + (isSite(selected) ? "wf-button" : "wf-secondary"), () => showExpeditionDialog(selected));
+        const b = button("Відправити експедицію · 1–8 год", "wf " + (isSite(selected) ? "wf-button" : "wf-secondary"), () => showExpeditionDialog(selected));
         const freeN = RPG.partyMembers(save).filter(ms => !RPG.isMemberDead(ms) && !RPG.isAway(ms)).length;
         const bags = RPG.expeditionList(save).filter(e => e.done).length;
         if (bags >= RPG.EXP_MAX_BAGS) { b.disabled = true; b.title = "Спершу заберіть здобич повернених експедицій."; }
@@ -562,7 +562,7 @@
       }
     }
 
-    // ---------- Вікно експедиції: 3 або 6 героїв на 4 години ----------
+    // ---------- Вікно експедиції: 3 або 6 героїв, тривалість 1–8 год (повзунок) ----------
     function showExpeditionDialog(locId) {
       const loc = RPG.LOCATIONS[locId];
       const members = RPG.partyMembers(save).map((ms, i) => ({ ms, id: RPG.memberIdOf(save, ms), i }));
@@ -571,11 +571,12 @@
       const ok = members.filter(m => !why(m));
       let size = ok.length >= 6 ? 6 : 3;
       const chosen = new Set(ok.slice(0, size).map(m => m.id));
+      let hours = RPG.EXP_HOURS_DEFAULT;
       const { dlg, closeBtn } = noticeDialog("exp-dialog");
       const draw = () => {
         dlg.innerHTML = "";
         dlg.append(closeBtn(), el("h3", null, `Експедиція: ${loc.name}`));
-        dlg.append(el("p", null, "Група 4 години безперервно б'ється з ворогами локації (без босів). На бої з чемпіонами погоджується сама. " +
+        dlg.append(el("p", null, "Весь обраний час група безперервно б'ється з ворогами локації (без босів). На бої з чемпіонами погоджується сама. " +
           "Здобич — як у звичайних боях" + (loc.yields ? `, а ще за кожен виграний бій: ${loc.yields.map(id => RPG.ITEMS[id].name.toLowerCase() + " 1–3").join(", ")}` : "") + ". " +
           "Експедиція повертається, коли мине час або коли загинуть усі її герої. Між боями група стає на привал."));
         const ap = RPG.getAutoPotion?.();
@@ -593,6 +594,22 @@
           sizes.append(b);
         }
         dlg.append(sizes);
+        // Тривалість: повзунок зліва направо, 1 … 8 годин
+        const durBox = el("div", "exp-duration");
+        const durLabel = el("label", "exp-duration-label", `Тривалість: ${hours} год.`);
+        durLabel.htmlFor = "exp-hours";
+        const range = el("input", "exp-range");
+        Object.assign(range, { type: "range", id: "exp-hours", min: RPG.EXP_HOURS_MIN, max: RPG.EXP_HOURS_MAX, step: 1, value: hours });
+        range.setAttribute("aria-label", "Тривалість експедиції, годин");
+        range.addEventListener("input", () => {
+          hours = Number(range.value);
+          durLabel.textContent = RPG.t(`Тривалість: ${hours} год.`);
+          go.textContent = RPG.t(goText());
+        });
+        const ends = el("div", "exp-range-ends");
+        ends.append(el("span", null, `${RPG.EXP_HOURS_MIN} год.`), el("span", null, `${RPG.EXP_HOURS_MAX} год.`));
+        durBox.append(durLabel, range, ends);
+        dlg.append(durBox);
         const list = el("div", "stack exp-heroes");
         for (const m of members) {
           const w = why(m);
@@ -610,13 +627,14 @@
         dlg.append(list);
         const ids = [...chosen];
         const can = RPG.canStartExpedition(save, locId, ids);
-        const go = button(`Відправити (${ids.length}/${size})`, "wf wf-button", async () => {
-          const r = RPG.startExpedition(save, locId, ids);
+        const goText = () => `Відправити (${ids.length}/${size}) · ${hours} год.`;
+        const go = button(goText(), "wf wf-button", async () => {
+          const r = RPG.startExpedition(save, locId, ids, Date.now(), hours);
           if (!r.ok) { showMsg($("map-msg"), r.reason, true); return; }
           await RPG.saveGame(save);
           dlg.close();
           render();
-          showMsg($("map-msg"), `Експедиція вирушила: ${loc.name}. Повернеться за 4 години.`);
+          showMsg($("map-msg"), `Експедиція вирушила: ${loc.name}. Повернеться за ${r.hours} год.`);
         });
         go.disabled = ids.length !== size || !can.ok;
         dlg.append(go);

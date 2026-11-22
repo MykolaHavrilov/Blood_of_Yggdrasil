@@ -1,7 +1,7 @@
 // ============================================================
 // expedition.js — ЕКСПЕДИЦІЇ (запуск з мапи: бойові локації, Шахта, Лісопилка)
 //
-// Група з 3 або 6 героїв (гравець обирає, хто йде) 4 години безперервно б'ється з ворогами локації — окрім босів.
+// Група з 3 або 6 героїв (гравець обирає, хто йде) обраний час (1–8 год, v0.9.7; раніше завжди 4) безперервно б'ється з ворогами локації — окрім босів.
 // На бій з чемпіоном погоджується сама. Здобич — як у звичайних боях (rollLoot, трофеї чемпіонів, нагорода гільдії,
 // завдання на вбивства, ключі данжу), досвід — як у боях групи (бонус групи, Джерело Велеса, руни, Сфера Богів).
 // Шахта й Лісопилка (data/enemies.js → LOCATIONS, type "mine" / "sawmill") ще й дають за кожен виграний бій
@@ -12,7 +12,7 @@
 // і відновлюється (звичайне відновлення + EXP_CAMP_PCT за кожні 10 с), доки всі не матимуть EXP_REST_UNTIL HP.
 // Автозілля: якщо в Налаштуваннях увімкнено автозілля (core.js → getAutoPotion), після кожного бою герої експедиції
 // п'ють зілля з інвентаря за тими самими правилами (character.js → autoPotion), ще до привалу. Випите — e.potions.
-// Кінець: минуло 4 години, гравець відкликав групу, або загинули всі герої експедиції.
+// Кінець: минув обраний час, гравець відкликав групу, або загинули всі герої експедиції.
 //   Полеглі (і при поразці всієї групи — усі) після повернення лежать полеглими, як після звичайного бою: молитва в Храмі.
 //   Поразка всієї групи: штраф досвіду кожному (як у звичайному бою, без втрати речей). Якщо вдома теж ніхто не стоїть
 //   на ногах — усі прокидаються в Храмі (як після звичайної загибелі групи).
@@ -33,7 +33,10 @@
 // ============================================================
 
 (function (RPG) {
-  const EXP_DURATION_MS = 4 * 60 * 60 * 1000;   // 4 години
+  const EXP_DURATION_MS = 4 * 60 * 60 * 1000;   // тривалість за замовчуванням — 4 години
+  // Гравець обирає тривалість повзунком: від EXP_HOURS_MIN до EXP_HOURS_MAX цілих годин (v0.9.7)
+  const EXP_HOURS_MIN = 1, EXP_HOURS_MAX = 8, EXP_HOURS_DEFAULT = 4;
+  const expHours = h => Math.min(EXP_HOURS_MAX, Math.max(EXP_HOURS_MIN, Math.round(Number(h) || EXP_HOURS_DEFAULT)));
   const EXP_BATTLE_MS = 40 * 1000;               // один бій разом із підходом до наступної групи ворогів
   const EXP_TICK_MS = 10 * 1000;                 // тік відновлення (як у грі)
   const EXP_CAMP_PCT = 0.05;                     // привал: +5% HP і MP за тік понад звичайне відновлення
@@ -120,12 +123,14 @@
     return { ok: true };
   }
 
-  function startExpedition(save, locId, ids, now = Date.now()) {
+  // hours — тривалість у цілих годинах (1–8); без неї — 4 години, як було
+  function startExpedition(save, locId, ids, now = Date.now(), hours = EXP_HOURS_DEFAULT) {
     const can = canStartExpedition(save, locId, ids);
     if (!can.ok) return can;
+    const h = expHours(hours);
     const e = {
       id: "e" + now.toString(36) + Math.floor(Math.random() * 1000),
-      loc: locId, members: ids.slice(), start: now, end: now + EXP_DURATION_MS, at: now,
+      loc: locId, members: ids.slice(), start: now, end: now + h * 60 * 60 * 1000, at: now, hours: h,
       battles: 0, wins: 0, champions: 0, done: false, reason: "", finishedAt: 0,
       bag: { gold: 0, items: [], stacks: {}, filtered: 0, exp: {}, levels: {} }, fallen: [], potions: {}
     };
@@ -134,7 +139,7 @@
       ms.character.regenAt = now;
       e.bag.levels[memberIdOf(save, ms)] = [ms.character.level, ms.character.level];
     }
-    return { ok: true, end: e.end, id: e.id };
+    return { ok: true, end: e.end, id: e.id, hours: h };
   }
 
   // ---------- Один бій ----------
@@ -394,7 +399,7 @@
   }
 
   Object.assign(RPG, {
-    EXP_DURATION_MS, EXP_BATTLE_MS, EXP_POWER, EXP_SIZES, EXP_REST_BELOW, EXP_REST_UNTIL, EXP_CAMP_PCT, EXP_MAX_BAGS,
+    EXP_DURATION_MS, EXP_HOURS_MIN, EXP_HOURS_MAX, EXP_HOURS_DEFAULT, EXP_BATTLE_MS, EXP_POWER, EXP_SIZES, EXP_REST_BELOW, EXP_REST_UNTIL, EXP_CAMP_PCT, EXP_MAX_BAGS,
     expeditionList: expList, expeditionActive, isAway, memberIdOf, viewById, isExpeditionLoc, canStartExpedition, startExpedition,
     expeditionTick, recallExpedition, finishExpedition, collectExpedition, dropExpeditionLoot, expeditionInfo
   });

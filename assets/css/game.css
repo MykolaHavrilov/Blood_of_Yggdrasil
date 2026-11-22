@@ -1571,6 +1571,11 @@ main > a.location { display: flex; margin-bottom: 10px; }
 .exp-btns { gap: 8px; flex-wrap: wrap; margin-top: 6px; }
 .exp-dialog { max-width: min(560px, calc(100vw - 24px)); }
 .exp-sizes { gap: 8px; margin: 8px 0; }
+/* Тривалість експедиції — повзунок 1–8 год (v0.9.7) */
+.exp-duration { margin: 4px 0 10px; }
+.exp-duration-label { display: block; font-weight: 600; margin-bottom: 2px; }
+.exp-range { width: 100%; accent-color: var(--accent); }
+.exp-range-ends { display: flex; justify-content: space-between; font-size: .75rem; color: var(--text-dim); margin-top: -4px; }
 .exp-heroes { gap: 4px; margin: 6px 0 10px; }
 .exp-hero { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .exp-hero.is-off { opacity: .55; cursor: default; }

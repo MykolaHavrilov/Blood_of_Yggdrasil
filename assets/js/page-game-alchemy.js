@@ -124,11 +124,10 @@
         sel.addEventListener("change", () => { pickId = sel.value; count = 1; note = null; draw(); });
         left.append(el("label", "alch-cap", "Зілля"), sel);
         left.append(el("p", "alch-recipe", `Тір ${rec.tier} · ${rec.mode === "upgrade" ? "покращення" : "пряма варка"} · одне зілля — ${secText(unitSec)}`));
-        // повзунок: праворуч 1, ліворуч 100 (dir="rtl")
+        // повзунок: ліворуч 1, праворуч найбільше (з v0.9.7; раніше був справа наліво)
         const qtyCap = el("label", "alch-cap", "");
         const range = el("input", "alch-range");
         Object.assign(range, { type: "range", min: 1, max: Math.max(1, busy ? n : Math.min(RPG.ALCH_MAX_BATCH, max)), step: 1, value: n });
-        range.dir = "rtl";
         range.disabled = busy || max < 2;
         range.setAttribute("aria-label", "Скільки зілль варити");
         const total = el("p", "alch-total");
@@ -150,7 +149,7 @@
         };
         range.addEventListener("input", () => { count = Number(range.value); updQty(); });
         const ends = el("div", "alch-range-ends");
-        ends.append(el("span", null, String(range.max)), el("span", null, "1"));
+        ends.append(el("span", null, "1"), el("span", null, String(range.max)));
         left.append(qtyCap, range, ends, total);
         if (!open.ok) left.append(el("p", "status is-error", open.reason));
         else if (!busy && max < 1) left.append(el("p", "status", "Не вистачає інгредієнтів — дивіться комірки праворуч."));

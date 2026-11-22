@@ -4037,9 +4037,37 @@ RPG.I18N.en = {
 "Важкий залізний ключ із круглим казанком на ланцюжку замість вушка й рибальським гачком замість борідки. Відчиняє данж «Казан Гюміра» (Чертог Гюміра). Одна спроба — один ключ.": "A heavy iron key with a round cauldron on a chain for a bow and a fishing hook for its teeth. Opens the dungeon \"Hymir's Cauldron\" (Hall of Hymir). One attempt — one key.",
 "Ключ «Кільце Змія»": "Key \"The Serpent's Ring\"",
 "Ключ у вигляді зелено-чорного морського змія, що кусає власний хвіст; на борідці — крапля отрути. Відчиняє данж «Кільце Змія» (Берег Світового Змія). Одна спроба — один ключ.": "A key shaped like a green-black sea serpent biting its own tail; a drop of venom hangs on its teeth. Opens the dungeon \"The Serpent's Ring\" (Shore of the World Serpent). One attempt — one key.",
-"Земля велетнів: крижані перевали, Залізний ліс Ангрбоди, кам'яна пустка й брама Утгарда — а за краєм світу з чорного моря піднімає голову Світовий Змій": "The land of the giants: icy passes, Angrboða's Iron Wood, the stone waste and the gate of Útgarðr — and beyond the edge of the world the World Serpent raises his head from the black sea"
+"Земля велетнів: крижані перевали, Залізний ліс Ангрбоди, кам'яна пустка й брама Утгарда — а за краєм світу з чорного моря піднімає голову Світовий Змій": "The land of the giants: icy passes, Angrboða's Iron Wood, the stone waste and the gate of Útgarðr — and beyond the edge of the world the World Serpent raises his head from the black sea",
+"Весь обраний час група безперервно б'ється з ворогами локації (без босів). На бої з чемпіонами погоджується сама. ": "For the whole chosen time the party fights the location's enemies non-stop (no bosses). It accepts fights with champions on its own. ",
+"Без дороги — лише експедиція (3 або 6 героїв, 1–8 год)": "No road — expedition only (3 or 6 heroes, 1–8 h)",
+"Відправити експедицію · 1–8 год": "Send an expedition · 1–8 h",
+"Тривалість експедиції, годин": "Expedition duration, hours"
 },
 "patterns": [
+["^Тривалість: (\\d+) год\\.$",
+"Duration: $1 h",
+1,
+0,
+"Тривалість: "
+],
+["^(\\d+) год\\.$",
+"$1 h",
+1,
+1,
+" год."
+],
+["^Відправити \\((\\d+)/(\\d+)\\) · (\\d+) год\\.$",
+"Send ($1/$2) · $3 h",
+1,
+0,
+"Відправити ("
+],
+["^Експедиція вирушила: (.*?)\\. Повернеться за (\\d+) год\\.$",
+"The expedition has set off: $1. It will return in $2 h.",
+1,
+0,
+". Повернеться за "
+],
 [
 "^(\\S+), у данжі — (\\S+) — одне з (\\d+)$",
 "$1, in a dungeon — $2 — one of $3",
