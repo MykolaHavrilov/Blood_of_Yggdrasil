@@ -53,6 +53,8 @@
       setTimeout(() => showNotice("Жарина згасла", [n > 1 ? `Згасло жарин Небесного горна: ${n}. Ви не встигли донести їх до горна Сварога чи до вівтаря в Храмі Перуна.` : "Жарина Небесного горна згасла: ви не встигли донести її до горна Сварога чи до вівтаря в Храмі Перуна."]), 200);
     }
     const locId = save.location.map;
+    // Журнал подій: герой опинився на іншій локації — запис «Перехід» (journal.js → journalMove)
+    if (RPG.journalMove?.(save)) RPG.saveGame(save).catch(e => console.error(e));
     const locData = RPG.getLocation(locId);
     // Власний дім показується з назвою, яку дав гравець
     const placeName = locData.house ? (RPG.houseHere(save)?.name || locData.name) : locData.name;
@@ -110,7 +112,7 @@
     function playLocationMusic() {
       if (!RPG.audio) return;
       const dun = dungeonOn() ? RPG.activeDungeon(save) : null;
-      if (combat) RPG.audio.scene({ screen: "combat", location: locId, region: locData.region, boss: !!(dun && dun.stage === dun.stages) });
+      if (combat) RPG.audio.scene({ screen: "combat", location: locId, region: locData.region, boss: false });   // тема боса — у бою в кімнаті Б (showMaze)
       else if (locData.type === "city" && locId !== "city") RPG.audio.scene({ screen: "map", region: "svart" });            // Свартгард — тема свого світу
       else if (locData.type === "citygate" && locData.city && locData.city !== "city") RPG.audio.scene({ screen: "map", region: locData.region });
       else if (locData.type === "city") RPG.audio.scene({ screen: "city", district: save.location.district || "south" });
@@ -216,9 +218,10 @@
     let corner = RPG.randomCorner();
     let obstacles = [];         // перешкоди наступного бою (battle.js → makeObstacles), нові з кожною групою ворогів
     let foePositions = [];      // стартові місця ворогів (battle.js → placeFoesFree): будь-де на полі, купою або врозкид
+    let maze = null, mazeP = null;   // карта лабіринту наступного проходу і її розбір (maze.js) — див. «Поле-лабіринт»
     function nextEnemy() {
       corner = RPG.randomCorner(corner);
-      obstacles = RPG.makeObstacles(fieldCover(), corner);
+      newMaze();   // карта лабіринту наступного проходу (і її перешкоди)
       pickFoes();
       foePositions = RPG.placeFoesFree(foes, corner, obstacles);
     }
@@ -262,14 +265,13 @@
       rerollBtn.hidden = mode === "dungeon";
       startBtn.hidden = inGate;
       leaveBtn.hidden = !(mode === "dungeon" && active);
-      startBtn.textContent = active && mode === "dungeon" ? `Почати бій ${active.stage} з ${active.stages}` : "Почати бій";
+      startBtn.textContent = active && mode === "dungeon" ? "Увійти в данж" : "Почати бій";
       if (!inGate) return;
       panel.innerHTML = "";
       panel.append(el("h3", null, `Данж «${dungeonInfo.name}»`), noteP(dungeonInfo.description));
       panel.append(noteP(
-        `3 бої поспіль: 1) ${RPG.DUNGEON_POOL_TEXT(dungeonInfo, 1)}; 2) ${RPG.DUNGEON_POOL_TEXT(dungeonInfo, 2)}; ` +
-        `3) бос «${RPG.ENEMIES[dungeonInfo.boss].name}». Зілля й відновлення HP/MP у данжі не діють — ` +
-        "лікують лише навички. Досвід і здобич — тільки за перемогу над босом."));
+        `Лабіринт від входу до кімнати боса: ${RPG.DUNGEON_POOL_TEXT(dungeonInfo, 0)}; у кімнаті боса — «${RPG.ENEMIES[dungeonInfo.boss].name}» і приспішники.`),
+        noteP("Зілля й відновлення HP/MP у данжі не діють — лікують лише навички. Досвід і здобич — тільки за кімнату боса."));
       panel.append(el("p", "note" + (keys ? "" : " is-neg"),
         `${RPG.ITEMS[dungeonInfo.key].name} у кишені для ключів: ${keys}. Одна спроба — один ключ (зникає при вході). ` +
         `Ключ можна знайти під час «${dungeonInfo.explore}» — шанс ${Math.round(dungeonInfo.keyChance * 100)}% з кожного ворога.`));
@@ -281,7 +283,8 @@
         const r = RPG.openDungeon(save, dungeonInfo.id);
         if (!r.ok) { showMsg(msg, r.reason, true); return; }
         await RPG.saveGame(save);
-        showMsg(msg, "Ворота відчинено. Бій 1 з 3 — зілля й відновлення тут не діють.");
+        showMsg(msg, "Ворота відчинено. Попереду лабіринт до кімнати боса — зілля й відновлення тут не діють.");
+        if (RPG.activeDungeon(save)?.darkSoul) showNotice("З'явилась темна душа", DARK_SOUL_LINES);
         nextEnemy();
         renderMode();
         renderEnemy();
@@ -439,6 +442,26 @@
       tree: "Дерево — не пройти й не видно ціль", rock: "Скеля — не пройти й не видно ціль", wall: "Стіна — не пройти й не видно ціль",
       bush: "Кущ — не стати, але ціль видно (лук, заклинання)", stone: "Каміння — не стати, але ціль видно (лук, заклинання)"
     };
+    // ---------- Поле бою світу (етап 8б): assets/images/battlefield/bf_<світ>_big1–4 / low1–4 / floor / edge ----------
+    // Світ — за регіоном локації (у данжі — локації, де ворота). Велика перешкода (не пройти, не видно) — big, мала — low;
+    // яка з 4 — за клітинкою (стала для тієї самої карти). Підлога — плитка під полем, край — плитка смуг рамки.
+    const BF_WORLDS = ["start", "dark", "alf", "van", "svart", "jot", "musp", "asg", "nifl"];
+    const bfWorld = () => { const r = locData?.region || "start"; return BF_WORLDS.includes(r) ? r : null; };
+    const bfImg = name => `url("${RPG.asset("assets/images/battlefield/" + name + ".webp")}")`;
+    function artCell(cell, o) {
+      const w = bfWorld();
+      if (!w || !o) return;
+      const n = 1 + ((o.r * 7 + o.c * 13) % 4);
+      cell.style.backgroundImage = bfImg(`bf_${w}_${o.block ? "big" : "low"}${n}`);
+      cell.classList.add("bf-art");
+    }
+    function artField(box, cols) {
+      const w = bfWorld();
+      box.classList.toggle("bf-art", !!w);
+      if (!w) return;
+      box.style.setProperty("--bf-floor", bfImg(`bf_${w}_floor`));
+      box.style.setProperty("--bf-cols", cols);
+    }
     let fieldFrame = null;
     function frameField(mob) {
       if (!fieldBox) return;
@@ -452,7 +475,9 @@
       // На телефоні поле повернуте (рядок ↔ стовпець): логічний лівий край стає верхнім,
       // нижній — правим, правий — нижнім, верхній — лівим
       const shown = mob ? [l, b, r, t] : [t, r, b, l];
-      fieldFrame.className = "bf-frame" + (mob ? " is-mobile" : "") + (locData?.region === "dark" ? " is-dark" : "");
+      const w = bfWorld();
+      fieldFrame.className = "bf-frame" + (mob ? " is-mobile" : "") + (w ? " bf-art" : locData?.region === "dark" ? " is-dark" : "");
+      if (w) fieldFrame.style.setProperty("--bf-edge-img", bfImg(`bf_${w}_edge`));
       ["top", "right", "bottom", "left"].forEach((side, i) => {
         const strip = fieldFrame.querySelector(".bf-edge-" + side);
         strip.className = `bf-edge bf-edge-${side} edge-${shown[i]}`;
@@ -466,8 +491,10 @@
       const mob = mobileField.matches;
       if (box === fieldBox) frameField(mob);
       box.className = "bfield bf-big" + (mob ? " is-mobile" : "");
+      box.bfBox = null;
       setView(box, mob ? FIELD.cols : FIELD.rows, mob ? FIELD.rows : FIELD.cols,
         mob ? p => ({ row: p.c, col: p.r }) : p => ({ row: p.r, col: p.c }), 1.3);
+      artField(box, mob ? FIELD.rows : FIELD.cols);
       const zone = {};
       for (const z of RPG.zoneCells(heroCorner)) zone[z.r + ":" + z.c] = "bf-hero" + (z.front ? " bf-front" : "");
       const ob = {};
@@ -476,7 +503,7 @@
         for (let c = 0; c < FIELD.cols; c++) {
           const o = ob[r + ":" + c];
           const cell = addCell(box, { r, c }, o ? `bf-gap bf-obst ob-${o.kind}${o.block ? " is-block" : " is-low"}` : (zone[r + ":" + c] || "bf-gap"));
-          if (o) cell.title = OBST_TITLES[o.kind] || "";
+          if (o) { cell.title = OBST_TITLES[o.kind] || ""; artCell(cell, o); }
         }
       }
     }
@@ -514,6 +541,8 @@
     function tokenPos(t, p, box = fieldBox) {
       const v = box?.bfView;
       if (!p || !v) return;
+      const b = box?.bfBox;
+      t.hidden = !!b && (p.r < b.r0 || p.r > b.r1 || p.c < b.c0 || p.c > b.c1);   // лабіринт: поза показаною зоною
       const q = v.map(p), k = v.scale || 1;
       t.style.width = (k * 100 / v.cols) + "%";
       t.style.height = (k * 100 / v.rows) + "%";
@@ -538,6 +567,19 @@
     // heroPos / foePos / team / maxStats — для показу бою (інакше — поточна розстановка)
     function renderField(opts = {}) {
       if (!fieldBox) return;
+      if (maze && !opts.heroPos) {
+        const team = fighters(), cells = mazeHeroCells(team);
+        mazeGrid(fieldBox, mazeP.startZone);
+        fieldTokens.enemy = [];
+        fieldTokens.hero = team.map((ms, k) => {
+          const t = heroTokenFor(ms), st = RPG.calcStats(ms);
+          tokenBars(t, ms.character.hp, st.hp, ms.character.mp, st.mp);
+          fieldBox.append(t);
+          putToken(t, cells[k]);
+          return t;
+        });
+        return;
+      }
       const team = opts.team || fighters();
       const hc = Number.isInteger(opts.corner) ? opts.corner : corner;
       const heroPos = opts.heroPos || formationOf(team).map(p => RPG.fieldPos(p, hc));
@@ -566,7 +608,8 @@
       (ev.heroes || []).forEach((h, k) => {
         const t = fieldTokens.hero[k];
         if (!t) return;
-        tokenPos(t, h.pos);
+        putToken(t, h.pos);
+        t.classList.toggle("is-away", !!h.away);
         tokenBars(t, h.hp, maxStats[k].hp, h.mp, maxStats[k].mp);
         const was = prev?.heroes?.[k];
         if (was && was.hp !== h.hp) RPG.fx.hit(t, h.hp - was.hp, ev.crit ? "crit" : "");
@@ -575,7 +618,8 @@
         const t = fieldTokens.enemy[i];
         if (!t) return;
         const e = curEnemy(i);
-        tokenPos(t, st.pos);
+        putToken(t, st.pos);
+        t.classList.toggle("is-asleep", !!st.asleep);
         tokenBars(t, st.hp, e.stats.hp, st.mp, e.stats.mp || 0);
         const was = prev?.enemies?.[i];
         if (was && was.hp !== st.hp) RPG.fx.hit(t, st.hp - was.hp, ev.crit ? "crit" : "");
@@ -599,6 +643,8 @@
       const auto = RPG.placeHeroes(team, team.map(ms => f[memberKey(ms)]));
       let pos = team.map((ms, i) => (f[memberKey(ms)] ? auto[i] : null));
       let selected = null;
+      let order = walkOrdered(team).map(ms => team.indexOf(ms));   // порядок ходьби лабіринтом (індекси team)
+      const orderBox = el("ol", "walk-order");
 
       let dlg = $("formation-dialog");
       if (!dlg) {
@@ -620,6 +666,7 @@
       const btnOk = button(onDone ? "До бою!" : "Готово", "wf wf-button", async () => {
         if (pos.some(p => !p)) return;
         storeFormation(team, pos);
+        save.walkOrder = order.map(i => memberKey(team[i]));
         await RPG.saveGame(save);
         dlg.close();
         renderField();
@@ -629,12 +676,14 @@
       const row = el("div", "row dialog-actions");
       row.append(btnOk, btnAuto, button("Скасувати", "wf wf-link", () => dlg.close()));
       dlg.append(close, el("h3", null, "Розстановка героїв"),
-        noteP("Ваша зона — 3×3 клітинки. У кожному бою група з'являється в іншому куті поля, " +
-          "а вороги — будь-де на полі (купою або врозкид), але не ближче ніж на хід руху. Розстановка задається відносно " +
+        noteP("Ваша зона — кімната старту 3×3 у куті лабіринту (щоразу іншому). Розстановка задається відносно " +
           "кута: передній ряд (виділений) дивиться в бік поля. " +
           "Перетягніть героя на клітинку або натисніть на героя, а потім на клітинку. " +
           "Дальність: ближній бій — 1 клітинка, посох (заклинання) — 2, лук — 3. Схема збережеться для наступних боїв і локацій."),
-        field, tray, hint, row);
+        field, tray, hint);
+      if (team.length > 1) dlg.append(el("h4", null, "Порядок ходьби"),
+        noteP(`Перший веде групу найкоротшим шляхом до ${mode === "dungeon" ? "кімнати боса" : "кімнати"}, кожен наступний іде за попереднім.`), orderBox);
+      dlg.append(row);
 
       function placeAt(i, p) {
         const j = pos.findIndex((q, k) => k !== i && q && q.r === p.r && q.c === p.c);
@@ -721,6 +770,13 @@
           bindDrag(t, i);
           if (pos[i]) { tokenPos(t, pos[i], field); field.append(t); }
           else { t.classList.add("in-tray"); tray.append(t); }
+        });
+        orderBox.innerHTML = "";
+        order.forEach((i, n) => {
+          const li = el("li", null);
+          li.append(el("span", null, team[i].character.name + (n === 0 ? " — веде групу" : "")));
+          if (n > 0) li.append(button("↑", "wf wf-link walk-up", () => { [order[n - 1], order[n]] = [order[n], order[n - 1]]; draw(); }));
+          orderBox.append(li);
         });
         tray.classList.toggle("is-empty", !tray.children.length);
         if (!tray.children.length) tray.append(el("span", "bf-tray-empty", "Усі герої на полі. Перетягніть сюди, щоб прибрати з клітинки."));
@@ -832,7 +888,7 @@
     // Короткий стан бою (logBox): заголовок і рядки. Повний журнал — у вікні (journal.js).
     // Під час показу бою (liveLines) рядки ще й ідуть у відкрите вікно журналу.
     let liveLines = null;     // рядки бою, що зараз показується
-    let liveEntry = null;     // його запис у save.battleLog (у вікні не показуємо, поки бій іде)
+    let liveEntry = null;     // його записи [у журналі бою, у журналі подій] (у вікні не показуємо, поки бій іде)
     let journalCtl = null;    // відкрите вікно журналу
     function statusAppend(line) {
       logBox.append(RPG.logLi(line));   // смужка на 2 рядки: видно початок (головне), решта — у журналі
@@ -855,18 +911,18 @@
             "Відчиніть ворота ключем (панель вище)."], "ready");
           return;
         }
-        const lines = [`Бій ${a.stage} з ${a.stages}: ${foesText()}.`,
-          "Зілля й відновлення в данжі не діють — лікують лише навички."];
-        if (a.stage < a.stages) lines.push("За цей бій нагороди немає — досвід і здобич дає лише бос.");
-        else if (a.darkSoul) lines.push(...DARK_SOUL_LINES);
+        const lines = [`Лабіринт: у зонах — вороги данжу, у кімнаті боса — ${foesText()} і приспішники.`,
+          "Зілля й відновлення в данжі не діють — лікують лише навички. Нагорода — лише за кімнату боса."];
+        if (a.darkSoul) lines.push(...DARK_SOUL_LINES);
         else lines.push("Це БОС! Кожен третій свій хід він застосовує особливу навичку. Перемога — нагорода за весь данж.");
         if (!fighters().length) lines.push("Усі герої групи полягли.");
-        setArena(a.stage < a.stages ? `Данж: бій ${a.stage} з ${a.stages}` : a.darkSoul ? "З'явилась темна душа!" : "Данж: бос!", lines, "ready");
+        setArena(a.darkSoul ? "З'явилась темна душа!" : `Данж «${a.name}»`, lines, "ready");
         return;
       }
       const lvl = save.character.level;
       const strong = foes.some((f, i) => curEnemy(i).level >= lvl + 2);
-      const lines = [`Попереду: ${foesText()}.${strong ? " Обережно: серед них є значно сильніші!" : ""}`];
+      const lines = [`Лабіринт: перші вороги — ${foesText()}.${strong ? " Обережно: серед них є значно сильніші!" : ""}`,
+        "Далі — свої вороги в кожній зоні (стільки, скільки героїв). Досвід і здобич — за весь прохід, коли пройдено останню зону."];
       if (foes.length > 1) lines.push(`Ворогів: ${foes.length}, у вашій групі живих героїв: ${fighters().length}.`);
       if (anyChampion()) lines.push("Серед них рідкісний ЧЕМПІОН: утричі сильніший! За перемогу — трофей і нагорода ×5 у Гільдії авантюристів.");
       if (foes.some((f, i) => curEnemy(i).boss)) lines.push("Це БОС! Кожен третій свій хід він застосовує особливу навичку.");
@@ -971,14 +1027,208 @@
       return lines;
     }
 
+
+    // ---------- Поле-лабіринт (maze.js; етап 7, Лабіринт_задум.md) ----------
+    // Кожен бій на бойовій локації й у данжі — прохід лабіринту: нова карта з кожною групою ворогів (makeMaze),
+    // кімната A — кут corner (зона розстановки 3 × 3). На полі — усе поле в одному масштабі, поточна зона світиться.
+    // Увесь прохід рахується одразу на старті (simulateMaze) і зберігається — далі лише показ.
+    function newMaze() {
+      maze = RPG.makeMaze({ corner });
+      mazeP = RPG.parseMaze(maze);
+      obstacles = RPG.mazeObstacles(maze, fieldCover());
+    }
+    const zoneOf = p => (p && mazeP ? mazeP.zones[p.r]?.[p.c] : null);
+    const zoneLabel = z => (z === "Б" ? (mode === "dungeon" ? "кімната боса" : "кімната") : z === mazeP?.startZone ? "старт" : "зона " + z);
+    // Що видно на полі під час проходу: завжди все поле в одному масштабі (рішення 25.11.2026 — без збільшення
+    // й зменшення між зонами); поточна зона світиться, інші притемнені (mazeGrid → bf-zone-off)
+    const zoneBox = () => ({ r0: 0, r1: FIELD.rows - 1, c0: 0, c1: FIELD.cols - 1 });
+    function mazeGrid(box, z) {
+      box.innerHTML = "";
+      const mob = mobileField.matches;
+      if (box === fieldBox) frameField(mob);
+      const b = zoneBox(z);
+      box.className = "bfield bf-big bf-maze" + (mob ? " is-mobile" : "");
+      const rows = b.r1 - b.r0 + 1, cols = b.c1 - b.c0 + 1;
+      setView(box, mob ? cols : rows, mob ? rows : cols,
+        mob ? p => ({ row: p.c - b.c0, col: p.r - b.r0 }) : p => ({ row: p.r - b.r0, col: p.c - b.c0 }), 1.3);
+      box.bfBox = b;
+      artField(box, mob ? rows : cols);
+      const ob = {};
+      for (const o of obstacles || []) ob[o.r + ":" + o.c] = o;
+      for (let r = b.r0; r <= b.r1; r++) {
+        for (let c = b.c0; c <= b.c1; c++) {
+          const o = ob[r + ":" + c], t = mazeP.tiles[r][c];
+          const cls = o ? `bf-gap bf-obst ob-${o.kind}${o.block ? " is-block" : " is-low"}${mazeP.zones[r][c] === z || o.block ? "" : " bf-zone-off"}`
+            : mazeP.zones[r][c] !== z ? "bf-gap bf-zone-off"
+            : t === "A" ? "bf-hero bf-zone-on" : t === "Б" ? "bf-boss bf-zone-on" : "bf-zone-on";
+          const cell = addCell(box, { r, c }, cls);
+          if (o) { cell.title = OBST_TITLES[o.kind] || ""; artCell(cell, o); }
+        }
+      }
+    }
+    // Іконка на клітинці (запам'ятовує клітинку, щоб поставити знову після зміни зони)
+    function putToken(t, p) { t.bfP = p; tokenPos(t, p); }
+    // Клітинки старту в A: розстановка 3 × 3 у куті карти
+    const mazeHeroCells = team => formationOf(team).map(p => RPG.fieldPos(p, maze.corner));
+    // Порядок ходьби (save.walkOrder — ключі героїв): перший веде групу до Б, решта — за ним
+    function walkOrdered(team) {
+      const order = save.walkOrder || [];
+      const at = ms => { const i = order.indexOf(memberKey(ms)); return i < 0 ? 99 : i; };
+      return team.map((ms, k) => [ms, k]).sort((a, b) => at(a[0]) - at(b[0]) || a[1] - b[1]).map(x => x[0]);
+    }
+
+    // Прохід: увесь одразу (maze.js → simulateMaze). Вороги першої зони — ті, що на панелі ворогів (їх видно до бою);
+    // далі — свої для кожної зони (у Б на локації — без боса). Між зонами на локації — автозілля.
+    function runMaze(team, dun) {
+      const lvl = save.character.level;
+      let first = !dun;
+      const one = () => RPG.rollEnemyGroup(locId, lvl, { min: 1, max: 1 });
+      const pickFoes = dun ? RPG.dungeonMazeOpts(save).pickFoes : (z, n) => {
+        if (z === "Б") {
+          const out = [];
+          for (let k = 0; k < n; k++) { const id = RPG.pickEnemy(locId, lvl, { noBoss: true }); if (id) out.push({ id, champion: RPG.rollChampion(id) }); }
+          return out;
+        }
+        if (first) {
+          first = false;
+          const out = foes.slice(0, n);
+          while (out.length < n) out.push(...one());
+          return out.slice(0, n);
+        }
+        return RPG.rollEnemyGroup(locId, lvl, { min: n, max: n });
+      };
+      const opts = { cover: fieldCover(), heroCells: mazeHeroCells(team), pickFoes };
+      if (dun) Object.assign(opts, RPG.dungeonMazeOpts(save), { pickFoes });
+      else opts.onPotion = H => {
+        H.forEach((h, k) => { team[k].character.hp = h.hp; team[k].character.mp = h.mp; });
+        const alive = team.filter((ms, k) => !H[k].dead);
+        const r = RPG.autoPotion(save, RPG.getAutoPotion(), alive);
+        H.forEach((h, k) => { if (!h.dead) { h.hp = team[k].character.hp; h.mp = team[k].character.mp; } });
+        return r.lines;
+      };
+      const run = RPG.simulateMaze(team, maze, opts);
+      const battles = run.parts.filter(p => p.type === "battle");
+      // Події бою зони — з індексами героїв усієї групи (у бою зони — лише живі на ту мить)
+      for (const p of battles) {
+        p.events = p.result.events.map(ev => (ev.actor?.side === "hero" ? { ...ev, actor: { ...ev.actor, i: p.heroIdx[ev.actor.i] } } : ev));
+      }
+      const last = battles[battles.length - 1] || null;
+      const paid = run.win ? battles.filter(p => p.result.win && (!dun || p.zone === "Б")) : [];
+      // Зведений результат для нагород (як від simulatePartyBattle): локація — усі зони разом, данж — кімната Б
+      const result = {
+        win: run.win, hel: run.hel, heroes: run.heroes, rounds: last ? last.result.rounds : 0,
+        enemies: paid.flatMap(p => p.result.enemies), events: last ? last.events : [],
+        enemyIds: run.win ? battles.flatMap(p => p.result.enemyIds || []) : (last?.result.enemyIds || [])
+      };
+      return { run, battles, result, paidSpecs: paid.flatMap(p => p.specs) };
+    }
+
+    // Показ проходу: хода → поява ворогів → бій зони → зілля. stepByStep — по кроку; інакше одразу все
+    // Показ «по кроках» усього проходу — не довше MAZE_SHOW_MS (рішення 25.11.2026: весь прохід до 60 с).
+    // Паузи в звичайному темпі: крок ходьби 140 мс, вороги з'явились 400, подія бою 550 (рядок-інфо 400), кінець бою 500.
+    // Якщо разом виходить довше — усі паузи стискаються однаково (видно всі удари, просто швидше).
+    const MAZE_SHOW_MS = 58000;
+    const MAZE_PAUSE = { step: 140, spawn: 400, hit: 550, info: 400, end: 500 };
+    function mazeShowMs(run) {
+      let ms = 0;
+      for (const p of run.parts) {
+        if (p.type === "move") ms += p.frames.length * MAZE_PAUSE.step;
+        else if (p.type === "spawn") ms += MAZE_PAUSE.spawn;
+        else if (p.type === "battle") ms += MAZE_PAUSE.end + p.result.events.reduce((t, e) => t + (e.who === "info" ? MAZE_PAUSE.info : MAZE_PAUSE.hit), 0);
+      }
+      return ms;
+    }
+    async function showMaze(M, team, start, maxStats, stepByStep, dun) {
+      const k = Math.min(1, MAZE_SHOW_MS / Math.max(1, mazeShowMs(M.run)));
+      // Паузи — за розкладом від старту показу: час на малювання (слабкий телефон) з'їдає наступну паузу,
+      // тож весь показ не виходить за MAZE_SHOW_MS; якщо відстаємо — лише коротко віддаємо кадр екрану.
+      const t0 = performance.now();
+      let planned = 0, lastYield = t0;
+      const pause = ms => {
+        planned += ms * k;
+        const now = performance.now(), wait = t0 + planned - now;
+        if (wait > 0) { lastYield = now + wait; return sleep(wait); }
+        if (now - lastYield < 50) return Promise.resolve();
+        lastYield = now;
+        return sleep(0);
+      };
+      const heroT = team.map((ms, k) => {
+        const t = heroTokenFor(ms);
+        tokenBars(t, start[k].hp, maxStats[k].hp, start[k].mp, maxStats[k].mp);
+        return t;
+      });
+      const foeT = {};            // зона → іконки її ворогів
+      let zoneNow = null;
+      const place = z => {
+        if (!z || z === zoneNow) return;
+        zoneNow = z;
+        mazeGrid(fieldBox, z);
+        for (const t of [...heroT, ...Object.values(foeT).flat()]) { fieldBox.append(t); tokenPos(t, t.bfP); }
+      };
+      const cells = mazeHeroCells(team);
+      heroT.forEach((t, k) => { t.bfP = cells[k]; });
+      place(zoneOf(cells[0]));
+      for (const part of M.run.parts) {
+        if (part.type === "move") {
+          const frames = stepByStep ? part.frames : part.frames.slice(-1);
+          for (const f of frames) {
+            const lead = f.find(Boolean);
+            place(zoneOf(lead));
+            f.forEach((p, k) => { if (p) putToken(heroT[k], p); });
+            if (stepByStep) await pause(MAZE_PAUSE.step);
+          }
+        } else if (part.type === "spawn") {
+          foeT[part.zone] = part.specs.map((f, i) => {
+            const e = RPG.enemyFromSpec(f);
+            const t = foeTokenFor(f, e);
+            t.classList.add("is-asleep");
+            tokenBars(t, e.stats.hp, e.stats.hp, e.stats.mp || 0, e.stats.mp || 0);
+            fieldBox.append(t);
+            putToken(t, part.pos[i]);
+            return t;
+          });
+          addLogLine({ who: "info", text: `Попереду, ${zoneLabel(part.zone)}: ${part.specs.map(f => RPG.enemyFromSpec(f).name).join(", ")} — сплять.` });
+          if (stepByStep) await pause(MAZE_PAUSE.spawn);
+        } else if (part.type === "battle") {
+          const r = part.result;
+          place(part.zone);
+          foes = part.specs;
+          renderEnemy();
+          if (RPG.audio && dun && part.zone === "Б") RPG.audio.scene({ screen: "combat", location: locId, region: locData.region, boss: true });
+          const sub = part.heroIdx.map(i => team[i]), subMax = part.heroIdx.map(i => maxStats[i]);
+          fieldTokens.hero = part.heroIdx.map(i => heroT[i]);
+          fieldTokens.enemy = foeT[part.zone] || [];
+          addLogLine({ who: "info", text: `Бій №${part.no} — ${zoneLabel(part.zone)}` +
+            (part.why === "shot" ? ` (${team[part.shooter].character.name} стріляє здалеку)` : "") + "." });
+          lastSnap = null;
+          let prevEv = null;
+          const evs = stepByStep ? part.events : part.events.slice(-1);
+          if (!stepByStep) part.events.forEach(addLogLine);
+          for (const ev of evs) {
+            if (stepByStep) addLogLine(ev);
+            applyEventToBars(ev, sub, subMax);
+            if (stepByStep) { battleFx(ev, sub); RPG.audio?.battleSound(ev); }
+            fieldEvent(ev, prevEv, sub, subMax);
+            prevEv = ev;
+            if (stepByStep) await pause(ev.who === "info" ? MAZE_PAUSE.info : MAZE_PAUSE.hit);
+          }
+          if (r.win) { (foeT[part.zone] || []).forEach(t => t.remove()); delete foeT[part.zone]; }
+          addLogLine({ who: "info", text: r.win ? `Бій №${part.no} виграно: ${zoneLabel(part.zone)} — зачищено.` : `Бій №${part.no}: поразка.` });
+          if (stepByStep) await pause(MAZE_PAUSE.end);
+        } else if (part.type === "potion") {
+          for (const l of part.lines || []) addLogLine({ who: "info", text: l });
+        }
+      }
+    }
+
     async function startBattle() {
       if (fighting) return;
-      const team = fighters();
+      const team = walkOrdered(fighters());   // порядок ходьби лабіринтом — перший веде групу
       if (!team.length) { showMsg(msg, RPG.expeditionActive?.(save) && RPG.partyMembers(save).some(ms => RPG.isAway(ms)) && !RPG.partyMembers(save).some(ms => !RPG.isAway(ms) && !RPG.isMemberDead(ms))
         ? "Уся група, що лишилась удома, — в експедиції або полягла. Дочекайтеся повернення експедиції." : "Усі герої групи полягли — помоліться за них у Храмі.", true); return; }
       if (mode === "dungeon" && !dungeonOn()) { showMsg(msg, "Спершу відчиніть ворота данжу ключем.", true); return; }
       const dun = dungeonOn() ? RPG.activeDungeon(save) : null;   // бій у данжі: { stage, stages, ... }
-      const rewarded = !dun || dun.stage === dun.stages;          // нагорода — лише за боса данжу
+      const rewarded = true;   // лабіринт: нагорода — за весь прохід (локація — усі зони, данж — кімната Б), поразка — нічого
       // Автозілля перед боєм (у данжі не діє — character.js → autoPotion)
       const prePotion = runAutoPotion().map(l => l.replace(/^Автозілля:/, "Автозілля перед боєм:"));
       setFighting(true);
@@ -988,7 +1238,9 @@
       const maxStats = team.map(ms => RPG.calcStats(ms));
       RPG.equipFoes(foes, team);   // GS групи міг змінитися (перевдягнулись) — речі ворогів під нього
       renderEnemy();
-      const result = RPG.simulatePartyBattle(team, foes, { heroPos: formationOf(team), corner, obstacles, foePos: foePositions });
+      const start = team.map(ms => ({ hp: ms.character.hp, mp: ms.character.mp }));   // для показу — стан на вході
+      const M = runMaze(team, dun);   // увесь прохід лабіринту одразу (maze.js → simulateMaze)
+      const result = M.result;        // зведено: перемога — кімнату Б зачищено; вороги — за ким нагорода
       const group = team.length > 1;
 
       // Результат застосовуємо і зберігаємо ОДРАЗУ — щоб не можна було
@@ -1136,19 +1388,19 @@
         const keys = RPG.rollKeyDrops(save, locId, result.enemyIds);
         if (keys.got) { summary.push(`${keys.name} ×${keys.got} — у кишеню для ключів!`); got[keys.name] = (got[keys.name] || 0) + keys.got; }
         if (keys.full) summary.push(`Кишеня для ключів: ${keys.name} — уже ${RPG.KEY_MAX}/${RPG.KEY_MAX}, нові не випадають, поки не використаєте хоча б один.`);
-      } else if (!result.draw) {
-        // Уся група загинула: штраф кожному, відродження в Храмі
+      } else {
+        // Уся група загинула (зокрема від Хелли після ліміту раундів — battle.js → MAX_ROUNDS): штраф кожному, відродження в Храмі
         deaths = team.map(ms => ({ ms, d: RPG.applyDeath(ms, result.enemyIds) }));
         RPG.pray(save);   // ті, хто поліг раніше, теж прокидаються в Храмі
       }
-      // Данж: перемога — наступний бій (або кінець), поразка чи втеча ворогів — данж провалено
+      // Данж: перемога — наступний бій (або кінець), поразка — данж провалено
       // Досвід володіння зброєю (data/skills.js → masteryGainFor / addMasteryExp): кожному живому герою за виграний бій
       const masteryLines = [];
       if (result.win) {
         const fmtM = v => (Math.round(v * 10) / 10).toString().replace(".", ",");
         team.forEach((ms, k) => {
           if (result.heroes[k].dead) return;
-          const g = RPG.masteryGainFor(save, ms, foes);
+          const g = RPG.masteryGainFor(save, ms, M.paidSpecs);
           if (!g.type || !g.gain) return;
           const r = RPG.addMasteryExp(ms, g.type, g.gain);
           const wt = RPG.WEAPON_TYPES[g.type];
@@ -1186,7 +1438,7 @@
         for (const r of hc?.removed || []) lifeLines.push(r.f ? `☠ ${r.name} загинула втретє й назавжди покидає групу.` : `☠ ${r.name} загинув утретє й назавжди покидає групу.`);
         for (const r of hc?.removed || []) if (r.toInv || r.toBag) lifeLines.push(`Речі полеглого: в інвентар — ${r.toInv}, у «мішок загиблого» — ${r.toBag} (забрати протягом 30 хв, сторінка «Інвентар»).`);
       }
-      if (!result.draw || result.win) fieldLootAdd(save, { win: result.win, exp: battleExp, gold: battleGold, items: got, lost, filtered });
+      fieldLootAdd(save, { win: result.win, exp: battleExp, gold: battleGold, items: got, lost, filtered });
       // Автозілля після бою (не після загибелі всієї групи; у данжі між боями не діє)
       const postPotion = deaths ? [] : runAutoPotion();
 
@@ -1197,6 +1449,8 @@
           `${group ? ms.character.name + ": " : ""}штраф досвіду −${d.expPct}% (${fmtNum(d.expLost)} EXP)` +
           (d.levelDown ? `, рівень знижено до ${d.newLevel}${d.pointsLost ? ` (−${d.pointsLost} очок атрибутів)` : ""}` : "") +
           (d.lostItems.length ? `, втрачено: ${d.lostItems.map(ref => RPG.itemFullName(ref)).join(", ")}` : ""));
+        if (result.hel) lines.unshift(`Бій тривав ${RPG.BATTLE_MAX_ROUNDS} раундів — Хелла своїми чарами допомогла вбити героїв.`);
+        if (dun) lines.push("Данж провалено: ворота зачинилися, ключ використано.");
         lines.push(`${group ? "Уся група відродилася" : "Ви відродилися"} в Храмі з ${Math.round(RPG.RESPAWN_HP_PCT * 100)}% здоров'я і без мани.`);
         outcome = { title: group ? "Група загинула" : "Загибель", lines, state: "lose" };
       } else if (dun && result.win && !dunNext.done) {
@@ -1212,20 +1466,29 @@
           (chron.chapterDone ? ` — «${chron.chapter.title}» завершено!` : ` («${chron.chapter.title}»).`) +
           " Попросіть Розпорядника Захара в Мерії показати книгу.");
         outcome = { title: dun ? `Данж «${dun.name}» пройдено!` : "Перемога!", lines, state: "win" };
-      } else if (dun) {
-        outcome = { title: foes.length > 1 ? "Вороги втекли — данж провалено" : "Ворог утік — данж провалено",
-          lines: ["Ворота зачинилися. Нагороди немає, ключ використано."], state: "draw" };
-      } else {
-        outcome = { title: foes.length > 1 ? "Вороги втекли" : "Ворог утік", lines: ["Нагороди немає."], state: "draw" };
       }
       if (masteryLines.length) outcome.lines.push("Володіння: " + masteryLines.join("; "));
       outcome.lines.push(...lifeLines);
       outcome.lines.push(...prePotion, ...postPotion);
-      const fightTitle = `${team.map(ms => ms.character.name).join(", ")} проти: ${foesText()}`;
-      // Журнал бою (journal.js): увесь хід бою + підсумок; найстаріший запис понад 100 затирається
-      liveEntry = RPG.journalAdd(save, { kind: "battle", lines: [
-        ["title", fightTitle, "fight"], ...result.events.map(RPG.journalPack),
-        ["title", outcome.title, outcome.state], ...outcome.lines.map(l => ["info", l])] });
+      const fightTitle = `${team.map(ms => ms.character.name).join(", ")}: ${mode === "dungeon" ? "данж «" + dungeonInfo.name + "»" : "лабіринт"}`;
+      const zonesWon = M.battles.filter(p => p.result.win).length;
+      outcome.lines.unshift(`Лабіринт: боїв ${M.battles.length}, зачищено зон ${zonesWon}${result.win ? (mode === "dungeon" ? " — кімнату боса пройдено" : " — кімнату пройдено") : ""}.`);
+      // Журнали (journal.js): у журнал бою — увесь хід бою з результатом (бій №N),
+      // у журнал подій — підсумок (здобич, досвід, загибель) з посиланням на цей бій
+      liveEntry = [];
+      const finalOut = [["title", outcome.title, outcome.state], ["info", fightTitle], ...outcome.lines.map(l => ["info", l])];
+      M.battles.forEach((p, k) => {
+        const last = k === M.battles.length - 1;
+        const names = p.heroIdx.map(i => team[i].character.name).join(", ");
+        const Z = zoneLabel(p.zone)[0].toUpperCase() + zoneLabel(p.zone).slice(1);
+        const title = `${Z}: ${names} проти: ${p.result.enemies.map(e => e.name).join(", ")}`;
+        const end = p.result.win ? [`${Z} — зачищено`, "win"] : [outcome.title, outcome.state];
+        const jr = RPG.journalBattle(save, {
+          course: [["title", title, "fight"], ...p.events.map(RPG.journalPack), ["title", ...end]],
+          outcome: last ? finalOut : [["title", end[0], end[1]], ["info", title]] });
+        liveEntry.push(jr.battle, jr.event);
+      });
+      if (!M.battles.length) { const jr = RPG.journalBattle(save, { course: [["title", fightTitle, "fight"]], outcome: finalOut }); liveEntry.push(jr.battle, jr.event); }
       await RPG.saveGame(save).catch(e => console.error(e));
 
       // Показ бою (у вікні журналу цей бій з'являється рядок за рядком, без спойлера підсумку)
@@ -1234,25 +1497,8 @@
       journalCtl?.refresh({ skip: liveEntry, live: liveLines });
       setArena(fightTitle, [], "fight");
       lastSnap = null;
-      // Поле бою: розстановка цього бою, смужки — зі стану на початку
-      renderField({ team, heroPos: result.heroPos, foePos: result.foePos, corner: result.corner, obstacles: result.obstacles, maxStats });
-      fieldEvent(result.events[0], null, team, maxStats);
-      if (stepByStep) {
-        let prevEv = null;
-        for (const ev of result.events) {
-          addLogLine(ev);
-          applyEventToBars(ev, team, maxStats);
-          battleFx(ev, team);
-          RPG.audio?.battleSound(ev);
-          fieldEvent(ev, prevEv, team, maxStats);
-          prevEv = ev;
-          await sleep(ev.who === "info" ? 400 : 550);
-        }
-      } else {
-        result.events.forEach(addLogLine);
-        applyEventToBars(result.events[result.events.length - 1], team, maxStats);
-        fieldEvent(result.events[result.events.length - 1], null, team, maxStats);
-      }
+      // Показ проходу: хода, поява ворогів, бої зон (смужки — зі стану на вході)
+      await showMaze(M, team, start, maxStats, stepByStep, dun);
 
       // Підсумок: коротка мелодія, далі знову музика локації
       if (RPG.audio) {
@@ -1333,12 +1579,12 @@
       });
     });
 
-    // Журнал бою: останні 100 подій в окремому вікні (journal.js); під час бою — поточний бій наживо.
+    // Журнали (journal.js): вікно з вкладками «Журнал подій» і «Журнал бою»; під час бою — поточний бій наживо.
     // Кнопка є і в бойових локаціях (біля «Почати бій»), і в мирних (біля «Зберегти гру»)
     const openJournal = () => { journalCtl = RPG.openJournal(save, liveLines ? { skip: liveEntry, live: liveLines } : {}); };
     document.querySelectorAll(".journal-btn").forEach(b => b.addEventListener("click", openJournal));
     // Коротка смужка стану (2 рядки) — клік відкриває повний журнал
-    logBox.title = "Натисніть, щоб відкрити журнал бою";
+    logBox.title = "Натисніть, щоб відкрити журнал";
     logBox.addEventListener("click", openJournal);
     const placeJournal = $("journal-btn-place");
     if (placeJournal) placeJournal.hidden = !!combat;

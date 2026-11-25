@@ -368,4 +368,24 @@
   }
 
   Object.assign(RPG, { TIER_BLUEPRINTS, TIER_BP_CHANCE, tierBlueprintDef, tierBlueprintChance, rollTierBlueprints, learnAllTier, STORM_BLUEPRINT, isStormBlueprint, stormBlueprintChance, blueprintOf, T4_BLUEPRINT, isT4Blueprint, t4BlueprintChance, learnAllT4, blueprintVisible, PROF_SETS: SETS, BLUEPRINT_DROPS, BLUEPRINT_CHANCE, knowsRecipe, learnBlueprint, rollBlueprintDrop, blueprintSource });
+
+  // «Свої» характеристики комплектів професій (рішення користувача 2026-11-25): у слотах 2–9 речей комплекту
+  // кожна з них випадає в PROF_SLOT_FAVOR_WEIGHT разів частіше за чужу (rarity.js → rollSlots); слот 1 — як у всіх речей.
+  // Своє випадає лише там, де воно є в списку слота (data/itemslots.js); звичайних речей це не стосується.
+  RPG.PROF_SLOT_FAVOR_WEIGHT = 4;
+  RPG.PROF_SLOT_FAVOR = {
+    warrior:    ["str", "agi", "vit", "attack", "atkPct", "crit", "critDmg", "hp", "hpPct", "defense"],
+    knight:     ["str", "vit", "attack", "defense", "defensePct", "magicDefense", "hp", "hpPct", "blockPhys", "blockMag", "hpRegenPct"],
+    berserker:  ["str", "agi", "vit", "attack", "atkPct", "crit", "critDmg", "speed", "hp", "hpRegenPct"],
+    rogue:      ["agi", "str", "attack", "atkPct", "crit", "critDmg", "dodge", "speed", "skillPct"],
+    hunter:     ["agi", "str", "attack", "atkPct", "crit", "critDmg", "speed", "dodge", "skillPct"],
+    mage_fire:  ["int", "spi", "magic", "magicPct", "crit", "critDmg", "skillPct", "mp", "mpRegenPct"],
+    mage_water: ["int", "spi", "magic", "magicPct", "mp", "mpRegenPct", "skillPct", "magicDefense", "hp"],
+    mage_wind:  ["int", "spi", "magic", "magicPct", "speed", "dodge", "crit", "skillPct", "mp"],
+    mage_earth: ["int", "spi", "vit", "magic", "magicPct", "defense", "defensePct", "hp", "blockMag", "mp"],
+    paladin:    ["str", "int", "spi", "vit", "attack", "magic", "atkPct", "magicPct", "magicDefense", "hp", "blockPhys"],
+    priest:     ["spi", "int", "vit", "magic", "magicPct", "mp", "mpRegenPct", "hpRegenPct", "skillPct", "magicDefense"],
+    monk:       ["agi", "int", "vit", "attack", "atkPct", "dodge", "speed", "crit", "hpRegenPct"],
+    shaman:     ["int", "agi", "vit", "attack", "magic", "atkPct", "magicPct", "mp", "skillPct", "magicDefense"]
+  };
 })(window.RPG);

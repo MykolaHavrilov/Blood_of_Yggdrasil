@@ -33,6 +33,7 @@
 | `dungeon.js`, `expedition.js`, `travel.js` | данжі, експедиції, дорога по мапі | `data/enemies`, `routes`, `battle.js` |
 | `quests.js` | завдання гільдії та сюжетні квести | `character.js` |
 | `craft.js` | кузня: кування, переплавка, розбір | `data/recipes`, `books`, `runes` |
+| `maze.js` | поле-лабіринт: перевірка карти, шлях A → Б, генератор `makeMaze`, прохід `simulateMaze` — кожен бій на локації, данж і бій експедиції | `data/mazes.js`, `battle.js` |
 | `journal.js`, `bestiary.js` | журнал бою, книга ворогів | — |
 | `i18n.js` + `i18n/en.js` | переклад (словник «українська фраза → англійська») | дані |
 | `audio.js` | музика й звуки (синтез, без файлів) | `core.js` |
@@ -44,7 +45,7 @@
 | `ui.js` | спливаючі вікна з описом, бойові ефекти |
 | `game-common.js` | спільні помічники всіх екранів → `RPG.ui` |
 | `game-main.js`, `menu.js` | запуск екрана за `data-page`; логіка меню |
-| `page-game.js` | екран «Локація»: запуск, герой, швидкий доступ і **бій** (поле, черга дій, данж) |
+| `page-game.js` | екран «Локація»: запуск, герой, швидкий доступ і **бій** — прохід лабіринту (поле зони, черга дій, данж) |
 | `page-game-home.js` | Домівка, власний дім, кузня, Спальний район |
 | `page-game-places.js` | брами, Корінь Іггдрасиля, Храм, двір Відреченого, розмови з NPC, Шинок |
 | `page-game-shop.js` | купівля й продаж у торговця |
@@ -56,7 +57,7 @@
 `G` — спільне екрана (`save`, `msg`, `place`, `locData`, `G.renderAll`, `G.renderPlace`, `G.fighting`); функцію з іншої частини кликати через `G`.
 
 **`assets/js/data/` — лише довідники:** `items`, `enemies` (вороги, локації, данжі), `classes`, `skills`, `levels`, `runes`, `recipes`,
-`books`, `artifacts`, `profsets`, `npcs`, `chronicle`, `worlds`, `routes` (згенерований — руками не правити).
+`books`, `artifacts`, `profsets`, `npcs`, `chronicle`, `worlds`, `mazes`, `routes` (згенерований — руками не правити).
 
 **`assets/`:** `css/` — `main.css` (основа), `game.css` (ігрові екрани), `theme.css` (оформлення); `images/` — `.webp` за теками
 (`items`, `enemies`, `heroes`, `skills`, `locations`, `map`, `npc`, `ui`, `book`); `fonts/`, `icons/`.
@@ -69,14 +70,17 @@
 - `node tools/test.js` — тести логіки (герой, інвентар, торгівля, бій, завдання, дорога, сейви). Запускати після кожної зміни логіки.
 - `node tools/release.js` — попередній перегляд релізу; `--apply` — виконати: перевірка + тести, `PRECACHE`, версії в `core.js` і `sw.js`,
   архів у `backup\`, якщо змін більше 100 рядків. На GitHub нічого не відправляє.
-- `node tools/add-image.js <файл або тека> --as item|enemy|hero|skill|npc|location|map|ui` — нова картинка: конвертує у `.webp`
+- `node tools/add-image.js <файл або тека> --as item|enemy|hero|skill|npc|location|map|ui|battlefield` — нова картинка: конвертує у `.webp`
   потрібного розміру, кладе в теку, реєструє в даних (`ICON_FILES`, `ENEMY_FILES`, `HERO_SPRITE_FILES`) і дописує в `PRECACHE`.
   `--dry` — лише показати; `--replace` — замінити наявну. Конвертує Edge / Chrome без вікна.
 - `node tools/cut-sheet.js <лист.png> --grid 7x2 --names … --out assets/images/ui --prefix cls_` — розрізати лист значків на окремі `.webp`;
   `--mask --tint classes` — білі силуети фарбуються кольорами професій (так зроблено значки професій `ui/cls_<id>.webp`).
 - `node tools/sync-github.js` — показати, що перенесеться в клон для GitHub (`H:\Game_NEW\_github`); `--apply` — перенести. Сам не комітить і не пушить;
   зберігає відомі розбіжності з GitHub (шлях спрайт-листів `assets/img/items`, «29 рун», картинки з метаданими C2PA).
-- `node tools/balance.js <початок ID ворогів> --rarity epic` — баланс: відсоток перемог героя в повному спорядженні свого рівня над кожним ворогом (напр. `svart_`).
+- `node tools/balance.js <початок ID ворогів> --rarity epic` — баланс: відсоток перемог героя в повному спорядженні свого рівня над кожним ворогом (напр. `svart_`);
+  `--maze [світ] [--dungeons] [--n 20 --sizes 1,3,6]` — відсоток пройдених лабіринтів соло й групами (цілі — `maze.js → MAZE_POWER`, `dungeon.js → GROUP_POWER`).
+- `node tools/maze.js <id>` / `--gen [--seed N --corner 0…3 --zones 4…7]` — показати карту лабіринту цифрами з зонами й шляхом A → Б і перевірити її;
+  `--run --team warrior,priest --level 10 --loc forest_path [--boss id]` — ще й прогнати прохід групою (бої зон, підсумок).
 - `node tools/serve.js` — локальний сервер `http://localhost:8765/` (як GitHub Pages, із service worker).
 
 Нова поведінка в логіці — додати тест у `tools/test.js`. Новий файл коду — підключити в потрібних `pages/*.html`; у `PRECACHE` його додасть реліз.

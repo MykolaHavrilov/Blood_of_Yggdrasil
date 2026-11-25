@@ -24,7 +24,9 @@
     function renderMemberTabs() { members.tabs(); }
 
     const DERIVED = ["hp", "mp", "attack", "magic", "skillPct", "defense", "magicDefense", "speed",
-                     "crit", "critDmg", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct", "attackPct"];
+                     "crit", "critDmg", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct", "attackPct",
+                     "atkPct", "magicPct", "defensePct", "magicDefensePct", "hpPct", "hpRegenPct", "mpRegenPct"];
+    const ONLY_IF_SET = ["attackPct", "atkPct", "magicPct", "defensePct", "magicDefensePct", "hpPct", "hpRegenPct", "mpRegenPct"];
 
     // ---------- Карусель «Атрибути / Характеристики / Розвиток» ----------
     const CAROUSEL_KEY = "rpg.charPage";
@@ -114,17 +116,24 @@
       mp: "Запас мани для навичок і заклинань.",
       attack: "Сила фізичних ударів зброєю і фізичних навичок.",
       magic: "Сила заклинань і магічних навичок.",
-      defense: "Зменшує фізичну шкоду, яку отримує герой.",
-      magicDefense: "Зменшує магічну шкоду, яку отримує герой.",
+      defense: "Зменшує фізичну шкоду, яку отримує герой: шкода × 100 / (100 + захист), але не більше ніж на 70%.",
+      magicDefense: "Зменшує магічну шкоду, яку отримує герой: шкода × 100 / (100 + маг. захист), але не більше ніж на 70%.",
       speed: "Як часто герой ходить у бою. Межа: 250 без професії; 350 — з професією від 25 рівня; 450 — з другою професією від 51 рівня.",
       crit: "Шанс завдати посиленого (критичного) удару.",
       attackPct: "Бонус артефактів: на стільки відсотків зростають і атака, і сила магії.",
-      critDmg: "У скільки разів посилюється критичний удар: 150% — це ×1,5 шкоди. Бонус дають лише зброя та сережки. Межа — 250%.",
-      dodge: "Шанс повністю ухилитися від фізичного удару.",
-      blockPhys: "Шанс заблокувати половину фізичної шкоди.",
-      blockMag: "Шанс заблокувати половину магічної шкоди.",
-      hpRegen: "Скільки здоров'я відновлюється з часом поза боєм (у Домівці — швидше).",
-      mpRegen: "Скільки мани відновлюється з часом поза боєм (у Домівці — швидше).",
+      critDmg: "У скільки разів посилюється критичний удар: 150% — це ×1,5 шкоди. Межа — 500%.",
+      dodge: "Шанс повністю ухилитися від фізичного удару. Межа — 70%.",
+      blockPhys: "Шанс заблокувати половину фізичної шкоди. Межа — 50%.",
+      blockMag: "Шанс заблокувати половину магічної шкоди. Межа — 50%.",
+      atkPct: "Бонус речей: на стільки відсотків зростає атака.",
+      magicPct: "Бонус речей: на стільки відсотків зростає сила магії.",
+      defensePct: "Бонус речей: на стільки відсотків зростає захист.",
+      magicDefensePct: "Бонус речей: на стільки відсотків зростає магічний захист.",
+      hpPct: "Бонус речей: на стільки відсотків зростає здоров'я.",
+      hpRegenPct: "Щосекунди (і в бою: 1 раунд = 1 с) відновлюється ще стільки відсотків максимуму здоров'я.",
+      mpRegenPct: "Щосекунди (і в бою: 1 раунд = 1 с) відновлюється ще стільки відсотків максимуму мани.",
+      hpRegen: "Скільки здоров'я відновлюється за 1 секунду — і в бою (1 раунд = 1 с), і поза боєм. Витривалість × 0,2 + Сила × 0,1 + бонуси; ще додається «Відновлення HP, %» від максимуму здоров'я. У Домівці — швидше.",
+      mpRegen: "Скільки мани відновлюється за 1 секунду — і в бою (1 раунд = 1 с), і поза боєм. Дух × 0,2 + Інтелект × 0,1 + бонуси; ще додається «Відновлення MP, %» від максимуму мани. У Домівці — швидше.",
       attackSpeedPct: "Бонус володіння зброєю до швидкості.",
       skillPct: "Посилює всі навички однаково: фізичні удари (від Атаки), заклинання (від Сили магії) і лікування. Дають речі (випадковий бонус) і руна Манназ."
     };
@@ -184,7 +193,7 @@
       box.append(el("p", "stat-info-sub", "Впливає на:"));
       const eff = el("ul", "stat-parts");
       for (const e of RPG.attrEffects(key, total, ms.character.classId)) {
-        eff.append(partRow(RPG.STAT_NAMES[e.key], e.value, "", ["crit", "dodge", "blockPhys", "blockMag", "skillPct", "critDmg", "attackPct"].includes(e.key) ? "%" : ""));
+        eff.append(partRow(RPG.STAT_NAMES[e.key], e.value, "", RPG.isPctKey(e.key) ? "%" : ""));
       }
       box.append(eff);
       return box;
@@ -200,7 +209,7 @@
 
     // Підказка характеристики: що робить, з чого складається зараз, від чого залежить
     function statInfo(key, st, trace) {
-      const pct = ["crit", "dodge", "blockPhys", "blockMag", "attackSpeedPct"].includes(key) ? "%" : "";
+      const pct = (RPG.isPctKey(key) && key !== "critDmg") || key === "attackSpeedPct" ? "%" : "";
       const box = el("div", "info-body stat-info");
       box.append(el("p", "stat-info-head", `${RPG.STAT_NAMES[key]}: ${fmtStat(key, st[key] || 0)}`));
       box.append(el("p", null, STAT_HELP[key] || ""));
@@ -258,7 +267,7 @@
       const trace = {};
       RPG.calcStats(ms, trace);
       for (const key of DERIVED) {
-        if (key === "attackPct" && !st[key]) continue;          // «Атака, %» — лише з артефактами
+        if (ONLY_IF_SET.includes(key) && !st[key]) continue;   // % з артефактів і слотів речей — лише коли є
         const row = el("div", "stat-row");
         row.append(el("span", null, RPG.STAT_NAMES[key]),
           infoButton(RPG.STAT_NAMES[key], () => statInfo(key, st, trace)),

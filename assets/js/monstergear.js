@@ -238,8 +238,8 @@
       else add(direct, k, gear.stats[k]);
     }
     const fromAttrs = RPG.attrBonuses(attrs);
-    delete fromAttrs.hpRegen; delete fromAttrs.mpRegen;
-    if (!(own.mp > 0)) delete fromAttrs.mp;
+    // Відновлення за 1 с (1 раунд бою) — від атрибутів речей, як у героя (stats.js → attrBonuses, battle.js → кінець раунду)
+    if (!(own.mp > 0)) { delete fromAttrs.mp; delete fromAttrs.mpRegen; }
     for (const k in fromAttrs) add(direct, k, fromAttrs[k]);
     for (const k in direct) add(st, k, direct[k]);
 
@@ -251,13 +251,14 @@
         if (extra > 0) { overflowPts += extra * RPG.GS_WEIGHTS.auxiliary; st[k] -= extra; }
       }
     }
-    const speedCap = Math.max(1, (own.speed || 1) * SPEED_MULT_CAP);
+    const sp = RPG.ENEMY_SPEED, mult = sp?.gearMult ?? SPEED_MULT_CAP;   // спорядження: швидкість — не більше ×gearMult від власної і не вище max (data/enemies.js)
+    const speedCap = Math.max(1, Math.min((own.speed || 1) * mult, Math.max(own.speed || 1, sp?.max ?? Infinity)));
     if (st.speed > speedCap) { overflowPts += (st.speed - speedCap) * RPG.GS_WEIGHTS.auxiliary; st.speed = speedCap; }
     if (overflowPts) add(st, "hp", pointsToValue("hp", overflowPts));
     if (gear.power && gear.power !== 1) for (const k of BOSS_POWER_KEYS) if (st[k]) st[k] *= gear.power;
 
     for (const k in st) {
-      st[k] = ["crit", "dodge", "blockPhys", "blockMag"].includes(k) ? Math.round(st[k] * 10) / 10 : Math.round(st[k]);
+      st[k] = ["crit", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen"].includes(k) ? Math.round(st[k] * 10) / 10 : Math.round(st[k]);
     }
     return st;
   }

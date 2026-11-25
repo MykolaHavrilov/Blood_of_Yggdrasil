@@ -7,8 +7,11 @@
 // Шахта й Лісопилка (data/enemies.js → LOCATIONS, type "mine" / "sawmill") ще й дають за кожен виграний бій
 // 1–3 кожного ресурсу свого світу (loc.yields).
 //
-// Час — реальний, гра може бути закрита: бої «доганяються» при відкритті гри (expeditionTick, game-common.js → requireSave
-// і щосекундний таймер). Один бій — EXP_BATTLE_MS; після бою, якщо в когось менше EXP_REST_BELOW HP, група стає на привал
+// Кожен «бій» експедиції — прохід лабіринту (maze.js → simulateMaze; етап 8, Лабіринт_задум.md): нова карта, бої зон, між зонами —
+// автозілля (якщо ввімкнено). Нагорода — як на локації: досвід і здобич з усіх зон разом, лише коли пройдено Б; поразка — кінець
+// експедиції. Прохід триває EXP_BATTLE_MS за кожен бій зони (не менше одного).
+// Час — реальний, гра може бути закрита: проходи «доганяються» при відкритті гри (expeditionTick, game-common.js → requireSave
+// і щосекундний таймер). Після проходу, якщо в когось менше EXP_REST_BELOW HP, група стає на привал
 // і відновлюється (звичайне відновлення + EXP_CAMP_PCT за кожні 10 с), доки всі не матимуть EXP_REST_UNTIL HP.
 // Автозілля: якщо в Налаштуваннях увімкнено автозілля (core.js → getAutoPotion), після кожного бою герої експедиції
 // п'ють зілля з інвентаря за тими самими правилами (character.js → autoPotion), ще до привалу. Випите — e.potions.
@@ -25,7 +28,9 @@
 // Уся гра в цей час — майже як у дорозі: лише «Персонаж», «Інвентар», «Мапа», «Налаштування» і «Головне меню» (game-common.js → requireSave),
 // переходити між локаціями не можна (travel.js → startTravel); з Мапи можна відправити другу експедицію.
 //
-// Стан: save.expeditions = [{ id, loc, members: [id], start, end, at, battles, wins, champions, done, reason, finishedAt,
+// Стан: save.expeditions = [{ id, loc, members: [id], start, end, at, runs, battles, wins, champions, done, reason, finishedAt,
+//                          runs — проходів лабіринту, battles / wins — боїв зон (усіх) і виграних;
+//                          по закінченні — запис-підсумок у журнал подій (journal.js, kind "expedition");
 //                          bag: { gold, items: [ref], stacks: { id: qty }, filtered, exp: { id: n }, levels: { id: [from, to] } },
 //                          fallen: [id] }]  (старий сейв: одна save.expedition — переноситься в масив, expList)
 //   id героя: "main" — головний, інакше id напарника з save.party.
@@ -37,7 +42,7 @@
   // Гравець обирає тривалість повзунком: від EXP_HOURS_MIN до EXP_HOURS_MAX цілих годин (v0.9.7)
   const EXP_HOURS_MIN = 1, EXP_HOURS_MAX = 8, EXP_HOURS_DEFAULT = 4;
   const expHours = h => Math.min(EXP_HOURS_MAX, Math.max(EXP_HOURS_MIN, Math.round(Number(h) || EXP_HOURS_DEFAULT)));
-  const EXP_BATTLE_MS = 40 * 1000;               // один бій разом із підходом до наступної групи ворогів
+  const EXP_BATTLE_MS = 60 * 1000;               // один бій зони лабіринту разом із ходою (прохід — стільки × боїв зон)
   const EXP_TICK_MS = 10 * 1000;                 // тік відновлення (як у грі)
   const EXP_CAMP_PCT = 0.05;                     // привал: +5% HP і MP за тік понад звичайне відновлення
   const EXP_REST_BELOW = 0.5;                    // привал, якщо в когось HP нижче 50%
@@ -142,20 +147,7 @@
     return { ok: true, end: e.end, id: e.id, hours: h };
   }
 
-  // ---------- Один бій ----------
-  function rollGroup(save, locId, team) {
-    const range = RPG.enemyGroupRange(team);
-    const n = range.min + Math.floor(Math.random() * (range.max - range.min + 1));
-    const lvl = Math.max(...team.map(ms => ms.character.level));
-    const power = EXP_POWER[RPG.LOCATIONS[locId]?.region || "start"] ?? 1;
-    const specs = [];
-    for (let i = 0; i < n; i++) {
-      const id = RPG.pickEnemy(locId, lvl, { noBoss: true });
-      if (id) specs.push({ id, champion: RPG.rollChampion(id), power });
-    }
-    if (RPG.equipFoes) RPG.equipFoes(specs, team);
-    return specs;
-  }
+  // ---------- Один прохід лабіринту ----------
   function bagAddRef(bag, ref) { bag.items.push(ref); }
   function bagAddStack(bag, id, qty) { if (qty > 0) bag.stacks[id] = (bag.stacks[id] || 0) + qty; }
   // Річ з рідкістю: рідкість, руна Даждьбог (rarityUp), фільтр здобичі — як у character.js → applyReward
@@ -175,13 +167,39 @@
     const loc = RPG.LOCATIONS[e.loc];
     const team = expMembers(save, e).filter(ms => !isDown(ms));
     if (!team.length) return "wiped";
-    const specs = rollGroup(save, e.loc, team);
-    if (!specs.length) return "empty";
-    const result = RPG.simulatePartyBattle(team, specs);
-    e.battles++;
+    const lvl = Math.max(...team.map(ms => ms.character.level));
+    const power = EXP_POWER[loc?.region || "start"] ?? 1;
+    // вороги зони: n (живих героїв) з пулу локації, без босів, із силою експедиції
+    const pickFoes = (zone, n) => {
+      const out = [];
+      for (let i = 0; i < n; i++) { const id = RPG.pickEnemy(e.loc, lvl, { noBoss: true }); if (id) out.push({ id, champion: RPG.rollChampion(id), power }); }
+      return out;
+    };
+    const cfg = RPG.getAutoPotion ? RPG.getAutoPotion() : null;
+    const onPotion = H => {
+      if (!cfg || !(cfg.hp.on || cfg.mp.on) || !RPG.autoPotion) return [];
+      H.forEach((h, k) => { team[k].character.hp = h.hp; team[k].character.mp = h.mp; });
+      const pr = RPG.autoPotion(save, cfg, team.filter((ms, k) => !H[k].dead));
+      e.potions ??= {};
+      for (const [id, n] of Object.entries(pr.used || {})) e.potions[id] = (e.potions[id] || 0) + n;
+      H.forEach((h, k) => { if (!h.dead) { h.hp = team[k].character.hp; h.mp = team[k].character.mp; } });
+      return pr.lines;
+    };
+    const run = RPG.simulateMaze(team, RPG.makeMaze({}), { pickFoes, onPotion });
+    const zb = run.parts.filter(p => p.type === "battle");
+    if (!zb.length) return "empty";
+    e.runs = (e.runs || 0) + 1;
+    e.battles += zb.length;
+    const dur = EXP_BATTLE_MS * zb.length;
+    const last = zb[zb.length - 1];
+    const specs = run.win ? zb.flatMap(p => p.specs) : [];
+    // зведений результат (як від simulatePartyBattle): вороги всіх зон — лише коли прохід пройдено
+    const result = { win: run.win, hel: run.hel, heroes: run.heroes,
+      enemies: run.win ? zb.flatMap(p => p.result.enemies) : [],
+      enemyIds: run.win ? zb.flatMap(p => p.result.enemyIds || []) : (last.result.enemyIds || []) };
     result.heroes.forEach((h, k) => { team[k].character.hp = Math.max(0, h.hp); team[k].character.mp = Math.max(0, h.mp); if (h.dead) team[k].character.hp = 0; });
     if (result.win) {
-      e.wins++;
+      e.wins += zb.filter(p => p.result.win).length;
       const bag = e.bag;
       // досвід — як у page-game.js: пул з бонусом групи, ділиться між тими, хто вижив
       const totalExp = result.enemies.reduce((s, x) => s + (x.exp || 0), 0);
@@ -238,8 +256,8 @@
       // трави (Лісопилка) і мінерали (Шахта) для алхімії — alchemy.js → alchYields, 8–12 кожного
       for (const id of RPG.alchYields?.(loc) || []) bagAddStack(bag, id, RPG.randInt(RPG.ALCH_YIELD[0], RPG.ALCH_YIELD[1]));
     }
-    if (!result.win && !result.draw) return { wiped: true, enemyIds: result.enemyIds };
-    return result.win ? "win" : "draw";
+    if (!result.win) return { wiped: true, enemyIds: result.enemyIds, hel: !!result.hel, dur };   // поразка (зокрема Хелла після ліміту раундів)
+    return { win: true, dur };
   }
 
   // ---------- Привал між боями: скільки часу треба, щоб усі живі мали EXP_REST_UNTIL HP ----------
@@ -298,7 +316,25 @@
       for (const ms of fallen) { ms.character.hp = 0; ms.character.mp = 0; ms.character.dead = true; ms.character.deaths = (ms.character.deaths || 0) + 1; RPG.loseLife?.(ms); }
     }
     for (const ms of team) ms.character.regenAt = now;
+    journalExpedition(save, e, team);
     return true;
+  }
+  // Запис-підсумок у журнал подій (journal.js): де, хто, скільки проходів і боїв, досвід, здобич, загибель
+  function journalExpedition(save, e, team) {
+    if (!RPG.journalAdd) return;
+    const loc = RPG.LOCATIONS[e.loc]?.name || e.loc;
+    const title = e.reason === "wiped" ? "Експедиція загинула" : e.reason === "recalled" ? "Групу відкликано з експедиції" : "Експедиція повернулась";
+    const bag = e.bag || { exp: {}, gold: 0, items: [], stacks: {} };
+    const lines = [["title", `${title}: ${loc}`, e.reason === "wiped" ? "lose" : "win"],
+      ["info", `${team.map(ms => ms.character.name).join(", ")}. Проходів лабіринту ${e.runs || 0}, боїв ${e.battles}, перемог ${e.wins}` +
+        (e.champions ? `, чемпіонів ${e.champions}` : "") + "."],
+      ["info", team.map(ms => `${ms.character.name}: +${bag.exp[memberIdOf(save, ms)] || 0} EXP` +
+        (e.penalty?.[memberIdOf(save, ms)] > 0 ? `, штраф −${e.penalty[memberIdOf(save, ms)]} EXP` : "")).join(" · ")],
+      ["info", `Здобич у мішку експедиції: ${bag.gold || 0} золота, речей ${bag.items.length}, ресурсів ${Object.values(bag.stacks).reduce((a, b) => a + b, 0)}.`]];
+    if (e.temple) lines.push(["info", "Уся група полягла — герої прокинулись у Храмі."]);
+    else if (e.fallen?.length) lines.push(["info", `Полягли: ${team.filter(ms => e.fallen.includes(memberIdOf(save, ms))).map(ms => ms.character.name).join(", ")} — помоліться за них у Храмі.`]);
+    const rec = RPG.journalAdd(save, { kind: "expedition", lines });
+    if (rec) rec.at = e.finishedAt || rec.at;
   }
   // Відкликати групу достроково
   function recallExpedition(save, eid, now = Date.now()) {
@@ -312,7 +348,7 @@
 
   // ---------- «Доганяння» боїв до поточного часу. Повертає true, якщо щось змінилось ----------
   function expeditionTick(save, now = Date.now()) {
-    if (!RPG.simulatePartyBattle) return false;
+    if (!RPG.simulateMaze) return false;
     let changed = false;
     for (const e of activeList(save)) changed = tickOne(save, e, now) || changed;
     return changed;
@@ -320,12 +356,15 @@
   function tickOne(save, e, now) {
     const limit = Math.min(now, e.end);
     let changed = false, steps = 0;
+    // новий прохід починається, якщо до кінця експедиції лишився хоч один бій; триває EXP_BATTLE_MS × боїв зон
+    // (результат рахується одразу — як і на локації)
     while (!e.done && e.at + EXP_BATTLE_MS <= limit && steps++ < EXP_MAX_STEPS) {
       const r = fightOne(save, e);
       changed = true;
-      if (r === "wiped" || r?.wiped) { finishExpedition(save, e, "wiped", e.at + EXP_BATTLE_MS, r?.enemyIds); break; }
-      e.at += EXP_BATTLE_MS;
-      // автозілля (якщо ввімкнено в Налаштуваннях), потім відновлення за час бою, а коли треба — привал
+      const dur = Math.max(EXP_BATTLE_MS, r?.dur || EXP_BATTLE_MS);
+      if (r === "wiped" || r?.wiped) { finishExpedition(save, e, "wiped", Math.min(e.end, e.at + dur), r?.enemyIds); break; }
+      e.at += dur;
+      // автозілля (якщо ввімкнено в Налаштуваннях), потім відновлення за час проходу, а коли треба — привал
       const team = expMembers(save, e).filter(ms => !isDown(ms));
       const cfg = RPG.getAutoPotion ? RPG.getAutoPotion() : null;
       if (cfg && (cfg.hp.on || cfg.mp.on) && RPG.autoPotion && team.length) {
@@ -333,7 +372,7 @@
         e.potions ??= {};
         for (const [id, n] of Object.entries(pr.used || {})) e.potions[id] = (e.potions[id] || 0) + n;
       }
-      for (const ms of team) healStep(ms, EXP_BATTLE_MS / EXP_TICK_MS - 1);
+      for (const ms of team) healStep(ms, dur / EXP_TICK_MS - 1);
       const ticks = restTicks(team);
       if (ticks > 0) {
         const can = Math.max(0, Math.floor((e.end - e.at) / EXP_TICK_MS));
@@ -342,7 +381,7 @@
         e.at += t * EXP_TICK_MS;
       }
     }
-    if (!e.done && e.at + EXP_BATTLE_MS > e.end && now >= e.end) { finishExpedition(save, e, "time", e.end); changed = true; }
+    if (!e.done && e.at + EXP_BATTLE_MS > e.end && now >= e.end) { finishExpedition(save, e, "time", Math.max(e.end, Math.min(e.at, now))); changed = true; }
     return changed;
   }
 
@@ -392,7 +431,7 @@
     return { id: e.id,
       active: !e.done, done: e.done, reason: e.reason, loc: RPG.LOCATIONS[e.loc], locId: e.loc,
       leftMs: Math.max(0, e.end - now), elapsedMs: Math.min(now, e.end) - e.start,
-      battles: e.battles, wins: e.wins, champions: e.champions,
+      runs: e.runs || 0, battles: e.battles, wins: e.wins, champions: e.champions,
       team, alive: team.filter(ms => !isDown(ms)).length, total: team.length,
       bag: e.bag, fallen: e.fallen || [], temple: !!e.temple, penalty: e.penalty || null, potions: e.potions || {}
     };

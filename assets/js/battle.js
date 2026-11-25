@@ -6,13 +6,14 @@
 //
 // РАУНДИ І ШВИДКІСТЬ
 //   Раунд триває, доки кожен живий учасник не походить хоча б раз.
-//   Кожна дія учасника має «час» n / швидкість (n = 1, 2, …). Раунд закінчується
-//   на часі найповільнішого (1 / найменша швидкість). Хто вдвічі швидший за
-//   найповільнішого — ходить за раунд двічі, втричі — тричі і т.д.
-//   Порядок: за часом; при рівному часі — спершу ті, хто ходить уперше в раунді,
-//   потім герої раніше за ворогів.
-//   Приклад: герой 1 — 200, герой 2 — 100, ворог 1 — 80, ворог 2 — 100:
-//   герой 1 → герой 2 → ворог 2 → герой 1 (вдруге) → ворог 1.
+//   Смуги швидкості (speedBand): до 100 — смуга 1, 100–199 — смуга 2, від 200 — смуга 3.
+//   Ходів за раунд = смуга учасника − найнижча смуга серед живих учасників + 1 (не більше MAX_TURNS = 3).
+//   Усі в одній смузі — кожен ходить 1 раз (навіть якщо хтось удвічі швидший у межах смуги).
+//   Ходи розкладені рівномірно: 2 ходи — на ½ і в кінці раунду, 3 — на ⅓, ⅔ і в кінці.
+//   В одну мить першим ходить швидший; за рівної швидкості — герой, потім за порядком.
+//   Приклад: герой 1 — 200 (3 ходи), герой 2 — 100 (2), ворог 1 — 80 (1), ворог 2 — 100 (2):
+//   г1 → г2 → в2 → г1 → г1 → г2 → в2 → в1.
+//   Швидкість ворогів — data/enemies.js → enemySpeed: від 45 у світі 1 до 210 у світі 9.
 //
 // ПОЛЕ БОЮ 15 × 30 (FIELD)
 //   Логічно поле завжди 15 рядків (r = 0…14) × 30 стовпців (c = 0…29).
@@ -57,6 +58,25 @@
 //   (DUAL_MULT); з однією сокирою — 100%. Навички б'ють основною сокирою як завжди.
 //   Заморожений ворог (Крижаний спис) пропускає свої ходи і невразливий — його не можна вибрати ціллю.
 //   Групові пасивки (skills.js → group: true) діють на всіх героїв у бою.
+//   Лікування (kind: "heal") лише коли є поранені: ціль → сам лікар → чекати, поки походять інші герої
+//   раунду → пропустити лікування й зробити наступну дію з черги (heroHeal).
+//   ПРАВИЛО для майбутнього лікування на кілька ходів (зараз такого немає): кожна частка лікування
+//   спрацьовує в той хід, у який мала відбутись дія, — у хід цілі, на якій воно висить, а не на початку раунду.
+//
+// РУШІЙ І ЛАБІРИНТ (етап 5, Лабіринт_задум.md)
+//   createBattle(members, specs, opts) — рушій: { heroes, foes, events, going(), runRound(), finish(), join(i, pos),
+//   wake(f, why), sees(A, T), chainOf(H), zoneAt(p), round }. simulatePartyBattle — звичайний бій на ньому.
+//   Нові опції (без них бій такий самий, як раніше, — перевірено еталоном журналів):
+//     maze      — карта (data/mazes.js / maze.js → makeMaze): перешкоди з її 1 і 2 (вигляд — cover), зони клітинок;
+//     heroCells — готові клітинки героїв на полі (замість розстановки в куті);
+//     asleep    — true або [..] для ворогів: сплячий не ходить; прокидається вся його зона, коли туди заходить герой
+//                 або когось із неї атакують (без карти — лише той, у кого влучили). Дальник (дальність > 1) стріляє
+//                 у сплячого, якого бачить, лише коли не дістає жодного неспливого. Перемога — немає живих неспливих;
+//     away      — [..] для героїв: поза зоною бою (не ходить і не ціль, але займає клітинку); join(i, pos) — вступає
+//                 в бій навіть посеред раунду й отримує решту своїх ходів цього раунду;
+//     vision    — обзір: HERO_VISION (3 / 4 / 5 за професією), ENEMY_VISION (за роллю); бачити — у радіусі й крізь 1,
+//                 не крізь 2. Лікування — лише союзникам у ланцюжку обзору (хтось когось бачить);
+//     afterSlot — функція (api) після кожного ходу раунду (прохід лабіринту — maze.js, етап 6).
 //
 // Черга дій (save.battleQueue, до 6 — RPG.QUEUE_SIZE): "attack" — удар зброєю, "spell" — «Іскра»,
 //   або ID навички (data/skills.js). Якщо навичка недоступна (не та зброя, бракує мани) —
@@ -64,7 +84,8 @@
 // ============================================================
 
 (function (RPG) {
-  const MAX_ROUNDS = 80;
+  const MAX_ROUNDS = 100;   // раундів у бою; без переможця — Хелла вбиває героїв (поразка, звичайний штраф)
+  const MAX_TURNS = 3;           // найбільше ходів одного учасника (героя чи ворога) за раунд
   const SPELL_COST = 4;
   const SPELL_MULT = 1.6;
   const CRIT_MULT = 1.5;
@@ -74,6 +95,12 @@
   const START_DISTANCE = FIELD.cols - 2 * FIELD.zone + 1;   // між передніми рядами: 25
   const MOVE_STEPS = 4;          // скільки клітинок проходить учасник за один хід руху
   const ROW_ORDER = [1, 0, 2];   // спершу середній рядок, потім краї
+  // Обзір (поле-лабіринт): радіус у клітинках; бачити можна крізь малі перешкоди (1), але не крізь стіни (2)
+  const HERO_VISION = { warrior: 3, knight: 3, berserker: 3, paladin: 3, shaman: 3, peasant: 3,
+                        mage_fire: 4, mage_water: 4, mage_wind: 4, mage_earth: 4, priest: 4,
+                        hunter: 5, rogue: 5, monk: 5 };
+  const ENEMY_VISION = { melee: 3, tank: 3, caster: 4, healer: 4, ranged: 5 };
+  const visionOf = u => (u.side === "hero" ? HERO_VISION[u.classId] ?? 3 : ENEMY_VISION[u.enemy?.role] ?? 3);
 
   const inField = p => p && p.r >= 0 && p.r < FIELD.rows && p.c >= 0 && p.c < FIELD.cols;
   // Локальні координати зони 3 × 3 (розстановка): r 0…2, c 0…2 (c 2 — передній ряд)
@@ -278,7 +305,8 @@
   }
 
   const variance = () => 0.85 + Math.random() * 0.3;   // ±15%
-  const mitigate = (damage, defense) => damage * 100 / (100 + Math.max(0, defense || 0));
+  // Захист: шкода × 100 / (100 + захист), але зменшення — не більше STAT_CAP.defReduce (70%)
+  const mitigate = (damage, defense) => damage * Math.max(1 - (RPG.STAT_CAP?.defReduce ?? 100) / 100, 100 / (100 + Math.max(0, defense || 0)));
   const roll = pct => Math.random() * 100 < (pct || 0);
 
   // mult — сила криту (герой: calcStats → critDmg / 100; вороги — CRIT_MULT)
@@ -682,18 +710,25 @@
     });
   }
 
-  // Розклад ходів одного раунду
+  // Смуга швидкості: до 100 — 1, 100–199 — 2, від 200 — 3 (SPEED_BANDS — нижні межі смуг 2 і 3)
+  const SPEED_BANDS = [100, 200];
+  const speedBand = speed => 1 + SPEED_BANDS.filter(b => speed >= b).length;
+
+  // Розклад ходів одного раунду: ходів = смуга учасника − найнижча смуга серед живих учасників + 1 (не більше MAX_TURNS).
+  // Усі в одній смузі — кожен ходить 1 раз. Ходи розкладені рівномірно по раунду (2 ходи — на ½ і в кінці, 3 — на ⅓, ⅔, кінець);
+  // в одну мить першим ходить швидший, за рівної швидкості — герой.
   function roundSchedule(units) {
     const speeds = units.map(speedOf);
-    const end = Math.max(...speeds.map(s => 1 / s)) + 1e-9;
+    const bands = speeds.map(speedBand);
+    const low = Math.min(...bands);
     const slots = [];
     units.forEach((u, idx) => {
-      for (let n = 1; n / speeds[idx] <= end && n <= 6; n++) {
-        slots.push({ u, t: n / speeds[idx], n, hero: u.side === "hero", idx });
-      }
+      const turns = Math.min(MAX_TURNS, bands[idx] - low + 1);
+      for (let n = 1; n <= turns; n++) slots.push({ u, t: n / turns, n, hero: u.side === "hero", idx, speed: speeds[idx] });
     });
-    return slots.sort((a, b) => a.t - b.t || a.n - b.n || (b.hero - a.hero) || a.idx - b.idx);
+    return slots.sort(slotOrder);
   }
+  function slotOrder(a, b) { return a.t - b.t || b.speed - a.speed || (b.hero - a.hero) || a.idx - b.idx; }
 
   // members — «вигляди» героїв (party.js → memberSave), живі; enemySpecs — [{ id, champion }]
   // opts.heroPos — [{ r, c }] ЛОКАЛЬНА розстановка героїв у зоні 3 × 3 (у порядку members);
@@ -711,14 +746,23 @@
   //               heroHp, heroMp, enemyHp, enemyMp,
   //               sound? — який звук грати (audio.js → battleSound): "skill:<id>", "weapon:<тип>",
   //                        "enemy:<зброя>:<дієслово>" або назва звуку ("miss", "dark", "death"…) }
-  function simulatePartyBattle(members, enemySpecs, opts = {}) {
+  // РУШІЙ БОЮ: createBattle готує учасників і поле й повертає { heroes, foes, events, going, runRound, finish, round }.
+  // simulatePartyBattle — звичайний бій: раунди, доки є переможець або до MAX_ROUNDS, потім finish().
+  function createBattle(members, enemySpecs, opts = {}) {
     const heroes = members.map(makeHero);
     const labels = enemyLabels(enemySpecs);
     const foes = enemySpecs.map((spec, i) => makeEnemy(spec, labels[i]));
     const corner = Number.isInteger(opts.corner) ? (opts.corner & 3) : randomCorner();
     const heroPos = placeHeroes(members, opts.heroPos || []).map(p => fieldPos(p, corner));
-    const obstacles = (opts.obstacles || []).filter(o => inField(o) && OBSTACLE_KINDS[o.kind]);
+    // opts.maze — карта лабіринту (data/mazes.js, maze.js → makeMaze): перешкоди з її 1 і 2 (вигляд — opts.cover), зони — для пробудження
+    const maze = opts.maze && RPG.parseMaze ? RPG.parseMaze(opts.maze) : null;
+    const obstacles = (opts.obstacles || (maze ? RPG.mazeObstacles(opts.maze, opts.cover) : [])).filter(o => inField(o) && OBSTACLE_KINDS[o.kind]);
     const walls = new Set(obstacles.map(keyOf));
+    const zoneAt = p => (maze && p ? (maze.zones[p.r]?.[p.c] ?? null) : null);
+    // opts.heroCells — готові клітинки героїв НА ПОЛІ (лабіринт), якщо коректні; інакше — розстановка в куті
+    const hc = opts.heroCells;
+    if (Array.isArray(hc) && hc.length === members.length && hc.every(p => inField(p) && !walls.has(keyOf(p))) &&
+        new Set(hc.map(keyOf)).size === hc.length) heroPos.splice(0, heroPos.length, ...hc.map(p => ({ r: p.r, c: p.c })));
     // Вороги: готові місця з opts.foePos (те, що гравець бачив на полі до бою), якщо вони коректні;
     // інакше — розставляємо тут
     const heroKeys = new Set(heroPos.map(keyOf));
@@ -731,6 +775,11 @@
     heroes.forEach((h, i) => { h.pos = { ...heroPos[i] }; h.idx = i; });
     applyGroupPassives(heroes);
     foes.forEach((f, i) => { f.pos = { ...foePos[i] }; f.idx = i; });
+    // opts.asleep — true (усі) або [true/false] для кожного ворога: сплячий не ходить, доки герой не зайде в його зону
+    //   або доки когось із зони не атакують (тоді прокидається вся зона — f.zone, клітинка карти)
+    if (opts.asleep) foes.forEach((f, i) => { f.asleep = !!(opts.asleep === true || opts.asleep[i]); f.zone = zoneAt(f.pos); });
+    // opts.away — [true/false] для кожного героя: поза зоною бою (не ходить і не ціль), приєднується через battle.join(i)
+    if (opts.away) heroes.forEach((h, i) => { h.away = !!opts.away[i]; });
     // Перешкоди: усі — не стати; великі (block) — ще й не видно крізь них
     const sight = new Set(obstacles.filter(o => OBSTACLE_KINDS[o.kind].block).map(keyOf));
     // Чи дістає U до T з клітинки from: відстань ≤ reach, а для дальньої дії — ще й пряма видимість
@@ -742,16 +791,30 @@
     const cur = { actor: null, target: null };   // хто діє і по кому (для поля бою на сторінці)
     const ref = u => (u ? { side: u.side, i: u.idx } : null);
     const push = ev => events.push(Object.assign(ev, {
-      heroes: heroes.map(h => ({ hp: h.hp, mp: h.mp, pos: { ...h.pos } })),
-      enemies: foes.map(f => ({ hp: f.hp, mp: f.mp, pos: { ...f.pos } })),
+      heroes: heroes.map(h => (h.away === undefined ? { hp: h.hp, mp: h.mp, pos: { ...h.pos } } : { hp: h.hp, mp: h.mp, pos: { ...h.pos }, away: h.away })),
+      enemies: foes.map(f => (f.asleep === undefined ? { hp: f.hp, mp: f.mp, pos: { ...f.pos } } : { hp: f.hp, mp: f.mp, pos: { ...f.pos }, asleep: f.asleep })),
       actor: ev.actor !== undefined ? ev.actor : ref(cur.actor),
       target: ev.target !== undefined ? ev.target : ref(cur.target),
       heroHp: heroes[0].hp, heroMp: heroes[0].mp, enemyHp: foes[0].hp, enemyMp: foes[0].mp
     }));
-    const aliveH = () => heroes.filter(h => h.hp > 0);
+    const aliveH = () => heroes.filter(h => h.hp > 0 && !h.away);   // у бою (без тих, хто поза зоною)
     const aliveE = () => foes.filter(f => f.hp > 0);
-    const targetE = () => aliveE().filter(f => !(f.frozen > 0));   // заморожених бити не можна
-    const going = () => aliveH().length > 0 && aliveE().length > 0;
+    const awakeE = () => aliveE().filter(f => !f.asleep);
+    const targetE = () => aliveE().filter(f => !(f.frozen > 0) && !f.asleep);   // заморожених бити не можна; сплячих — лише дальникам (heroAct)
+    const going = () => aliveH().length > 0 && awakeE().length > 0;
+    const bodies = () => [...heroes.filter(h => h.hp > 0), ...aliveE()];       // хто займає клітинки (і ті, хто поза зоною)
+    // Обзір: A бачить T, якщо T у радіусі обзору A і між ними немає стіни (2); крізь малі перешкоди (1) видно
+    const sees = (A, T) => cellDist(A.pos, T.pos) <= visionOf(A) && hasSight(A.pos, T.pos, sight);
+    // Ланцюжок обзору (opts.vision): герої, зв'язані з H через «хтось когось бачить». Лікування — лише в ньому
+    function chainOf(H) {
+      if (!opts.vision) return null;
+      const all = aliveH(), seen = new Set([H]), q = [H];
+      while (q.length) {
+        const A = q.shift();
+        for (const B of all) if (!seen.has(B) && (sees(A, B) || sees(B, A))) { seen.add(B); q.push(B); }
+      }
+      return seen;
+    }
     const minDist = () => Math.min(...aliveH().flatMap(h => aliveE().map(e => dist(h, e))));
     const multi = heroes.length > 1;
 
@@ -769,7 +832,7 @@
     // Якщо такої клітинки не дістатись (усе заступили) — крок «просто ближче», як раніше.
     // Повертає нову відстань до найближчого суперника або null (немає куди)
     function moveToward(U, targets, reach = 1) {
-      const busy = new Set([...aliveH(), ...aliveE()].filter(x => x !== U).map(x => keyOf(x.pos)));
+      const busy = new Set(bodies().filter(x => x !== U).map(x => keyOf(x.pos)));
       const startKey = keyOf(U.pos);
       const prev = new Map([[startKey, null]]);
       const queue = [{ r: U.pos.r, c: U.pos.c }];
@@ -803,7 +866,7 @@
     }
     // Крок на 1 клітинку до найближчого суперника. Повертає нову відстань або null (немає куди)
     function stepToward(U, targets) {
-      const busy = new Set([...aliveH(), ...aliveE()].filter(x => x !== U).map(x => keyOf(x.pos)));
+      const busy = new Set(bodies().filter(x => x !== U).map(x => keyOf(x.pos)));
       const score = p => {
         let d = Infinity, m = Infinity;
         for (const T of targets) {
@@ -833,39 +896,75 @@
       : foes.length > 1 && foeSpread === "scatter" ? " Вороги розсипались по полю." : "";
     push({ who: "info", text: `Бій починається: ${heroNames} проти ${foeNames}. До найближчого ворога — ${minDist()} кл.${spreadTxt}` });
 
-    // Хто вже походив у поточному раунді (для «Молитви зцілення» жерця)
+    // Пробудження: сплячий ворог f і вся його зона (без карти — лише він сам). why — причина для журналу
+    function wake(f, why) {
+      if (!f.asleep) return;
+      const group = foes.filter(x => x.asleep && (x === f || (f.zone != null && x.zone === f.zone)));
+      for (const x of group) x.asleep = false;
+      const names = group.filter(x => x.hp > 0).map(x => `«${x.name}»`).join(", ");
+      if (names) push({ who: "info", text: f.zone != null ? `Зона ${f.zone} прокидається (${why}): ${names}` : `${names} прокидається (${why})`, actor: null, target: null });
+    }
+    // Герой у зоні сплячих — уся зона прокидається
+    function wakeByHeroes() {
+      for (const H of aliveH()) {
+        const z = zoneAt(H.pos);
+        const f = z != null && foes.find(x => x.hp > 0 && x.asleep && x.zone === z);
+        if (f) wake(f, `${H.name} заходить у зону`);
+      }
+    }
+    if (opts.asleep) wakeByHeroes();
+
+    // Хто вже походив у поточному раунді (для лікувальних навичок — heroHeal)
     let roundActed = new Set();
     const hurt = h => h.hp > 0 && h.hp < h.base.hp;
-    const mostWounded = () => aliveH().filter(hurt).sort((a, b) => a.hp / a.base.hp - b.hp / b.base.hp)[0] || null;
+    const byWound = (a, b) => a.hp / a.base.hp - b.hp / b.base.hp;
+    const mostWounded = () => aliveH().filter(hurt).sort(byWound)[0] || null;
+    // Чи походили в цьому раунді всі живі герої, крім H
+    const othersActed = H => aliveH().every(a => a === H || roundActed.has(a));
 
-    // Лікувальна навичка героя. Повертає false, якщо жрець вирішив чекати
+    // Кого лікувала б навичка: { targets, pcts } (pcts — свій % для кожної цілі або null)
+    function healTargets(H, act) {
+      const sk = act.sk, area = sk.area || "self";
+      const chain = chainOf(H);
+      const aliveH = () => (chain ? heroes.filter(a => a.hp > 0 && !a.away && chain.has(a)) : heroes.filter(a => a.hp > 0 && !a.away));
+      const mostWounded = () => aliveH().filter(hurt).sort(byWound)[0] || null;
+      if (sk.extra) {
+        // Цілюща хвиля: себе + до 3 союзників (спершу найпораненіші, решта — випадково), кожен слабше
+        const others = aliveH().filter(a => a !== H);
+        const rest = others.filter(a => !hurt(a)).sort(() => Math.random() - 0.5);
+        const picked = [...others.filter(hurt).sort(byWound), ...rest].slice(0, sk.extra.length);
+        const grow = sk.healPct[1] * (act.lvl - 1);
+        return { targets: [H, ...picked], pcts: [RPG.skillValue(sk.healPct, act.lvl), ...picked.map((_, i) => sk.extra[i] + grow)] };
+      }
+      if (area === "near") return { targets: aliveH().filter(a => dist(a, H) <= 1), pcts: null };
+      if (area === "group") return { targets: aliveH(), pcts: null };
+      if (area === "wounded") { const w = mostWounded(); return { targets: w ? [w] : [], pcts: null }; }
+      return { targets: [H], pcts: null };
+    }
+
+    // Лікувальна навичка героя (разове лікування за хід). Порядок перевірки:
+    //   1) хтось із цілей навички поранений — лікує ціль(і);
+    //   2) інакше поранений сам лікар — лікує себе;
+    //   3) інакше, якщо всі інші герої вже походили в цьому раунді — лікування пропускається ("skip":
+    //      навичка в черзі минає, герой одразу робить наступну дію);
+    //   4) інакше — лікар чекає ("wait"), поки походять інші, і після кожної дії перевіряє знову
+    //      (answerWaitingHealers). Повертає "done" | "wait" | "skip".
     function heroHeal(H, act) {
-      const area = act.sk.area || "self";
-      let targets = [H];
-      let pcts = null;
-      if (area === "near") targets = aliveH().filter(a => dist(a, H) <= 1);
-      else if (area === "group") targets = aliveH();
-      else if (area === "wounded") {
-        const w = mostWounded();
-        if (w) { targets = [w]; cur.target = w; }
-        else if (aliveE().some(E => !roundActed.has(E))) {
-          // Усі здорові, а вороги ще не ходили — чекаємо першого удару
+      let { targets, pcts } = healTargets(H, act);
+      if (!targets.some(hurt)) {
+        if (hurt(H)) { targets = [H]; pcts = null; }
+        else if (othersActed(H)) return "skip";
+        else {
           H.healWait = act;
-          push({ who: "hero", move: true, text: `${H.name} готує «${act.sk.name}» і чекає удару ворога`, crit: false });
-          return false;
+          push({ who: "hero", move: true, text: `${H.name} готує «${act.sk.name}» і чекає, поки походять союзники`, crit: false });
+          return "wait";
         }
       }
-      if (act.sk.extra) {
-        // Цілюща хвиля: себе + до 3 випадкових союзників, кожен слабше
-        const others = aliveH().filter(a => a !== H).sort(() => Math.random() - 0.5).slice(0, act.sk.extra.length);
-        const grow = act.sk.healPct[1] * (act.lvl - 1);
-        targets = [H, ...others];
-        pcts = [RPG.skillValue(act.sk.healPct, act.lvl), ...others.map((_, i) => act.sk.extra[i] + grow)];
-      }
+      if (targets.length === 1 && targets[0] !== H) cur.target = targets[0];
       H.mp -= act.sk.mp;
       H.qi++;
       push(Object.assign(castHeal(H, act.sk, act.lvl, targets, pcts), { sound: "skill:" + act.id }));
-      return true;
+      return "done";
     }
 
     // Скільки ворогів зараз дістає героя T (для «Кам'яної шкіри»)
@@ -891,7 +990,7 @@
     function shadowStrike(H, act) {
       const E = targetE().filter(T => dist(H, T) <= 3).sort((a, b) => a.hp - b.hp)[0];
       if (!E) return;
-      const busy = new Set([...aliveH(), ...aliveE()].filter(x => x !== H).map(x => keyOf(x.pos)));
+      const busy = new Set(bodies().filter(x => x !== H).map(x => keyOf(x.pos)));
       // «Спина» — клітинки з боку ворога, протилежного розбійнику (поле велике, кути різні)
       const sr = Math.sign(E.pos.r - H.pos.r), sc = Math.sign(E.pos.c - H.pos.c);
       const behind = [];
@@ -922,18 +1021,20 @@
       if (E.hp <= 0 && foes.length > 1) push({ who: "info", text: `«${E.name}» переможений.`, sound: "death" });
     }
 
-    // Після удару ворога: жрець, що чекав, одразу лікує пораненого
+    // Після кожної дії в раунді: лікар, що чекав, перевіряє знову. Хтось поранений — одразу лікує;
+    // усі здорові, а інші герої вже походили — лікування пропускається, і лікар робить наступну дію з черги
     function answerWaitingHealers() {
       for (const H of aliveH()) {
         const act = H.healWait;
-        if (!act) continue;
-        const w = mostWounded();
-        if (!w) continue;
+        if (!act || !going()) continue;
+        if (H.mp < act.sk.mp || H.stun > 0) { delete H.healWait; continue; }
+        const { targets } = healTargets(H, act);
+        if (!targets.some(hurt) && !hurt(H) && !othersActed(H)) continue;   // ще чекає
         delete H.healWait;
-        if (H.mp < act.sk.mp || H.stun > 0) continue;
-        H.mp -= act.sk.mp;
-        H.qi++;
-        push(Object.assign(castHeal(H, act.sk, act.lvl, [w]), { actor: ref(H), target: ref(w), sound: "skill:" + act.id }));
+        const was = { actor: cur.actor, target: cur.target };
+        cur.actor = H; cur.target = null;
+        if (heroHeal(H, act) === "skip") { H.qi++; heroAct(H); }
+        cur.actor = was.actor; cur.target = was.target;
       }
     }
 
@@ -970,11 +1071,25 @@
         push({ who: "hero", text: `${H.name} ${H.g === "f" ? "застрягла" : "застряг"} у слизу й пропускає хід`, crit: false, sound: "squish" });
         return;
       }
-      const act = resolveAction(H);
-      if (act.type === "skill" && act.sk.kind === "heal") { heroHeal(H, act); return; }
+      heroAct(H);
+    }
+
+    // Дія героя з черги. Пропущене лікування (heroHeal → "skip") минає, і береться наступна дія
+    function heroAct(H) {
+      let act = { type: "attack" };
+      for (let i = 0; i < H.queue.length; i++) {
+        const a = resolveAction(H);
+        if (a.type === "skill" && a.sk.kind === "heal") {
+          if (heroHeal(H, a) === "skip") { H.qi++; continue; }
+          return;
+        }
+        act = a;
+        break;
+      }
       if (act.type === "skill" && act.sk.kind === "buff") { heroBuff(H, act); return; }
       const reach = rangeOf(act, H);
-      const target = nearestInReach(H, targetE(), reach);
+      let target = nearestInReach(H, targetE(), reach);
+      if (!target && reach > 1) target = nearestInReach(H, aliveE().filter(f => f.asleep && !(f.frozen > 0) && sees(H, f)), reach);
       if (!target) {
         if (!targetE().length) { push({ who: "hero", move: true, text: `${H.name} чекає, поки розтане крига`, crit: false }); return; }
         const d = moveToward(H, targetE(), reach);
@@ -1006,6 +1121,7 @@
 
     // --- Хід ворога ---
     function enemyTurn(E, firstInRound) {
+      if (E.asleep) return;
       if (E.stunned > 0) {
         E.stunned--;
         push({ who: "enemy", text: `«${E.name}» оглушений і пропускає хід`, crit: false });
@@ -1037,7 +1153,6 @@
         cur.target = H;
         push(ev);
         if (H.hp <= 0 && multi && aliveH().length) push({ who: "info", text: `${H.name} падає без сил…` });
-        answerWaitingHealers();
       };
 
       // Хілер (data/enemies.js → role: "healer"): кожен 3-й свій хід лікує найпораненішого монстра групи (і себе)
@@ -1094,22 +1209,72 @@
     }
 
     let round = 0;
-    while (going() && round < MAX_ROUNDS) {
+    let queue = null, nowT = 0, roundLow = 1;     // черга слотів поточного раунду (null — між раундами)
+    // Герой i, що був поза зоною (opts.away), вступає в бій (pos — його клітинка). Посеред раунду
+    // отримує решту своїх ходів цього раунду (ходів за смугою — як у roundSchedule, лише ті, що ще попереду)
+    function join(i, pos) {
+      const H = heroes[i];
+      if (!H || !H.away || H.hp <= 0) return false;
+      H.away = false;
+      if (pos) H.pos = { r: pos.r, c: pos.c };
+      push({ who: "info", text: `${H.name} вступає в бій`, actor: null, target: null });
+      if (queue) {
+        const speed = speedOf(H), turns = Math.min(MAX_TURNS, Math.max(1, speedBand(speed) - roundLow + 1));
+        for (let n = 1; n <= turns; n++) if (n / turns >= nowT) queue.push({ u: H, t: n / turns, n, hero: true, idx: 100 + i, speed });
+        queue.sort(slotOrder);
+      }
+      if (opts.asleep) wakeByHeroes();
+      return true;
+    }
+    // Один раунд бою
+    function runRound() {
       round++;
       push({ who: "round", text: `Раунд ${round} · до найближчого ворога ${minDist()} кл.` });
       const acted = new Set();
       roundActed = acted;
-      for (const slot of roundSchedule([...aliveH(), ...aliveE()])) {
+      queue = roundSchedule([...aliveH(), ...awakeE()]);
+      roundLow = Math.min(...queue.map(x => speedBand(x.speed)));
+      while (queue.length) {
+        const slot = queue.shift();
         if (!going()) break;
         const u = slot.u;
-        if (u.hp <= 0) continue;
+        if (u.hp <= 0 || u.away) continue;
+        nowT = slot.t;
+        const sleepers = opts.asleep ? foes.filter(x => x.asleep).map(x => [x, x.hp]) : null;
         cur.actor = u; cur.target = null;
         if (u.side === "hero") heroTurn(u);
         else enemyTurn(u, !acted.has(u));
+        const hitNow = cur.target;
         cur.actor = cur.target = null;
         acted.add(u);
+        if (sleepers) {                    // атакований сплячий будить свою зону; герой у зоні — теж
+          for (const [x, hp] of sleepers) if (x.asleep && (x.hp < hp || hitNow === x)) wake(x, "атака");
+          wakeByHeroes();
+        }
+        answerWaitingHealers();            // лікар, що чекав, перевіряє поранених знову
+        if (opts.afterSlot) opts.afterSlot(api);
       }
-      // Кінець раунду — бафи й послаблення слабшають; жрець, що так і не дочекався удару, перестає чекати
+      queue = null;
+      // Відновлення HP / MP героїв: 1 раунд = 1 секунда (character.js → regenPerSecond); дробові частки накопичуються
+      if (going()) for (const h of heroes) {
+        if (h.hp <= 0 || h.away) continue;
+        const rg = h.regen || (h.regen = RPG.regenPerSecond ? RPG.regenPerSecond(h.base) : { hp: 0, mp: 0 });
+        h.rgHp = (h.rgHp || 0) + rg.hp; h.rgMp = (h.rgMp || 0) + rg.mp;
+        const dh = Math.floor(h.rgHp), dm = Math.floor(h.rgMp);
+        if (dh > 0) { h.hp = Math.min(h.base.hp, h.hp + dh); h.rgHp -= dh; }
+        if (dm > 0) { h.mp = Math.min(h.base.mp, h.mp + dm); h.rgMp -= dm; }
+      }
+      // …і живих ворогів: stats.hpRegen / mpRegen — від атрибутів прихованих речей (monstergear.js → applyGear) + % від максимуму
+      if (going()) for (const E of foes) {
+        if (E.hp <= 0) continue;
+        const st = E.enemy.stats;
+        E.rgHp = (E.rgHp || 0) + (st.hpRegen || 0) + st.hp * (st.hpRegenPct || 0) / 100;
+        E.rgMp = (E.rgMp || 0) + (st.mpRegen || 0) + (st.mp || 0) * (st.mpRegenPct || 0) / 100;
+        const dh = Math.floor(E.rgHp), dm = Math.floor(E.rgMp);
+        if (dh > 0) { E.hp = Math.min(st.hp, E.hp + dh); E.rgHp -= dh; }
+        if (dm > 0) { E.mp = Math.min(st.mp || 0, E.mp + dm); E.rgMp -= dm; }
+      }
+      // Кінець раунду — бафи й послаблення слабшають; лікар, що так і не дочекався, перестає чекати
       for (const h of heroes) {
         delete h.healWait;
         for (const [id, b] of Object.entries(h.buffs)) {
@@ -1126,23 +1291,43 @@
       }
     }
 
-    const win = aliveE().length === 0;
-    const draw = !win && aliveH().length > 0;
-    const many = foes.length > 1;
-    if (win) push({ who: "info", text: `${many ? "Усіх ворогів" : `«${foes[0].enemy.name}»`} переможено за ${round} раунд(ів).` });
-    else if (draw) push({ who: "info", text: `${many ? "Вороги втекли" : `«${foes[0].enemy.name}» втік`} із бою.` });
-    else push({ who: "info", text: multi ? "Уся група загинула…" : `${heroes[0].name} ${heroes[0].g === "f" ? "загинула" : "загинув"}…` });
+    // Кінець бою: переможець, Хелла після ліміту раундів, підсумок
+    function finish() {
+      const win = awakeE().length === 0;
+      // Ліміт раундів без переможця: Хелла добиває героїв — це звичайна поразка
+      const hel = !win && aliveH().length > 0;
+      if (hel) {
+        for (const h of heroes) h.hp = 0;
+        push({ who: "info", text: "Хелла своїми чарами допомогла вбити героїв." });
+      }
+      const draw = false;
+      const many = foes.length > 1;
+      if (win) push({ who: "info", text: `${many ? "Усіх ворогів" : `«${foes[0].enemy.name}»`} переможено за ${round} раунд(ів).` });
+      else if (heroes.some(h => h.away && h.hp > 0)) push({ who: "info", text: "Герої в зоні бою загинули…" });
+      else push({ who: "info", text: multi ? "Уся група загинула…" : `${heroes[0].name} ${heroes[0].g === "f" ? "загинула" : "загинув"}…` });
 
-    return {
-      win, draw, rounds: round, events,
-      heroes: heroes.map(h => ({ hp: h.hp, mp: h.mp, dead: h.hp <= 0 })),
-      enemies: foes.map(f => ({ id: f.id, champion: f.champion, name: f.enemy.name, exp: f.enemy.exp,
-                                maxHp: f.enemy.stats.hp, maxMp: f.enemy.stats.mp || 0 })),   // (bestiary.js — здоров'я й мана в боях)
-      enemyIds: foes.map(f => f.id),
-      heroHp: heroes[0].hp, heroMp: heroes[0].mp,
-      champion: foes.some(f => f.champion),
-      heroPos, foePos, corner, obstacles, foeSpread
-    };
+      return {
+        win, draw, hel, rounds: round, events,
+        heroes: heroes.map(h => ({ hp: h.hp, mp: h.mp, dead: h.hp <= 0 })),
+        enemies: foes.map(f => ({ id: f.id, champion: f.champion, name: f.enemy.name, exp: f.enemy.exp,
+                                  maxHp: f.enemy.stats.hp, maxMp: f.enemy.stats.mp || 0 })),   // (bestiary.js — здоров'я й мана в боях)
+        enemyIds: foes.map(f => f.id),
+        heroHp: heroes[0].hp, heroMp: heroes[0].mp,
+        champion: foes.some(f => f.champion),
+        heroPos, foePos, corner, obstacles, foeSpread,
+        ...(opts.asleep ? { asleep: foes.map(f => !!f.asleep && f.hp > 0) } : {}),
+        ...(opts.away ? { away: heroes.map(h => !!h.away) } : {})
+      };
+    }
+
+    const api = { heroes, foes, events, push, going, runRound, finish, join, wake, sees, chainOf, zoneAt, get round() { return round; } };
+    return api;
+  }
+
+  function simulatePartyBattle(members, enemySpecs, opts = {}) {
+    const battle = createBattle(members, enemySpecs, opts);
+    while (battle.going() && battle.round < MAX_ROUNDS) battle.runRound();
+    return battle.finish();
   }
 
   // Бій одного героя з одним ворогом
@@ -1186,7 +1371,7 @@
     return specs;
   }
 
-  Object.assign(RPG, { simulateBattle, simulatePartyBattle, rollEnemyGroup, enemyGroupCap, enemyGroupRange, roundSchedule, BATTLE_START_DISTANCE: START_DISTANCE,
+  Object.assign(RPG, { simulateBattle, simulatePartyBattle, createBattle, HERO_VISION, ENEMY_VISION, visionOf, rollEnemyGroup, enemyGroupCap, enemyGroupRange, roundSchedule, speedBand, SPEED_BANDS, BATTLE_START_DISTANCE: START_DISTANCE, BATTLE_MAX_TURNS: MAX_TURNS, BATTLE_MAX_ROUNDS: MAX_ROUNDS,
     BATTLE_FIELD: FIELD, placeHeroes, placeFoes, placeFoesLocal, fieldPos, zoneCells, randomCorner, oppositeCorner,
     makeObstacles, hasSight, OBSTACLE_KINDS, placeFoesFree });
 })(window.RPG);

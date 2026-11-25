@@ -858,6 +858,13 @@ main > a.location { display: flex; margin-bottom: 10px; }
 .bf-cell.ob-bush  { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cellipse cx='12.5' cy='14' rx='7' ry='5.5' fill='%23000' opacity='.4'/%3E%3Ccircle cx='9' cy='13' r='4.2' fill='%232f5a26'/%3E%3Ccircle cx='15' cy='13.5' r='4' fill='%232a5122'/%3E%3Ccircle cx='12' cy='10' r='4.2' fill='%23386a2c'/%3E%3Ccircle cx='11' cy='8.8' r='1.6' fill='%234c8a3a'/%3E%3C/svg%3E"); }
 .bf-cell.ob-stone { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cellipse cx='9.5' cy='15' rx='5' ry='3' fill='%23000' opacity='.4'/%3E%3Cpath d='M5 14 L7 10 L12 9.5 L14 13 L11 16 L6 16Z' fill='%236a655e'/%3E%3Cpath d='M7 10 L12 9.5 L11 12 L7.5 12Z' fill='%238a847c'/%3E%3Cpath d='M14 17 L16 14.5 L19.5 15 L20 18 L16.5 19.5Z' fill='%235d5851'/%3E%3Cpath d='M15 8 L17 6.5 L19 8 L17.5 10Z' fill='%23625d56'/%3E%3C/svg%3E"); }
 .bf-frame.is-dark .bf-cell.bf-obst { filter: saturate(.45) brightness(.8); }
+/* Поле бою світу (етап 8б, page-game.js → artField / artCell / frameField): підлога — плитка на 3 клітинки, притемнена,
+   щоб іконки героїв і ворогів читались; перешкоди — картинки світу; край — плитка світу (втричі товща за смугу). */
+.bfield.bf-art {
+  background: linear-gradient(rgba(0, 0, 0, .3), rgba(0, 0, 0, .3)), var(--bf-floor) 0 0 / calc(300% / var(--bf-cols, 30)) auto repeat;
+}
+.bf-cell.bf-obst.bf-art, .bf-cell.bf-obst.is-low.bf-art { background-size: 100% 100%; }
+.bf-frame.bf-art .bf-edge { background-image: var(--bf-edge-img); background-size: calc(var(--bf-edge) * 3) auto; animation: none; }
 
 /* Вікно розстановки */
 .formation-dialog {
@@ -874,6 +881,18 @@ main > a.location { display: flex; margin-bottom: 10px; }
 .formation-dialog h3 { margin: 0 36px 6px 0; color: var(--gold); font-family: var(--font-head); }
 .formation-dialog > .note { margin: 0 0 10px; }
 .formation-dialog .dialog-actions { flex-wrap: wrap; margin-top: 10px; }
+/* Поле-лабіринт (page-game.js → mazeGrid): видно лише поточну зону; клітинки інших зон — темні */
+.bf-cell.bf-zone-on  { background: rgba(255, 255, 255, .05); }
+.bf-cell.bf-zone-off { background: rgba(0, 0, 0, .45); }
+.bf-cell.bf-obst.bf-zone-off { opacity: .45; }
+.bf-cell.bf-boss.bf-zone-on { background: rgba(160, 70, 200, .16); }
+.bf-unit.is-asleep { opacity: .55; filter: grayscale(.6) brightness(.85); }
+.bf-unit.is-away { opacity: .6; }
+.bf-unit[hidden] { display: none; }
+/* Порядок ходьби у вікні розстановки */
+.walk-order { margin: 0 0 var(--space-sm, 8px); padding-left: 1.6em; }
+.walk-order li { display: flex; align-items: center; gap: 8px; min-height: 32px; }
+.walk-order .walk-up { padding: 2px 10px; }
 .bfield.is-setup .bf-cell.bf-hero { cursor: pointer; }
 .bfield.is-setup.has-pick .bf-cell.bf-hero { background: rgba(90, 150, 230, .2); }
 .bfield.is-setup .bf-cell.bf-hero.is-over { background: rgba(201, 163, 90, .45); }
@@ -1156,7 +1175,7 @@ main > a.location { display: flex; margin-bottom: 10px; }
 .log.log-status .log-text { display: inline; }
 .log.log-status .log-title { font-weight: 800; }
 .log.log-status:hover { border-color: var(--gold); }
-/* Невелика кнопка «Журнал бою» */
+/* Невелика кнопка «Журнал» */
 .actions .wf.journal-btn, .journal-btn { min-height: 0; padding: 4px 10px; font-size: .85rem; align-self: center; }
 #journal-btn-place { align-self: flex-start; }
 
@@ -1165,7 +1184,17 @@ main > a.location { display: flex; margin-bottom: 10px; }
 .journal-wrap { position: relative; }
 .log.journal-list { height: min(62vh, 560px); padding-right: 44px; scroll-behavior: smooth; }
 .journal-list li { animation: none; }
-.journal-list.is-empty::before { content: "Журнал порожній — тут з'являться ваші бої та нагороди."; display: block; padding: 8px; color: var(--text-dim); font-style: italic; }
+.journal-list[data-tab="events"].is-empty::before { content: "Журнал порожній — тут з'являться здобич, переходи, нагороди й сповіщення."; display: block; padding: 8px; color: var(--text-dim); font-style: italic; }
+.journal-list[data-tab="battles"].is-empty::before { content: "Журнал бою порожній — тут з'являться ваші бої."; display: block; padding: 8px; color: var(--text-dim); font-style: italic; }
+/* Вкладки «Журнал подій» / «Журнал бою» */
+.journal-tabs { display: flex; gap: 6px; margin: 0 0 8px; flex-wrap: wrap; }
+.journal-tab { padding: 5px 12px; border: 1px solid var(--border-color); border-radius: 6px; background: transparent; color: inherit; cursor: pointer; font: inherit; font-size: .88rem; }
+.journal-tab:hover, .journal-tab:focus-visible { border-color: var(--gold); }
+.journal-tab.is-on { border-color: var(--gold); color: var(--gold); font-weight: 800; }
+/* Посилання «Бій №N» у журналі подій */
+.journal-battle-link { padding: 0; border: 0; background: none; color: var(--gold); font: inherit; font-weight: 800; letter-spacing: inherit; text-transform: inherit; text-decoration: underline; cursor: pointer; }
+.journal-battle-link:hover, .journal-battle-link:focus-visible { filter: brightness(1.25); }
+.journal-list .log-entry-head.is-target { background: rgba(255, 200, 80, .12); }
 .journal-list .log-entry-head {
   display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap;
   margin-top: 12px; padding: 6px 6px 2px; border-top: 2px solid var(--border-color); border-radius: 0;
@@ -1175,6 +1204,7 @@ main > a.location { display: flex; margin-bottom: 10px; }
 .log-entry-num { font-variant-numeric: tabular-nums; opacity: .7; }
 .log-entry-kind { font-weight: 800; color: var(--gold); }
 .log-entry-head.is-quest .log-entry-kind { color: #8fe08f; }
+.log-entry-head.is-move .log-entry-kind { color: var(--text-dim); }
 .log-entry-at { margin-left: auto; font-variant-numeric: tabular-nums; }
 /* Дві малі стрілки: на самий верх / в самий низ */
 .journal-nav { position: absolute; right: 8px; bottom: 8px; display: flex; flex-direction: column; gap: 6px; }

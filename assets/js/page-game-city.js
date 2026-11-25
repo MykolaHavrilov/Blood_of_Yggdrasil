@@ -222,7 +222,7 @@
             side.append(el("p", "temper-cost", `Ціна: ${fmtNum(c.gold)} золота (у вас ${fmtNum(save.character.gold)}) · Небесна іскра ×${c.sparks} (є ${fmtNum(sparks)})`));
             // що зміниться
             const now = RPG.itemStats(info.ref), next = RPG.itemStats({ ...info.ref, up: c.to });
-            const lines = RPG.temperKeys(info.ref.id).filter(k => now[k] != null)
+            const lines = RPG.temperKeys(info.ref).filter(k => now[k] != null)
               .map(k => `${RPG.STAT_NAMES[k] || k}: ${RPG.ui.fmtStat(k, now[k])} → ${RPG.ui.fmtStat(k, next[k])}`);
             side.append(el("p", "temper-gain", lines.join(" · ") + ` (разом +${Math.round(RPG.temperPct(c.to))}% до основи)`));
             if (RPG.TEMPER_MILESTONES.includes(c.to)) side.append(el("p", "temper-mile", `+${c.to} — віха: одна випадкова характеристика речі отримає ще +15%.`));

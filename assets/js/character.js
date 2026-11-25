@@ -109,8 +109,10 @@ function createNewSave(name, classId = DEFAULT_CLASS, gender = null) {
 // база професії + приріст за рівні + атрибути + екіпірування
 
 const STAT_KEYS = ["hp", "mp", "attack", "magic", "defense", "magicDefense", "speed",
-                   "crit", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct", "skillPct", "critDmg", "attackPct"];
-const DECIMAL_KEYS = ["crit", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct"];
+                   "crit", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct", "skillPct", "critDmg", "attackPct",
+                   "atkPct", "magicPct", "defensePct", "magicDefensePct", "hpPct", "hpRegenPct", "mpRegenPct"];
+const DECIMAL_KEYS = ["crit", "dodge", "blockPhys", "blockMag", "hpRegen", "mpRegen", "attackSpeedPct",
+                      "atkPct", "magicPct", "defensePct", "magicDefensePct", "hpPct", "hpRegenPct", "mpRegenPct"];
 
 // trace — необов'язковий об'єкт: якщо передати {}, у нього запишеться, з чого склалась
 // кожна характеристика: trace[key] = [{ label, value }] (сторінка «Персонаж» → підказки «i»).
@@ -210,6 +212,13 @@ function calcStats(save, trace = null) {
     change("magic", "Артефакти: атака, %", v => v * (1 + p / 100));
   }
 
+  // Слоти речей (rarity.js → слоти характеристик): «Атака, %», «Захист, %»… — до своєї характеристики
+  const ITEM_PCT = { atkPct: "attack", magicPct: "magic", defensePct: "defense", magicDefensePct: "magicDefense", hpPct: "hp" };
+  for (const [k, stat] of Object.entries(ITEM_PCT)) {
+    const p = stats[k];
+    if (p) change(stat, `Речі: ${RPG.STAT_NAMES?.[k] || k}`, v => v * (1 + p / 100));
+  }
+
   // Межі (STAT_CAP) діють один раз — у самому кінці, на суму з усіх джерел, і з легендарними речами теж
   const CAP = RPG.STAT_CAP;
   for (const key in legendOver) change(key, "Легендарні речі", v => v + legendOver[key]);
@@ -273,17 +282,28 @@ function fullHeal(save) {
 }
 
 // ---------- Відновлення HP / MP з часом ----------
-// Кожні 10 секунд: hpRegen / mpRegen (залежать від атрибутів і речей).
+// Відновлення за 1 секунду (рішення користувача 2026-11-25): HP = Витривалість × 0,2 + Сила × 0,1 + числові бонуси
+//   + «Відновлення HP, % за 1 с» × макс. HP / 100; MP = Дух × 0,2 + Інтелект × 0,1 + бонуси + «Відновлення MP, %» × макс. MP / 100.
+// Діє і в бою (battle.js: 1 раунд = 1 секунда), і поза боєм — тиком кожні 10 секунд (×10).
 // У Домівці додатково +5% від максимуму HP і MP.
 // Рахується і за час, поки гра була закрита.
 // Повертає true, якщо щось змінилося (тоді варто зберегти гру).
 
+// s — результат calcStats
+function regenPerSecond(s) {
+  return {
+    hp: (s.hpRegen || 0) + s.hp * (s.hpRegenPct || 0) / 100,
+    mp: (s.mpRegen || 0) + s.mp * (s.mpRegenPct || 0) / 100
+  };
+}
+
 function regenPerTick(save) {
   const s = calcStats(save);
   const home = RPG.getLocation(save.location.map).type === "home";
+  const sec = REGEN_TICK_MS / 1000, ps = regenPerSecond(s);
   return {
-    hp: s.hpRegen + (home ? s.hp * HOME_REGEN_PCT : 0),
-    mp: s.mpRegen + (home ? s.mp * HOME_REGEN_PCT : 0),
+    hp: ps.hp * sec + (home ? s.hp * HOME_REGEN_PCT : 0),
+    mp: ps.mp * sec + (home ? s.mp * HOME_REGEN_PCT : 0),
     home
   };
 }
@@ -2053,7 +2073,7 @@ Object.assign(RPG, {
   QUEUE_SIZE, BUY_MAX, GRACE, graceCost, graceLeft, buyGrace, attrResetCost, attrResetPrice, investedAttrs, resetAttrs,
   REGEN_TICK_MS, HOME_REGEN_PCT, RESPAWN_HP_PCT, DEATH_EXP_MULT, ITEM_LOSS_CHANCE, maxItemLoss,
   createNewSave, calcStats, speedCap, clampHpMp, fullHeal, FEMALE_NAMES, heroGender, gw,
-  regenPerTick, applyRegen, msToNextRegen,
+  regenPerTick, regenPerSecond, applyRegen, msToNextRegen,
   addExp, levelCap, levelCapOpen, LEVEL_CAP_BASE, LEVEL_CAP_PROFESSION, LEVEL_CAP_SECOND, LEVEL_CAP_BOSS, LEVEL_CAP_SECOND_BOSS, removeExp, deathExpPenalty, DEATH_MAX_PCT, expProgress, applyDeath, markFallen, pray,
   HC_LIVES, livesOf, loseLife, noteVictory, noteKills, noteExpedition, hardcoreScore, heroLevels, locLevel, locRankOf, SCORE,
   getClassChanges, changeClass,

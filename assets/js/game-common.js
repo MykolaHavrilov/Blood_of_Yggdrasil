@@ -54,7 +54,7 @@
   }
 
   function fmtStat(key, value) {
-    const pct = ["crit", "dodge", "blockPhys", "blockMag", "skillPct", "critDmg", "attackPct"].includes(key);
+    const pct = RPG.isPctKey ? RPG.isPctKey(key) : ["crit", "dodge", "blockPhys", "blockMag", "skillPct", "critDmg", "attackPct"].includes(key);
     return fmtNum(value) + (pct ? "%" : "");
   }
 
@@ -124,10 +124,10 @@
     box._t = setTimeout(remove, MSG_SEC * 1000);
     host.append(box);
     while (host.children.length > MSG_MAX) { clearTimeout(host.firstChild._t); host.firstChild.remove(); }
-    // Текст — і в журнал бою (запис «Сповіщення»; зберігається разом із грою)
+    // Текст — і в журнал подій (запис «Сповіщення»; зберігається разом із грою)
     const save = RPG.currentSave;
     if (save && RPG.journalAdd) {
-      if (!noticeRec || !(save.battleLog || []).includes(noticeRec)) noticeRec = RPG.journalAdd(save, { kind: "notice", lines: [] });
+      if (!noticeRec || !(save.eventLog || []).includes(noticeRec)) noticeRec = RPG.journalAdd(save, { kind: "notice", lines: [] });
       noticeRec.lines.push(["info", text, isError ? "m" : ""]);
     }
     raiseToasts();   // показати (або підняти на самий верх, якщо після попереднього повідомлення відкрився діалог)
@@ -505,7 +505,7 @@
     return head;
   }
 
-  // ---------- Журнал бою: нагорода за завдання (journal.js) ----------
+  // ---------- Журнал подій: нагорода за завдання (journal.js) ----------
   function journalReward(save, title, text) {
     if (RPG.journalAdd) RPG.journalAdd(save, { kind: "quest", lines: [["title", title, "win"], ["info", text]] });
   }
@@ -1797,7 +1797,7 @@
   // ref — ID предмета або екземпляр з рідкістю
   function describeStats(ref) {
     return Object.entries(RPG.itemStats(ref))
-      .map(([k, v]) => `${RPG.STAT_NAMES[k] || k} ${v > 0 ? "+" : ""}${v}`)
+      .map(([k, v]) => `${RPG.STAT_NAMES[k] || k} ${v > 0 ? "+" : ""}${fmtStat(k, v)}`)
       .join(", ");
   }
 
@@ -1856,7 +1856,7 @@
       .filter(Boolean).join(" · ") || (info.done ? "нічого" : "поки нічого");
     if (!info.done) {
       box.append(el("h3", null, `Експедиція: ${info.loc.name}${region ? " · " + region : ""}`));
-      box.append(el("p", null, `${names}. Лишилось ${fmtHours(info.leftMs)} · боїв ${info.battles}, перемог ${info.wins}` +
+      box.append(el("p", null, `${names}. Лишилось ${fmtHours(info.leftMs)} · проходів лабіринту ${info.runs}, боїв ${info.battles}, перемог ${info.wins}` +
         (info.champions ? `, чемпіонів ${info.champions}` : "") + ` · у строю ${info.alive}/${info.total}.`));
       box.append(el("p", "note keep", `Здобич: ${lootLine}.`));
       if (potLine) box.append(el("p", "note keep", `Випито зілля: ${potLine}.`));
@@ -1872,7 +1872,7 @@
     }
     const title = info.reason === "wiped" ? "Експедиція загинула" : info.reason === "recalled" ? "Групу відкликано з експедиції" : "Експедиція повернулась";
     box.append(el("h3", null, `${title}: ${info.loc.name}${region ? " · " + region : ""}`));
-    box.append(el("p", null, `Боїв ${info.battles}, перемог ${info.wins}` + (info.champions ? `, чемпіонів ${info.champions}` : "") + "."));
+    box.append(el("p", null, `Проходів лабіринту ${info.runs}, боїв ${info.battles}, перемог ${info.wins}` + (info.champions ? `, чемпіонів ${info.champions}` : "") + "."));
     const expLines = info.team.map(ms => {
       const id = RPG.memberIdOf(save, ms), lv = bag.levels[id];
       return `${ms.character.name}: +${fmtNum(bag.exp[id] || 0)} EXP` + (lv && lv[1] > lv[0] ? `, рівень ${lv[0]} → ${lv[1]}` : "") +
@@ -1946,12 +1946,16 @@
     if (opts.onLock && ref && typeof ref === "object" && !item.locked && !item.quest) head.append(lockButton(ref, opts.onLock));
     box.append(head);
 
-    const stats = Object.entries(RPG.itemStats(ref));
+    // Слот 1 — першим; однакові значення слотів 2–9 уже складені (rarity.js → itemStatLines).
+    // Гартування — після значення окремо: «Атака, % — 12% +3%» (колір — .tip-temper)
+    const stats = RPG.itemStatLines ? RPG.itemStatLines(ref) : Object.entries(RPG.itemStats(ref)).map(([key, value]) => ({ key, value, gain: 0 }));
     if (stats.length) {
       const list = el("ul", "tip-stats");
-      for (const [k, v] of stats) {
+      for (const { key: k, value: v, gain: g } of stats) {
         const li = el("li", v < 0 ? "is-neg" : null);
-        li.append(el("span", null, RPG.STAT_NAMES[k] || k), el("b", null, (v > 0 ? "+" : "") + v));
+        const b = el("b", null, (v > 0 ? "+" : "") + fmtStat(k, g > 0 ? Math.round((v - g) * 10) / 10 : v));
+        if (g > 0) b.append(" ", el("span", "tip-temper", "+" + fmtStat(k, g)));
+        li.append(el("span", null, RPG.STAT_NAMES[k] || k), b);
         list.append(li);
       }
       box.append(list);

@@ -1,12 +1,14 @@
 // ============================================================
 // dungeon.js — ДАНЖІ (опис данжів — data/enemies.js → DUNGEONS)
 //
-// Стан данжу в сейві: save.dungeon = { id, stage: 1..3, foes: ["slime", ...] }
-//   stage — номер бою, foes — ID ворогів поточного бою.
+// Стан данжу в сейві: save.dungeon = { id, stage: 1, foes: [ID боса], darkSoul? }
+//   Данж — один прохід лабіринту (maze.js → simulateMaze; етап 7, Лабіринт_задум.md): зони з ворогами з pool,
+//   у кімнаті Б — бос (або Темна душа) і приспішники. foes — бос (його видно до бою).
+//   Старі сейви зі stage 2–3 (данж був із 3 боїв) — стають stage 1, ключ не пропадає.
 //   Поки save.dungeon є — зілля пити не можна (character.js → useItem) і відновлення
 //   HP/MP з часом не працює (character.js → applyRegen); лікують лише навички,
 //   а сторінка локації показує данж замість звичайних боїв.
-// Вихід із локації, загибель, втеча ворогів або перемога в 3-му бою — данж закінчується.
+// Вихід із локації, загибель або прохід лабіринту до кінця — данж закінчується.
 //
 // КИШЕНЯ ДЛЯ КЛЮЧІВ: ключі не займають клітинок інвентаря, а лежать окремо:
 //   save.keys = { key_cave_secret: 12, ... } — до KEY_MAX (1000) кожного виду.
@@ -17,7 +19,7 @@
 // ============================================================
 
 (function (RPG) {
-  const STAGES = 3;
+  const STAGES = 1;   // данж — один прохід лабіринту (до етапу 7 — 3 бої)
   const KEY_MAX = 1000;            // найбільше ключів одного виду в кишені
 
   const pick = arr => arr[Math.floor(Math.random() * arr.length)];
@@ -134,6 +136,7 @@
   // n — живих героїв у бою: ворогів не менше, ніж героїв (бій 1 — n, бій 2 — не менше 3; бос — один, але сильніший за групу)
   function stageFoes(d, stage, n = 1, darkSoul = false) {
     n = Math.max(1, Math.min(6, n || 1));
+    if (stage >= STAGES) return [darkSoul && RPG.ENEMIES[darkSoulId(d.id)] ? darkSoulId(d.id) : d.boss];
     if (stage === 1) return Array.from({ length: n }, () => pick(d.pool));
     if (stage === 2) {
       const size = Math.max(3, n);
@@ -150,6 +153,7 @@
     const s = save.dungeon;
     if (!s) return null;
     const d = getDungeon(s.id);
+    if (d && s.stage > STAGES && s.stage <= 3) { s.stage = STAGES; s.foes = null; }   // старий данж із 3 боїв
     if (!d || save.location?.map !== d.location || !(s.stage >= 1 && s.stage <= STAGES)) {
       delete save.dungeon;
       return null;
@@ -171,8 +175,9 @@
     if (!useKey(save, d.key)) {
       return { ok: false, reason: `Потрібен ${RPG.ITEMS[d.key].name}. Його можна знайти під час «${d.explore}» (шанс ${Math.round(d.keyChance * 100)}% з кожного ворога).` };
     }
-    save.dungeon = { id: d.id, stage: 1, foes: stageFoes(d, 1, fighters(save)) };
+    save.dungeon = { id: d.id, stage: 1 };
     if (darkSoulPossible(d.id) && Math.random() < DARK_SOUL.chance) save.dungeon.darkSoul = true;   // жереб — одразу, у сейві
+    save.dungeon.foes = stageFoes(d, 1, fighters(save), save.dungeon.darkSoul);
     return { ok: true };
   }
 
@@ -188,26 +193,28 @@
 
   function leaveDungeon(save) { delete save.dungeon; }
 
-  // Множник сили ВСІХ ворогів данжу (боїв 1–3) за розміром групи — живих героїв у бою:
+  // Множник сили ВСІХ ворогів данжу за розміром групи — живих героїв, коли з'являються вороги зони:
   // здоров'я, атака, магія, захисти × множник (monstergear.js → equipFoes).
-  // Підібрано симуляцією (листопад 2026, після перерахунку ворогів): увесь данж (3 бої поспіль без зілля,
-  // по ворогу на кожного героя в 1-му бою, не менше 3 — у 2-му) проходять ≈35% спроб за будь-якого розміру групи.
-  // Герої: Темний ліс і Печера — Селяни рівня боса в синіх/фіолетових речах; Альвгейм — різні професії
-  // в повному професійному сеті (броня + зброя). Соло — < 1, бо бої 1–2 перед босом виснажують героя.
-  const ALF_POWER = { 1: 0.57, 2: 1.06, 3: 1.37, 4: 1.52, 5: 1.56, 6: 1.63 };
-  const VAN_POWER = { 1: 0.57, 2: 1.05, 3: 1.36, 4: 1.52, 5: 1.54, 6: 1.63 };   // Ванагейм (світ 4)
-  const SVART_POWER = VAN_POWER;                                               // Свартальвгейм (світ 5) — поки як у Ванагеймі
-  const JOT_POWER = VAN_POWER;                                                 // Йотунгейм (світ 6) — поки як у Ванагеймі
-  const MUSP_POWER = VAN_POWER;                                                // Муспельгейм (світ 7) — поки як у Ванагеймі
-  const ASG_POWER = VAN_POWER;                                                 // Асгард (світ 8) — поки як у Ванагеймі
-  const NIFL_POWER = VAN_POWER;                                                // Ніфльгейм і Хельгейм (світ 9) — поки як у Ванагеймі
+  // Етап 9 (24.11.2026, данж = прохід лабіринту: зони з ворогами з pool + бос у Б, без зілля; тимчасова межа швидкості ворогів 99):
+  // підібрано симуляцією tools/balance.js --maze --dungeons під цілі соло ≈ 5%, група з 6 ≈ 35% (між ними — плавно).
+  // Герої — свого рівня (рівня боса): світи 1–2 — речі тіру сині, далі — повний професійний сет епічний; група — танк + лікар + інші.
+  // Один рядок на світ (значення 2–5 згладжені).
+  // 25.11.2026 — перепідібрано після слотів характеристик речей і нових меж (вороги світів 4–9 сильніші — data/enemies.js,
+  // «ТРЕТІЙ ПЕРЕРАХУНОК») і після відновлення HP/MP у бою (1 раунд = 1 с); еталон з 3 світу — епічні речі зі слотами (по черзі професійний сет і речі тіру).
+  const START_POWER = { 1: 2.96, 2: 2.41, 3: 2.59, 4: 2.66, 5: 2.79, 6: 3.03 };
+  const DARK_POWER = { 1: 2.71, 2: 2.08, 3: 2.06, 4: 1.94, 5: 1.92, 6: 1.84 };
+  const ALF_POWER = { 1: 2.66, 2: 1.88, 3: 1.9, 4: 1.82, 5: 1.74, 6: 1.73 };
+  const VAN_POWER = { 1: 2.08, 2: 1.55, 3: 1.62, 4: 1.57, 5: 1.44, 6: 1.4 };
+  const SVART_POWER = { 1: 1.95, 2: 1.57, 3: 1.57, 4: 1.47, 5: 1.36, 6: 1.21 };
+  const JOT_POWER = { 1: 1.65, 2: 1.44, 3: 1.47, 4: 1.35, 5: 1.24, 6: 1.14 };
+  const MUSP_POWER = { 1: 1.68, 2: 1.45, 3: 1.47, 4: 1.36, 5: 1.22, 6: 1.07 };
+  const ASG_POWER = { 1: 1.5, 2: 1.4, 3: 1.4, 4: 1.32, 5: 1.13, 6: 0.97 };
+  const NIFL_POWER = { 1: 1.53, 2: 1.21, 3: 1.28, 4: 1.21, 5: 1.12, 6: 1.02 };
   // Трон Хелли (фінал гри): Хелла лише для повної групи — соло без знижки, групі — посилення (симуляція 2026-11-21:
   // герої 50 рів. в епічних речах — соло 0%, 2–3 героїв ≤ 5%, 4 — ≈20%, 5 — ≈28%, 6 — ≈53%)
-  const HEL_POWER = { 1: 1, 2: 1.15, 3: 1.3, 4: 1.45, 5: 1.4, 6: 1.35 };
+  const HEL_POWER = { 1: 1, 2: 1.15, 3: 1.3, 4: 0.75, 5: 0.8, 6: 0.77 };   // 25.11.2026 (слоти речей, відновлення в бою): 4 — ≈17%, 5 — ≈33%, 6 — ≈40–58%, соло–3 — 0%
   const GROUP_POWER = {
-    cave_secret: { 1: 0.82, 2: 1.3,  3: 1.7,  4: 1.9,  5: 2.1,  6: 2.15 },
-    web_nest:    { 1: 0.48, 2: 0.71, 3: 0.88, 4: 0.92, 5: 0.93, 6: 0.94 },
-    dark_throne: { 1: 0.54, 2: 0.78, 3: 0.96, 4: 1.04, 5: 1.07, 6: 1.08 },
+    cave_secret: START_POWER, web_nest: DARK_POWER, dark_throne: DARK_POWER,
     alf_moth_nest: ALF_POWER, alf_lake_depths: ALF_POWER, alf_rot_garden: ALF_POWER,
     alf_dawn_spire: ALF_POWER, alf_freyr_throne: ALF_POWER, alf_beli_barrow: ALF_POWER,
     van_ghost_ship: VAN_POWER, van_volva_hut: VAN_POWER, van_mead_cellar: VAN_POWER,
@@ -233,6 +240,7 @@
   // Опис бою stage для гравця
   function dungeonStageText(d, stage) {
     const names = d.pool.map(id => RPG.ENEMIES[id].name);
+    if (stage === 0) return `у зонах — ${names.join(", ")} (стільки, скільки героїв, з GS як у вашої групи)`;
     if (stage === 1) return `випадкові вороги (${names.join(" / ")}) — по одному на кожного героя, з GS як у вашої групи`;
     if (stage === 2) return `три вороги або більше — не менше, ніж героїв (${names.join(", ")}), з GS як у вашої групи`;
     return `бос «${RPG.ENEMIES[d.boss].name}»`;
@@ -244,6 +252,15 @@
     const a = activeDungeon(save);
     if (!a) return [];
     return a.foes.map(id => ({ id, champion: false, dungeonGs: !RPG.ENEMIES[id]?.boss, dungeon: a.id }));
+  }
+
+  // Для проходу лабіринту (maze.js → simulateMaze): вороги зони — n випадкових із pool (GS як у групи), у Б — бос
+  function dungeonMazeOpts(save) {
+    const a = activeDungeon(save);
+    if (!a) return null;
+    const spec = id => ({ id, champion: false, dungeonGs: !RPG.ENEMIES[id]?.boss, dungeon: a.id });
+    return { boss: spec(a.foes[0]), dungeon: true,
+      pickFoes: (zone, n) => Array.from({ length: n }, () => spec(pick(a.pool))) };
   }
 
   // Ключі зі «Обстеження»: шанс keyChance з кожного переможеного ворога з pool — у кишеню.
@@ -262,7 +279,7 @@
 
   Object.assign(RPG, {
     DUNGEON_STAGES: STAGES, KEY_MAX, keyAmount, addKeys, useKey, keyPocket, migrateKeys, DUNGEON_GROUP_POWER: GROUP_POWER, dungeonGroupPower: groupPower, DUNGEON_POOL_TEXT: dungeonStageText, getDungeon, locationDungeon, keyCount, activeDungeon, openDungeon,
-    advanceDungeon, leaveDungeon, dungeonSpecs, rollKeyDrops,
+    advanceDungeon, leaveDungeon, dungeonSpecs, dungeonMazeOpts, rollKeyDrops,
     DARK_SOUL, darkSoulId, darkSoulPossible, isDarkSoul, emberChance, darkSoulReward
   });
 })(window.RPG);

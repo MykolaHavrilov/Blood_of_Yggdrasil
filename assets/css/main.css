@@ -633,6 +633,7 @@ p > .role-tags:first-child { margin-left: 0; margin-right: 4px; }
 .tip-stats li { display: flex; justify-content: space-between; gap: 8px; padding: 3px 8px; border-radius: 4px; background: rgba(255, 255, 255, .05); font-size: .85rem; }
 .tip-stats b { color: #8fe08f; font-variant-numeric: tabular-nums; }
 .tip-stats .is-neg b { color: #ff8a7a; }
+.tip-stats .tip-temper { color: #6fb8ff; font-weight: 600; }   /* гартування: на скільки посилено (rarity.js → itemStatLines) */
 .tip-effect { color: #8fe08f; font-weight: 600; }
 .tip-set { font-size: .85rem; }
 .tip-req { font-size: .82rem; color: var(--text-dim); }

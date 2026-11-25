@@ -44,7 +44,10 @@
     crit: "auxiliary", dodge: "auxiliary", speed: "auxiliary",
     blockPhys: "auxiliary", blockMag: "auxiliary",
     hpRegen: "auxiliary", mpRegen: "auxiliary", attackSpeedPct: "auxiliary", skillPct: "auxiliary", critDmg: "auxiliary",
-    attackPct: "primary"      // «Атака, %» артефактів — і атака, і сила магії (1% ≈ основна характеристика)
+    attackPct: "primary",     // «Атака й сила магії, %» артефактів (1% ≈ основна характеристика)
+    // Слоти речей (rarity.js): % до однієї характеристики — як основна; відновлення, % — допоміжна
+    atkPct: "primary", magicPct: "primary", defensePct: "primary", magicDefensePct: "primary", hpPct: "primary",
+    hpRegenPct: "auxiliary", mpRegenPct: "auxiliary"
   };
 
   // Варіант 2 і 3: скільки «сирих» очок складають 1 одиницю
@@ -54,8 +57,8 @@
     mp: 6,        // 1 Інтелект дає 6 MP
     attack: 2,    // 1 Сила дає 2 атаки
     magic: 2,     // 1 Інтелект дає 2 сили магії
-    hpRegen: 0.5, // мінімальний крок відновлення
-    mpRegen: 0.5
+    hpRegen: 0.2, // відновлення за 1 с: 1 Витривалість дає 0,2
+    mpRegen: 0.2  // 1 Дух дає 0,2
   };
 
   // Варіант 3: додаткові бали за рідкість

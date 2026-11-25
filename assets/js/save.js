@@ -214,8 +214,14 @@
     const loc = RPG.LOCATIONS[save.location.map];
     if (!loc || loc.locked) save.location.map = RPG.DEFAULT_LOCATION;
     save.settings ??= { battleView: "stepByStep" };
-    // Журнал бою (journal.js): останні 100 подій
-    save.battleLog = Array.isArray(save.battleLog) ? save.battleLog.filter(r => r && Array.isArray(r.lines)).slice(-100) : [];
+    // Журнали (journal.js): журнал подій (500) і журнал бою (100 боїв); старий спільний журнал ділиться на два
+    save.battleLog = Array.isArray(save.battleLog) ? save.battleLog.filter(r => r && Array.isArray(r.lines)) : [];
+    if (RPG.migrateJournal) RPG.migrateJournal(save);
+    else if (!Array.isArray(save.eventLog)) save.battleLog = save.battleLog.slice(-100);   // сторінка без journal.js — поділить пізніше
+    if (Array.isArray(save.eventLog)) {
+      save.eventLog = save.eventLog.filter(r => r && Array.isArray(r.lines)).slice(-(RPG.EVENT_LOG_MAX || 500));
+      save.battleLog = save.battleLog.slice(-(RPG.BATTLE_LOG_MAX || 100));
+    }
     save.battleQueue ??= ["attack"];
     save.battleQueue = save.battleQueue.slice(0, RPG.QUEUE_SIZE || 6);
     if (!save.battleQueue.some(Boolean)) save.battleQueue = ["attack"];

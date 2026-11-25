@@ -10,9 +10,9 @@
 //                                    АБО 2 атрибути + 1 другорядна
 // 4 epic      — фіолетові, «Епічна»: ×1.3; 2 випадкові атрибути + 2–3 другорядні
 // 5 legendary — помаранчеві, «Легендарна»: ×1.5; 2–3 атрибути + 3–4 другорядні,
-//                                    крит/ухилення/швидкість додаються після першого ліміту (остаточні межі 100% / 60% / 250–450 — і для них)
+//                                    крит/ухилення/швидкість додаються після першого ліміту (остаточні межі 100% / 70% / 250–450 — і для них)
 //
-// «Сила криту, %» (critDmg) випадає лише на зброї та сережках (SECONDARY → only); межа — 250% (stats.js).
+// «Сила криту, %» (critDmg) випадає лише на зброї та сережках (SECONDARY → only); межа — 500% (stats.js).
 // Швидкість (speed) — лише взуття (там завжди один з бонусів), рукавиці, каблучки й амулет.
 //
 // Однакові бонуси, що випали двічі, складаються.
@@ -178,6 +178,88 @@
     return ref;
   }
 
+  // ---------- Слоти характеристик (рішення користувача 2026-11-25; таблиця «Речі — характеристики за рідкістю.xlsx» → data/itemslots.js) ----------
+  // Слотів: зламана 1, звичайна 4 (слоти 2–4 — кожен з шансом 45%, лише з бою чи кузні; з магазину — тільки слот 1),
+  // магічна 5, епічна 7, легендарна 9. Сила величин — за світом речі (рівень речі levelReq), а не за рідкістю
+  // (рішення користувача 2026-11-25): світи 1–2 (рівні 1–24) — 1, 3–5 (25–39) — 2, 6–7 (40–49) — 3, 8–9 (50+) — 4.
+  // Слот 1 — випадковий вид зі свого списку; величина — число речі (атака / захист…), а для відсоткових — з таблиці.
+  // Однакові значення слотів 2–9 складаються в одне (ref.aff); слот 1 — окремо (ref.s1, ref.s1v).
+  //   { id: "sword_t1", qty: 1, r: "epic", s1: "attack", aff: { crit: 25, hp: 18 } }
+  // Професійні комплекти — теж зі слотами. Речі зі старих сейвів (без s1) лишаються на старих правилах.
+  const SLOT_COUNT = { broken: 1, common: 4, magic: 5, epic: 7, legendary: 9 };
+  const SLOT_POWER_BY_LEVEL = [[50, 4], [40, 3], [25, 2], [1, 1]];     // [від рівня речі, сила]
+  const PROF_POWER_CHANCE3 = 0.5;   // комплекти професій: шанс сили 3 (інакше 2)
+  function slotPower(id) {
+    const lvl = RPG.ITEMS[id]?.levelReq || 1;
+    return SLOT_POWER_BY_LEVEL.find(([from]) => lvl >= from)[1];
+  }
+  const COMMON_SLOT_CHANCE = 0.45;
+  const MAIN_FLAT = ["attack", "magic", "defense", "magicDefense", "hp", "mp"];
+  // Відсоткові характеристики (у підказці — зі знаком %; гартування — +0,5 за рівень)
+  const PCT_KEYS = ["crit", "dodge", "blockPhys", "blockMag", "skillPct", "critDmg", "attackPct",
+                    "atkPct", "magicPct", "defensePct", "magicDefensePct", "hpPct", "hpRegenPct", "mpRegenPct"];
+  const TEMPER_SLOT_FLAT = 5;     // слот 1, число: +5% за рівень гартування (понад звичайне гартування)
+  const TEMPER_SLOT_PCT = 0.5;    // слот 1, відсоток: +0,5% за рівень
+  const isPctKey = k => PCT_KEYS.includes(k);
+  const roundKey = (k, v) => (isPctKey(k) || DECIMAL_KEYS.includes(k)) ? Math.round(v * 10) / 10 : Math.round(v);
+
+  function slotKind(id) {
+    const it = RPG.ITEMS[id];
+    if (!it || !RPG.ITEM_SLOT_POOLS || it.rarityFixed) return null;
+    const k = it.type === "weapon" ? it.weaponType : it.type === "shield" ? "shield"
+      : it.type === "offhand" ? it.offType : (it.type === "armor" || it.type === "accessory") ? it.slot : null;
+    return RPG.ITEM_SLOT_POOLS[k] ? k : null;
+  }
+  function slotPools(id) { const k = slotKind(id); return k ? RPG.ITEM_SLOT_POOLS[k] : null; }
+  function usesSlots(ref) { return !!slotKind(refId(ref)) && (typeof ref === "string" || !!ref?.s1); }
+  // «Число речі» — найбільше з атаки / сили магії / захисту / магічного захисту
+  function mainNumber(item) {
+    const st = item.stats || {};
+    return Math.max(0, ...["attack", "magic", "defense", "magicDefense"].map(k => st[k] || 0));
+  }
+  // Величина слоту 1 з числа речі (null — береться з таблиці)
+  function s1Base(id, key) {
+    const item = RPG.ITEMS[id];
+    if (!item || !MAIN_FLAT.includes(key)) return null;
+    return (item.stats?.[key] || 0) > 0 ? item.stats[key] : Math.max(1, mainNumber(item));
+  }
+  function slotRoll(key, power, id, low = false) {
+    const def = RPG.ITEM_SLOT_VALUES?.[key];
+    if (!def) return 0;
+    const [a, b] = def.tiers[Math.max(1, Math.min(4, power)) - 1];
+    const step = (a % 1 || b % 1) ? 0.1 : 1;
+    let v = low ? a : rollRange([a, b], step);
+    if (def.grow) v *= levelScale(id);
+    return Math.max(step, roundKey(key, v));
+  }
+  function rollSlots(entry, opts) {
+    const pools = slotPools(entry.id);
+    const r = entry.r;
+    // Комплект професії (рішення користувача 2026-11-25): сила величин — 2 або 3 з шансом 50/50, кидається раз на річ (ref.sp)
+    const pw = RPG.ITEMS[entry.id]?.profSet ? (entry.sp = Math.random() < PROF_POWER_CHANCE3 ? 3 : 2) : slotPower(entry.id);
+    entry.s1 = opts.fromShop ? pools[0][0] : pick(pools[0]);
+    if (s1Base(entry.id, entry.s1) == null) entry.s1v = slotRoll(entry.s1, pw, entry.id, !!opts.fromShop);
+    if (r === "broken" || opts.fromShop) return entry;
+    const aff = {};
+    // Комплект професії: «свої» характеристики (data/profsets.js → PROF_SLOT_FAVOR) — у PROF_SLOT_FAVOR_WEIGHT разів частіше
+    const item = RPG.ITEMS[entry.id];
+    const favor = item?.profSet ? new Set(RPG.PROF_SLOT_FAVOR?.[(item.classes || [])[0]] || []) : null;
+    const pickSlot = pool => {
+      if (!favor || !favor.size || !pool.some(k => favor.has(k))) return pick(pool);
+      const w = RPG.PROF_SLOT_FAVOR_WEIGHT || 4, ws = pool.map(k => favor.has(k) ? w : 1);
+      let x = Math.random() * ws.reduce((a, b) => a + b, 0);
+      for (let i = 0; i < pool.length; i++) if ((x -= ws[i]) < 0) return pool[i];
+      return pool[pool.length - 1];
+    };
+    for (let s = 1; s < SLOT_COUNT[r]; s++) {
+      if (r === "common" && Math.random() >= COMMON_SLOT_CHANCE) continue;
+      const key = pickSlot(pools[s]);
+      addTo(aff, key, slotRoll(key, pw, entry.id));
+    }
+    if (Object.keys(aff).length) entry.aff = aff;
+    return entry;
+  }
+
   // Створити екземпляр речі (для інвентаря/скрині)
   function makeItem(id, r = "common", opts = {}) {
     if (!hasRarity(id)) return { id, qty: 1 };
@@ -188,8 +270,11 @@
     }
     if (!RARITIES[r]) r = "common";
     const entry = { id, qty: 1, r };
-    const aff = rollAffixes(id, r, opts.fromShop);
-    if (Object.keys(aff).length) entry.aff = aff;
+    if (slotKind(id)) rollSlots(entry, opts);
+    else {
+      const aff = rollAffixes(id, r, opts.fromShop);
+      if (Object.keys(aff).length) entry.aff = aff;
+    }
     rollSockets(entry);
     return entry;
   }
@@ -248,6 +333,7 @@
   function temperLevel(ref) { return typeof ref === "object" && ref ? Math.max(0, Math.min(TEMPER_MAX, ref.up | 0)) : 0; }
   function temperPct(level) { return level > 0 ? TEMPER_TOTAL[Math.min(TEMPER_MAX, level) - 1] : 0; }
   function temperKeys(id) {
+    if (id && typeof id === "object") { if (usesSlots(id)) return [id.s1]; id = id.id; }
     const item = RPG.ITEMS[id];
     if (!item) return [];
     const st = item.stats || {};
@@ -258,7 +344,7 @@
     if (item.type === "offhand") { const k = has(["attack", "magic"]); return k.length ? k : has(["defense", "magicDefense"]); }
     return [];
   }
-  function canTemper(id) { return hasRarity(id) && temperKeys(id).length > 0; }
+  function canTemper(id) { const i = refId(id); return hasRarity(i) && (!!slotKind(i) || temperKeys(i).length > 0); }
   function addTemper(out, ref) {
     const up = temperLevel(ref);
     if (!up && !ref?.upB) return out;
@@ -279,12 +365,60 @@
 
   // ---------- Підсумкові характеристики речі ----------
   // Повертає { stats } — усі бонуси речі з урахуванням рідкості
+  // Нові речі (слоти): частини окремо — слот 1 і складені слоти 2–9, з гартуванням
+  //   { s1: { key, value, gain }, rest: { key: value }, restGain: { key: gain } }
+  function slotParts(ref) {
+    const id = refId(ref);
+    const item = RPG.ITEMS[id];
+    const r = rarityOf(ref);
+    const obj = typeof ref === "object" ? ref : null;
+    const key = obj ? ref.s1 : slotPools(id)[0][0];
+    const b = s1Base(id, key);
+    let v0 = b != null ? b * RARITIES[r].coreMult
+      : (obj && ref.s1v != null ? ref.s1v * (r === "broken" ? RARITIES.broken.coreMult : 1) : slotRoll(key, (obj && ref.sp) || slotPower(id), id, true));
+    v0 = b != null ? Math.max(1, Math.round(v0)) : roundKey(key, v0);
+    const up = temperLevel(ref);
+    let v = v0;
+    if (up) {
+      const p = temperPct(up) / 100;
+      v = isPctKey(key) ? v0 * (1 + p) + TEMPER_SLOT_PCT * up : v0 * (1 + p + TEMPER_SLOT_FLAT * up / 100);
+      v = roundKey(key, v);
+    }
+    const rest = {};
+    if (obj && r !== "broken") for (const k in ref.aff || {}) addTo(rest, k, ref.aff[k]);
+    const restGain = {};
+    let s1gain = v - v0;
+    // Віхи +3 / +6 / +10: +15% до основи обраної характеристики (основа — без гартування)
+    for (const [k, n] of Object.entries(obj?.upB || {})) {
+      if (k === key) { const add = roundKey(k, v0 * TEMPER_MILESTONE_PCT / 100 * n); v = roundKey(k, v + add); s1gain = roundKey(k, s1gain + add); }
+      else if (rest[k]) { const add = roundKey(k, rest[k] * TEMPER_MILESTONE_PCT / 100 * n); rest[k] = roundKey(k, rest[k] + add); restGain[k] = add; }
+    }
+    return { s1: { key, value: v, gain: roundKey(key, s1gain) }, rest, restGain, item };
+  }
+
+  // Рядки опису речі: [{ key, value, gain }] — слот 1 першим, далі решта; gain — скільки додало гартування
+  function itemStatLines(ref) {
+    if (usesSlots(ref)) {
+      const p = slotParts(ref);
+      return [p.s1, ...Object.entries(p.rest).map(([key, value]) => ({ key, value, gain: p.restGain[key] || 0 }))];
+    }
+    const now = itemStats(ref);
+    const plain = typeof ref === "object" && ref ? itemStats({ ...ref, up: 0, upB: undefined }) : now;
+    return Object.entries(now).map(([key, value]) => ({ key, value, gain: roundKey(key, value - (plain[key] || 0)) }));
+  }
+
   function itemStats(ref) {
     const id = refId(ref);
     const item = RPG.ITEMS[id];
     if (!item) return {};
     const base = item.stats || {};
     if (!hasRarity(id)) return { ...base };
+    if (usesSlots(ref)) {
+      const p = slotParts(ref);
+      const out = { ...p.rest };
+      addTo(out, p.s1.key, p.s1.value);
+      return out;
+    }
 
     const r = rarityOf(ref);
     const core = CORE_KEYS[item.type] || [];
@@ -301,6 +435,8 @@
     if (r !== "broken" && typeof ref === "object") {
       for (const key in ref.aff || {}) addTo(out, key, ref.aff[key]);
     }
+    // Старі правила: hpRegen / mpRegen речі й бонусів записані «за 10 с» — відновлення тепер за 1 с (2026-11-25), ділимо на 10
+    for (const k of ["hpRegen", "mpRegen"]) if (out[k] > 0) out[k] = Math.max(0.1, Math.round(out[k]) / 10);
     return typeof ref === "object" ? addTemper(out, ref) : out;
   }
 
@@ -380,7 +516,8 @@
     lootFilter, isFilteredOut, lootFilterActive,
     RARITY_ORDER, RARITIES, DROP_WEIGHTS, LUCK, LEGEND_OVERCAP, CORE_KEYS,
     refId, hasRarity, rarityOf, makeItem, rollRarity, newLuck,
-    itemStats, itemName, itemFullName,
+    itemStats, itemStatLines, itemName, itemFullName,
+    SLOT_COUNT, SLOT_POWER_BY_LEVEL, slotPower, COMMON_SLOT_CHANCE, PCT_KEYS, TEMPER_SLOT_FLAT, TEMPER_SLOT_PCT, slotKind, usesSlots, isPctKey,
     TEMPER_MAX, TEMPER_STEP, TEMPER_TOTAL, TEMPER_MILESTONES, TEMPER_MILESTONE_PCT, temperLevel, temperPct, temperKeys, canTemper, itemIconRef, refSellPrice, runesSellPrice, normalizeRef, SOCKETS, rollSockets
   });
 })(window.RPG);
