@@ -136,12 +136,12 @@
     }
     return true;
   }
-  // Скільки зілль цього рецепта вистачить інгредієнтів (не більше MAX_BATCH)
-  function alchMaxCount(save, rec) {
+  // Скільки зілль цього рецепта вистачить інгредієнтів (не більше MAX_BATCH; all — без цієї межі, «МАКСИМУМ»)
+  function alchMaxCount(save, rec, all = false) {
     if (!rec) return 0;
-    let n = MAX_BATCH;
+    let n = all ? Infinity : MAX_BATCH;
     for (const [id, q] of [...rec.need, [rec.flask, 1]]) n = Math.min(n, Math.floor(countIng(save, id) / q));
-    return Math.max(0, n);
+    return Number.isFinite(n) ? Math.max(0, n) : 0;
   }
 
   // ---------- Казан станка ----------
@@ -169,9 +169,12 @@
     if (!rec) return { ok: false, reason: "Такого рецепта немає." };
     const open = alchTierOpen(save, rec.tier);
     if (!open.ok) return open;
-    count = Math.floor(Number(count));
-    if (!(count >= 1 && count <= MAX_BATCH)) return { ok: false, reason: `Варити можна від 1 до ${MAX_BATCH} зілль за раз.` };
-    if (alchMaxCount(save, rec) < count) return { ok: false, reason: "Не вистачає інгредієнтів." };
+    // count === "max" — «МАКСИМУМ»: усе, на що вистачає інгредієнтів (понад MAX_BATCH); час — як у звичайної варки
+    const all = count === "max";
+    count = all ? alchMaxCount(save, rec, true) : Math.floor(Number(count));
+    if (all && count < 1) return { ok: false, reason: "Не вистачає інгредієнтів." };
+    if (!(count >= 1 && (all || count <= MAX_BATCH))) return { ok: false, reason: `Варити можна від 1 до ${MAX_BATCH} зілль за раз.` };
+    if (alchMaxCount(save, rec, all) < count) return { ok: false, reason: "Не вистачає інгредієнтів." };
     for (const [id, q] of [...rec.need, [rec.flask, 1]]) takeIng(save, id, q * count);
     const unitMs = brewMs(rec.tier, alchState(save).level);
     RPG.rootSave(save).alchemy[station] = { potion, mode, count, unitMs, start: now, end: now + unitMs * count,

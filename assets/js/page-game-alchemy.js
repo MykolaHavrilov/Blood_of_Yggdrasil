@@ -69,7 +69,7 @@
       let timer = 0;
       const { dlg, closeBtn } = noticeDialog("alchemy-dialog rune-forge-dialog", () => { clearInterval(timer); renderAll(); });
       const recipes = RPG.alchRecipes();
-      let pickId = null, count = 1, note = null;
+      let pickId = null, count = 1, note = null, maxAll = false;   // maxAll — прапорець «МАКСИМУМ» (повзунок у крайньому правому положенні)
       // Перший відкритий рецепт, на який вистачає інгредієнтів, інакше — перший відкритий
       const openRecipes = recipes.filter(r => RPG.alchTierOpen(save, r.tier).ok);
       pickId = (openRecipes.find(r => RPG.alchMaxCount(save, r) > 0) || openRecipes[0] || recipes[0]).id;
@@ -100,6 +100,7 @@
         const n = busy ? st.brew.count : count;
         const open = RPG.alchTierOpen(save, rec.tier);
         const max = busy ? n : RPG.alchMaxCount(save, rec);
+        const maxFull = busy ? n : RPG.alchMaxCount(save, rec, true);   // без межі ALCH_MAX_BATCH — для «МАКСИМУМ»
         if (!busy) count = Math.min(Math.max(1, count), Math.max(1, max));
         const unitSec = busy ? st.brew.unitMs / 1000 : RPG.alchBrewSec(rec.tier, A.level);
 
@@ -121,7 +122,7 @@
           sel.append(grp);
         }
         sel.disabled = busy;
-        sel.addEventListener("change", () => { pickId = sel.value; count = 1; note = null; draw(); });
+        sel.addEventListener("change", () => { pickId = sel.value; count = 1; maxAll = false; note = null; draw(); });
         left.append(el("label", "alch-cap", "Зілля"), sel);
         left.append(el("p", "alch-recipe", `Тір ${rec.tier} · ${rec.mode === "upgrade" ? "покращення" : "пряма варка"} · одне зілля — ${secText(unitSec)}`));
         // повзунок: ліворуч 1, праворуч найбільше (з v0.9.7; раніше був справа наліво)
@@ -132,16 +133,27 @@
         range.setAttribute("aria-label", "Скільки зілль варити");
         const total = el("p", "alch-total");
         const go = button("", "wf wf-button alch-go", async () => {
-          const r = RPG.alchStartBrew(save, station, rec.id, count);
+          const r = RPG.alchStartBrew(save, station, rec.id, maxAll ? "max" : count);
           if (!r.ok) { note = { text: r.reason, error: true }; draw(); return; }
           await RPG.saveGame(save);
-          pickId = rec.id;
+          pickId = rec.id; maxAll = false;
           note = { text: `Казан закипів: ${potionName(r.potion)} ×${r.count}. Буде готово за ${clock(r.ms)}.` };
           draw();
         });
+        // «МАКСИМУМ»: з'являється, коли повзунок у найбільшому положенні; ставить у варку все, на що вистачає інгредієнтів
+        const maxBox = el("label", "alch-maxall");
+        const maxChk = el("input"); maxChk.type = "checkbox";
+        const maxTxt = el("span");
+        maxBox.append(maxChk, maxTxt);
+        maxChk.addEventListener("change", () => { maxAll = maxChk.checked; updQty(); });
         const updQty = () => {
-          const k = busy ? n : count;
-          qtyCap.textContent = `Кількість: ${k}` + (busy ? "" : ` (можна до ${Math.min(RPG.ALCH_MAX_BATCH, max)})`);
+          const atEnd = !busy && max >= 1 && count >= Number(range.max);
+          if (!atEnd) maxAll = false;
+          maxBox.hidden = !atEnd;
+          maxChk.checked = maxAll;
+          maxTxt.textContent = `МАКСИМУМ — усе, на що вистачає інгредієнтів (×${maxFull})`;
+          const k = busy ? n : (maxAll ? maxFull : count);
+          qtyCap.textContent = `Кількість: ${k}` + (busy ? "" : maxAll ? " (максимум)" : ` (можна до ${Math.min(RPG.ALCH_MAX_BATCH, max)})`);
           total.textContent = `Час варки: ${clock(unitSec * 1000 * k)}`;
           go.textContent = `Варити ×${k}`;
           go.disabled = busy || !open.ok || max < 1;
@@ -150,7 +162,7 @@
         range.addEventListener("input", () => { count = Number(range.value); updQty(); });
         const ends = el("div", "alch-range-ends");
         ends.append(el("span", null, "1"), el("span", null, String(range.max)));
-        left.append(qtyCap, range, ends, total);
+        left.append(qtyCap, range, ends, maxBox, total);
         if (!open.ok) left.append(el("p", "status is-error", open.reason));
         else if (!busy && max < 1) left.append(el("p", "status", "Не вистачає інгредієнтів — дивіться комірки праворуч."));
         left.append(go);
@@ -192,7 +204,7 @@
         const right = el("div", "alch-slots");
         function drawSlots() {
           right.innerHTML = "";
-          const k = busy ? n : count;
+          const k = busy ? n : (maxAll ? maxFull : count);
           for (const [id, q] of [...rec.need, [rec.flask, 1]]) {
             const need = q * k, have = RPG.alchCountIng(save, id);
             const wrap = el("div", "alch-slot-wrap" + (id === rec.flask ? " is-flask" : ""));

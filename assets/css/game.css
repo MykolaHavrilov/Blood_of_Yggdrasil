@@ -1703,6 +1703,9 @@ main > a.location { display: flex; margin-bottom: 10px; }
 .alch-select option:disabled { color: #777; }
 .alch-recipe, .alch-total { margin: 0; font-size: .9rem; }
 .alch-range { width: 100%; accent-color: var(--accent); }
+.alch-maxall { display: flex; align-items: center; gap: 6px; font-size: .85rem; cursor: pointer; }
+.alch-maxall[hidden] { display: none; }
+.alch-maxall input { width: 16px; height: 16px; margin: 0; }
 .alch-range-ends { display: flex; justify-content: space-between; font-size: .75rem; color: var(--text-dim); margin-top: -4px; }
 .alch-go { justify-self: start; margin-top: 4px; }
 .alch-mid { display: grid; justify-items: center; gap: 6px; }

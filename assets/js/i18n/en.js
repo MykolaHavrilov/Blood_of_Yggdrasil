@@ -4082,6 +4082,12 @@ RPG.I18N.en = {
 "Тривалість експедиції, годин": "Expedition duration, hours"
 },
 "patterns": [
+["^МАКСИМУМ — усе, на що вистачає інгредієнтів \\(×(\\d+)\\)$",
+"MAXIMUM — everything the ingredients allow (×$1)",
+1,
+0,
+"МАКСИМУМ — "
+],
 ["^Тривалість: (\\d+) год\\.$",
 "Duration: $1 h",
 1,
