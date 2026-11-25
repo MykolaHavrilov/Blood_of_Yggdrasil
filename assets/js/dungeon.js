@@ -201,7 +201,10 @@
   // Один рядок на світ (значення 2–5 згладжені).
   // 25.11.2026 — перепідібрано після слотів характеристик речей і нових меж (вороги світів 4–9 сильніші — data/enemies.js,
   // «ТРЕТІЙ ПЕРЕРАХУНОК») і після відновлення HP/MP у бою (1 раунд = 1 с); еталон з 3 світу — епічні речі зі слотами (по черзі професійний сет і речі тіру).
-  const START_POWER = { 1: 2.96, 2: 2.41, 3: 2.59, 4: 2.66, 5: 2.79, 6: 3.03 };
+  // 1 світ (Гардарика, данж «Таємниці печери»), 25.11.2026 — рішення користувача: еталон — СЕЛЯНИ (професія лише з 15 рівня),
+  //   група з 6 селян 13 рівня в змішаних речах (білі/сині/епічні + 1–2 легендарні) — ≈35–40%. Рядок ×0,52 (був 2,96…3,03)
+  //   і межа GS ворогів (DUNGEON_GS_CAP нижче): епічні й легендарні речі селян більше не посилюють ворогів.
+  const START_POWER = { 1: 1.54, 2: 1.25, 3: 1.35, 4: 1.38, 5: 1.45, 6: 1.58 };
   const DARK_POWER = { 1: 2.71, 2: 2.08, 3: 2.06, 4: 1.94, 5: 1.92, 6: 1.84 };
   const ALF_POWER = { 1: 2.66, 2: 1.88, 3: 1.9, 4: 1.82, 5: 1.74, 6: 1.73 };
   const VAN_POWER = { 1: 2.08, 2: 1.55, 3: 1.62, 4: 1.57, 5: 1.44, 6: 1.4 };
@@ -230,6 +233,13 @@
     nifl_border_mist: NIFL_POWER, nifl_elivagar_rivers: NIFL_POWER, nifl_hvergelmir_spring: NIFL_POWER, nifl_roots_deep: NIFL_POWER, nifl_nidafjoll_peaks: NIFL_POWER, nifl_nidhogg_nest: NIFL_POWER,
     nifl_gjallarbru_bridge: NIFL_POWER, nifl_gnipahellir_cave: NIFL_POWER, nifl_helgrind_gate: NIFL_POWER, nifl_nastrond_shore: NIFL_POWER, nifl_eljudnir_hall: NIFL_POWER, nifl_throne_hall: HEL_POWER
   };
+  // Межа GS групи, під який підбираються речі ворогів данжу (monstergear.js → equipFoes): світ → GS.
+  // 1 світ — GS селянина 13 рівня в синіх речах свого тіру (tools: equipmentScore → 39).
+  const DUNGEON_GS_CAP = { start: 39 };
+  function dungeonGsCap(dungeonId) {
+    const d = RPG.DUNGEONS?.[dungeonId];
+    return d ? (RPG.DUNGEON_GS_CAP || DUNGEON_GS_CAP)[RPG.LOCATIONS?.[d.location]?.region || "start"] ?? null : null;
+  }
   function groupPower(dungeonId, size) {
     const row = (RPG.DUNGEON_GROUP_POWER || GROUP_POWER)[dungeonId];
     if (!row) return 1;
@@ -278,7 +288,7 @@
   }
 
   Object.assign(RPG, {
-    DUNGEON_STAGES: STAGES, KEY_MAX, keyAmount, addKeys, useKey, keyPocket, migrateKeys, DUNGEON_GROUP_POWER: GROUP_POWER, dungeonGroupPower: groupPower, DUNGEON_POOL_TEXT: dungeonStageText, getDungeon, locationDungeon, keyCount, activeDungeon, openDungeon,
+    DUNGEON_STAGES: STAGES, KEY_MAX, keyAmount, addKeys, useKey, keyPocket, migrateKeys, DUNGEON_GROUP_POWER: GROUP_POWER, dungeonGroupPower: groupPower, DUNGEON_GS_CAP, dungeonGsCap, DUNGEON_POOL_TEXT: dungeonStageText, getDungeon, locationDungeon, keyCount, activeDungeon, openDungeon,
     advanceDungeon, leaveDungeon, dungeonSpecs, dungeonMazeOpts, rollKeyDrops,
     DARK_SOUL, darkSoulId, darkSoulPossible, isDarkSoul, emberChance, darkSoulReward
   });

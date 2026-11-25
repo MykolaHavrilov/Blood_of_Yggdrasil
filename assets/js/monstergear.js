@@ -212,9 +212,12 @@
   // Додати спорядження до специфікацій ворогів [{ id, champion }] під групу героїв.
   // Повторний виклик перекидає речі, лише якщо GS групи змінився.
   function equipFoes(specs, members) {
-    const pGs = partyGs(members);
-    const lGs = leaderGs(members);
+    const pGs0 = partyGs(members);
+    const lGs0 = leaderGs(members);
     for (const spec of specs || []) {
+      // данж із межею GS (dungeon.js → DUNGEON_GS_CAP, 1 світ): речі групи понад межу ворогів не посилюють
+      const cap = spec.dungeon && RPG.dungeonGsCap ? RPG.dungeonGsCap(spec.dungeon) : null;
+      const pGs = cap != null ? Math.min(pGs0, cap) : pGs0, lGs = cap != null ? Math.min(lGs0, cap) : lGs0;
       // Бос — множник за речами першого героя; у данжі — ще й за розміром групи (dungeon.js)
       const group = spec.dungeon && RPG.dungeonGroupPower ? RPG.dungeonGroupPower(spec.dungeon, (members || []).filter(Boolean).length) : 1;
       // spec.power — додатковий множник (експедиції: expedition.js → EXP_POWER)
