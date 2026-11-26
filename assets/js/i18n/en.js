@@ -4103,7 +4103,19 @@ RPG.I18N.en = {
 "Четверта печать Свартальвгейму зламана": "The fourth seal of Svartalfheim is broken",
 "П'ята печать зламана — горно Брокка й Ейтрі відчинено": "The fifth seal is broken — the forge of Brokkr and Eitri is opened",
 "Шоста печать Свартальвгейму зламана": "The sixth seal of Svartalfheim is broken",
-"Сьома печать зламана — Свартальвгейм звільнено": "The seventh seal is broken — Svartalfheim is freed"
+"Сьома печать зламана — Свартальвгейм звільнено": "The seventh seal is broken — Svartalfheim is freed",
+"Глава VI. Земля велетнів": "Chapter VI. The Land of Giants",
+"Над Свартальвгеймом": "Above Svartalfheim",
+"Витяжна шахта двергів вивела Перунових дітей із жару кузень у сніги Йотунгейму — землю велетнів, старших за самих богів. Йотуни ніколи не любили асів, і Хеллі не довелося довго їх умовляти: тролі перекрили перевали, Тьяцці знову кружляє над Тримгеймом, Ангрбода в Залізному лісі чекає своїх онуків, а на краю світу з моря піднімає голову Світовий Змій Йормунганд — Хелла шепоче йому, що Рагнарьок близько.": "The dwarves' ventilation shaft led Perun's children out of the heat of the forges into the snows of Jotunheim — the land of giants, older than the gods themselves. The jötnar never loved the Aesir, and Hel did not have to persuade them for long: trolls have blocked the passes, Þjazi circles over Thrymheim again, Angrboða waits for her grandchildren in the Iron Forest, and at the edge of the world the World Serpent Jörmungandr raises his head from the sea — Hel whispers to him that Ragnarök is near.",
+"Коли Світовий Змій пішов на дно, море біля берега вперше за багато місяців стихло, а сніг на перевалах падав уже просто сніг — без шепоту Хелли. Велетні Йотунгейму не стали друзями богів: вони лише мовчки дивилися зі скель, як діти Перуна спускаються до води. Та цього разу ніхто з них не підняв палиці. А з туману, без весляра й без вітру, виплив корабель із нігтів мерців — Нагльфар. Він пливе туди, куди треба Хеллі: на південь, через море, у Муспельгейм, де вогняні велетні Сурта кують зброю для кінця світу. Глава шоста закрита.": "When the World Serpent sank to the bottom, the sea by the shore grew calm for the first time in many months, and the snow on the passes fell as mere snow — without Hel's whisper. The giants of Jotunheim did not become friends of the gods: they only watched in silence from the cliffs as the children of Perun went down to the water. But this time none of them raised a club. And out of the mist, with no oarsman and no wind, sailed a ship made of dead men's nails — Naglfar. It sails wherever Hel needs it: south, across the sea, to Muspelheim, where Surtr's fire giants forge weapons for the end of the world. Chapter six is closed.",
+"Перша печать Йотунгейму зламана": "The first seal of Jotunheim is broken",
+"Друга печать Йотунгейму зламана": "The second seal of Jotunheim is broken",
+"Третя печать Йотунгейму зламана": "The third seal of Jotunheim is broken",
+"Четверта печать Йотунгейму зламана": "The fourth seal of Jotunheim is broken",
+"П'ята печать Йотунгейму зламана": "The fifth seal of Jotunheim is broken",
+"Шоста печать зламана — ілюзії Утгарда розвіяно": "The sixth seal is broken — the illusions of Utgard are dispelled",
+"Сьома печать Йотунгейму зламана": "The seventh seal of Jotunheim is broken",
+"Восьма печать зламана — Йотунгейм звільнено": "The eighth seal is broken — Jotunheim is freed"
 },
 "patterns": [
 ["^МАКСИМУМ — усе, на що вистачає інгредієнтів \\(×(\\d+)\\)$",

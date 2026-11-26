@@ -127,6 +127,50 @@ RPG.I18N.en.chronicle = {
       "The furnace breathed iron and clay as the overseer dwarves laid into Mökkurkálfi's chest the heart Hel had given — a block of ice from Niflheim. " +
       "The giant rose, and the vault of the forge groaned. Once he had been frightened of Thor. Now there was no fear in him — only cold. " +
       `${h.many ? list(h.names) : h.names[0]} stood against the avalanche of clay for ${h.rounds} round(s), and every step of the giant knocked them off their feet. ` +
-      `The last blow was struck by ${h.blow} — the icy heart cracked, and Mökkurkálfi crumbled into the raw clay he had been moulded from.`
+      `The last blow was struck by ${h.blow} — the icy heart cracked, and Mökkurkálfi crumbled into the raw clay he had been moulded from.`,
+    // ---------- Chapter VI. Jotunheim ----------
+    jot_troll_cave: (h, list) =>
+      `Beneath the pass the trolls piled the bones of those who never reached Jotunheim — and ${h.many ? list(h.names) : h.names[0]} walked over them as over shingle. ` +
+      "In the deepest hall, on a heap of plunder, the Troll Chieftain rose with a club torn out of the ground along with a whole pine. He roared — and an avalanche broke loose from the peak above the cave. " +
+      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and the chieftain collapsed onto his treasures, while the trolls that were left fled into the gorges.`,
+    jot_eagle_nest: (h, list) =>
+      `On the top of the eagle's crag, in a nest of broken masts and spears, sat a gigantic eagle — and ${h.many ? list(h.names) : h.names[0]} at once recognised Þjazi in him. ` +
+      "Once he stole Iðunn and her apples; now Hel had promised him eternal youth even without them. The storm of his wings knocked them down, his talons seized them and carried them over the abyss. " +
+      `The battle lasted ${h.rounds} round(s), until ${h.blow} clipped his wing. The eagle fell onto the rock — and rose as a giant again, old and weary, never to fly again.`,
+    jot_angrboda_lair: (h, list) =>
+      "The iron trees of Járnviðr wove a vault over the lair, and yellow eyes watched from behind every trunk. " +
+      `Angrboða, mother of Fenrir, Jörmungandr and Hel herself, came out unarmed: "You are killing my grandchildren. Now I shall watch ${h.many ? "all of you" : "you"} die." ` +
+      "Wolves lunged from every side, iron roots wound around their legs. " +
+      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and the giantess sank down among the roots, and her wolves howled the way one howls for a mother.`,
+    jot_thrym_hoard: (h, list) =>
+      "Beneath the Court of Thrym, eight leagues under the earth, lay an empty treasury — Mjölnir was once hidden here. Þrymr, King of the Thurses, sat at the edge of the empty place with a golden sceptre " +
+      "and did not trust guests: the last bride under a wedding veil had turned out to be Thor. " +
+      `${h.many ? list(h.names) : h.names[0]} had not said a word before the king threw himself into battle. ` +
+      `For ${h.rounds} round(s) the sceptre struck like a hammer, until ${h.blow} knocked it out of the royal hand. Þrymr fell to his knees and laughed: "Fooled again."`,
+    jot_stone_heart: (h, list) =>
+      "In the middle of the Stone Wasteland lay a giant's head bigger than a house — and suddenly it opened its eyes. Hrungnir, whose heart and head are of stone, rose again, gathering himself out of boulders. " +
+      "Thor once shattered him with his hammer; now Thor was not there. " +
+      (h.many
+        ? `${list(h.names)} struck at stone that made blades bounce off for ${h.rounds} round(s), and every time the giant's flint whetstone struck sparks from their shields. At last ${h.blow} hit the three-cornered heart of stone — `
+        : `${h.names[0]} struck at stone that made blades bounce off for ${h.rounds} round(s), and every time the giant's flint whetstone struck sparks from ${h.g1("his", "her")} shield, until at last ${h.g1("he", "she")} hit the three-cornered heart of stone — `) +
+      "and Hrungnir crumbled, this time into sand.",
+    jot_hall_of_illusions: (h, list) =>
+      "Beyond the gate between two stone faces the walls of the hall moved, and the floor was now ice, now sea. Útgarða-Loki laughed from his throne: " +
+      "\"Drink from my horn! Outrun my thought! Lift my cat!\" " +
+      "The horn drew the sea into itself, the cat turned out to be the Serpent, and every blow struck emptiness. " +
+      `For ${h.rounds} round(s) ${h.many ? list(h.names) : h.names[0]} fought what was not there, until ${h.blow} closed ${h.gb("his", "her")} eyes — and struck true at random. ` +
+      "The hall fell apart like a dream, and for the first time Útgarða-Loki did not laugh.",
+    jot_hymir_cauldron: (h, list) =>
+      "In an icy cave above the bay hung a cauldron a mile deep. Hymir, who once went fishing with Thor, had no intention of giving it up a second time. " +
+      "He looked — and the pillars of the cave cracked from a single glance. " +
+      (h.many
+        ? `An icy fist, a blow of the cauldron, frost from the deep — ${list(h.names)} held out for ${h.rounds} round(s). The last blow was struck by ${h.blow} — and the giant fell onto the ice, `
+        : `An icy fist, a blow of the cauldron, frost from the deep — ${h.names[0]} withstood it all for ${h.rounds} round(s) and finally brought the giant down onto the ice, `) +
+      "and the cauldron, swaying, rang out over all Jotunheim like a bell.",
+    jot_serpent_ring: (h, list) =>
+      "Where the Serpent bites its own tail, the sea boiled with poison. Jörmungandr raised his head above the waves — scales as large as shields, eyes in which all of Midgard was reflected. " +
+      "Hel was calling him ashore, and he was coming. " +
+      `${h.many ? list(h.names) : h.names[0]} stood at the edge of the world for ${h.rounds} round(s): the tail smashed the cliffs, the coils squeezed the air, the poison burned their shields. ` +
+      `The last blow was struck by ${h.blow} — and the Serpent withdrew into the deep and bit his tail once more. The ring of the world closed. Ragnarök did not come — this time.`
   }
 };
