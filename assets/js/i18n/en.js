@@ -4092,7 +4092,18 @@ RPG.I18N.en = {
 "Шоста печать зламана — Ванагейм звільнено": "The sixth seal is broken — Vanaheim is freed",
 "Глава VII": "Chapter VII",
 "Глава VIII": "Chapter VIII",
-"Глава IX": "Chapter IX"
+"Глава IX": "Chapter IX",
+"Глава V. Горна Свартальвгейму": "Chapter V. The Forges of Svartalfheim",
+"Під корінням Іггдрасиля": "Beneath the Roots of Yggdrasil",
+"Затоплена штольня з Бухти Ран вивела Перунових дітей під землю — у Свартгард, останнє вільне місто під корінням Іггдрасиля. Його вирубали два народи, що споконвіку не терпіли один одного: свартальви, які ріжуть камінь і тінь, і дверги-ковалі, які приборкали вогонь. Усе навколо Хелла забрала собі: у копальнях плетуть кокони павуки, Князь свартальвів присягнув їй на обсидіановому шпилі, братів Брокка й Ейтрі вона замкнула в їхній же кузні, а в найглибшій печі ліпить заново глиняного велетня Мьоккуркальві.": "The Flooded Adit from Rán's Bay led Perun's children underground — to Svartgard, the last free city beneath the roots of Yggdrasil. It was carved out by two peoples who have never been able to stand each other: the svartálfar, who cut stone and shadow, and the dwarf smiths, who tamed fire. Hel has taken everything around it for herself: in the mines spiders weave their cocoons, the Prince of the Svartálfar swore to her atop the obsidian spire, the brothers Brokkr and Eitri she locked inside their own forge, and in the deepest furnace she is moulding anew the clay giant Mökkurkálfi.",
+"Коли крижане серце Мьоккуркальві тріснуло, по всьому Свартгарду загули міхи. Горна, що роками стояли холодними, спалахнули знову, у Чорних кварталах свартальви зірвали фіолетові прапори, а брати Брокк і Ейтрі вперше за довгий час ударили молотами в лад — так, що почули навіть у Палаці королів. Дверги й свартальви, які споконвіку не терпіли один одного, того вечора пили з одного рогу. Та в склепінні кузні тріснула стара кладка, і крізь витяжну шахту двергів потягло снігом і крижаним вітром. Нагорі лежить Йотунгейм — земля велетнів, де турси й тролі вже присягнули Хеллі. Глава п'ята закрита.": "When Mökkurkálfi's icy heart cracked, bellows roared all across Svartgard. Forges that had stood cold for years blazed up again, in the Black Quarters the svartálfar tore down the violet banners, and the brothers Brokkr and Eitri, for the first time in a long while, struck their hammers in time — so loudly that it was heard even in the Palace of the Kings. Dwarves and svartálfar, who have never been able to stand each other, drank from one horn that evening. But old masonry cracked in the vault of the forge, and through the dwarves' ventilation shaft came a draught of snow and icy wind. Above lies Jotunheim — the land of giants, where the thurses and trolls have already sworn to Hel. Chapter five is closed.",
+"Перша печать Свартальвгейму зламана": "The first seal of Svartalfheim is broken",
+"Друга печать Свартальвгейму зламана": "The second seal of Svartalfheim is broken",
+"Третя печать зламана — Чорні квартали звільнено": "The third seal is broken — the Black Quarters are freed",
+"Четверта печать Свартальвгейму зламана": "The fourth seal of Svartalfheim is broken",
+"П'ята печать зламана — горно Брокка й Ейтрі відчинено": "The fifth seal is broken — the forge of Brokkr and Eitri is opened",
+"Шоста печать Свартальвгейму зламана": "The sixth seal of Svartalfheim is broken",
+"Сьома печать зламана — Свартальвгейм звільнено": "The seventh seal is broken — Svartalfheim is freed"
 },
 "patterns": [
 ["^МАКСИМУМ — усе, на що вистачає інгредієнтів \\(×(\\d+)\\)$",

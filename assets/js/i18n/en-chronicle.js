@@ -89,6 +89,44 @@ RPG.I18N.en.chronicle = {
     van_ran_hall: (h, list) =>
       "At low tide the sea parted, and stairs led down to a hall lit by the gold of the drowned. Among the nets sat Rán — the goddess of the sea whom Hel had made her warden. " +
       `She cast her net, and the water in the hall grew heavy as earth on a grave. ${h.many ? list(h.names) : h.names[0]} tore at its knots for ${h.rounds} round(s). ` +
-      `The last blow was struck by ${h.blow} — and the net that held half the sea came apart, and Hel's spell with it.`
+      `The last blow was struck by ${h.blow} — and the net that held half the sea came apart, and Hel's spell with it.`,
+    // ---------- Chapter V. Svartalfheim ----------
+    svart_matriarch_cocoon: (h, list) =>
+      "The rails broke off above the deepest shaft, and beyond them there was only web — from floor to vault. " +
+      `${h.many ? list(h.names) : h.names[0]} hacked through it until, above a heap of empty armour, a cocoon burst and the Cave Spider Matriarch crawled out. ` +
+      "She spat poison, sticky web bound their hands, and little spiders poured from under her belly. " +
+      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and the Matriarch fell onto her own cocoons, and for the first time in a hundred years the shafts grew quiet.`,
+    svart_andvari_hoard: (h, list) =>
+      `Through the wall of water ${h.many ? list(h.names) : h.names[0]} entered a grotto where gold lay knee-deep. ` +
+      "Andvari surfaced from the lake as a pike — and came ashore as a dwarf with a ring on his finger. " +
+      `"Take even one coin — and it will kill ${h.many ? "you all" : "you"}," he laughed. Golden fetters seized their feet, the curse burned their palms. ` +
+      `After ${h.rounds} round(s) ${h.blow} knocked the ring from his hand, and the dwarf vanished again into the black water. The gold stayed where it lay: this time no one took it.`,
+    svart_obsidian_spire: (h, list) =>
+      `Up the stairs of the obsidian spire, past svartálfar who no longer served their kings, ${h.many ? list(h.names) : h.names[0]} climbed to the very top. ` +
+      "The Prince of the Svartálfar stood in violet light with two blades and did not even turn: \"I swore to Hel so that my people would live. Now they live in darkness — but they live.\" " +
+      `Black flame licked the walls, shadows became fetters. The battle lasted ${h.rounds} round(s). ` +
+      `The last blow was struck by ${h.blow} — and the violet light in the windows of the Black Quarters began to go out, one after another.`,
+    svart_stone_hall: (h, list) =>
+      `In the Petrified Hall the statues of dwarves stood so close that ${h.many ? list(h.names) : h.names[0]} had to squeeze between them sideways. ` +
+      "Alvíss the All-Knowing waited beneath a crack in the vault. \"What is fire called in the tongue of giants? What is the sea called in the tongue of gods?\" he asked, " +
+      "and every word of his struck like lightning, while the riddle without an answer bound their tongues. " +
+      `The battle lasted ${h.rounds} round(s), until ${h.blow} answered — with a blow, not a word. Alvíss turned to stone again, this time forever.`,
+    svart_sealed_forge: (h, list) =>
+      "Behind the rune-carved doors breathed a forge that had not gone out since the making of the worlds. Before it stood Hel's Forged Guardian — a giant assembled from the shards of the swords, axes and shields of the fallen. " +
+      "When he stepped, the whole hall rang; when he struck with his hammer, anvils cracked. " +
+      (h.many
+        ? `${list(h.names)} fought for ${h.rounds} round(s), and the last blow was struck by ${h.blow}. `
+        : `${h.names[0]} fought for ${h.rounds} round(s), until bringing him down with the last blow. `) +
+      "The Guardian crumbled into a heap of scrap — and from behind the forge came the brothers Brokkr and Eitri, squinting at the light of their own fire.",
+    svart_rune_well: (h, list) =>
+      `The ledge above the abyss came to an end, and ${h.many ? list(h.names) : h.names[0]} descended to the bottom of the Well of Runes, where all the inscriptions met in a single circle. ` +
+      "The Keeper of the Runes raised his staff: \"No stranger shall read them.\" The rune of doom blazed, the rune of silence snuffed out spells on their lips. " +
+      `After ${h.rounds} round(s) ${h.blow} shattered his staff — and for the first time in a thousand years the Keeper remembered whom he served: the dwarves who wrote these runes. ` +
+      "He bowed his head, and the circle of runes shone steadily — for their own people now.",
+    svart_clay_heart: (h, list) =>
+      "The furnace breathed iron and clay as the overseer dwarves laid into Mökkurkálfi's chest the heart Hel had given — a block of ice from Niflheim. " +
+      "The giant rose, and the vault of the forge groaned. Once he had been frightened of Thor. Now there was no fear in him — only cold. " +
+      `${h.many ? list(h.names) : h.names[0]} stood against the avalanche of clay for ${h.rounds} round(s), and every step of the giant knocked them off their feet. ` +
+      `The last blow was struck by ${h.blow} — the icy heart cracked, and Mökkurkálfi crumbled into the raw clay he had been moulded from.`
   }
 };
