@@ -991,6 +991,12 @@
       const extra = { broken: "—", common: "—", magic: "1 магічний матеріал", epic: "1 епічний матеріал", legendary: "Небесна іскра" };
       frag.append(forgeBookTable(["Рідкість речі", "Назад", "Додатково"], Object.entries(RPG.DISASSEMBLE_SHARE).map(([r, sh]) =>
         [el("span", "rt-" + r, RPG.RARITIES[r].name), pc(sh), extra[r]])));
+    } else if (kind === "temper" && RPG.TEMPER_CHANCE && RPG.TEMPER_TOTAL) {
+      // Гартування в Горні Сварога (craft.js → TEMPER_CHANCE, rarity.js → TEMPER_TOTAL, TEMPER_MILESTONES)
+      const ms = RPG.TEMPER_MILESTONES || [];
+      frag.append(forgeBookTable(["Рівень", "Шанс", "Основа речі", "Іскор"], RPG.TEMPER_CHANCE.map((ch, i) =>
+        [`+${i + 1}` + (ms.includes(i + 1) ? " ✦" : ""), pc(ch), `+${Math.round(RPG.TEMPER_TOTAL[i])}%`, String(i + 1)])));
+      frag.append(el("p", "chronicle-note", "✦ — ще +15% до однієї випадкової характеристики речі."));
     }
     return frag;
   }
