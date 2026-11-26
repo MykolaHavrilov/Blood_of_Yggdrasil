@@ -257,6 +257,61 @@ RPG.I18N.en.chronicle = {
       `She did not rise when ${h.many ? list(h.names) : h.names[0]} climbed the stairs past her guards. ` +
       "\"You crossed eight worlds to come to me,\" she said. \"And never noticed that the whole way led down.\" " +
       `The gaze from the throne chilled to the bone, the touch of death snuffed out Perun's fire in the chest. The battle lasted ${h.rounds} round(s). ` +
-      `The last blow was struck by ${h.blow} — and Hel fell from Odin's throne. But instead of a body, green smoke settled on the marble — and drifted up into the sky, to the portal behind her.`
+      `The last blow was struck by ${h.blow} — and Hel fell from Odin's throne. But instead of a body, green smoke settled on the marble — and drifted up into the sky, to the portal behind her.`,
+    // ---------- Chapter IX. Niflheim and Helheim ----------
+    nifl_border_mist: (h, list) =>
+      "The mist at the border was as thick as milk, and in it stood the Warden of the Mist — the one who decides whom to let down below. He never let the living pass. " +
+      "\"Turn back,\" he said, and the mist closed in: the blinding fog hid hands from eyes, blows came out of nowhere. " +
+      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and the Warden melted into the mist, and the fog parted for the first time, revealing a path down.`,
+    nifl_elivagar_rivers: (h, list) =>
+      "On the bank of Élivágar sat Bergelmir — the only frost giant who survived the flood of Ymir's blood. He remembered how the gods killed his grandfather, and he had been waiting for exactly this war. " +
+      `"You have come from the gods," he muttered, rising. "So you are guilty too." ` +
+      "Ymir's blood gushed from under the ice, an icy flood swept over the bank. " +
+      `The battle lasted ${h.rounds} round(s), until ${h.blow} toppled the giant into his own frozen river. Bergelmir went under the ice in silence — just as he once crossed the flood of blood.`,
+    nifl_hvergelmir_spring: (h, list) =>
+      "Hvergelmir boiled, and spirits peered out of the steam. At the bottom, beneath the root, lay Grábakr — the serpent who gnaws the Tree together with Níðhöggr. " +
+      "Hel had promised him that the Tree would soon fall, and he gnawed in haste. The poison of the spring scalded the skin, the serpent's coils dragged them under. " +
+      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and Grábakr slid into the boiling water, and where he had gnawed, golden sap oozed from the bark.`,
+    nifl_roots_deep: (h, list) =>
+      "The root of Yggdrasil rose out of the ice, thicker than any fortress, and golden sap flowed from its wounds. " +
+      `Deep in the roots two serpents, Góinn and Móinn, were gnawing a passage to the very heart of the Tree — and ${h.many ? list(h.names) : h.names[0]} heard Yggdrasil groan beneath their teeth. ` +
+      "The serpents attacked together: while one bit, the other coiled. " +
+      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and both serpents, twisted into a single knot, went still among the roots. The Tree shuddered — and stopped groaning.`,
+    nifl_nidafjoll_peaks: (h, list) =>
+      "In the deepest gorge of Niðafjöll, where dawn never comes, Sváfnir and Ófnir were whispering — sorcerer serpents who cursed the Tree itself. " +
+      "Their whisper lulled to sleep, and every moment of sleep could be the last. Shed skins lay all around, and the serpents put them on again, healing their wounds. " +
+      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and the whisper broke off mid-word. For the first time in Niðafjöll one could hear the snow falling.`,
+    nifl_nidhogg_nest: (h, list) =>
+      "Níðhöggr's nest was laid with bones and scales as large as shields. " +
+      `The corpse-eating dragon raised his head from the root he had gnawed since the beginning of time and looked at the living the way one looks at prey. ` +
+      "The breath of rot knocked them down, the tail strike smashed the bones of the nest, and the corpse feast healed his wounds. " +
+      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and Níðhöggr collapsed onto his nest. For the first time since the making of the world, no one was gnawing the roots of Yggdrasil.`,
+    nifl_gjallarbru_bridge: (h, list) =>
+      "The golden bridge Gjallarbrú rang under every step, and beneath it drowned souls drifted with the ice. Móðguðr stood in the middle, as she has stood for as long as death has existed. " +
+      `"${h.many ? "Your names?" : "Your name?"}" she asked, and every name spoken grew heavy as a stone and dragged towards the Gjöll. ` +
+      `For ${h.rounds} round(s) the bridge rang with blows, until ${h.blow} forced the guardian to step back. ` +
+      `Móðguðr lowered her spear: "You are alive — and you are going down. I have never seen the like."`,
+    nifl_gnipahellir_cave: (h, list) =>
+      "Torn chains hung at the entrance of Gnipahellir, and green fire breathed out of the cave. " +
+      `Garmr, Hel's hound, blood on his chest, knew the scent of everyone who had set foot in Helheim alive — and he had caught ${h.many ? "theirs" : h.g1("his", "hers")} back at the bridge. His howl rolled across all nine worlds. ` +
+      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and Garmr fell beside his chains. The howling died away, and in the silence one could hear the dead weeping far below.`,
+    nifl_helgrind_gate: (h, list) =>
+      "The gate of Helheim — black iron between two stone corpses — had not opened for the living since the first death. " +
+      "The Gatekeeper of Helgrind held the key in a bony hand, and every blow of his was the blow of a closed gate. His stone skin turned blades, the key of the dead bound every movement. " +
+      `The battle lasted ${h.rounds} round(s), until ${h.blow} tore the key from the bony hand. The Gatekeeper crumbled, and the gate opened by itself — as if it had long been waiting.`,
+    nifl_nastrond_shore: (h, list) =>
+      "On the shore of Náströnd, where the doors face north and poison drips from the roof, waited the First Traitor — the first in the nine worlds to break an oath. " +
+      "Hel had set him over all the oath-breakers who came after. \"Everyone betrays sooner or later,\" he smiled. \"I was merely the first.\" " +
+      "The knife in the back came from where no one expected it, the poison from the roof burned their shoulders. " +
+      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — straight, into the chest, the way traitors never strike. The First Traitor fell, and the dark souls on the shore looked away for the first time.`,
+    nifl_eljudnir_hall: (h, list) =>
+      "In the halls of Éljúðnir captive einherjar waited on the dead, while Hel's servant and maid, Ganglati and Ganglöt, moved among them so slowly that they seemed motionless. " +
+      `But the moment ${h.many ? list(h.names) : h.names[0]} crossed the threshold, they became swift. Frozen time bound every movement, slow death crept through the veins. ` +
+      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and Hel's servants froze for good, while the einherjar set their trays down on the tables and straightened their backs for the first time in ages.`,
+    nifl_throne_hall: (h, list) =>
+      "In the heart of Helheim, in a dead garden with a withered tree and pale flowers that grow without sun, Hel no longer fled. On her own throne she was stronger than anywhere else, and this time she rose herself. " +
+      "\"Every road ends here,\" she said. \"Even yours.\" " +
+      "The Harvest of the Nine Worlds mowed like a sickle, the half-corpse cold slid through the veins, and the touch of death searched for Perun's fire in the chest — and did not find it: the souls Perun has called do not belong to Hel. " +
+      `The last battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and Hel fell from her throne. This time she did not escape.`
   }
 };
