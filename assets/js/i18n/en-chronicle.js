@@ -60,6 +60,35 @@ RPG.I18N.en.chronicle = {
     alf_beli_barrow: (h, list) =>
       "The barrow in the middle of the field split, and out of it came Beli — the giant Freyr once slew with a stag's antler. Hel gave him a second life and a bronze axe. " +
       `Hel's smoke spread across the field, the giant's blows knocked them off their feet, but ${h.many ? list(h.names) : h.names[0]} rose again and again. ` +
-      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and Beli, swaying, fell back into his barrow, never to rise again.`
+      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and Beli, swaying, fell back into his barrow, never to rise again.`,
+    // ---------- Chapter IV. Vanaheim ----------
+    van_ghost_ship: (h, list) =>
+      `The largest longship in the harbour stood with its sail raised, though there was no wind. ${h.many ? list(h.names) : h.names[0]} stepped onto the deck — ` +
+      "and the dead oarsmen raised their heads as one. The Draugr Captain came out from the stern, dragging a rusty anchor chain behind him, and every blow of his rocked the ship like a storm. " +
+      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and the Captain, and his whole crew with him, went down with his ship.`,
+    van_volva_hut: (h, list) =>
+      `A hut on stilts of whale ribs stood in the middle of the marsh, and its door opened by itself. The Old Völva called ${h.many ? "each of them" : h.names[0]} by name ` +
+      `before ${h.many ? list(h.names) : h.names[0]} even crossed the threshold: "I saw you before you were born — and I saw you die here." ` +
+      "The bones on her neck clattered, the mist turned into phantoms, and the brew in the cauldron boiled with poison. " +
+      `After ${h.rounds} round(s) ${h.blow} overturned the cauldron, and the völva fell silent — for the first time her prophecy did not come true.`,
+    van_mead_cellar: (h, list) =>
+      "Beneath the roots of the oldest oak in Kvasir's Forest, in a cellar with three cauldrons, the dwarves Fjalar and Galar still guarded the mead brewed from the sage's blood. " +
+      "The two fought as one hand: one threw sleepy hops into their eyes, the other struck with a hammer from behind. " +
+      (h.many
+        ? `${list(h.names)} held out back to back for ${h.rounds} round(s), until ${h.blow} knocked the last of the brothers to the floor. `
+        : `${h.names[0]} held out against both for ${h.rounds} round(s) and finally knocked the last of the brothers to the floor. `) +
+      "The air above the cauldrons smelled of honey and wisdom — but no one dared to drink.",
+    van_pyre_heart: (h, list) =>
+      "Deep in the barrow the pyre on which the Aesir burned Gullveig three times was still smouldering. Three times she burned — and three times she rose from the ashes. " +
+      `Now she rose a fourth time, in a dress of embers, and the flames obeyed her like hounds obey their mistress. ${h.many ? list(h.names) : h.names[0]} walked through the fire for ${h.rounds} round(s), ` +
+      `and the last blow was struck by ${h.blow}. The pyre finally went out — and this time the ashes stayed ashes.`,
+    van_inner_shrine: (h, list) =>
+      "Behind a curtain of flowers, where no stranger had ever set foot, the High Priestess of the Vanir stood among three altars — and in her eyes lived Hel's cold instead of Freyja. " +
+      `Seiðr spells bent the space: ${h.many ? list(h.names) : h.names[0]} saw themselves now on the shore, now at the bottom of the sea, now back in their Homestead. ` +
+      `After ${h.rounds} round(s) ${h.blow} tore apart the last spell, and the priestess fell to her knees. The flowers on the altars, long dry, opened again.`,
+    van_ran_hall: (h, list) =>
+      "At low tide the sea parted, and stairs led down to a hall lit by the gold of the drowned. Among the nets sat Rán — the goddess of the sea whom Hel had made her warden. " +
+      `She cast her net, and the water in the hall grew heavy as earth on a grave. ${h.many ? list(h.names) : h.names[0]} tore at its knots for ${h.rounds} round(s). ` +
+      `The last blow was struck by ${h.blow} — and the net that held half the sea came apart, and Hel's spell with it.`
   }
 };

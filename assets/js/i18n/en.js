@@ -4079,7 +4079,20 @@ RPG.I18N.en = {
 "Весь обраний час група безперервно б'ється з ворогами локації (без босів). На бої з чемпіонами погоджується сама. ": "For the whole chosen time the party fights the location's enemies non-stop (no bosses). It accepts fights with champions on its own. ",
 "Без дороги — лише експедиція (3 або 6 героїв, 1–8 год)": "No road — expedition only (3 or 6 heroes, 1–8 h)",
 "Відправити експедицію · 1–8 год": "Send an expedition · 1–8 h",
-"Тривалість експедиції, годин": "Expedition duration, hours"
+"Тривалість експедиції, годин": "Expedition duration, hours",
+"Глава IV. Туман Ванагейму": "Chapter IV. The Mist of Vanaheim",
+"За гілкою Іггдрасиля": "Beyond the Branch of Yggdrasil",
+"Гілка Іггдрасиля на Полі Белі вивела Перунових дітей на південний берег Ванагейму, до розбитого драккара. Це край ванів — богів моря, родючості й чарів, що колись воювали з асами, а потім уклали з ними мир. Хелла скувала його туманом: у гавані Ньйорда господарюють драугри, вьольви на мочарах ворожать на кістках, а сама богиня моря Ран, зачарована Хеллою, тягне на дно кожен корабель.": "The Branch of Yggdrasil on Beli's Field led Perun's children to the southern shore of Vanaheim, to a wrecked longship. This is the land of the Vanir — gods of the sea, fertility and magic, who once warred with the Aesir and then made peace with them. Hel has bound it in mist: draugr rule Njord's harbour, völvas cast bones in the marshes, and Rán herself, the goddess of the sea, enchanted by Hel, drags every ship to the bottom.",
+"Коли останній вузол сіті луснув, Ран підвелася з-поміж утоплених — і вперше за довгі роки подивилася на героїв не очима Хелли. Туман над морем розійшовся, у Ноатуні задзвонили корабельні дзвони, а драугри на палубах розсипалися солоним піском. Вани, що пам'ятали давню війну з асами, вийшли до берега без зброї: цього разу на допомогу прийшли не аси, а діти Перуна. Ран не подякувала — морські боги не дякують. Вона лише вказала на сходи, що вели ще глибше під дно, до Затопленої штольні. Там, під землею, лежить Свартальвгейм — царство темних альвів і двергів-ковалів, яких Хелла змушує кувати зброю для свого війська. Глава четверта закрита.": "When the last knot of the net snapped, Rán rose from among the drowned — and for the first time in long years looked at the heroes not with Hel's eyes. The mist over the sea parted, ship bells rang out in Nóatún, and the draugr on the decks crumbled into salty sand. The Vanir, who remembered the old war with the Aesir, came down to the shore unarmed: this time help came not from the Aesir, but from the children of Perun. Rán did not thank them — sea gods do not give thanks. She only pointed to the stairs that led even deeper under the seabed, to the Flooded Adit. There, under the earth, lies Svartalfheim — the realm of the dark elves and dwarf smiths whom Hel forces to forge weapons for her army. Chapter four is closed.",
+"Перша печать Ванагейму зламана": "The first seal of Vanaheim is broken",
+"Друга печать Ванагейму зламана": "The second seal of Vanaheim is broken",
+"Третя печать Ванагейму зламана": "The third seal of Vanaheim is broken",
+"Четверта печать Ванагейму зламана": "The fourth seal of Vanaheim is broken",
+"П'ята печать зламана — храм ванів очищено": "The fifth seal is broken — the temple of the Vanir is cleansed",
+"Шоста печать зламана — Ванагейм звільнено": "The sixth seal is broken — Vanaheim is freed",
+"Глава VII": "Chapter VII",
+"Глава VIII": "Chapter VIII",
+"Глава IX": "Chapter IX"
 },
 "patterns": [
 ["^МАКСИМУМ — усе, на що вистачає інгредієнтів \\(×(\\d+)\\)$",
