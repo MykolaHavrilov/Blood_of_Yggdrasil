@@ -4126,7 +4126,20 @@ RPG.I18N.en = {
 "Четверта печать Муспельгейму зламана": "The fourth seal of Muspelheim is broken",
 "П'ята печать Муспельгейму зламана": "The fifth seal of Muspelheim is broken",
 "Шоста печать зламана — відлуння Іміра стихло": "The sixth seal is broken — the echo of Ymir has fallen silent",
-"Сьома печать зламана — Муспельгейм звільнено": "The seventh seal is broken — Muspelheim is freed"
+"Сьома печать зламана — Муспельгейм звільнено": "The seventh seal is broken — Muspelheim is freed",
+"Глава VIII. Престол Одіна": "Chapter VIII. Odin's Throne",
+"За райдужним мостом": "Beyond the Rainbow Bridge",
+"Біфрест вивів Перунових дітей із диму Муспельгейму до золотих мурів Асгарду — і вони побачили те, чого боялися найбільше. Поки Одін ходив до Ірію просити допомоги, а Тор бився на мосту, Хелла ввійшла в оселю богів. Сторожова вежа Хеймдалля горить зеленим вогнем, Фенрір вирвався з пут, ейнхерії у Валгаллі служать уже їй, а ті, кого діти Перуна колись перемогли, — Ангрбода, Хрунґнір, Гулльвейг, Утгарда-Локі — повернулися, посилені її силою. А на престолі Одіна, звідки видно всі дев'ять світів, сидить сама Хелла.": "Bifrost led Perun's children out of the smoke of Muspelheim to the golden walls of Asgard — and they saw what they had feared most. While Odin went to Iriy to ask for help and Thor fought on the bridge, Hel entered the home of the gods. Heimdallr's watchtower burns with green fire, Fenrir has broken free of his fetters, the einherjar in Valhalla now serve her, and those whom the children of Perun once defeated — Angrboða, Hrungnir, Gullveig, Útgarða-Loki — have returned, empowered by her might. And on Odin's throne, from which all nine worlds can be seen, sits Hel herself.",
+"Асгард стогнав, як поранений: розбиті мури Хімінбйоргу, витоптаний луг Бальдра, порожні трони Гладсгейму. Та над Валгаллою знову засяяли золоті щити, і ейнхерії, звільнені з полону, вперше за довгий час підняли роги — не за Хеллу, а за тих, хто прийшов з Ірію. Того вечора Одін повернувся до свого престолу. Він довго дивився на дев'ять світів, а потім сказав лише одне: «Вона не переможена. Вона вдома». Там, де впала Хелла, у повітрі досі висить зелено-чорний портал, з якого тягне холодом і гниллю. Шлях лежить униз — у Ніфльгейм, де народжуються туман і холод, і ще глибше, у Хельгейм, царство самої Хелли. Глава восьма закрита.": "Asgard groaned like a wounded man: the broken walls of Himinbjörg, Baldr's trampled meadow, the empty thrones of Glaðsheimr. But golden shields shone over Valhalla once more, and the einherjar, freed from captivity, raised their horns for the first time in a long while — not for Hel, but for those who came from Iriy. That evening Odin returned to his throne. He gazed at the nine worlds for a long time, and then said only one thing: \"She is not defeated. She is home.\" Where Hel fell, a green-and-black portal still hangs in the air, breathing cold and rot. The road leads down — to Niflheim, where mist and cold are born, and deeper still, to Helheim, the realm of Hel herself. Chapter eight is closed.",
+"Перша печать Асгарду зламана": "The first seal of Asgard is broken",
+"Друга печать Асгарду зламана": "The second seal of Asgard is broken",
+"Третя печать Асгарду зламана": "The third seal of Asgard is broken",
+"Четверта печать Асгарду зламана": "The fourth seal of Asgard is broken",
+"П'ята печать зламана — ейнхерії вільні": "The fifth seal is broken — the einherjar are free",
+"Шоста печать Асгарду зламана": "The sixth seal of Asgard is broken",
+"Сьома печать Асгарду зламана": "The seventh seal of Asgard is broken",
+"Восьма печать Асгарду зламана": "The eighth seal of Asgard is broken",
+"Дев'ята печать зламана — Асгард звільнено": "The ninth seal is broken — Asgard is freed"
 },
 "patterns": [
 ["^МАКСИМУМ — усе, на що вистачає інгредієнтів \\(×(\\d+)\\)$",

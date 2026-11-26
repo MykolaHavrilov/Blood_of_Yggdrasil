@@ -207,6 +207,56 @@ RPG.I18N.en.chronicle = {
       "Surtr rose from his black throne, and the lava in the crater surged up to his knees. He pulled his sword from the stone — brighter than the sun, hotter than death itself. " +
       "\"Hel promised me the world,\" he said. \"I shall take it without her.\" " +
       `${h.many ? list(h.names) : h.names[0]} stood against the flame of Ragnarök for ${h.rounds} round(s), and the heat melted armour right on their bodies. ` +
-      `The last blow was struck by ${h.blow} — and Surtr, who was to burn the nine worlds, fell to his knees. The sword slipped from his hand and plunged into the lava — never having touched Bifrost.`
+      `The last blow was struck by ${h.blow} — and Surtr, who was to burn the nine worlds, fell to his knees. The sword slipped from his hand and plunged into the lava — never having touched Bifrost.`,
+    // ---------- Chapter VIII. Asgard ----------
+    asg_himinbjorg_watch: (h, list) =>
+      "In the cellars of Heimdallr's watchtower the cold was as at the bottom of Niflheim. Hrym, helmsman of Naglfar, was building an ice bridge here for the army of the dead, and every brick of it was hoarfrost. " +
+      `${h.many ? list(h.names) : h.names[0]} stepped onto the ice — and the bridge came alive underfoot, gripping their ankles. The breath of rime froze on armour, the ice hammer crushed stone. ` +
+      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and Hrym shattered into shards of ice, and the bridge he was building collapsed into the abyss. Bifrost belonged to the gods again.`,
+    asg_fensalir_halls: (h, list) =>
+      "In the flooded halls of Frigg, Angrboða sat at her spinning wheel, spinning the thread of fate inside out. " +
+      `She recognised ${h.many ? "them" : h.g1("him", "her")} at once: "You have killed me once already in the Iron Forest. Hel brought me back — and this time I remember your blows." ` +
+      "Marsh fetters dragged them down, the wolf curse tore at their armour. " +
+      `The battle lasted ${h.rounds} round(s), until ${h.blow} cut her thread. The wheel stopped — and Angrboða, mother of wolves, vanished along with her yarn.`,
+    asg_breidablik_meadow: (h, list) =>
+      "In the middle of Baldr's meadow lay the torn fetter Gleipnir, and beside it waited Fenrir — the wolf who once bit off Týr's hand. He remembered every god who had laughed at him, and now he laughed himself. " +
+      "The howl of Ragnarök rolled across the meadow, his jaws snapped like a gate. " +
+      `${h.many ? list(h.names) : h.names[0]} stood against him for ${h.rounds} round(s). ` +
+      `The last blow was struck by ${h.blow} — and Fenrir fell onto the crushed flowers. He still breathed, but he did not rise: his time is Ragnarök, and that time has not yet come.`,
+    asg_bilskirnir_hall: (h, list) =>
+      "Thor had gone to fight on Bifrost, and into his hall crept Hrungnir — the very one the children of Perun had already shattered in the Stone Wasteland. Hel had glued him back together, and now green rot glowed in the cracks of his stone body. " +
+      `${h.many ? list(h.names) : h.names[0]} recognised him by his flint whetstone — and by the way the stone of the courtyard shook. Shards of the whetstone whistled like arrows. ` +
+      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and Hrungnir split along the old crack once left by Thor's hammer.`,
+    asg_valhalla_shields: (h, list) =>
+      "In Valhalla's feasting hall, where the einherjar once drank mead, the valkyrie Hlökk raised a battle cry — and dead warriors rose from the tables. " +
+      "She gathered the fallen not for Odin but for Hel, and whenever someone fell, Hlökk stretched out her hand to them. " +
+      (h.many
+        ? `${list(h.names)} fought amid the din of battle for ${h.rounds} round(s), until ${h.blow} knocked the spear from her hand. `
+        : `${h.names[0]} fought amid the din of battle for ${h.rounds} round(s), until at last ${h.g1("he", "she")} knocked the spear from her hand. `) +
+      "Hlökk fell — and the einherjar, as if waking, lowered their weapons. They recognised the golden shields overhead: this was their home.",
+    asg_vingolf_garden: (h, list) =>
+      "Deep in the garden of Vingólf, Gullveig was fanning the embers in which she had once been burned. Three times the Aesir burned her, the fourth time the children of Perun in Vanaheim. " +
+      "Now she had returned a fifth time, and it was no longer she who burned, but the white flowers of the goddesses. " +
+      "\"You cannot burn me again,\" she laughed, and the thirst for gold clouded their eyes. " +
+      `For ${h.rounds} round(s) ${h.many ? list(h.names) : h.names[0]} walked through the fourth flame, until ${h.blow} scattered the embers. ` +
+      "Gullveig did not burn — she simply grew cold, and the gold in her hair turned to ash.",
+    asg_gladsheim_thrones: (h, list) =>
+      "The twelve thrones of Glaðsheimr stood empty, yet on one of them someone sat, though no one was there. The Shadow of Loki laughed — " +
+      `and suddenly ${h.many ? list(h.names) : h.names[0]} saw a shadow double beside ${h.many ? "each of them" : h.g1("him", "her")}. ` +
+      "The real Loki still lay bound, but his shadow had long been free and served Hel, his daughter. " +
+      (h.many
+        ? `For ${h.rounds} round(s) ${list(h.names)} fought their own shadows, until ${h.blow} struck where the shadow cast no shadow. `
+        : `For ${h.rounds} round(s) ${h.names[0]} fought ${h.g1("his", "her")} own shadow, until at last ${h.g1("he", "she")} struck where the shadow cast no shadow. `) +
+      "The laughter broke off — and for the first time in a long while there truly was no one on the throne.",
+    asg_square_heart: (h, list) =>
+      "In the middle of Asgard's main square Útgarða-Loki was showing the gods their defeat: Asgard in flames, Odin dead, Ragnarök already come. The illusions were so true that some had already believed them. " +
+      `${h.many ? list(h.names) : h.names[0]} saw it too — ${h.many ? "their own deaths" : h.g1("his own death", "her own death")} on these very stones. A mirage giant grew above the square, and every blow of illusion cut like steel. ` +
+      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and the mirage cracked like glass. Útgarða-Loki was left in the middle of the square, small and grey: without illusions he was only an old giant.`,
+    asg_hlidskjalf_throne: (h, list) =>
+      "At the top of the highest tower, on Odin's throne, from which all nine worlds can be seen, sat Hel. Half of her face was alive and beautiful, half dead and blue. " +
+      `She did not rise when ${h.many ? list(h.names) : h.names[0]} climbed the stairs past her guards. ` +
+      "\"You crossed eight worlds to come to me,\" she said. \"And never noticed that the whole way led down.\" " +
+      `The gaze from the throne chilled to the bone, the touch of death snuffed out Perun's fire in the chest. The battle lasted ${h.rounds} round(s). ` +
+      `The last blow was struck by ${h.blow} — and Hel fell from Odin's throne. But instead of a body, green smoke settled on the marble — and drifted up into the sky, to the portal behind her.`
   }
 };
