@@ -171,6 +171,42 @@ RPG.I18N.en.chronicle = {
       "Where the Serpent bites its own tail, the sea boiled with poison. Jörmungandr raised his head above the waves — scales as large as shields, eyes in which all of Midgard was reflected. " +
       "Hel was calling him ashore, and he was coming. " +
       `${h.many ? list(h.names) : h.names[0]} stood at the edge of the world for ${h.rounds} round(s): the tail smashed the cliffs, the coils squeezed the air, the poison burned their shields. ` +
-      `The last blow was struck by ${h.blow} — and the Serpent withdrew into the deep and bit his tail once more. The ring of the world closed. Ragnarök did not come — this time.`
+      `The last blow was struck by ${h.blow} — and the Serpent withdrew into the deep and bit his tail once more. The ring of the world closed. Ragnarök did not come — this time.`,
+    // ---------- Chapter VII. Muspelheim ----------
+    musp_hound_lair: (h, list) =>
+      "The ash underfoot was warm, and red eyes kept peering out from beneath it. " +
+      `${h.many ? list(h.names) : h.names[0]} went down into the burrows where the fire hounds rear their pups in the embers — and the pack met ${h.many ? "them" : h.g1("him", "her")} with a flaming howl. ` +
+      "The Hound Packleader leapt first, and the whole pack rushed after him like wind after fire. " +
+      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and the packleader fell into the ash, while the pack, whimpering, scattered into the burrows.`,
+    musp_serpent_nest: (h, list) =>
+      "Where two rivers of lava meet, the whirlpool boiled like a cauldron. The Lava Serpent surged out of it, and fiery drops ran from his scales of cooled magma. " +
+      `${h.many ? list(h.names) : h.names[0]} stood on a basalt island that cracked with heat: the river of fire rolled in wave after wave, coils of magma tightened all around. ` +
+      `The battle lasted ${h.rounds} round(s), until ${h.blow} split the scales on the serpent's neck. ` +
+      "The serpent choked on his own lava and sank, and the rivers that met in the whirlpool flowed calmly for the first time.",
+    musp_sons_forge: (h, list) =>
+      "The forge at the heart of the smithies blazed so fiercely that metal melted from a mere glance. " +
+      `The Master Smith of Muspel did not look up from his anvil when ${h.many ? list(h.names) : h.names[0]} came in — he was forging a blade as long as a ship, the very one with which the world is one day to be burned. ` +
+      "\"You are in my way,\" was all he said, and he turned with his hammer. Molten metal splashed like rain, every blow on the anvil knocked them off their feet. " +
+      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and the master fell beside the unfinished sword. The forge went out, and the blade stayed cold.`,
+    musp_citadel_vaults: (h, list) =>
+      "The vaults beneath the obsidian fortress were a labyrinth, and the Commander knew every corridor of it, and the corridors knew him: doors slammed shut behind them, the floor gave way underfoot. " +
+      `${h.many ? list(h.names) : h.names[0]} fought through the guards until, in the last hall, the Commander himself came out to meet ${h.many ? "them" : h.g1("him", "her")} — with a mace and a shield of black glass. ` +
+      `"Fire!" he commanded, and the flames obeyed. For ${h.rounds} round(s) the obsidian shield held every blow, until ${h.blow} split it in two. ` +
+      "The Commander fell, and the prisoners in the vaults heard their doors open for the first time.",
+    musp_sinmara_vault: (h, list) =>
+      "Bronze braziers burned around a chest with nine locks, and Sinmara, Surtr's wife, stood before it as before a cradle. Inside lay Lævateinn — and everyone who looked in burned before they could see. " +
+      "\"You have come for the key,\" she said. \"Neither gods nor giants have ever had it.\" " +
+      "The flame of Lævateinn burst from under the lid, the nine locks clicked shut around their hands. " +
+      `The battle lasted ${h.rounds} round(s). The last blow was struck by ${h.blow} — and Sinmara fell onto her chest. The key dropped from her hand, but no one opened the chest: some things are better left unseen.`,
+    musp_ymir_abyss: (h, list) =>
+      "At the bottom of Ginnungagap fire and ice still fought, as on the first day of the world. Out of the steam between them rose the Echo of Ymir — a faceless giant, burning on one side, rimed with frost on the other. " +
+      "It remembered how the gods tore it into earth and sky, and it wanted the world back. " +
+      `${h.many ? list(h.names) : h.names[0]} walked through ice and flame for ${h.rounds} round(s), and every step of the first giant shook the abyss. ` +
+      `The last blow was struck by ${h.blow} — and the Echo dissolved into steam, and over Ginnungagap fell a silence unheard since the making of the world.`,
+    musp_volcano_heart: (h, list) =>
+      "Surtr rose from his black throne, and the lava in the crater surged up to his knees. He pulled his sword from the stone — brighter than the sun, hotter than death itself. " +
+      "\"Hel promised me the world,\" he said. \"I shall take it without her.\" " +
+      `${h.many ? list(h.names) : h.names[0]} stood against the flame of Ragnarök for ${h.rounds} round(s), and the heat melted armour right on their bodies. ` +
+      `The last blow was struck by ${h.blow} — and Surtr, who was to burn the nine worlds, fell to his knees. The sword slipped from his hand and plunged into the lava — never having touched Bifrost.`
   }
 };

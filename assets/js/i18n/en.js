@@ -4115,7 +4115,18 @@ RPG.I18N.en = {
 "П'ята печать Йотунгейму зламана": "The fifth seal of Jotunheim is broken",
 "Шоста печать зламана — ілюзії Утгарда розвіяно": "The sixth seal is broken — the illusions of Utgard are dispelled",
 "Сьома печать Йотунгейму зламана": "The seventh seal of Jotunheim is broken",
-"Восьма печать зламана — Йотунгейм звільнено": "The eighth seal is broken — Jotunheim is freed"
+"Восьма печать зламана — Йотунгейм звільнено": "The eighth seal is broken — Jotunheim is freed",
+"Глава VII. Вогонь Муспельгейму": "Chapter VII. The Fire of Muspelheim",
+"За морем, на півдні": "Across the Sea, to the South",
+"Нагльфар, корабель із нігтів мерців, переправив Перунових дітей через море до попелястого берега Муспельгейму — світу вогню, що палав ще до того, як боги розірвали Іміра на землю й небо. Тут править вогняний велетень Сурт. Хелла пообіцяла йому світ, і Сурт погодився: його гончаки женуть чужинців по попелу, сини Муспелля кують мечі для Рагнарьоку, Сінмара береже за дев'ятьма замками Леватейн, а сам Сурт сидить у кратері вулкана з палаючим мечем і чекає лише сигналу, щоб рушити на Біфрест.": "Naglfar, the ship of dead men's nails, carried Perun's children across the sea to the ashen shore of Muspelheim — a world of fire that blazed even before the gods tore Ymir into earth and sky. Here the fire giant Surtr rules. Hel promised him the world, and Surtr agreed: his hounds hunt strangers across the ash, the sons of Muspel forge swords for Ragnarök, Sinmara guards Lævateinn behind nine locks, and Surtr himself sits in the crater of a volcano with a burning sword, waiting only for the signal to march on Bifrost.",
+"Коли Сурт упав, його полум'яний меч так і не торкнувся моста. Вулкан видихнув — уперше за тисячі років не вогнем, а попелом, що лягав на рівнини тихо, як сніг. Вогняні велетні не склали зброї, але й не рушили на північ: без свого володаря вони лише стояли біля згаслих горен і дивилися, як діти Перуна йдуть до краю кратера. А там, крізь дим, проступила райдуга — Біфрест, міст до Асгарду. Він цілий. Та за ним уже стоїть армія Хелли, і в чертогах богів чекають ті, кого діти Перуна вже раз перемогли, — тепер посилені самою Хеллою. Глава сьома закрита.": "When Surtr fell, his flaming sword never touched the bridge. The volcano exhaled — for the first time in thousands of years not fire, but ash that settled on the plains as quietly as snow. The fire giants did not lay down their arms, but neither did they march north: without their lord they only stood by the cold forges and watched the children of Perun walk to the edge of the crater. And there, through the smoke, a rainbow appeared — Bifrost, the bridge to Asgard. It is whole. But beyond it Hel's army already stands, and in the halls of the gods wait those whom the children of Perun have defeated once before — now empowered by Hel herself. Chapter seven is closed.",
+"Перша печать Муспельгейму зламана": "The first seal of Muspelheim is broken",
+"Друга печать Муспельгейму зламана": "The second seal of Muspelheim is broken",
+"Третя печать зламана — горна Рагнарьоку згасли": "The third seal is broken — the forges of Ragnarök have gone out",
+"Четверта печать Муспельгейму зламана": "The fourth seal of Muspelheim is broken",
+"П'ята печать Муспельгейму зламана": "The fifth seal of Muspelheim is broken",
+"Шоста печать зламана — відлуння Іміра стихло": "The sixth seal is broken — the echo of Ymir has fallen silent",
+"Сьома печать зламана — Муспельгейм звільнено": "The seventh seal is broken — Muspelheim is freed"
 },
 "patterns": [
 ["^МАКСИМУМ — усе, на що вистачає інгредієнтів \\(×(\\d+)\\)$",
