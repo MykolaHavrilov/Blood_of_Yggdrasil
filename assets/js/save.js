@@ -335,6 +335,18 @@
       for (const e of save.expeditions || []) (e.bag?.items || []).forEach(fix);
       for (const d of save.deathBag || []) fix(d?.ref);
     }
+    // Віхи гартування — не більше 4 влучань в одну характеристику (v0.9.25, rarity.js → capTemperRef):
+    // надлишок (міг випасти при перерахунку v0.9.24) переходить в інші характеристики речі
+    if (!save.story?.temperCap4 && RPG.capTemperRef) {
+      (save.story ||= {}).temperCap4 = true;
+      const fix = ref => { if (ref && typeof ref === "object" && ref.upB) RPG.capTemperRef(ref); };
+      for (const slot in save.equipment) fix(save.equipment[slot]);
+      for (const m of save.party || []) for (const slot in m.equipment || {}) fix(m.equipment[slot]);
+      save.inventory.forEach(fix);
+      for (const sid in save.chests) save.chests[sid].forEach(fix);
+      for (const e of save.expeditions || []) (e.bag?.items || []).forEach(fix);
+      for (const d of save.deathBag || []) fix(d?.ref);
+    }
 
     save.saveVersion = SAVE_VERSION;
     return save;

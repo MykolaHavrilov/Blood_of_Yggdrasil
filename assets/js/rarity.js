@@ -322,20 +322,42 @@
   }
 
   // ---------- Гартування в Горні Сварога (рішення користувача 2026-11-17; дії — craft.js → temperItem) ----------
-  // ref.up = 1…25 (0 — не пишеться), ref.upB = { характеристика: скільки разів по +15% } — віхи +4, +8, +12, +16, +20, +24.
+  // ref.up = 1…25 (0 — не пишеться), ref.upB = { характеристика: скільки разів влучила віха (1…4) } — віхи +4, +8, +12, +16, +20, +24.
   // Приріст за рівень росте рівномірно від +2% (на +1) до +8% (на +10): разом на +10 — +50% до основи.
   // Основа: зброя — атака / сила магії; броня й щит — захист; прикраси — магічний захист;
   // предмет у другу руку — атака / магія, а без них — захист чи магічний захист.
   // Гартування +1…+25 (рішення користувача 2026-11-28; до v0.9.24 — +1…+10, +10 = +50%, віхи +3/+6/+10).
   // Основа речі: +1…+24 — плавно, кожен рівень дає трохи більше за попередній (від +1% до ≈ +4,8%), разом +70% на +24;
-  // +25 — стрибок до +100%. Віхи — кожні 4 рівні: +15% до випадкової характеристики речі.
+  // +25 — стрибок до +100%. Віхи — кожні 4 рівні: бонус до випадкової характеристики речі (рішення користувача 2026-11-28):
+  // разом до основи характеристики за 1 / 2 / 3 / 4 влучання — +50% / +100% / +200% / +400%; після 4-го влучання
+  // характеристика більше не розігрується (temperMilestoneKeys).
   const TEMPER_MAX = 25, TEMPER_TOP = 24, TEMPER_TOP_PCT = 70, TEMPER_MAX_PCT = 100;
   const TEMPER_STEP = Array.from({ length: TEMPER_MAX }, (_, i) => i < TEMPER_TOP
     ? 1 + (2 * TEMPER_TOP_PCT / TEMPER_TOP - 2) * i / (TEMPER_TOP - 1)
     : TEMPER_MAX_PCT - TEMPER_TOP_PCT);                                                       // % за рівень i+1
   const TEMPER_TOTAL = TEMPER_STEP.map((_, i) => Math.round(TEMPER_STEP.slice(0, i + 1).reduce((a, b) => a + b, 0) * 10) / 10);
   const TEMPER_MILESTONES = [4, 8, 12, 16, 20, 24];
-  const TEMPER_MILESTONE_PCT = 15;
+  const TEMPER_MILESTONE_PCT = [50, 100, 200, 400];        // разом за 1…4 влучання в одну характеристику, % до основи
+  const TEMPER_MILESTONE_CAP = TEMPER_MILESTONE_PCT.length;
+  const milestonePct = n => (n > 0 ? TEMPER_MILESTONE_PCT[Math.min(n, TEMPER_MILESTONE_CAP) - 1] : 0);
+  // Характеристики, у які ще може влучити віха: додатні й ще не мають 4 влучань
+  function temperMilestoneKeys(ref) {
+    const upB = (ref && typeof ref === "object" && ref.upB) || {};
+    return Object.entries(itemStats(ref)).filter(([k, v]) => v > 0 && (upB[k] || 0) < TEMPER_MILESTONE_CAP).map(([k]) => k);
+  }
+  // Прибрати зайві влучання понад 4 (сейви до v0.9.25): надлишок переходить в інші характеристики
+  function capTemperRef(ref, rng = Math.random) {
+    if (!ref || typeof ref !== "object" || !ref.upB) return false;
+    let extra = 0;
+    for (const k in ref.upB) if (ref.upB[k] > TEMPER_MILESTONE_CAP) { extra += ref.upB[k] - TEMPER_MILESTONE_CAP; ref.upB[k] = TEMPER_MILESTONE_CAP; }
+    while (extra-- > 0) {
+      const keys = temperMilestoneKeys(ref);
+      if (!keys.length) break;
+      const k = keys[Math.floor(rng() * keys.length) % keys.length];
+      ref.upB[k] = (ref.upB[k] || 0) + 1;
+    }
+    return true;
+  }
   // Перерахунок віх речі за новими правилами (міграція сейву, save.js): старі ref.upB прибираються,
   // і для кожної віхи до поточного рівня — нове влучання в одну випадкову додатну характеристику
   function retemperRef(ref, rng = Math.random) {
@@ -344,10 +366,13 @@
     delete ref.upB;
     const n = TEMPER_MILESTONES.filter(m => m <= ref.up).length;
     if (!n) return true;
-    const keys = Object.entries(itemStats(ref)).filter(([, v]) => v > 0).map(([k]) => k);
-    if (!keys.length) return true;
     ref.upB = {};
-    for (let i = 0; i < n; i++) { const k = keys[Math.floor(rng() * keys.length) % keys.length]; ref.upB[k] = (ref.upB[k] || 0) + 1; }
+    for (let i = 0; i < n; i++) {
+      const keys = temperMilestoneKeys(ref);
+      if (!keys.length) break;
+      const k = keys[Math.floor(rng() * keys.length) % keys.length];
+      ref.upB[k] = (ref.upB[k] || 0) + 1;
+    }
     return true;
   }
   function temperLevel(ref) { return typeof ref === "object" && ref ? Math.max(0, Math.min(TEMPER_MAX, ref.up | 0)) : 0; }
@@ -377,7 +402,7 @@
     }
     for (const [k, n] of Object.entries(ref.upB || {})) {
       if (!base[k]) continue;
-      const add = base[k] * TEMPER_MILESTONE_PCT / 100 * n;
+      const add = base[k] * milestonePct(n) / 100;
       out[k] = DECIMAL_KEYS.includes(k) ? Math.round((out[k] + add) * 10) / 10 : Math.round(out[k] + add);
     }
     return out;
@@ -408,10 +433,10 @@
     if (obj && r !== "broken") for (const k in ref.aff || {}) addTo(rest, k, ref.aff[k]);
     const restGain = {};
     let s1gain = v - v0;
-    // Віхи +4 / +8 / … / +24: +15% до основи обраної характеристики (основа — без гартування)
+    // Віхи +4 / +8 / … / +24: +50% / +100% / +200% / +400% до основи обраної характеристики (основа — без гартування)
     for (const [k, n] of Object.entries(obj?.upB || {})) {
-      if (k === key) { const add = roundKey(k, v0 * TEMPER_MILESTONE_PCT / 100 * n); v = roundKey(k, v + add); s1gain = roundKey(k, s1gain + add); }
-      else if (rest[k]) { const add = roundKey(k, rest[k] * TEMPER_MILESTONE_PCT / 100 * n); rest[k] = roundKey(k, rest[k] + add); restGain[k] = add; }
+      if (k === key) { const add = roundKey(k, v0 * milestonePct(n) / 100); v = roundKey(k, v + add); s1gain = roundKey(k, s1gain + add); }
+      else if (rest[k]) { const add = roundKey(k, rest[k] * milestonePct(n) / 100); rest[k] = roundKey(k, rest[k] + add); restGain[k] = add; }
     }
     return { s1: { key, value: v, gain: roundKey(key, s1gain) }, rest, restGain, item };
   }
@@ -538,6 +563,6 @@
     refId, hasRarity, rarityOf, makeItem, rollRarity, newLuck,
     itemStats, itemStatLines, itemName, itemFullName,
     SLOT_COUNT, SLOT_POWER_BY_LEVEL, slotPower, COMMON_SLOT_CHANCE, PCT_KEYS, TEMPER_SLOT_FLAT, TEMPER_SLOT_PCT, slotKind, usesSlots, isPctKey,
-    TEMPER_MAX, TEMPER_STEP, TEMPER_TOTAL, TEMPER_MILESTONES, TEMPER_MILESTONE_PCT, retemperRef, temperLevel, temperPct, temperKeys, canTemper, itemIconRef, refSellPrice, runesSellPrice, normalizeRef, SOCKETS, rollSockets
+    TEMPER_MAX, TEMPER_STEP, TEMPER_TOTAL, TEMPER_MILESTONES, TEMPER_MILESTONE_PCT, TEMPER_MILESTONE_CAP, temperMilestonePct: milestonePct, temperMilestoneKeys, capTemperRef, retemperRef, temperLevel, temperPct, temperKeys, canTemper, itemIconRef, refSellPrice, runesSellPrice, normalizeRef, SOCKETS, rollSockets
   });
 })(window.RPG);

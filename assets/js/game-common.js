@@ -996,7 +996,7 @@
       const ms = RPG.TEMPER_MILESTONES || [];
       frag.append(forgeBookTable(["Рівень", "Шанс", "Основа речі", "Іскор"], RPG.TEMPER_CHANCE.map((ch, i) =>
         [`+${i + 1}` + (ms.includes(i + 1) ? " ✦" : ""), pc(ch), `+${Math.round(RPG.TEMPER_TOTAL[i])}%`, String(i + 1)])));
-      frag.append(el("p", "chronicle-note", "✦ — ще +15% до однієї випадкової характеристики речі."));
+      frag.append(el("p", "chronicle-note", "✦ — віха: бонус до однієї випадкової характеристики речі — разом +50% / +100% / +200% / +400% за 1–4 влучання; після 4-го ця характеристика більше не випадає."));
     }
     return frag;
   }

@@ -20,6 +20,7 @@
 // кувати на своєму ковадлі — усі знаряддя на місці, як у власній кузні, але кожне кування коштує плату гільдії
 // (GUILD_FORGE.fee за видом і тіром: зброя 250 … 50 000, броня 150 … 45 000, біжутерія 300 … 55 000 золота) і +5% кожного матеріалу понад рецепт (вгору, мінімум +5 шт.;
 // для матеріалів, що падають лише з босів, — мінімум +1). Переплавка й розбір у гільдії — без плати.
+// Комплекти професій (profSet: броня prof_* і зброя profw_*) Кузьма не кує — лише власна кузня або Горно Сварога (guildBans).
 // Підключається ПІСЛЯ character.js, data/items.js, data/recipes.js, rarity.js.
 // ============================================================
 
@@ -149,6 +150,8 @@
     extraPct: 0.05, extraMin: 5, extraMinBoss: 1 };
   function atGuildForge(save) { return save?.location?.map === GUILD_FORGE.city && save?.location?.district === GUILD_FORGE.district; }
   function guildFee(tier, cat) { const t = Math.max(1, Math.min(7, Math.floor(tier) || 1)); return (GUILD_FORGE.fee[cat] || GUILD_FORGE.fee.weapon)[t - 1]; }
+  // Чи заборонено кувати рецепт у гільдії: комплекти професій — лише вдома або в Горні Сварога
+  const guildBans = (save, itemId) => atGuildForge(save) && !!RPG.ITEMS[itemId]?.profSet;
   // Матеріал «з босів»: падає лише з босів і не добувається інакше (шахти й лісопилки, переплавка, крамниця Скруджа)
   let bossMats = null;
   function isBossMaterial(id) {
@@ -192,7 +195,8 @@
   // ---------- Гартування: +1…+25, невдача знищує річ (v0.9.24; до того — +1…+10) ----------
   // Шанс успіху на рівень +1…+25; ціна спроби — золото 10 000 + 500 × рівень героя × тір речі × рівень гартування
   // і Небесні іскри — стільки, на який рівень гартується річ. На +4, +8, +12, +16, +20, +24 одна випадкова характеристика речі
-  // (основна чи бонусна) отримує ще +15% до своєї основи; повторне влучання в ту саму складається (+30%, +45%).
+  // (основна чи бонусна) отримує бонус до своєї основи: разом за 1 / 2 / 3 / 4 влучання — +50% / +100% / +200% / +400%
+  // (rarity.js → TEMPER_MILESTONE_PCT); після 4-го влучання ця характеристика більше не розігрується.
   // Шанси: +1…+8 — 99%, +9…+12 — 90%, +13…+16 — 80%, +17…+20 — 70%, +21…+24 — 60%, +25 — лише 5% (найважчий крок).
   const TEMPER_CHANCE = [...Array(8).fill(0.99), ...Array(4).fill(0.9), ...Array(4).fill(0.8), ...Array(4).fill(0.7), ...Array(4).fill(0.6), 0.05];
   const TEMPER_GOLD = { base: 10000, per: 500 };
@@ -231,14 +235,15 @@
     ref.up = cost.to;
     let boost = null;
     if (RPG.TEMPER_MILESTONES.includes(cost.to)) {
-      const keys = Object.entries(RPG.itemStats(ref)).filter(([, v]) => v > 0).map(([k]) => k);
+      const keys = RPG.temperMilestoneKeys(ref);
       if (keys.length) {
         boost = keys[Math.floor(rng() * keys.length) % keys.length];
         ref.upB ??= {};
         ref.upB[boost] = (ref.upB[boost] || 0) + 1;
       }
     }
-    return { ok: true, success: true, ref, up: cost.to, boost, cost };
+    const boostN = boost ? ref.upB[boost] : 0;
+    return { ok: true, success: true, ref, up: cost.to, boost, boostN, boostPct: boost ? RPG.temperMilestonePct(boostN) : 0, cost };
   }
 
   // ---------- Матеріали для кузні: інвентар + скрині для матеріалів складу цього дому ----------
@@ -343,6 +348,7 @@
     let reason = "";
     const known = RPG.knowsRecipe ? RPG.knowsRecipe(save, itemId) : true;   // рецепт комплекту професії — лише за кресленням
     if (!known) { const def = RPG.tierBlueprintDef?.(itemId); reason = def ? `Потрібне креслення — падає ${def.where}.` : `Потрібне креслення — падає з боса «${RPG.blueprintSource(itemId)}».`; }
+    else if (guildBans(save, itemId)) reason = "Комплекти професій Кузьма не кує — лише у власній кузні або в Горні Сварога.";
     else if (!open.ok) reason = open.reason;
     else if (st.level < tierLevel) reason = `Потрібен рівень «${g?.name || "майстерності"}» ${tierLevel}.`;
     else if (!ready.ok) reason = ready.reason;
@@ -428,7 +434,7 @@
   // Скільки речей вистачить матеріалів (з вибраною рідкістю)
   function craftMaxCount(save, itemId, opts = {}) {
     const recipe = RPG.RECIPES[itemId];
-    if (!recipe) return 0;
+    if (!recipe || guildBans(save, itemId)) return 0;
     let n = Infinity;
     const fee = craftFee(save, itemId);
     if (fee) n = Math.floor(RPG.rootSave(save).character.gold / fee);
@@ -622,7 +628,7 @@
     craftForgeReady: forgeReady, craftItem, craftBatch, craftMaxCount, blueprintSlot, CRAFT_BATCH, BLUEPRINT_LEGEND_BONUS, BLUEPRINT_MAX, CRAFT_GRADES: GRADE_ORDER, addCraftExp, smeltInfo, smelt,
     DISASSEMBLE_SHARE, DISASSEMBLE_EXP, disassembleInfo, disassemble, salvageRecipe,
     craftCountMat: countMat, craftHouse,
-    GUILD_FORGE, atGuildForge, guildFee, guildExtra, isBossMaterial, craftMats, craftFee,
+    GUILD_FORGE, atGuildForge, guildBans, guildFee, guildExtra, isBossMaterial, craftMats, craftFee,
     SVAROG, atSvarogForge, svarogLit, lightSvarog, TEMPER_CHANCE, TEMPER_GOLD, temperCost, temperInfo, temperItem,
     craftCat: catState, craftCatMaxLevel: catMaxLevel, craftCatOpenTier: catOpenTier, addCraftCatExp: addCatExp
   });

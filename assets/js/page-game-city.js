@@ -205,7 +205,7 @@
         dlg.innerHTML = "";
         dlg.append(closeBtn("Закрити горно"), el("h3", null, "Гартування"));
         dlg.append(noteP("Гартування посилює основу речі: зброя — атаку й силу магії, броня й щит — захист, прикраси — магічний захист. " +
-          "На +4, +8, +12, +16, +20 і +24 вогонь ще й посилює одну випадкову характеристику речі на 15%. Якщо горно не прийме метал — річ згорить. " +
+          "На +4, +8, +12, +16, +20 і +24 вогонь ще й посилює одну випадкову характеристику речі: перше влучання — +50% до її основи, друге — разом +100%, третє — +200%, четверте — +400%, і далі ця характеристика вже не випадає. Якщо горно не прийме метал — річ згорить. " +
           "Гартують лише речі з інвентаря."));
         if (note) dlg.append(el("p", "forge-result" + (note.error ? " is-error" : ""), note.text));
         const items = list();
@@ -238,7 +238,7 @@
             const lines = RPG.temperKeys(info.ref).filter(k => now[k] != null)
               .map(k => `${RPG.STAT_NAMES[k] || k}: ${RPG.ui.fmtStat(k, now[k])} → ${RPG.ui.fmtStat(k, next[k])}`);
             side.append(el("p", "temper-gain", lines.join(" · ") + ` (разом +${Math.round(RPG.temperPct(c.to))}% до основи)`));
-            if (RPG.TEMPER_MILESTONES.includes(c.to)) side.append(el("p", "temper-mile", `+${c.to} — віха: одна випадкова характеристика речі отримає ще +15%.`));
+            if (RPG.TEMPER_MILESTONES.includes(c.to)) side.append(el("p", "temper-mile", `+${c.to} — віха: одна випадкова характеристика речі отримає бонус (за влучаннями в неї разом +50% → +100% → +200% → +400%).`));
             const b = button(asking ? `Так, гартувати (${pct(c.chance)})` : "Гартувати", "wf " + (asking ? "wf-danger" : "wf-button"), async () => {
               if (risk && !asking) {
                 asking = true;
@@ -251,7 +251,7 @@
               await RPG.saveGame(save);
               if (r.success) {
                 flash = "up";
-                note = { text: `Метал прийняв вогонь: ${RPG.itemFullName(r.ref)}!` + (r.boost ? ` Віха +${r.up}: ${String(RPG.STAT_NAMES[r.boost] || r.boost).replace(/,\s*%$/, "")} +15% до основи.` : "") };
+                note = { text: `Метал прийняв вогонь: ${RPG.itemFullName(r.ref)}!` + (r.boost ? ` Віха +${r.up}: ${String(RPG.STAT_NAMES[r.boost] || r.boost).replace(/,\s*%$/, "")} — разом +${r.boostPct}% до основи (влучань ${r.boostN} з ${RPG.TEMPER_MILESTONE_CAP}${r.boostN >= RPG.TEMPER_MILESTONE_CAP ? ", більше не випадає" : ""}).` : "") };
               } else {
                 flash = "fail"; pick = null;
                 note = { text: `Горно не прийняло метал: ${r.name} — лише попіл.`, error: true };

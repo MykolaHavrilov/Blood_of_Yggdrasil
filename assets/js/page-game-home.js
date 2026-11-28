@@ -248,14 +248,16 @@
           const known = list.filter(([id]) => RPG.knowsRecipe(save, id)).length;
           dlg.append(el("p", "forge-why", text(known, list.length)));
         };
-        bpNote(inTier.filter(([id, rc]) => rc.blueprint && RPG.ITEMS[id]?.profSet && RPG.blueprintVisible(save, id)),
+        if (RPG.atGuildForge(save) && inTier.some(([id]) => RPG.ITEMS[id]?.profSet))
+          dlg.append(el("p", "forge-why", "Комплекти професій Кузьма не кує — лише у власній кузні або в Горні Сварога."));
+        else bpNote(inTier.filter(([id, rc]) => rc.blueprint && RPG.ITEMS[id]?.profSet && RPG.blueprintVisible(save, id)),
           (k, n) => `Комплекти професій: вивчено креслень ${k} з ${n}. Креслення падають з босів Альвгейму; використайте креслення в інвентарі — і рецепт з'явиться тут.`);
         for (const def of Object.values(RPG.TIER_BLUEPRINTS || {})) {
           bpNote(inTier.filter(([id]) => RPG.tierBlueprintDef(id) === def),
             (k, n) => `${def.label}: вивчено креслень ${k} з ${n}. Креслення падають ${def.where} (звичайні вороги — 0,5%, боси — 5%, боси данжів — 10%); використайте креслення в інвентарі — і рецепт з'явиться тут.`);
         }
         // Рецепти над ковадлом: вивчені; спершу ті, на які є все потрібне
-        const recipes = inTier.filter(([id, rc]) => !rc.blueprint || RPG.knowsRecipe(save, id)).map(([id]) => ({ id, info: RPG.recipeInfo(save, id) }));
+        const recipes = inTier.filter(([id, rc]) => (!rc.blueprint || RPG.knowsRecipe(save, id)) && !RPG.guildBans(save, id)).map(([id]) => ({ id, info: RPG.recipeInfo(save, id) }));
         const ready = recipes.filter(r => r.info.canCraft || r.info.bagFull);
         const shown = forgeShowAll ? recipes : ready;
         const head = el("div", "anvil-recipes-head");
