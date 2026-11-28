@@ -1937,13 +1937,13 @@ function buyFromTrade(save, id, qty = 1) {
   return { ok: true, price, qty, unit };
 }
 
-// Чи відкритий район Дубової Застави: Центральний — з 6 рівня, Торговий — з 20 рівня
+// Чи відкритий район Дубової Застави: Центральний — з 6 рівня, Торговий — з 1 рівня (Торгова гільдія Скруджа в ньому — з 20)
 // Район «Кузня Брокка й Ейтрі» (Свартгард): відкривається, щойно переможено Кованого стража Хелли — братів звільнено (WORLDS_4-7.md, п. 4)
 const BROKK_FREED_BY = "svart_boss_hels_forged_guardian";
 function isDistrictOpen(save, d) {
   if (!d.locked) return true;
   if (d.id === "center") return RPG.isCentralOpen(save);
-  if (d.id === "trade") return save.character.level >= TRADE_MIN_LEVEL || hasCraftAccess(save);   // з професією — лише Гільдія ремісників
+  if (d.id === "trade") return true;   // з 1 рівня (v0.9.24); Торгова гільдія Скруджа — з TRADE_MIN_LEVEL (page-game-city.js)
   if (d.id === "north") return RPG.canPassNorth ? RPG.canPassNorth(save) : getClass(save.character.classId).tier > 1;   // професія, Селянин з 16 рівня або «Знак відреченого»
   if (d.id === "rest") return !!RPG.isCoalDone?.(save);
   if (d.id === "brokk") return !!rootSave(save).bossKills?.[BROKK_FREED_BY];   // братів звільнено — Кований страж Хелли переможений

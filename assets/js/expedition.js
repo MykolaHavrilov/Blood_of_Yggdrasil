@@ -28,6 +28,15 @@
 // Уся гра в цей час — майже як у дорозі: лише «Персонаж», «Інвентар», «Мапа», «Налаштування» і «Головне меню» (game-common.js → requireSave),
 // переходити між локаціями не можна (travel.js → startTravel); з Мапи можна відправити другу експедицію.
 //
+// ЕКСПЕДИЦІЯ НА БОСА ДАНЖУ (v0.9.24, рішення користувача 2026-11-28): якщо в кишені 50 ключів (BOSS_EXP.minKeys) і більше
+// від одного данжу, група може піти не на час, а на N заходів до боса (від BOSS_EXP.minRuns = 10 до кількості ключів).
+// Ключі на всі заходи беруться при відправленні (e.keysLeft) — кожен захід «використовує» один ключ на вхід.
+// Захід — повний прохід лабіринту данжу (як dungeonMazeOpts: зони з ворогами з pool, у Б — бос або Темна душа),
+// без зілля всередині; нагорода — за кімнату Б, як у данжі (досвід, здобич, руни, креслення, мішечок, жарина).
+// Між заходами — автозілля й привал, як у звичайній експедиції. Загинула вся група — ключ цього заходу пропав,
+// решта (e.keysLeft) повертаються в кишеню; так само при відкликанні. Кінець — коли зроблено всі заходи (reason "runs").
+//   e.boss — id данжу, e.runsPlan — скільки заходів, e.bossRuns / e.bossWins — зроблено / виграно; e.end — оцінка часу повернення.
+//
 // Стан: save.expeditions = [{ id, loc, members: [id], start, end, at, runs, battles, wins, champions, done, reason, finishedAt,
 //                          runs — проходів лабіринту, battles / wins — боїв зон (усіх) і виграних;
 //                          по закінченні — запис-підсумок у журнал подій (journal.js, kind "expedition");
@@ -55,6 +64,9 @@
   // підібрано симуляцією так, щоб група з 3 героїв свого рівня доживала до кінця приблизно в половині експедицій,
   // група з 6 — майже завжди (Гардарика й Темний ліс — Селяни в синіх/фіолетових речах; Альвгейм — професії в повному сеті; Ванагейм — так само, 31–34 рівень).
   const EXP_POWER = { start: 0.5, dark: 0.32, alf: 0.37, van: 0.38, svart: 0.38, jot: 0.38, musp: 0.38, asg: 0.38, nifl: 0.38 };
+  // Експедиція на боса данжу: від minKeys ключів у кишені, заходів — від minRuns до кількості ключів;
+  // estMs — початкова оцінка тривалості одного заходу (потім — за фактичним середнім)
+  const BOSS_EXP = { minKeys: 50, minRuns: 10, estMs: 8 * 60 * 1000 };
 
   // ---------- Герої ----------
   function memberIdOf(save, ms) {
@@ -108,8 +120,13 @@
   }
   // Чи можна відправити цих героїв (ids) у цю локацію: { ok, reason }
   function canStartExpedition(save, locId, ids) {
-    const loc = RPG.LOCATIONS[locId];
     if (!isExpeditionLoc(locId)) return { ok: false, reason: "Сюди експедицію не відправити." };
+    return checkTeam(save, locId, ids);
+  }
+  // Спільні перевірки звичайної експедиції й експедиції на боса: мішки, дорога, данж, склад групи, рівні, доступ до локації
+  function checkTeam(save, locId, ids, minLevel = 0) {
+    const loc = RPG.LOCATIONS[locId];
+    if (!loc) return { ok: false, reason: "Сюди експедицію не відправити." };
     if (expList(save).filter(e => e.done).length >= EXP_MAX_BAGS) return { ok: false, reason: `Спершу заберіть здобич повернених експедицій (чекають ${EXP_MAX_BAGS}).` };
     if (RPG.isTraveling?.(save)) return { ok: false, reason: "Ви в дорозі — експедицію можна відправити, коли дійдете." };
     if (save.dungeon) return { ok: false, reason: "Група в данжі — спершу завершіть його." };
@@ -121,6 +138,7 @@
       if (isDown(ms)) return { ok: false, reason: `${ms.character.name} поліг — спершу помоліться за нього в Храмі.` };
       if (isAway(ms)) return { ok: false, reason: `${ms.character.name} уже в іншій експедиції.` };
       if (loc.minLevel && ms.character.level < loc.minLevel) return { ok: false, reason: `${loc.name}: експедиція — з ${loc.minLevel} рівня кожного героя (${ms.character.name} — ${ms.character.level}).` };
+      if (minLevel && ms.character.level < minLevel) return { ok: false, reason: `Бій з босом данжу — з ${minLevel} рівня кожного героя (${ms.character.name} — ${ms.character.level}).` };
     }
     const lvl = Math.min(...ids.map(id => viewById(save, id).character.level));
     const can = RPG.canEnterLocation(locId, Math.max(lvl, loc.minLevel || 1), save);
@@ -145,6 +163,46 @@
       e.bag.levels[memberIdOf(save, ms)] = [ms.character.level, ms.character.level];
     }
     return { ok: true, end: e.end, id: e.id, hours: h };
+  }
+
+  // ---------- Експедиція на боса данжу ----------
+  function bossExpDungeon(locId) { return RPG.locationDungeon ? RPG.locationDungeon(locId) : null; }
+  function rootOf(save) { let r = save; while (r && r.memberIndex) r = Object.getPrototypeOf(r); return r; }
+  // Скільки заходів можна обрати: { ok, keys, min, max, dungeon } (ok — ключів досить)
+  function bossExpRange(save, locId) {
+    const d = bossExpDungeon(locId);
+    if (!d) return { ok: false, keys: 0, min: BOSS_EXP.minRuns, max: 0, dungeon: null };
+    const keys = RPG.keyAmount(rootOf(save), d.key);
+    return { ok: keys >= BOSS_EXP.minKeys, keys, min: BOSS_EXP.minRuns, max: keys, dungeon: d };
+  }
+  function canStartBossExpedition(save, locId, ids, runs) {
+    const r = bossExpRange(save, locId);
+    if (!r.dungeon) return { ok: false, reason: "У цій локації немає данжу." };
+    const keyName = RPG.ITEMS[r.dungeon.key]?.name || r.dungeon.key;
+    if (!r.ok) return { ok: false, reason: `Експедиція на боса — від ${BOSS_EXP.minKeys} ключів у кишені: ${keyName} (зараз ${r.keys}).` };
+    const n = Math.floor(Number(runs));
+    if (!(n >= r.min && n <= r.max)) return { ok: false, reason: `Заходів на боса — від ${r.min} до ${r.max} (скільки є ключів).` };
+    return checkTeam(save, locId, ids, r.dungeon.minLevel || 0);
+  }
+  // runs — скільки заходів (і ключів); ключі на всі заходи беруться одразу, невикористані повертаються в кінці
+  function startBossExpedition(save, locId, ids, runs, now = Date.now()) {
+    const can = canStartBossExpedition(save, locId, ids, runs);
+    if (!can.ok) return can;
+    const d = bossExpDungeon(locId), n = Math.floor(Number(runs)), root = rootOf(save);
+    root.keys[d.key] = RPG.keyAmount(root, d.key) - n;
+    const e = {
+      id: "e" + now.toString(36) + Math.floor(Math.random() * 1000),
+      loc: locId, members: ids.slice(), start: now, end: now + n * BOSS_EXP.estMs, at: now,
+      boss: d.id, runsPlan: n, keysLeft: n, bossRuns: 0, bossWins: 0, darkSouls: 0,
+      battles: 0, wins: 0, champions: 0, done: false, reason: "", finishedAt: 0,
+      bag: { gold: 0, items: [], stacks: {}, filtered: 0, exp: {}, levels: {} }, fallen: [], potions: {}
+    };
+    expList(save).push(e);
+    for (const ms of expMembers(save, e)) {
+      ms.character.regenAt = now;
+      e.bag.levels[memberIdOf(save, ms)] = [ms.character.level, ms.character.level];
+    }
+    return { ok: true, end: e.end, id: e.id, runs: n };
   }
 
   // ---------- Один прохід лабіринту ----------
@@ -260,6 +318,76 @@
     return { win: true, dur };
   }
 
+  // ---------- Один захід на боса данжу: прохід лабіринту данжу, нагорода — за кімнату Б (як page-game.js у данжі) ----------
+  function fightBoss(save, e) {
+    const d = RPG.getDungeon(e.boss);
+    const team = expMembers(save, e).filter(ms => !isDown(ms));
+    if (!team.length || !d) return "wiped";
+    const root = rootOf(save);
+    const dark = RPG.darkSoulPossible?.(d.id) && Math.random() < RPG.DARK_SOUL.chance;
+    const spec = id => ({ id, champion: false, dungeonGs: !RPG.ENEMIES[id]?.boss, dungeon: d.id });
+    const bossId = dark ? RPG.darkSoulId(d.id) : d.boss;
+    const pick = () => d.pool[Math.floor(Math.random() * d.pool.length)];
+    const run = RPG.simulateMaze(team, RPG.makeMaze({}), { boss: spec(bossId), dungeon: true, pickFoes: (zone, n) => Array.from({ length: n }, () => spec(pick())) });
+    const zb = run.parts.filter(p => p.type === "battle");
+    e.bossRuns = (e.bossRuns || 0) + 1;
+    e.runs = (e.runs || 0) + 1;
+    e.battles += zb.length;
+    const dur = EXP_BATTLE_MS * Math.max(1, zb.length);
+    const last = zb[zb.length - 1];
+    run.heroes.forEach((h, k) => { team[k].character.hp = Math.max(0, h.hp); team[k].character.mp = Math.max(0, h.mp); if (h.dead) team[k].character.hp = 0; });
+    if (!run.win) return { wiped: true, enemyIds: last?.result.enemyIds || [], dur };
+    e.wins += zb.filter(p => p.result.win).length;
+    e.bossWins = (e.bossWins || 0) + 1;
+    if (dark) e.darkSouls = (e.darkSouls || 0) + 1;
+    const paid = zb.filter(p => p.result.win && p.zone === "Б");
+    const enemies = paid.flatMap(p => p.result.enemies), specs = paid.flatMap(p => p.specs);
+    const bag = e.bag;
+    // перемоги над босами — як у бою (Темна душа — не бос для світів)
+    for (const en of enemies) if (RPG.ENEMIES[en.id]?.boss && !RPG.ENEMIES[en.id].darkSoul) (root.bossKills ??= {})[en.id] ??= Date.now();
+    // досвід — пул з бонусом групи, ділиться між тими, хто вижив
+    const totalExp = enemies.reduce((s, x) => s + (x.exp || 0), 0);
+    const survivors = team.filter((ms, k) => !run.heroes[k].dead);
+    const spring = RPG.springExpMult ? RPG.springExpMult(save) : 1;
+    const orb = RPG.godsOrb?.(save);
+    const pool = Math.round(totalExp * (1 + (RPG.PARTY_EXP_BONUS || 0) / 100 * (team.length - 1)) * spring * (orb ? 1 + orb.expPct / 100 : 1));
+    const expEach = Math.floor(pool / Math.max(1, survivors.length));
+    for (const ms of survivors) {
+      const rp = RPG.runeTotals ? (RPG.runeTotals(ms).eco.exp || 0) : 0;
+      const add = expEach + Math.round(expEach * rp / 100);
+      RPG.addExp(ms, add);
+      const id = memberIdOf(save, ms);
+      bag.exp[id] = (bag.exp[id] || 0) + add;
+      if (bag.levels[id]) bag.levels[id][1] = ms.character.level;
+    }
+    // золото й здобич кімнати Б
+    const runeEco = RPG.teamRuneEco ? RPG.teamRuneEco(team) : { gold: 0, lootRarity: 0 };
+    for (const en of enemies) {
+      const lootOrb = RPG.godsOrb?.(save);
+      const loot = RPG.rollLoot(en.id, lootOrb ? lootOrb.lootPct / 100 : 0);
+      for (const r of RPG.rollRunes?.(en.id, { champion: en.champion, expedition: true }) || []) loot.items.push({ id: r, qty: 1 });
+      if (RPG.ENEMIES[en.id]?.darkSoul && RPG.darkSoulReward?.(root).ember) loot.items.push({ id: RPG.EMBER.id, qty: 1 });
+      let gold = loot.gold || 0;
+      if (runeEco.gold && gold) gold = Math.round(gold * (1 + runeEco.gold / 100));
+      bag.gold += gold;
+      for (const it of loot.items) bagAddLootItem(save, bag, it.id, it.qty, runeEco.lootRarity);
+      for (const bp of [RPG.rollBlueprintDrop?.(save, en.id), ...(RPG.rollTierBlueprints?.(en.id, { dungeon: true }) || [])]) if (bp) bagAddStack(bag, bp, 1);
+      const pouch = RPG.rollPouchDrop?.(en.id);
+      if (pouch) bagAddStack(bag, pouch, 1);
+      for (const ms of team) ms.character.kills = (ms.character.kills || 0) + 1;
+      RPG.questOnKill?.(save, en.id);
+    }
+    RPG.noteVictory?.(save, e.loc, zb.flatMap(p => p.result.enemyIds || []), d.name);
+    if (RPG.masteryGainFor && RPG.addMasteryExp) {
+      team.forEach((ms, k) => {
+        if (run.heroes[k].dead) return;
+        const g = RPG.masteryGainFor(save, ms, specs);
+        if (g.type && g.gain) RPG.addMasteryExp(ms, g.type, g.gain);
+      });
+    }
+    return { win: true, dur };
+  }
+
   // ---------- Привал між боями: скільки часу треба, щоб усі живі мали EXP_REST_UNTIL HP ----------
   function healStep(ms, ticks) {
     const s = RPG.calcStats(ms), per = RPG.regenPerTick(ms), ch = ms.character;
@@ -283,6 +411,12 @@
     if (!e || e.done) return false;
     e.done = true; e.reason = reason; e.finishedAt = now;
     if (reason === "time") RPG.noteExpedition?.(save, e.loc);   // рахунок гри: експедиція відходила весь час
+    // експедиція на боса: невикористані ключі — назад у кишеню
+    if (e.boss && e.keysLeft > 0) {
+      const d = RPG.DUNGEONS[e.boss];
+      if (d) e.keysBack = RPG.addKeys(rootOf(save), d.key, e.keysLeft);
+      e.keysLeft = 0;
+    }
     const team = expMembers(save, e);
     const fallen = team.filter(isDown);
     e.fallen = fallen.map(ms => memberIdOf(save, ms));
@@ -325,9 +459,11 @@
     const loc = RPG.LOCATIONS[e.loc]?.name || e.loc;
     const title = e.reason === "wiped" ? "Експедиція загинула" : e.reason === "recalled" ? "Групу відкликано з експедиції" : "Експедиція повернулась";
     const bag = e.bag || { exp: {}, gold: 0, items: [], stacks: {} };
-    const lines = [["title", `${title}: ${loc}`, e.reason === "wiped" ? "lose" : "win"],
-      ["info", `${team.map(ms => ms.character.name).join(", ")}. Проходів лабіринту ${e.runs || 0}, боїв ${e.battles}, перемог ${e.wins}` +
-        (e.champions ? `, чемпіонів ${e.champions}` : "") + "."],
+    const dn = e.boss ? RPG.DUNGEONS[e.boss]?.name || e.boss : "";
+    const lines = [["title", `${title}: ${loc}${e.boss ? ` — бос данжу «${dn}»` : ""}`, e.reason === "wiped" ? "lose" : "win"],
+      ["info", `${team.map(ms => ms.character.name).join(", ")}. ` + (e.boss
+        ? `Заходів на боса ${e.bossRuns || 0} з ${e.runsPlan}, перемог ${e.bossWins || 0}` + (e.darkSouls ? `, Темних душ ${e.darkSouls}` : "") + (e.keysBack ? `; ключів повернулось ${e.keysBack}` : "") + "."
+        : `Проходів лабіринту ${e.runs || 0}, боїв ${e.battles}, перемог ${e.wins}` + (e.champions ? `, чемпіонів ${e.champions}` : "") + ".")],
       ["info", team.map(ms => `${ms.character.name}: +${bag.exp[memberIdOf(save, ms)] || 0} EXP` +
         (e.penalty?.[memberIdOf(save, ms)] > 0 ? `, штраф −${e.penalty[memberIdOf(save, ms)]} EXP` : "")).join(" · ")],
       ["info", `Здобич у мішку експедиції: ${bag.gold || 0} золота, речей ${bag.items.length}, ресурсів ${Object.values(bag.stacks).reduce((a, b) => a + b, 0)}.`]];
@@ -354,6 +490,7 @@
     return changed;
   }
   function tickOne(save, e, now) {
+    if (e.boss) return tickBoss(save, e, now);
     const limit = Math.min(now, e.end);
     let changed = false, steps = 0;
     // новий прохід починається, якщо до кінця експедиції лишився хоч один бій; триває EXP_BATTLE_MS × боїв зон
@@ -382,6 +519,33 @@
       }
     }
     if (!e.done && e.at + EXP_BATTLE_MS > e.end && now >= e.end) { finishExpedition(save, e, "time", Math.max(e.end, Math.min(e.at, now))); changed = true; }
+    return changed;
+  }
+
+  // Експедиція на боса: заходи один за одним, поки є ключі; між ними — автозілля, відновлення і привал (без межі часу)
+  function tickBoss(save, e, now) {
+    let changed = false, steps = 0;
+    while (!e.done && e.keysLeft > 0 && e.at + EXP_BATTLE_MS <= now && steps++ < EXP_MAX_STEPS) {
+      e.keysLeft--;                                  // ключ на вхід
+      const r = fightBoss(save, e);
+      changed = true;
+      const dur = Math.max(EXP_BATTLE_MS, r?.dur || EXP_BATTLE_MS);
+      if (r === "wiped" || r?.wiped) { finishExpedition(save, e, "wiped", e.at + dur, r?.enemyIds); break; }
+      e.at += dur;
+      const team = expMembers(save, e).filter(ms => !isDown(ms));
+      const cfg = RPG.getAutoPotion ? RPG.getAutoPotion() : null;
+      if (cfg && (cfg.hp.on || cfg.mp.on) && RPG.autoPotion && team.length) {
+        const pr = RPG.autoPotion(save, cfg, team);
+        e.potions ??= {};
+        for (const [id, n] of Object.entries(pr.used || {})) e.potions[id] = (e.potions[id] || 0) + n;
+      }
+      for (const ms of team) healStep(ms, dur / EXP_TICK_MS - 1);
+      const ticks = restTicks(team);
+      if (ticks > 0) { for (const ms of team) healStep(ms, ticks); e.at += ticks * EXP_TICK_MS; }
+      // оцінка повернення — за середнім часом зроблених заходів
+      e.end = e.at + e.keysLeft * Math.round((e.at - e.start) / Math.max(1, e.bossRuns));
+    }
+    if (!e.done && e.keysLeft <= 0 && now >= e.at) { finishExpedition(save, e, "runs", e.at); changed = true; }
     return changed;
   }
 
@@ -433,12 +597,15 @@
       leftMs: Math.max(0, e.end - now), elapsedMs: Math.min(now, e.end) - e.start,
       runs: e.runs || 0, battles: e.battles, wins: e.wins, champions: e.champions,
       team, alive: team.filter(ms => !isDown(ms)).length, total: team.length,
-      bag: e.bag, fallen: e.fallen || [], temple: !!e.temple, penalty: e.penalty || null, potions: e.potions || {}
+      bag: e.bag, fallen: e.fallen || [], temple: !!e.temple, penalty: e.penalty || null, potions: e.potions || {},
+      boss: e.boss || null, dungeon: e.boss ? RPG.DUNGEONS[e.boss] || null : null, runsPlan: e.runsPlan || 0, bossRuns: e.bossRuns || 0,
+      bossWins: e.bossWins || 0, keysLeft: e.keysLeft || 0, keysBack: e.keysBack || 0, darkSouls: e.darkSouls || 0
     };
   }
 
   Object.assign(RPG, {
     EXP_DURATION_MS, EXP_HOURS_MIN, EXP_HOURS_MAX, EXP_HOURS_DEFAULT, EXP_BATTLE_MS, EXP_POWER, EXP_SIZES, EXP_REST_BELOW, EXP_REST_UNTIL, EXP_CAMP_PCT, EXP_MAX_BAGS,
+    BOSS_EXP, bossExpRange, canStartBossExpedition, startBossExpedition,
     expeditionList: expList, expeditionActive, isAway, memberIdOf, viewById, isExpeditionLoc, canStartExpedition, startExpedition,
     expeditionTick, recallExpedition, finishExpedition, collectExpedition, dropExpeditionLoot, expeditionInfo
   });

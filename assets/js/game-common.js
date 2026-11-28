@@ -1860,10 +1860,16 @@
     const potLine = Object.entries(info.potions).map(([id, n]) => `${RPG.ITEMS[id]?.name || id} ×${fmtNum(n)}`).join(", ");
     const lootLine = [bag.gold ? `${fmtNum(bag.gold)} золота` : "", bag.items.length ? `речей: ${bag.items.length}` : "", stackLine]
       .filter(Boolean).join(" · ") || (info.done ? "нічого" : "поки нічого");
-    if (!info.done) {
+    if (!info.done && info.boss) {
+      box.append(el("h3", null, `Експедиція на боса: ${info.dungeon?.name || ""} · ${info.loc.name}`));
+      box.append(el("p", null, `${names}. Захід ${Math.min(info.runsPlan, info.bossRuns + 1)} з ${info.runsPlan} · перемог над босом ${info.bossWins}` +
+        (info.darkSouls ? `, Темних душ ${info.darkSouls}` : "") + ` · ключів лишилось ${info.keysLeft} · орієнтовно ще ${fmtHours(info.leftMs)} · у строю ${info.alive}/${info.total}.`));
+    } else if (!info.done) {
       box.append(el("h3", null, `Експедиція: ${info.loc.name}${region ? " · " + region : ""}`));
       box.append(el("p", null, `${names}. Лишилось ${fmtHours(info.leftMs)} · проходів лабіринту ${info.runs}, боїв ${info.battles}, перемог ${info.wins}` +
         (info.champions ? `, чемпіонів ${info.champions}` : "") + ` · у строю ${info.alive}/${info.total}.`));
+    }
+    if (!info.done) {
       box.append(el("p", "note keep", `Здобич: ${lootLine}.`));
       if (potLine) box.append(el("p", "note keep", `Випито зілля: ${potLine}.`));
       let armed = false;
@@ -1877,8 +1883,11 @@
       return box;
     }
     const title = info.reason === "wiped" ? "Експедиція загинула" : info.reason === "recalled" ? "Групу відкликано з експедиції" : "Експедиція повернулась";
-    box.append(el("h3", null, `${title}: ${info.loc.name}${region ? " · " + region : ""}`));
-    box.append(el("p", null, `Проходів лабіринту ${info.runs}, боїв ${info.battles}, перемог ${info.wins}` + (info.champions ? `, чемпіонів ${info.champions}` : "") + "."));
+    box.append(el("h3", null, `${title}: ${info.boss ? `бос данжу «${info.dungeon?.name || ""}»` : info.loc.name}${region ? " · " + region : ""}`));
+    box.append(el("p", null, info.boss
+      ? `Заходів на боса ${info.bossRuns} з ${info.runsPlan}, перемог ${info.bossWins}` + (info.darkSouls ? `, Темних душ ${info.darkSouls}` : "") +
+        (info.keysBack ? `. Невикористані ключі повернулись у кишеню: ${info.keysBack}` : "") + "."
+      : `Проходів лабіринту ${info.runs}, боїв ${info.battles}, перемог ${info.wins}` + (info.champions ? `, чемпіонів ${info.champions}` : "") + "."));
     const expLines = info.team.map(ms => {
       const id = RPG.memberIdOf(save, ms), lv = bag.levels[id];
       return `${ms.character.name}: +${fmtNum(bag.exp[id] || 0)} EXP` + (lv && lv[1] > lv[0] ? `, рівень ${lv[0]} → ${lv[1]}` : "") +
@@ -2026,7 +2035,13 @@
   // ============================================================
 
   RPG.pages = {};
-  RPG.ui = { scoreBox, showScore, showBuriedPage, hardcoreCheck, showGameOver, showGameOverPage, showEnding, showHardcoreLosses, gameOverContent, expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showRunePouch, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, npcHead, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, showExpeditionBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, lockMark, lockButton, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, classTreeLayout, showClassTree, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
+  // Плата Кузні гільдії від тіру 1 до тіру 7 за видами (craft.js → GUILD_FORGE.fee)
+  function guildFeeRange() {
+    const f = RPG.GUILD_FORGE.fee, r = a => `${fmtNum(a[0])}–${fmtNum(a[a.length - 1])}`;
+    return `зброя ${r(f.weapon)}, броня ${r(f.armor)}, біжутерія ${r(f.jewel)}`;
+  }
+
+  RPG.ui = { guildFeeRange, scoreBox, showScore, showBuriedPage, hardcoreCheck, showGameOver, showGameOverPage, showEnding, showHardcoreLosses, gameOverContent, expeditionPanel, fmtHours, $, el, noteP, link, button, setBar, fmtNum, fmtDate, fmtStat, MSG_SEC, toastParent, raiseToasts, clearToasts, toastHost, showMsg, showNoGame, requireSave, showKeyPocket, showRunePouch, showLootFilter, renderFilterBtn, whenNoDialog, queueDialog, noticeClose, noticeDialog, showNotice, npcHead, journalReward, meetStranger, showParchment, BOOK, bookMotionOff, bookWide, bookBlobs, bookAnimUrl, playBookAnim, dropBookAnim, chronicleSection, showChronicle, forgeBookTable, forgeBookAuto, forgeBookSection, dataBookSection, openLibraryBook, showDataBook, showForgeBook, fieldLootAdd, showFieldLoot, TRAVEL_HREFS, blockLink, lockNavForTravel, unlockNavAfterTravel, showTravelBanner, showExpeditionBanner, startRegenTimer, itemLabel, rarityName, itemIcon, rarityTextClass, miniPlaceholder, fillItemCell, socketMarks, lockMark, lockButton, SLOT_SHORT, fillEquipCell, smallIcon, slotClass, renderHeroDoll, renderHeroGs, miniBar, renderPartyList, memberTabs, groupMemberTabs, classTreeLayout, showClassTree, renderHeroBars, expInfo, bindExpInfo, describeStats, describeEffect, useResultText, locImage, TYPE_NAMES, RARITY_NAMES, itemInfo, MSG_MAX };
   RPG.ui.classEmblem = classEmblem;
   RPG.ui.meetRenouncer = meetRenouncer;   // «Шлях відреченого»
 })(window.RPG);

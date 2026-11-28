@@ -322,6 +322,20 @@
       }
     }
 
+    // Гартування до +25 (v0.9.24, rarity.js → retemperRef): віхи тепер кожні 4 рівні (+4, +8, …, +24), а не +3 / +6 / +10.
+    // Рішення користувача 2026-11-28 — перерахувати: у кожної загартованої речі старі віхи прибираються й розігруються заново.
+    // Позначка в сейві (як tierBp12), бо rarity.js є не на кожній сторінці.
+    if (!save.story?.temper25 && RPG.retemperRef) {
+      (save.story ||= {}).temper25 = true;
+      const fix = ref => { if (ref && typeof ref === "object" && (ref.up || ref.upB)) RPG.retemperRef(ref); };
+      for (const slot in save.equipment) fix(save.equipment[slot]);
+      for (const m of save.party || []) for (const slot in m.equipment || {}) fix(m.equipment[slot]);
+      save.inventory.forEach(fix);
+      for (const sid in save.chests) save.chests[sid].forEach(fix);
+      for (const e of save.expeditions || []) (e.bag?.items || []).forEach(fix);
+      for (const d of save.deathBag || []) fix(d?.ref);
+    }
+
     save.saveVersion = SAVE_VERSION;
     return save;
   }

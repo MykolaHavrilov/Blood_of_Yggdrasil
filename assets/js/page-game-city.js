@@ -6,7 +6,7 @@
 // ============================================================
 
 (function (RPG) {
-  const { $, el, noteP, link, button, fmtNum, showMsg, noticeDialog, showForgeBook, fillItemCell, itemIcon, slotClass, memberTabs } = RPG.ui;
+  const { $, el, noteP, link, button, fmtNum, guildFeeRange, showMsg, noticeDialog, showForgeBook, fillItemCell, itemIcon, slotClass, memberTabs } = RPG.ui;
   RPG.gameParts = RPG.gameParts || {};
 
   RPG.gameParts.city = function (G) {
@@ -89,7 +89,7 @@
     }
 
     // --- Торговий район: Торгова гільдія, управляючий Скрудж ---
-    // Торговий район: Гільдія ремісників (Кузьма — з професією) і Торгова гільдія (Скрудж — з 20 рівня)
+    // Торговий район (з 1 рівня): Гільдія ремісників (Кузьма; знаряддя й книга — з професією; кузня гільдії — за плату) і Торгова гільдія (Скрудж — з 20 рівня)
     let tradeNpc = "kuzma";
     function renderTradeDistrict(box) {
       const tabs = el("div", "row npc-tabs");
@@ -109,6 +109,19 @@
         return;
       }
       renderNpc(box, "kuzma");
+      // Кузня Гільдії ремісників: ковадло Кузьми за плату (craft.js → GUILD_FORGE)
+      {
+        const fr = el("div", "shop-row tool-row fbook-row guild-forge-row");
+        const info = el("div", "tool-info");
+        const ready = RPG.craftForgeReady(save);
+        info.append(el("strong", null, "Кузня гільдії"),
+          el("small", null, `Кувати на ковадлі Кузьми, як у власній кузні: усі знаряддя на місці. Плата за кування — за тіром і видом речі: ${guildFeeRange()} золота ` +
+            `і +${Math.round(RPG.GUILD_FORGE.extraPct * 100)}% матеріалів понад рецепт.` + (ready.ok ? "" : ` ${ready.reason}`)));
+        const b = button("До ковадла", "wf wf-button", () => showForge());
+        b.disabled = !ready.ok;
+        fr.append(info, b);
+        box.append(fr);
+      }
       // Алхімічний станок — у Гільдії ремісників (alchemy.js, page-game-alchemy.js)
       G.renderAlchemyRow(box, "guild");
       // Рунне горно — всередині Гільдії ремісників (data/runes.js → RUNE_FORGE); з'являється лише після знахідки
@@ -145,14 +158,14 @@
           if (!r.ok) { showMsg(msg, r.reason, true); return; }
           await RPG.saveGame(save);
           RPG.ui.showNotice("Горно Сварога розгорілося", ["Жарина лягла на холодний попіл — і горно загуло, як колись за Сварога. Брокк і Ейтрі мовчки зняли шапки.",
-            "Тепер тут можна кувати речі, переплавляти руни й гартувати спорядження до +10."]);
+            "Тепер тут можна кувати речі, переплавляти руни й гартувати спорядження до +25."]);
           renderAll();
         });
         b.disabled = !embers;
         row.append(info, b);
       } else {
         info.append(el("strong", null, "Горно Сварога"),
-          el("small", null, "Вогонь, у якому народжувалась зброя богів. Кування, Рунне горно й гартування речей до +10."));
+          el("small", null, "Вогонь, у якому народжувалась зброя богів. Кування, Рунне горно й гартування речей до +25."));
         row.append(info, button("До Горна Сварога", "wf wf-button", () => showSvarogChoice()));
       }
       box.append(row);
@@ -175,7 +188,7 @@
         ready.ok ? "" : ready.reason);
       mode("is-runes", "Рунне горно", "Шість рун у вогонь — одна нова з попелу.", () => showRuneForge(),
         save.books?.runes ? "" : "Потрібна книга Сварога «Руни Небесної Кузні».");
-      mode("is-temper", "Гартування", "Річ +1…+10: сильніша атака чи захист. Невдача — річ згорає.", () => showTemper());
+      mode("is-temper", "Гартування", "Річ +1…+25: сильніша атака чи захист. Невдача — річ згорає.", () => showTemper());
       dlg.append(grid);
       document.body.append(dlg);
       dlg.showModal();
@@ -192,7 +205,7 @@
         dlg.innerHTML = "";
         dlg.append(closeBtn("Закрити горно"), el("h3", null, "Гартування"));
         dlg.append(noteP("Гартування посилює основу речі: зброя — атаку й силу магії, броня й щит — захист, прикраси — магічний захист. " +
-          "На +3, +6 і +10 вогонь ще й посилює одну випадкову характеристику речі на 15%. Якщо горно не прийме метал — річ згорить. " +
+          "На +4, +8, +12, +16, +20 і +24 вогонь ще й посилює одну випадкову характеристику речі на 15%. Якщо горно не прийме метал — річ згорить. " +
           "Гартують лише речі з інвентаря."));
         if (note) dlg.append(el("p", "forge-result" + (note.error ? " is-error" : ""), note.text));
         const items = list();

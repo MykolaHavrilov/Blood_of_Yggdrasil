@@ -6,7 +6,7 @@
 // ============================================================
 
 (function (RPG) {
-  const { $, el, noteP, link, button, fmtNum, showMsg, noticeDialog, showParchment, openLibraryBook, showForgeBook, rarityTextClass, lockMark, smallIcon, slotClass, fillItemCell } = RPG.ui;
+  const { $, el, noteP, link, button, fmtNum, guildFeeRange, showMsg, noticeDialog, showParchment, openLibraryBook, showForgeBook, rarityTextClass, lockMark, smallIcon, slotClass, fillItemCell } = RPG.ui;
   RPG.gameParts = RPG.gameParts || {};
 
   RPG.gameParts.home = function (G) {
@@ -191,8 +191,10 @@
         const st = RPG.craftState(save);
         const house = RPG.craftHouse(save);       // власний дім або Горно Сварога (craft.js → craftHouse)
         const next = RPG.craftExpToNext(st.level);
-        dlg.append(close, el("h3", null, house?.svarog ? "Горно Сварога — кування" : "Кузня"));
+        dlg.append(close, el("h3", null, house?.svarog ? "Горно Сварога — кування" : house?.guild ? "Кузня Гільдії ремісників" : "Кузня"));
         if (house?.svarog) dlg.append(el("p", "forge-why", "Знаряддя Брокка й Ейтрі — усі на місці; вогонь Сварога додає +5% до легендарної."));
+        if (house?.guild) dlg.append(el("p", "forge-why", `Знаряддя Кузьми — усі на місці. Плата гільдії за кожне кування — за тіром і видом речі: ${guildFeeRange()} золота (тір 1–7) ` +
+          `і +${Math.round(RPG.GUILD_FORGE.extraPct * 100)}% кожного матеріалу понад рецепт (щонайменше +${RPG.GUILD_FORGE.extraMin} шт., матеріалів з босів — +${RPG.GUILD_FORGE.extraMinBoss}). Переплавка й розбір — без плати.`));
         dlg.append(el("p", "forge-mastery", `Майстерність ${st.level} — ${craftRank(st.level)}` +
           (st.level < RPG.CRAFT_MAX_LEVEL ? ` · досвід ${fmtNum(st.exp)}/${fmtNum(next)}` : "") +
           ` · успіх ${pct(RPG.craftSuccessChance(save, house))}`));
@@ -284,9 +286,10 @@
       const drawAnvilBench = (group, id) => {
         const item = RPG.ITEMS[id], rc = RPG.RECIPES[id];
         const info = RPG.recipeInfo(save, id);
+        const rmats = RPG.craftMats(save, id);   // у Гільдії ремісників — з доплатою матеріалів
         const grades = (forgeGrades[id] ??= {});
         // клітинки матеріалів заповнюються самі: найдешевша рідкість, якої вистачає (інакше — звичайна)
-        for (const [base, need] of rc.mats) {
+        for (const [base, need] of rmats) {
           if (grades[base] && gradeIds(base).some(g => g.grade === grades[base])) continue;
           const ok = gradeIds(base).find(g => RPG.craftCountMat(save, g.id) >= need);
           grades[base] = ok ? ok.grade : "common";
@@ -313,7 +316,7 @@
         dlg.append(bench);
         // під ковадлом — матеріали
         const mats = el("div", "anvil-mats");
-        for (const [base, need] of rc.mats) {
+        for (const [base, need] of rmats) {
           const gid = RPG.materialOfGrade(base, grades[base]);
           const have = RPG.craftCountMat(save, gid);
           const cell = button("", slotClass(gid, "anvil-mat" + (have >= need ? " is-ok" : " is-short") + (matPick === base ? " is-active" : "")), () => { matPick = matPick === base ? null : base; draw(); });
@@ -332,8 +335,8 @@
           row.append(button("−1", "wf wf-link", set(bpPut - 1)), button("+1", "wf wf-link", set(bpPut + 1)), button("+10", "wf wf-link", set(bpPut + 10)),
             button("Усі", "wf wf-link", set(slot.have)), button("Забрати", "wf wf-link", set(0)));
           dlg.append(row);
-        } else if (matPick && rc.mats.some(([b]) => b === matPick)) {
-          const need = rc.mats.find(([b]) => b === matPick)[1];
+        } else if (matPick && rmats.some(([b]) => b === matPick)) {
+          const need = rmats.find(([b]) => b === matPick)[1];
           const row = el("div", "anvil-choose");
           row.append(el("span", null, `${RPG.ITEMS[matPick].name} — рідкість:`));
           for (const g of gradeIds(matPick)) {
@@ -367,6 +370,7 @@
           dlg.append(el("p", "forge-odds", (bpPut ? "Перше кування: " : "") + ["broken", "common", "magic", "epic", "legendary"]
             .filter(r => odds[r] >= 0.005).map(r => `${RARITY_LABEL[r]} ${fmtPct(odds[r])}`).join(" · ")));
         }
+        if (info.fee) dlg.append(el("p", "forge-why", `Плата Гільдії ремісників: ${fmtNum(info.fee)} золота за кожне кування (у вас ${fmtNum(RPG.rootSave(save).character.gold)}).`));
         if (RPG.chestsHere(save).some(cid => RPG.parseCraftChest(cid)?.type === "mat"))
           dlg.append(el("small", "forge-why", "Матеріали беруться з інвентаря і скринь для матеріалів цього дому."));
         const n = forgeCount === "all" ? max : Math.min(forgeCount, Math.max(max, 1));
@@ -386,6 +390,7 @@
           const one = r.made.length === 1 ? RPG.itemFullName(r.made[0].ref) : `${item.name} ×${r.made.length}`;
           forgeResult = { text: `Викувано: ${one} (${parts.join(", ")}). +${fmtNum(r.exp)} досвіду майстерності` +
             (r.sparks ? `, Небесних іскор згоріло: ${r.sparks}` : "") + (r.blueprints ? `, креслень витрачено: ${r.blueprints}` : "") +
+            (r.fee ? `, плата гільдії −${fmtNum(r.fee)} золота` : "") +
             craftUpsText({ levelUps: r.levelUps, catUps: r.catUps, cat: r.cat }) + (r.stop === "full" ? " Інвентар повний — кування зупинено." : r.stop === "mats" ? ` ${r.reason}` : "") };
           draw();
           if (r.stop === "full") showMsg(msg, `Інвентар повний — викувано ${r.made.length}, кування зупинено.`, true);

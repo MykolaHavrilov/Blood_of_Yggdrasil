@@ -535,6 +535,14 @@
         if (bags >= RPG.EXP_MAX_BAGS) { b.disabled = true; b.title = "Спершу заберіть здобич повернених експедицій."; }
         else if (RPG.expeditionActive(save) && freeN < RPG.EXP_SIZES[0]) { b.disabled = true; b.title = `Удома лишилось ${freeN} вільних героїв — для ще однієї експедиції треба ${RPG.EXP_SIZES[0]}.`; }
         details.append(b);
+        // Експедиція на боса данжу — від BOSS_EXP.minKeys ключів цього данжу в кишені
+        const br = RPG.bossExpRange?.(save, selected);
+        if (br?.dungeon) {
+          const bb = button(`Експедиція на боса данжу · ключів ${br.keys}`, "wf wf-secondary", () => showExpeditionDialog(selected, true));
+          if (!br.ok) { bb.disabled = true; bb.title = `Від ${RPG.BOSS_EXP.minKeys} ключів: ${RPG.ITEMS[br.dungeon.key]?.name || ""} (зараз ${br.keys}).`; }
+          else if (b.disabled) { bb.disabled = true; bb.title = b.title; }
+          details.append(bb);
+        }
         if (isSite(selected)) { details.append(noteP("До Шахти й Лісопилки немає дороги: туди лише відправляють експедицію з мапи.")); return; }
       }
       if (RPG.expeditionActive(save)) {
@@ -563,11 +571,16 @@
     }
 
     // ---------- Вікно експедиції: 3 або 6 героїв, тривалість 1–8 год (повзунок) ----------
-    function showExpeditionDialog(locId) {
+    // boss = true — експедиція на боса данжу: замість годин — кількість заходів (від 10 до кількості ключів)
+    function showExpeditionDialog(locId, boss = false) {
       const loc = RPG.LOCATIONS[locId];
+      const br = boss ? RPG.bossExpRange(save, locId) : null;
+      const dun = br?.dungeon || null;
+      const needLvl = Math.max(loc.minLevel || 0, dun?.minLevel || 0);
       const members = RPG.partyMembers(save).map((ms, i) => ({ ms, id: RPG.memberIdOf(save, ms), i }));
       const why = m => RPG.isMemberDead(m.ms) ? "полеглий" : RPG.isAway(m.ms) ? "в експедиції"
-        : loc.minLevel && m.ms.character.level < loc.minLevel ? `потрібен ${loc.minLevel} рів.` : "";
+        : needLvl && m.ms.character.level < needLvl ? `потрібен ${needLvl} рів.` : "";
+      let runs = br ? Math.min(br.max, Math.max(br.min, 50)) : 0;
       const ok = members.filter(m => !why(m));
       let size = ok.length >= 6 ? 6 : 3;
       const chosen = new Set(ok.slice(0, size).map(m => m.id));
@@ -575,10 +588,18 @@
       const { dlg, closeBtn } = noticeDialog("exp-dialog");
       const draw = () => {
         dlg.innerHTML = "";
+        if (dun) {
+          const keyName = RPG.ITEMS[dun.key]?.name || dun.key;
+          dlg.append(closeBtn(), el("h3", null, `Експедиція на боса: ${dun.name}`));
+          dlg.append(el("p", null, `Група раз у раз проходить данж «${dun.name}» до боса «${RPG.ENEMIES[dun.boss]?.name || ""}». Кожен захід бере на вхід один ключ — ${keyName}. ` +
+            "Нагорода кожного виграного заходу — як у данжі: досвід, золото, речі й креслення з кімнати боса (іноді замість боса виходить Темна душа). " +
+            "Усередині данжу зілля не п'ють; між заходами — автозілля й привал. Якщо загине вся група, ключ цього заходу пропаде, а решта повернеться в кишеню."));
+        } else {
         dlg.append(closeBtn(), el("h3", null, `Експедиція: ${loc.name}`));
         dlg.append(el("p", null, "Весь обраний час група безперервно б'ється з ворогами локації (без босів). На бої з чемпіонами погоджується сама. " +
           "Здобич — як у звичайних боях" + (loc.yields ? `, а ще за кожен виграний бій: ${loc.yields.map(id => RPG.ITEMS[id].name.toLowerCase() + " 1–3").join(", ")}` : "") + ". " +
           "Експедиція повертається, коли мине час або коли загинуть усі її герої. Між боями група стає на привал."));
+        }
         const ap = RPG.getAutoPotion?.();
         dlg.append(el("p", "note keep", ap && (ap.hp.on || ap.mp.on)
           ? `Автозілля ввімкнено (Налаштування): після кожного бою герої п'ють зілля з інвентаря за тими ж правилами${ap.hp.on ? ` — HP нижче ${ap.hp.below}% до ${ap.hp.upTo}%` : ""}${ap.mp.on ? `${ap.hp.on ? "," : " —"} MP нижче ${ap.mp.below}% до ${ap.mp.upTo}%` : ""}. Зілля спільні з тими, хто лишився вдома.`
@@ -594,20 +615,23 @@
           sizes.append(b);
         }
         dlg.append(sizes);
-        // Тривалість: повзунок зліва направо, 1 … 8 годин
+        // Тривалість: повзунок зліва направо, 1 … 8 годин; на боса — кількість заходів (10 … ключів)
         const durBox = el("div", "exp-duration");
-        const durLabel = el("label", "exp-duration-label", `Тривалість: ${hours} год.`);
+        const durText = () => dun ? `Заходів на боса: ${runs} (ключів ${br.keys})` : `Тривалість: ${hours} год.`;
+        const durLabel = el("label", "exp-duration-label", durText());
         durLabel.htmlFor = "exp-hours";
         const range = el("input", "exp-range");
-        Object.assign(range, { type: "range", id: "exp-hours", min: RPG.EXP_HOURS_MIN, max: RPG.EXP_HOURS_MAX, step: 1, value: hours });
-        range.setAttribute("aria-label", "Тривалість експедиції, годин");
+        if (dun) Object.assign(range, { type: "range", id: "exp-hours", min: br.min, max: br.max, step: 1, value: runs });
+        else Object.assign(range, { type: "range", id: "exp-hours", min: RPG.EXP_HOURS_MIN, max: RPG.EXP_HOURS_MAX, step: 1, value: hours });
+        range.setAttribute("aria-label", dun ? "Кількість заходів на боса" : "Тривалість експедиції, годин");
         range.addEventListener("input", () => {
-          hours = Number(range.value);
-          durLabel.textContent = RPG.t(`Тривалість: ${hours} год.`);
+          if (dun) runs = Number(range.value); else hours = Number(range.value);
+          durLabel.textContent = RPG.t(durText());
           go.textContent = RPG.t(goText());
         });
         const ends = el("div", "exp-range-ends");
-        ends.append(el("span", null, `${RPG.EXP_HOURS_MIN} год.`), el("span", null, `${RPG.EXP_HOURS_MAX} год.`));
+        if (dun) ends.append(el("span", null, String(br.min)), el("span", null, String(br.max)));
+        else ends.append(el("span", null, `${RPG.EXP_HOURS_MIN} год.`), el("span", null, `${RPG.EXP_HOURS_MAX} год.`));
         durBox.append(durLabel, range, ends);
         dlg.append(durBox);
         const list = el("div", "stack exp-heroes");
@@ -626,15 +650,15 @@
         }
         dlg.append(list);
         const ids = [...chosen];
-        const can = RPG.canStartExpedition(save, locId, ids);
-        const goText = () => `Відправити (${ids.length}/${size}) · ${hours} год.`;
+        const can = dun ? RPG.canStartBossExpedition(save, locId, ids, runs) : RPG.canStartExpedition(save, locId, ids);
+        const goText = () => dun ? `Відправити (${ids.length}/${size}) · заходів ${runs}` : `Відправити (${ids.length}/${size}) · ${hours} год.`;
         const go = button(goText(), "wf wf-button", async () => {
-          const r = RPG.startExpedition(save, locId, ids, Date.now(), hours);
+          const r = dun ? RPG.startBossExpedition(save, locId, ids, runs) : RPG.startExpedition(save, locId, ids, Date.now(), hours);
           if (!r.ok) { showMsg($("map-msg"), r.reason, true); return; }
           await RPG.saveGame(save);
           dlg.close();
           render();
-          showMsg($("map-msg"), `Експедиція вирушила: ${loc.name}. Повернеться за ${r.hours} год.`);
+          showMsg($("map-msg"), dun ? `Експедиція на боса вирушила: ${dun.name}, заходів ${r.runs}.` : `Експедиція вирушила: ${loc.name}. Повернеться за ${r.hours} год.`);
         });
         go.disabled = ids.length !== size || !can.ok;
         dlg.append(go);

@@ -15,7 +15,11 @@
 // переносить частину звичайних результатів у кращі рідкості; Небесна іскра (за бажанням) додає +10% до легендарної і згоряє.
 // Кувати можна лише в домі з кузнею і всіма обов'язковими знаряддями, героєві з професією —
 // або в Горні Сварога (Свартгард, Кузня Брокка й Ейтрі): там усі знаряддя є, а вогонь Сварога додає +5% до легендарної.
-// Там же — гартування речей +1…+10 (temperItem; бонус до характеристик — rarity.js → TEMPER_*).
+// Там же — гартування речей +1…+25 (temperItem; бонус до характеристик — rarity.js → TEMPER_*).
+// Кузня Гільдії ремісників (v0.9.24, рішення користувача 2026-11-28): у Торговому районі Дубової Застави коваль Кузьма пускає
+// кувати на своєму ковадлі — усі знаряддя на місці, як у власній кузні, але кожне кування коштує плату гільдії
+// (GUILD_FORGE.fee за видом і тіром: зброя 250 … 50 000, броня 150 … 45 000, біжутерія 300 … 55 000 золота) і +5% кожного матеріалу понад рецепт (вгору, мінімум +5 шт.;
+// для матеріалів, що падають лише з босів, — мінімум +1). Переплавка й розбір у гільдії — без плати.
 // Підключається ПІСЛЯ character.js, data/items.js, data/recipes.js, rarity.js.
 // ============================================================
 
@@ -136,21 +140,61 @@
     root.svarogLit = Date.now();
     return { ok: true };
   }
-  // «Дім» для кування в Горні Сварога: усі знаряддя на місці
-  let svarogHouse = null;
+  // ---------- Кузня Гільдії ремісників (Дубова Застава → Торговий район) ----------
+  const GUILD_FORGE = { city: "city", district: "trade", fee: {
+    // вид рецепта (data/recipes.js → RECIPE_GROUPS; щити й друга рука — зброя) → плата за тір 1…7
+    weapon: [250, 500, 1000, 2700, 7000, 19000, 50000],
+    armor:  [150, 350, 750, 2000, 6000, 16000, 45000],
+    jewel:  [300, 600, 1300, 3300, 8500, 21500, 55000] },
+    extraPct: 0.05, extraMin: 5, extraMinBoss: 1 };
+  function atGuildForge(save) { return save?.location?.map === GUILD_FORGE.city && save?.location?.district === GUILD_FORGE.district; }
+  function guildFee(tier, cat) { const t = Math.max(1, Math.min(7, Math.floor(tier) || 1)); return (GUILD_FORGE.fee[cat] || GUILD_FORGE.fee.weapon)[t - 1]; }
+  // Матеріал «з босів»: падає лише з босів і не добувається інакше (шахти й лісопилки, переплавка, крамниця Скруджа)
+  let bossMats = null;
+  function isBossMaterial(id) {
+    if (!bossMats) {
+      const by = {}, other = new Set(Object.keys(RPG.SMELT || {}));
+      for (const e of Object.values(RPG.ENEMIES || {})) for (const l of e.loot || []) { const s = (by[l.id] ??= { b: 0, n: 0 }); if (e.boss) s.b++; else s.n++; }
+      for (const l of Object.values(RPG.LOCATIONS || {})) for (const y of l.yields || []) other.add(y);
+      for (const x of RPG.tradeStock?.() || []) other.add(x);
+      bossMats = new Set(Object.keys(by).filter(k => by[k].b && !by[k].n && !other.has(k)));
+    }
+    return bossMats.has(id);
+  }
+  // Скільки матеріалу понад рецепт бере гільдія: +5% угору, мінімум +5 (з босів — мінімум +1)
+  function guildExtra(baseId, qty) {
+    return Math.max(isBossMaterial(baseId) ? GUILD_FORGE.extraMinBoss : GUILD_FORGE.extraMin, Math.ceil(qty * GUILD_FORGE.extraPct));
+  }
+  // Матеріали рецепта тут і зараз: у гільдії — з доплатою, деінде — як у рецепті
+  function craftMats(save, itemId) {
+    const recipe = RPG.RECIPES[itemId];
+    if (!recipe) return [];
+    return atGuildForge(save) ? recipe.mats.map(([id, q]) => [id, q + guildExtra(id, q)]) : recipe.mats;
+  }
+  // Плата за одне кування тут (0 — не в гільдії)
+  function craftFee(save, itemId) { return atGuildForge(save) ? guildFee(RPG.RECIPES[itemId]?.tier || 1, RPG.recipeGroupOf(itemId)) : 0; }
+
+  // «Дім» для кування в Горні Сварога і в Гільдії ремісників: усі знаряддя на місці
+  let svarogHouse = null, guildHouse = null;
+  const allTools = () => Object.fromEntries(Object.keys(RPG.FORGE_TOOLS).map(id => [id, true]));
   function craftHouse(save) {
     if (atSvarogForge(save) && svarogLit(save)) {
-      svarogHouse ??= { svarog: true, name: "Горно Сварога", forge: { tools: Object.fromEntries(Object.keys(RPG.FORGE_TOOLS).map(id => [id, true])) } };
+      svarogHouse ??= { svarog: true, name: "Горно Сварога", forge: { tools: allTools() } };
       return svarogHouse;
+    }
+    if (atGuildForge(save)) {
+      guildHouse ??= { guild: true, name: "Кузня Гільдії ремісників", forge: { tools: allTools() } };
+      return guildHouse;
     }
     return RPG.houseHere(save);
   }
 
-  // ---------- Гартування: +1…+10, невдача знищує річ ----------
-  // Шанс успіху на рівень +1…+10; ціна спроби — золото 10 000 + 500 × рівень героя × тір речі × рівень гартування
-  // і Небесні іскри — стільки, на який рівень гартується річ. На +3, +6, +10 одна випадкова характеристика речі
+  // ---------- Гартування: +1…+25, невдача знищує річ (v0.9.24; до того — +1…+10) ----------
+  // Шанс успіху на рівень +1…+25; ціна спроби — золото 10 000 + 500 × рівень героя × тір речі × рівень гартування
+  // і Небесні іскри — стільки, на який рівень гартується річ. На +4, +8, +12, +16, +20, +24 одна випадкова характеристика речі
   // (основна чи бонусна) отримує ще +15% до своєї основи; повторне влучання в ту саму складається (+30%, +45%).
-  const TEMPER_CHANCE = [0.99, 0.99, 0.99, 0.5, 0.5, 0.5, 0.4, 0.3, 0.2, 0.1];
+  // Шанси: +1…+8 — 99%, +9…+12 — 90%, +13…+16 — 80%, +17…+20 — 70%, +21…+24 — 60%, +25 — лише 5% (найважчий крок).
+  const TEMPER_CHANCE = [...Array(8).fill(0.99), ...Array(4).fill(0.9), ...Array(4).fill(0.8), ...Array(4).fill(0.7), ...Array(4).fill(0.6), 0.05];
   const TEMPER_GOLD = { base: 10000, per: 500 };
   function temperCost(save, ref) {
     const to = RPG.temperLevel(ref) + 1;
@@ -273,7 +317,7 @@
     if (!RPG.hasCraftAccess(save)) return { ok: false, reason: "Кувати можна, коли головний герой має професію." };
     if (!RPG.hasForgeBook(save)) return { ok: false, reason: "Спершу придбайте в коваля Кузьми книгу «Небесна кузня. Настанова» — першу науку коваля." };
     const house = craftHouse(save);
-    if (!house) return { ok: false, reason: "Кувати можна лише у власному домі з кузнею або в Горні Сварога." };
+    if (!house) return { ok: false, reason: "Кувати можна у власному домі з кузнею, у Гільдії ремісників (Торговий район) або в Горні Сварога." };
     if (!house.forge) return { ok: false, reason: "Спершу збудуйте кузню при домі." };
     const miss = RPG.forgeMissing(house);
     if (miss.length) return { ok: false, reason: `Бракує знарядь: ${miss.map(id => RPG.FORGE_TOOLS[id].name.toLowerCase()).join(", ")}.`, house };
@@ -291,7 +335,8 @@
     const g = RPG.RECIPE_GROUPS.find(x => x.id === cat);
     const house = craftHouse(save);
     const tierLevel = recipe.catLevel || RPG.CRAFT_TIER_LEVEL[recipe.tier];
-    const mats = recipe.mats.map(([id, need]) => ({ id, need, have: haveMaterial(save, id) }));
+    const mats = craftMats(save, itemId).map(([id, need]) => ({ id, need, have: haveMaterial(save, id) }));
+    const fee = craftFee(save, itemId);
     const tools = recipe.tools.map(id => ({ id, have: !!house?.forge?.tools?.[id] }));
     const ready = forgeReady(save, recipe.tools);
     const open = RPG.craftTierOpen ? RPG.craftTierOpen(save, recipe.tier) : { ok: true };
@@ -301,10 +346,11 @@
     else if (!open.ok) reason = open.reason;
     else if (st.level < tierLevel) reason = `Потрібен рівень «${g?.name || "майстерності"}» ${tierLevel}.`;
     else if (!ready.ok) reason = ready.reason;
-    else if (mats.some(m => m.have < m.need)) reason = "Бракує матеріалів.";
+    else if (mats.some(m => m.have < m.need)) reason = fee ? "Бракує матеріалів (з доплатою гільдії)." : "Бракує матеріалів.";
+    else if (fee && RPG.rootSave(save).character.gold < fee) reason = `Не вистачає золота на плату гільдії (${fee}).`;
     else if (!RPG.invFree(save)) reason = "Інвентар повний.";
     // bagFull — усе є, бракує лише місця в інвентарі (ковадло показує рецепт, а натискання — повідомлення «Інвентар повний»)
-    return { recipe, cat, tierLevel, levelOk: st.level >= tierLevel, tierOpen: open.ok, known, mats, tools, canCraft: !reason, reason, bagFull: reason === "Інвентар повний." };
+    return { recipe, cat, tierLevel, levelOk: st.level >= tierLevel, tierOpen: open.ok, known, mats, tools, fee, canCraft: !reason, reason, bagFull: reason === "Інвентар повний." };
   }
 
   function addCraftExp(save, amount) {
@@ -335,7 +381,7 @@
     const recipe = RPG.RECIPES[itemId];
     const house = craftHouse(save);
     const success = successChance(save, house);
-    const pick = recipe ? pickMaterials(save, recipe.mats, 1, !!opts.preferRare, opts.grades) : null;
+    const pick = recipe ? pickMaterials(save, craftMats(save, itemId), 1, !!opts.preferRare, opts.grades) : null;
     const spark = !!opts.spark && countMat(save, "heavenly_spark") > 0;
     return applyQuality(rarityTable(craftState(save).level, success), pick?.quality ?? gradesQuality(recipe, opts.grades), spark, !!house?.svarog,
       Math.min(BLUEPRINT_MAX, Math.max(0, Math.floor(opts.blueprints || 0))));
@@ -360,13 +406,14 @@
     const info = recipeInfo(save, itemId);
     if (!info) return { ok: false, reason: "Такого рецепта немає." };
     if (!info.canCraft) return { ok: false, reason: info.reason, full: !RPG.invFree(save) };
-    const pick = pickMaterials(save, info.recipe.mats, 1, !!opts.preferRare, opts.grades);
+    const pick = pickMaterials(save, craftMats(save, itemId), 1, !!opts.preferRare, opts.grades);
     if (!pick) return { ok: false, reason: opts.grades ? "Бракує матеріалів вибраної рідкості." : "Бракує матеріалів." };
     const spark = !!opts.spark && countMat(save, "heavenly_spark") > 0;
     const slot = blueprintSlot(save, itemId);
     const bps = slot ? Math.min(BLUEPRINT_MAX, slot.have, Math.max(0, Math.floor(opts.blueprints || 0))) : 0;
     const tab = craftOdds(save, itemId, { ...opts, blueprints: bps });
     for (const [id, qty] of pick.plan) takeMat(save, id, qty);
+    if (info.fee) RPG.rootSave(save).character.gold -= info.fee;   // плата Гільдії ремісників
     if (spark) takeMat(save, "heavenly_spark", 1);
     if (bps) takeMat(save, slot.id, bps);
     const rarity = rollFrom(tab);
@@ -375,7 +422,7 @@
     const exp = Math.round(CRAFT_EXP[info.recipe.tier] * (rarity === "broken" ? 0.5 : 1));
     const levelUps = addCraftExp(save, exp);
     const catUps = addCatExp(save, info.cat, exp);
-    return { ok: true, ref, rarity, exp, levelUps, cat: info.cat, catUps, spark, blueprints: bps };
+    return { ok: true, ref, rarity, exp, levelUps, cat: info.cat, catUps, spark, blueprints: bps, fee: info.fee || 0 };
   }
 
   // Скільки речей вистачить матеріалів (з вибраною рідкістю)
@@ -383,7 +430,9 @@
     const recipe = RPG.RECIPES[itemId];
     if (!recipe) return 0;
     let n = Infinity;
-    for (const [baseId, qty] of recipe.mats) {
+    const fee = craftFee(save, itemId);
+    if (fee) n = Math.floor(RPG.rootSave(save).character.gold / fee);
+    for (const [baseId, qty] of craftMats(save, itemId)) {
       const g = opts.grades?.[baseId];
       const have = g && GRADE_ORDER.includes(g) ? countMat(save, RPG.materialOfGrade(baseId, g)) : haveMaterial(save, baseId);
       n = Math.min(n, Math.floor(have / qty));
@@ -399,13 +448,13 @@
     const want = all ? 999 : Math.max(1, Math.floor(count) || 1);
     let bpLeft = Math.max(0, Math.floor(opts.blueprints || 0));
     const made = [], levelUps = [], catUps = [];
-    let exp = 0, blueprints = 0, sparks = 0, stop = null, reason = "";
+    let exp = 0, blueprints = 0, sparks = 0, fee = 0, stop = null, reason = "";
     while (made.length < want) {
       if (!RPG.invFree(save)) { stop = "full"; reason = "Інвентар повний — кування зупинено."; break; }
       const r = craftItem(save, itemId, { ...opts, blueprints: Math.min(BLUEPRINT_MAX, bpLeft) });
       if (!r.ok) { stop = r.full ? "full" : "mats"; reason = r.full ? "Інвентар повний — кування зупинено." : r.reason; break; }
       made.push(r);
-      bpLeft -= r.blueprints; blueprints += r.blueprints;
+      bpLeft -= r.blueprints; blueprints += r.blueprints; fee += r.fee || 0;
       if (r.spark) sparks++;
       exp += r.exp;
       levelUps.push(...(r.levelUps || []));
@@ -414,7 +463,7 @@
     if (!made.length) return { ok: false, reason: reason || "Не вдалося кувати.", stop };
     // «усі»: зупинка через матеріали — це звичайний кінець серії
     if (all && stop === "mats") { stop = null; reason = ""; }
-    return { ok: true, made, stop, reason, exp, levelUps, catUps, cat: made[0].cat, blueprints, sparks };
+    return { ok: true, made, stop, reason, exp, levelUps, catUps, cat: made[0].cat, blueprints, sparks, fee };
   }
 
   // ---------- Переплавка руди ----------
@@ -573,6 +622,7 @@
     craftForgeReady: forgeReady, craftItem, craftBatch, craftMaxCount, blueprintSlot, CRAFT_BATCH, BLUEPRINT_LEGEND_BONUS, BLUEPRINT_MAX, CRAFT_GRADES: GRADE_ORDER, addCraftExp, smeltInfo, smelt,
     DISASSEMBLE_SHARE, DISASSEMBLE_EXP, disassembleInfo, disassemble, salvageRecipe,
     craftCountMat: countMat, craftHouse,
+    GUILD_FORGE, atGuildForge, guildFee, guildExtra, isBossMaterial, craftMats, craftFee,
     SVAROG, atSvarogForge, svarogLit, lightSvarog, TEMPER_CHANCE, TEMPER_GOLD, temperCost, temperInfo, temperItem,
     craftCat: catState, craftCatMaxLevel: catMaxLevel, craftCatOpenTier: catOpenTier, addCraftCatExp: addCatExp
   });
